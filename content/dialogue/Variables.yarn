@@ -1,0 +1,90 @@
+title: Variables
+tags: declarations
+---
+// 由 tools/build_variables.py 从 bible.json 和 companions.json 生成，不要手改。
+// 系统变量
+<<declare $player_name = "学徒">>
+<<declare $chapter = 1>>
+<<declare $last_battle = "">>
+<<declare $last_battle_won = false>>
+<<declare $back = "">>
+// 每个决定选了哪个选项（存选项 id，没选是空字符串）
+<<declare $D1 = "">>
+<<declare $D2 = "">>
+<<declare $D3 = "">>
+<<declare $D4 = "">>
+<<declare $D5 = "">>
+<<declare $D6 = "">>
+<<declare $S1 = "">>
+<<declare $S2 = "">>
+<<declare $S3 = "">>
+<<declare $S4 = "">>
+// $V：第 5 章高文发誓时的附加选项 V0 / V1 / V2
+<<declare $V = "">>
+// 选项带来的标记（后面是哪些选项会设它）
+// S3c
+<<declare $apple_happened = false>>
+// S3a、S3b
+<<declare $apple_prevented = false>>
+// D3b
+<<declare $arthur_fears_sight = false>>
+// D2a
+<<declare $arthur_trusts_sight = false>>
+// S4b
+<<declare $elaine_convent = false>>
+// S4c
+<<declare $elaine_died = false>>
+// S4a
+<<declare $elaine_lives = false>>
+// S2a
+<<declare $gareth_refused_order = false>>
+// S1a
+<<declare $gawain_confessed = false>>
+// S1a
+<<declare $gawain_early_letter = false>>
+// S3a
+<<declare $gawain_owes_you = false>>
+// D3b
+<<declare $gawain_saw_stone = false>>
+// S1b
+<<declare $gawain_secret = false>>
+// S3b
+<<declare $guinevere_trusts_you = false>>
+// D1a
+<<declare $kay_believes_you = false>>
+// S2b
+<<declare $kay_protected_gareth = false>>
+// D1a、D1b、D1c
+<<declare $kay_rift = false>>
+// D1a、D1b、D1c
+<<declare $kay_shamed = false>>
+// D4a
+<<declare $lancelot_warned = false>>
+// D3c
+<<declare $merlin_note = false>>
+// D2b
+<<declare $merlin_teaches = false>>
+// D3a
+<<declare $merlin_told_place = false>>
+// D5a
+<<declare $player_at_arthur_side = false>>
+// D3a、D3b
+<<declare $player_knows_place = false>>
+// D5c
+<<declare $player_late = false>>
+// S4a
+<<declare $rumor_up = false>>
+// 同伴状态："none" 还没来 / "party" 在队 / "left" 离开 / "dead" 离世
+<<declare $c_kay = "none">>
+<<declare $c_arthur = "none">>
+<<declare $c_gawain = "none">>
+<<declare $c_lancelot = "none">>
+<<declare $c_gareth = "none">>
+<<declare $c_bedivere = "none">>
+<<declare $c_merlin = "none">>
+<<declare $c_ector = "none">>
+<<declare $c_guinevere = "none">>
+<<declare $c_agravaine = "none">>
+<<declare $c_gaheris = "none">>
+<<declare $c_mordred = "none">>
+===

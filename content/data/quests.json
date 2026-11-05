@@ -1,154 +1,374 @@
 {
-  "_说明": "参数登记，来自 design/systems/quests.md 第 6 节；代码只读这里的数，改数先改设计页。 步骤第 10 步填全。",
-  "main_marker": true,
-  "side_marker": false,
-  "warn_before_close": true,
-  "autosave_on_step": true,
-  "quests": [
-    {
-      "id": "main1",
-      "kind": "main",
-      "chapter": 1,
-      "name": "庄园的冬天",
-      "steps": [
-        "1101",
-        "1102",
-        "1103",
-        "1104"
-      ],
-      "battles": [
-        "wolves",
-        "merlin_shadow"
-      ]
-    },
-    {
-      "id": "main2",
-      "kind": "main",
-      "chapter": 2,
-      "name": "石中剑",
-      "steps": [
-        "1201",
-        "1202",
-        "1203",
-        "1204",
-        "1205"
-      ],
-      "battles": [
-        "bedegraine"
-      ]
-    },
-    {
-      "id": "main3",
-      "kind": "main",
-      "chapter": 3,
-      "name": "湖中剑与圆桌",
-      "steps": [
-        "1301",
-        "1302",
-        "1303",
-        "1304",
-        "1305"
-      ],
-      "battles": [
-        "pellinore"
-      ]
-    },
-    {
-      "id": "main4",
-      "kind": "main",
-      "chapter": 4,
-      "name": "梅林离开",
-      "steps": [
-        "1401",
-        "1402",
-        "1403",
-        "1404",
-        "1405"
-      ],
-      "battles": [
-        "morgan_chase"
-      ]
-    },
-    {
-      "id": "main5",
-      "kind": "main",
-      "chapter": 5,
-      "name": "圣杯与裂痕",
-      "steps": [
-        "1501",
-        "1502",
-        "1503",
-        "1504",
-        "1505"
-      ],
-      "battles": [
-        "camelot_defense"
-      ]
-    },
-    {
-      "id": "main6",
-      "kind": "main",
-      "chapter": 6,
-      "name": "最后一战",
-      "steps": [
-        "1601",
-        "1602",
-        "1603",
-        "1604",
-        "1605",
-        "1606"
-      ],
-      "battles": [
-        "joyous_gard",
-        "dover",
-        "camlann"
-      ]
-    },
-    {
-      "id": "S1",
-      "kind": "side",
-      "chapter": 3,
-      "name": "高文与绿衣骑士",
-      "opens_at": "1304",
-      "closes_before": "1305",
-      "skip_as": "S1_skip",
-      "battles": [
-        "wild_men"
-      ]
-    },
-    {
-      "id": "S2",
-      "kind": "side",
-      "chapter": 4,
-      "name": "厨房里的「美手」",
-      "opens_at": "1403",
-      "closes_before": "1405",
-      "skip_as": "S2c",
-      "battles": [
-        "red_knight"
-      ]
-    },
-    {
-      "id": "S3",
-      "kind": "side",
-      "chapter": 5,
-      "name": "毒苹果",
-      "opens_at": "1502",
-      "closes_before": "1503",
-      "skip_as": "S3c",
-      "battles": []
-    },
-    {
-      "id": "S4",
-      "kind": "side",
-      "chapter": 5,
-      "name": "阿斯托拉特的伊莲恩",
-      "opens_at": "1502",
-      "closes_before": "1503",
-      "skip_as": "S4c",
-      "battles": [
-        "tournament"
-      ]
-    }
-  ]
+  "_说明": "任务表（game-data-schema 格式）。1xxx 主线一章一条，步骤 id 就是剧情谱的节点编号；23xx–25xx 支线，id 和剧情谱的支线编号一致。文字只存键，正文在 content/strings/game_text.csv。area 是大地图的地方 id（overworld.json），坐标 target 第 9 步做地图时补。battle 是这一步要打的遭遇（combat.json 的 encounters）。",
+  "_params": {
+    "main_marker": true,
+    "side_marker": false,
+    "warn_before_close": true,
+    "autosave_on_step": true,
+    "_说明": "参数，来自 design/systems/quests.md 第 6 节"
+  },
+  "1001": {
+    "type": "main",
+    "name": "quest_1001_name",
+    "desc": "quest_1001_desc",
+    "chapter": 1,
+    "parts": [
+      {
+        "id": 1101,
+        "text": "quest_1001_p1101",
+        "area": "forest",
+        "battle": "wolves"
+      },
+      {
+        "id": 1102,
+        "text": "quest_1001_p1102",
+        "area": "stone_circle"
+      },
+      {
+        "id": 1103,
+        "text": "quest_1001_p1103",
+        "area": "manor",
+        "battle": "merlin_shadow"
+      },
+      {
+        "id": 1104,
+        "text": "quest_1001_p1104",
+        "area": "manor"
+      }
+    ]
+  },
+  "1002": {
+    "type": "main",
+    "name": "quest_1002_name",
+    "desc": "quest_1002_desc",
+    "chapter": 2,
+    "parts": [
+      {
+        "id": 1201,
+        "text": "quest_1002_p1201",
+        "area": "london"
+      },
+      {
+        "id": 1202,
+        "text": "quest_1002_p1202",
+        "area": "london"
+      },
+      {
+        "id": 1203,
+        "text": "quest_1002_p1203",
+        "area": "london"
+      },
+      {
+        "id": 1204,
+        "text": "quest_1002_p1204",
+        "area": "bedegraine",
+        "battle": "bedegraine"
+      },
+      {
+        "id": 1205,
+        "text": "quest_1002_p1205",
+        "area": "london"
+      }
+    ]
+  },
+  "1003": {
+    "type": "main",
+    "name": "quest_1003_name",
+    "desc": "quest_1003_desc",
+    "chapter": 3,
+    "parts": [
+      {
+        "id": 1301,
+        "text": "quest_1003_p1301",
+        "area": "camp"
+      },
+      {
+        "id": 1302,
+        "text": "quest_1003_p1302",
+        "area": "fountain",
+        "battle": "pellinore"
+      },
+      {
+        "id": 1303,
+        "text": "quest_1003_p1303",
+        "area": "lake"
+      },
+      {
+        "id": 1304,
+        "text": "quest_1003_p1304",
+        "area": "camelot"
+      },
+      {
+        "id": 1305,
+        "text": "quest_1003_p1305",
+        "area": "lake"
+      }
+    ]
+  },
+  "1004": {
+    "type": "main",
+    "name": "quest_1004_name",
+    "desc": "quest_1004_desc",
+    "chapter": 4,
+    "parts": [
+      {
+        "id": 1401,
+        "text": "quest_1004_p1401",
+        "area": "camelot"
+      },
+      {
+        "id": 1402,
+        "text": "quest_1004_p1402",
+        "area": "lake",
+        "battle": "morgan_chase"
+      },
+      {
+        "id": 1403,
+        "text": "quest_1004_p1403",
+        "area": "camelot"
+      },
+      {
+        "id": 1404,
+        "text": "quest_1004_p1404",
+        "area": "camelot"
+      },
+      {
+        "id": 1405,
+        "text": "quest_1004_p1405",
+        "area": "camelot"
+      }
+    ]
+  },
+  "1005": {
+    "type": "main",
+    "name": "quest_1005_name",
+    "desc": "quest_1005_desc",
+    "chapter": 5,
+    "parts": [
+      {
+        "id": 1501,
+        "text": "quest_1005_p1501",
+        "area": "camelot"
+      },
+      {
+        "id": 1502,
+        "text": "quest_1005_p1502",
+        "area": "camelot",
+        "battle": "camelot_defense"
+      },
+      {
+        "id": 1503,
+        "text": "quest_1005_p1503",
+        "area": "camelot"
+      },
+      {
+        "id": 1504,
+        "text": "quest_1005_p1504",
+        "area": "camelot_outside"
+      },
+      {
+        "id": 1505,
+        "text": "quest_1005_p1505",
+        "area": "camelot"
+      }
+    ]
+  },
+  "1006": {
+    "type": "main",
+    "name": "quest_1006_name",
+    "desc": "quest_1006_desc",
+    "chapter": 6,
+    "parts": [
+      {
+        "id": 1601,
+        "text": "quest_1006_p1601",
+        "area": "joyous_gard",
+        "battle": "joyous_gard"
+      },
+      {
+        "id": 1602,
+        "text": "quest_1006_p1602",
+        "area": "coast"
+      },
+      {
+        "id": 1603,
+        "text": "quest_1006_p1603",
+        "area": "coast"
+      },
+      {
+        "id": 1604,
+        "text": "quest_1006_p1604",
+        "area": "dover",
+        "battle": "dover"
+      },
+      {
+        "id": 1605,
+        "text": "quest_1006_p1605",
+        "area": "camlann",
+        "battle": "camlann"
+      },
+      {
+        "id": 1606,
+        "text": "quest_1006_p1606",
+        "area": "lake_last"
+      }
+    ]
+  },
+  "2301": {
+    "type": "side",
+    "decision": "S1",
+    "name": "quest_2301_name",
+    "desc": "quest_2301_desc",
+    "giver": "gawain",
+    "chapter": 3,
+    "opens_at": "1304",
+    "closes_before": "1305",
+    "parts": [
+      {
+        "id": 1,
+        "text": "quest_2301_p1",
+        "area": "north_road",
+        "battle": "wild_men"
+      },
+      {
+        "id": 2,
+        "text": "quest_2301_p2",
+        "area": "castle"
+      },
+      {
+        "id": 3,
+        "text": "quest_2301_p3",
+        "area": "green_chapel"
+      }
+    ],
+    "endings": [
+      {
+        "id": "S1a",
+        "text": "quest_2301_end_S1a"
+      },
+      {
+        "id": "S1b",
+        "text": "quest_2301_end_S1b"
+      },
+      {
+        "id": "S1_skip",
+        "text": "quest_2301_end_S1_skip"
+      }
+    ]
+  },
+  "2401": {
+    "type": "side",
+    "decision": "S2",
+    "name": "quest_2401_name",
+    "desc": "quest_2401_desc",
+    "giver": "kay",
+    "chapter": 4,
+    "opens_at": "1403",
+    "closes_before": "1405",
+    "parts": [
+      {
+        "id": 1,
+        "text": "quest_2401_p1",
+        "area": "camelot"
+      },
+      {
+        "id": 2,
+        "text": "quest_2401_p2",
+        "area": "red_launds",
+        "battle": "red_knight"
+      },
+      {
+        "id": 3,
+        "text": "quest_2401_p3",
+        "area": "camelot"
+      }
+    ],
+    "endings": [
+      {
+        "id": "S2a",
+        "text": "quest_2401_end_S2a"
+      },
+      {
+        "id": "S2b",
+        "text": "quest_2401_end_S2b"
+      },
+      {
+        "id": "S2c",
+        "text": "quest_2401_end_S2c"
+      }
+    ]
+  },
+  "2501": {
+    "type": "side",
+    "decision": "S3",
+    "name": "quest_2501_name",
+    "desc": "quest_2501_desc",
+    "giver": "guinevere_maid",
+    "chapter": 5,
+    "opens_at": "1502",
+    "closes_before": "1503",
+    "parts": [
+      {
+        "id": 1,
+        "text": "quest_2501_p1",
+        "area": "camelot"
+      },
+      {
+        "id": 2,
+        "text": "quest_2501_p2",
+        "area": "camelot"
+      }
+    ],
+    "endings": [
+      {
+        "id": "S3a",
+        "text": "quest_2501_end_S3a"
+      },
+      {
+        "id": "S3b",
+        "text": "quest_2501_end_S3b"
+      },
+      {
+        "id": "S3c",
+        "text": "quest_2501_end_S3c"
+      }
+    ]
+  },
+  "2502": {
+    "type": "side",
+    "decision": "S4",
+    "name": "quest_2502_name",
+    "desc": "quest_2502_desc",
+    "giver": "bedivere",
+    "chapter": 5,
+    "opens_at": "1502",
+    "closes_before": "1503",
+    "parts": [
+      {
+        "id": 1,
+        "text": "quest_2502_p1",
+        "area": "tournament",
+        "battle": "tournament"
+      },
+      {
+        "id": 2,
+        "text": "quest_2502_p2",
+        "area": "astolat"
+      }
+    ],
+    "endings": [
+      {
+        "id": "S4a",
+        "text": "quest_2502_end_S4a"
+      },
+      {
+        "id": "S4b",
+        "text": "quest_2502_end_S4b"
+      },
+      {
+        "id": "S4c",
+        "text": "quest_2502_end_S4c"
+      }
+    ]
+  }
 }

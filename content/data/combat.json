@@ -127,32 +127,56 @@
   },
   "enemies": {
     "wolf": {
-      "name": "狼",
+      "name": "enemy_wolf",
       "hp": 4,
       "pattern": [
         {
           "act": "attack",
-          "power": 3
+          "power": 3,
+          "target": "lowest_hp"
         }
       ]
     },
     "wolf_leader": {
-      "name": "头狼",
+      "name": "enemy_wolf_leader",
       "hp": 8,
       "pattern": [
         {
           "act": "attack",
-          "power": 5
+          "power": 5,
+          "target": "kay"
+        },
+        {
+          "act": "attack",
+          "power": 5,
+          "target": "arthur"
         }
       ]
     },
-    "wolf_howler": {
-      "name": "瘦狼",
+    "wolf_grey": {
+      "name": "enemy_wolf_grey",
       "hp": 4,
       "pattern": [
         {
           "act": "attack",
-          "power": 3
+          "power": 3,
+          "target": "arthur"
+        },
+        {
+          "act": "attack",
+          "power": 3,
+          "target": "kay"
+        }
+      ]
+    },
+    "wolf_howler": {
+      "name": "enemy_wolf_howler",
+      "hp": 4,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 3,
+          "target": "apprentice"
         },
         {
           "act": "summon",
@@ -162,7 +186,7 @@
       ]
     },
     "merlin_shadow": {
-      "name": "梅林的影子",
+      "name": "enemy_merlin_shadow",
       "hp": 6,
       "pattern": [
         {
@@ -175,10 +199,83 @@
         },
         {
           "act": "attack",
-          "power": 2
+          "power": 2,
+          "target": "apprentice"
         }
       ]
     },
     "_其他": "第 2–6 章的敌人第 10 步写遭遇时补"
+  },
+  "_敌人招式说明": "pattern 按回合轮着用（第 1 回合用第 1 条，用完从头再来）。target：某个同伴 id、apprentice（学徒）、lowest_hp（血最少的人）、all（群攻）。charge 是蓄力，then 是下回合放出的招；summon 的 what 是敌人 id。",
+  "encounters": {
+    "_说明": "一场仗：上场的敌人（按出手顺序）、我方规则、怎么算赢。party.fixed 是剧情规定一定上场的同伴，party.max 是最多带几个（默认 party_max_companions）。win：all_down 敌人全倒；survive 撑过 turns 回合，到了由剧情接管（剧情战）。",
+    "wolves": {
+      "name": "enc_wolves",
+      "enemies": [
+        "wolf_leader",
+        "wolf_grey",
+        "wolf_howler"
+      ],
+      "party": {
+        "fixed": [
+          "kay",
+          "arthur"
+        ]
+      },
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "merlin_shadow": {
+      "name": "enc_merlin_shadow",
+      "enemies": [
+        "merlin_shadow"
+      ],
+      "party": {
+        "fixed": [],
+        "max": 0
+      },
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "bedegraine": {
+      "_待写": "第 10 步写遭遇时补"
+    },
+    "pellinore": {
+      "_待写": "第 10 步写遭遇时补",
+      "win": {
+        "type": "survive",
+        "turns": 3
+      }
+    },
+    "morgan_chase": {
+      "_待写": "第 10 步写遭遇时补"
+    },
+    "camelot_defense": {
+      "_待写": "第 10 步写遭遇时补"
+    },
+    "joyous_gard": {
+      "_待写": "第 10 步写遭遇时补"
+    },
+    "dover": {
+      "_待写": "第 10 步写遭遇时补",
+      "win": {
+        "type": "survive",
+        "turns": 4
+      }
+    },
+    "camlann": {
+      "_待写": "第 10 步写遭遇时补"
+    },
+    "wild_men": {
+      "_待写": "第 10 步写遭遇时补"
+    },
+    "red_knight": {
+      "_待写": "第 10 步写遭遇时补"
+    },
+    "tournament": {
+      "_待写": "第 10 步写遭遇时补"
+    }
   }
 }

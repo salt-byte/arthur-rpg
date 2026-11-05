@@ -71,5 +71,7 @@ flowchart TD
 | design/CONTENT_SCHEDULE.md | 每章第一次出现什么、难到什么程度 | game-design → story-bible → quest-design | 2026-11-05 | 故事列已确认；玩法列待你确认；遭遇列第 10 步填 | 「设计总览」页面；[GitHub](https://github.com/salt-byte/arthur-rpg/blob/main/design/CONTENT_SCHEDULE.md)；项目 |
 | content/data/*.json | 设计页里每个会调的数 | game-design → balancing | 2026-11-05 | 草稿 | [GitHub](https://github.com/salt-byte/arthur-rpg/tree/main/content/data)；项目 |
 | design/design_overview.html | 「设计总览」页面：上面几份设计文档合成的一页 | game-design | 2026-11-05 | 跟着各 .md 重新生成 | 「设计总览」页面；[GitHub](https://github.com/salt-byte/arthur-rpg/blob/main/design/design_overview.html) |
+| content/README.md | 内容数据格式：变量、指令、任务表、遭遇表 | game-data-schema | 2026-11-05 | 草稿（第 6 步） | [GitHub](https://github.com/salt-byte/arthur-rpg/blob/main/content/README.md) |
+| project.godot、scripts/ | Godot 4.3 工程骨架：读数据、跑对白、存读档 | godot-project-structure | 2026-11-05 | 第 1 章样例三条路线跑通 | [GitHub](https://github.com/salt-byte/arthur-rpg/tree/main/scripts) |
 | design/ART_DIRECTION.md | 画风 | art-direction | — | 未开始（第 7 步） | — |
 | design/_draft_v1/ | 换流程之前的旧草稿 | — | 2026-11-05 | 只作参考，不再更新 | [GitHub](https://github.com/salt-byte/arthur-rpg/tree/main/design/_draft_v1)；项目 |

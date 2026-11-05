@@ -343,3 +343,33 @@
 补记：
 - 用户在 GitHub 建好空仓库 salt-byte/arthur-rpg，本地仓库连上并推送（第一次推送 12efcad）。
 - GDD 目录每一行加上仓库里的文件链接。生成总览页时发现 render_design.py 会把网址里的路径（…/blob/main/design/GDD.md）也换成页内链接，修好后插件改为 0.5.1 重新打包；补丁改名 plugin-patches/v0.5.1-figures-github-first.patch。
+
+## 17. 第 6 步：定数据格式、搭工程
+问题：设计页定了规则，内容和代码之间还没有约定：变量叫什么、剧情里怎么触发看水面和学新招、任务步骤怎么对上剧情谱。
+
+做法：
+1. 格式照插件 game-data-schema，本作加的写进 content/README.md：
+   - 变量：`tools/build_variables.py` 从 bible.json 和同伴名单生成 Variables.yarn，共 54 个（每个决定一个、26 个标记、12 个同伴状态、5 个系统变量）。
+   - 新指令 6 个：vision、book_after、unlock、companion、chapter、autosave；关键选择的选项加 `#key`。
+   - 任务表 10 条：主线一章一条，步骤 id 直接用剧情谱节点号；支线 id 和剧情谱一致。
+   - 遭遇表放进 combat.json；刷新点的 enemy 填遭遇 id。
+   - 第 1 章样例：对白 65 行（开场、凯、亚瑟、打完狼、石圈、阁楼、梅林的影子、马厩的关键选择）、NPC 6 个、刷新点 1 个、文本表 131 条。
+2. 新写 `tools/check_project_data.py`：查本作加的东西（指令参数、遭遇、地方、节点、文本键）。故意改坏三处，三处都报出来。
+3. Godot 4.3 工程骨架：project.godot、导出设置（网页版导到 docs/）；Yarn 解释器和任务运行时用插件模板，改了关键选择、`quest_part()`、`has_unlock()`、打赢遭遇进下一步；新写 data.gd、gs.gd、main.gd。main.gd 只实现指令，`--playtest` 按顺序跑第 1 章样例并核对结果。
+4. design、plugin-patches、content/story 放了 .gdignore，Godot 不导入、网页包里也没有。
+
+决定：
+- 导出模板只取网页的两个 → 整包 1GB，网页只用 17MB → 写了 `tools/fetch_zip_entries.py` 按字节范围取 → `tools/setup_godot.sh` 一条命令装好。
+- 第 6 步不做战斗 → `fight_npcs` 先按打赢处理，任务照样往前走 → 第 8 步白盒换成真的战斗。
+- 占位画面只用英文 → 网页版没有系统字体，中文会变方块 → 第 8 步白盒前接中文字体（localization-table 的 build_fonts.py）。
+- `.import` 文件提交，`.translation` 不提交 → Godot 文档建议提交导入设置；翻译文件导入时生成。
+
+证据：
+- check_content.py：9 个节点、65 行、54 个变量、0 错误、6 条提醒（新指令，插件指令表写死了）。check_project_data.py：0 错误。
+- `--playtest --route=a|b|c` 三条都 PASS，退出码 0：文本表和对白表按键取字、任务从 1101 走到完成、预言簿有 D1、学会打断、三个选项各自的标记、进第 2 章、自动存档读回一致。日志在 qa/evidence/step6/。
+- 网页导出：index.wasm 35MB、index.pck 72KB，包里有全部 content 文件、没有 design 和 story；无头 Chromium 打开后控制台打印 `[boot] ok tables=9 nodes=9 vars=54 quests=10 data_errors=0`，0 报错。截图 qa/evidence/step6/web_skeleton.png。
+
+插件问题（记给插件）：
+- check_content.py 的指令表写死，项目自己加的指令只能报「未知指令」。可以让它读项目里的指令清单（比如 content/data/commands.json）。
+- godot-project-structure 让下 1GB 的导出模板包；只做网页版时，按字节范围取两个文件就够（本项目 tools/fetch_zip_entries.py）。
+- 模板 yarn_runner.gd 里有 graveholme 专用的函数（墓碑、物品），新项目要先删掉才能跑。

@@ -12,7 +12,8 @@
       "decision": "D1",
       "seen_at": "1102",
       "surface": "石圈平石上的积水",
-      "decide_at": "1104"
+      "decide_at": "1104",
+      "text": "vision_D1"
     },
     {
       "decision": "D2",
@@ -62,5 +63,6 @@
       "surface": "木碗",
       "decide_at": "2502"
     }
-  ]
+  ],
+  "_画面说明": "text 是画面下面的两三句（文本键）。现在只有 D1，其余第 10 步补。"
 }

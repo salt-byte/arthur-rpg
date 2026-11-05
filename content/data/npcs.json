@@ -1,0 +1,94 @@
+{
+  "_说明": "NPC 表（game-data-schema 格式）。condition 是 Yarn 表达式，为真时出现；node 是对话入口，空字符串是路人，只冒闲话；area 是地方 id；cell 第 9 步做地图时补。现在只有第 1 章的样例，其余章第 10 步写任务时补。",
+  "speakers": {
+    "_说明": "对白里出现、不站在地图上的说话人 → 头像外观"
+  },
+  "npcs": [
+    {
+      "id": "kay",
+      "name": "npc_kay",
+      "look": "kay_young",
+      "area": "manor",
+      "cell": null,
+      "node": "Kay",
+      "condition": "$chapter == 1",
+      "act": {
+        "type": "work",
+        "dir": "down",
+        "every": 1.8
+      },
+      "barks": [
+        "bark_kay_1"
+      ]
+    },
+    {
+      "id": "arthur",
+      "name": "npc_arthur",
+      "look": "arthur_young",
+      "area": "manor",
+      "cell": null,
+      "node": "Arthur",
+      "condition": "$chapter == 1",
+      "act": {
+        "type": "wander",
+        "r": 2
+      }
+    },
+    {
+      "id": "ector",
+      "name": "npc_ector",
+      "look": "ector",
+      "area": "manor",
+      "cell": null,
+      "node": "",
+      "condition": "$chapter == 1",
+      "act": {
+        "type": "look"
+      },
+      "barks": [
+        "bark_ector_1"
+      ]
+    },
+    {
+      "id": "merlin_circle",
+      "name": "npc_merlin",
+      "look": "merlin",
+      "area": "stone_circle",
+      "cell": null,
+      "node": "Ch1_StoneCircle",
+      "condition": "quest_part(1001) == 1102",
+      "act": {
+        "type": "look"
+      }
+    },
+    {
+      "id": "merlin_attic",
+      "name": "npc_merlin",
+      "look": "merlin",
+      "area": "manor",
+      "cell": null,
+      "node": "Merlin",
+      "condition": "quest_part(1001) == 1103",
+      "act": {
+        "type": "look"
+      }
+    },
+    {
+      "id": "miller",
+      "name": "npc_miller",
+      "look": "villager1",
+      "area": "manor",
+      "cell": null,
+      "node": "",
+      "condition": "$chapter == 1",
+      "act": {
+        "type": "wander",
+        "r": 3
+      },
+      "barks": [
+        "bark_miller_1",
+        "bark_miller_2"
+      ]
+    }
+  ]
+}

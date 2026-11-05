@@ -13,7 +13,12 @@
       "kind": "spell",
       "what": "interrupt",
       "at": "1103",
-      "requires": []
+      "requires": [],
+      "popup": {
+        "name": "unlock_u_interrupt_name",
+        "effect": "unlock_u_interrupt_effect",
+        "origin": "unlock_u_interrupt_origin"
+      }
     },
     {
       "id": "u_arthur_king",
@@ -43,7 +48,12 @@
       "at": "1303",
       "requires": [
         "D2b"
-      ]
+      ],
+      "popup": {
+        "name": "unlock_u_still_water_name",
+        "effect": "unlock_u_still_water_effect",
+        "origin": "unlock_u_still_water_origin"
+      }
     },
     {
       "id": "u_round_table",
@@ -68,21 +78,36 @@
       "requires": [
         "D2b",
         "D3a"
-      ]
+      ],
+      "popup": {
+        "name": "unlock_u_deflect_name",
+        "effect": "unlock_u_deflect_effect",
+        "origin": "unlock_u_deflect_origin"
+      }
     },
     {
       "id": "u_staff",
       "kind": "stat",
       "what": "mana_max_after_staff",
       "at": "1401",
-      "requires": []
+      "requires": [],
+      "popup": {
+        "name": "unlock_u_staff_name",
+        "effect": "unlock_u_staff_effect",
+        "origin": "unlock_u_staff_origin"
+      }
     },
     {
       "id": "u_scabbard_lost",
       "kind": "lose",
       "what": "scabbard",
       "at": "1402",
-      "requires": []
+      "requires": [],
+      "popup": {
+        "name": "unlock_u_scabbard_lost_name",
+        "effect": "unlock_u_scabbard_lost_effect",
+        "origin": "unlock_u_scabbard_lost_origin"
+      }
     },
     {
       "id": "u_lancelot",
@@ -123,5 +148,6 @@
       "at": "1502",
       "requires": []
     }
-  ]
+  ],
+  "_提示框说明": "popup 是「新能力提示」的三行文字（文本键）。现在写了几条样例，其余第 10 步补。"
 }

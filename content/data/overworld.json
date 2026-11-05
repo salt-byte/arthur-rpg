@@ -1,5 +1,5 @@
 {
-  "_说明": "参数登记，来自 design/systems/overworld.md 第 6 节；代码只读这里的数，改数先改设计页。 areas 第 9 步做地图时补全。",
+  "_说明": "参数登记，来自 design/systems/overworld.md 第 6 节；代码只读这里的数，改数先改设计页。 areas 列出每章的地方（名字是文本键）；大小、出口第 9 步做地图时补。",
   "tile_px": 32,
   "move_speed_tiles": 4,
   "enemies_chase": false,
@@ -8,17 +8,107 @@
     {
       "id": "manor",
       "chapter": 1,
-      "name": "埃克托爵士的庄园"
+      "name": "area_manor"
     },
     {
       "id": "forest",
       "chapter": 1,
-      "name": "森林"
+      "name": "area_forest"
     },
     {
       "id": "stone_circle",
       "chapter": 1,
-      "name": "石圈"
+      "name": "area_stone_circle"
+    },
+    {
+      "id": "london",
+      "chapter": 2,
+      "name": "area_london"
+    },
+    {
+      "id": "bedegraine",
+      "chapter": 2,
+      "name": "area_bedegraine"
+    },
+    {
+      "id": "camp",
+      "chapter": 3,
+      "name": "area_camp"
+    },
+    {
+      "id": "fountain",
+      "chapter": 3,
+      "name": "area_fountain"
+    },
+    {
+      "id": "lake",
+      "chapter": 3,
+      "name": "area_lake"
+    },
+    {
+      "id": "camelot",
+      "chapter": 3,
+      "name": "area_camelot"
+    },
+    {
+      "id": "north_road",
+      "chapter": 3,
+      "name": "area_north_road"
+    },
+    {
+      "id": "castle",
+      "chapter": 3,
+      "name": "area_castle"
+    },
+    {
+      "id": "green_chapel",
+      "chapter": 3,
+      "name": "area_green_chapel"
+    },
+    {
+      "id": "red_launds",
+      "chapter": 4,
+      "name": "area_red_launds"
+    },
+    {
+      "id": "camelot_outside",
+      "chapter": 5,
+      "name": "area_camelot_outside"
+    },
+    {
+      "id": "tournament",
+      "chapter": 5,
+      "name": "area_tournament"
+    },
+    {
+      "id": "astolat",
+      "chapter": 5,
+      "name": "area_astolat"
+    },
+    {
+      "id": "joyous_gard",
+      "chapter": 6,
+      "name": "area_joyous_gard"
+    },
+    {
+      "id": "coast",
+      "chapter": 6,
+      "name": "area_coast"
+    },
+    {
+      "id": "dover",
+      "chapter": 6,
+      "name": "area_dover"
+    },
+    {
+      "id": "camlann",
+      "chapter": 6,
+      "name": "area_camlann"
+    },
+    {
+      "id": "lake_last",
+      "chapter": 6,
+      "name": "area_lake_last"
     }
   ],
   "water_spots": [
@@ -43,7 +133,7 @@
     },
     {
       "id": "W2",
-      "area": "round_table_hall",
+      "area": "camelot",
       "chapter": 5,
       "reads": [
         "companions_state"
@@ -54,7 +144,7 @@
     },
     {
       "id": "W3",
-      "area": "camelot_riverside",
+      "area": "camelot_outside",
       "chapter": 5,
       "reads": [
         "S4"
@@ -67,7 +157,7 @@
     },
     {
       "id": "W4",
-      "area": "camlann_camp",
+      "area": "camlann",
       "chapter": 6,
       "reads": [
         "companions_state"

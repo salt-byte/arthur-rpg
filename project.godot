@@ -1,0 +1,33 @@
+; Godot 4 项目配置（照插件 godot-project-structure 的模板改）
+config_version=5
+
+[application]
+
+config/name="梅林的学徒"
+config/description="把亚瑟王与梅林的传说做成的 2D RPG（公版改编）"
+run/main_scene="res://scenes/main.tscn"
+config/features=PackedStringArray("4.3", "GL Compatibility")
+
+[autoload]
+
+Data="*res://scripts/data.gd"
+GS="*res://scripts/gs.gd"
+Quests="*res://scripts/quests.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://content/strings/dialogue.zh.translation", "res://content/strings/game_text.zh.translation")
+locale/fallback="zh"

@@ -1,0 +1,128 @@
+title: Ch1_Start
+tags: chapter
+---
+// 第 1 章开场。样例：第 8 步白盒照它跑，第 10 步按 dialogue-authoring 重写、过 story-review。
+你醒来的时候，窗缝里塞的稻草结了一层霜。 #line:ch1_001
+院子里有人在磨剑，磨石一下一下地响，很慢。 #line:ch1_002
+<<companion kay party>>
+<<companion arthur party>>
+<<start_quest 1001>>
+===
+title: Kay
+tags: npc
+---
+<<if quest_part(1001) == 1101>>
+    凯: 林子里又有狼了。昨晚咬死了磨坊家两只羊。 #line:ch1_003
+    凯: 我带亚瑟去，你来不来？ #line:ch1_004
+    -> 我跟你去。 #line:ch1_005
+        凯: 那就把你那根树枝也带上。上回你拿它点着了我的袖子，这回对准狼。 #line:ch1_006
+    -> 亚瑟也去？他连剑都拿不稳。 #line:ch1_007
+        凯: 所以才带他。父亲说了，开春他就得给我当侍从。总不能头一回见血是在比武场上。 #line:ch1_008
+    凯: 走吧。天黑前得回来，我可不想摸黑找你们俩。 #line:ch1_009
+<<elseif visited("Ch1_WolvesDone") and $D1 == "">>
+    凯: 回去别跟父亲说亚瑟差点被咬。他会算到我头上。 #line:ch1_010
+<<else>>
+    凯: 又来看我磨剑？磨石就一块，不借。 #line:ch1_011
+<<endif>>
+===
+title: Arthur
+tags: npc
+---
+<<if quest_part(1001) == 1101>>
+    亚瑟: 凯说这回让我拿真剑。 #line:ch1_012
+    亚瑟: 你别告诉他，我昨晚偷偷拿出来挥过，差点砍到马槽。 #line:ch1_013
+<<else>>
+    亚瑟: 你今天怎么老盯着水桶看？ #line:ch1_014
+<<endif>>
+===
+title: Ch1_WolvesDone
+tags: battle
+---
+最后一只狼钻回灌木丛，雪地上留下一串歪歪扭扭的脚印。 #line:ch1_015
+亚瑟: 它扑过来之前，你就喊了。你怎么知道的？ #line:ch1_016
+-> 我看见它要扑。 #line:ch1_017
+    亚瑟: 我也看着它啊。 #line:ch1_018
+-> 猜的。 #line:ch1_019
+    亚瑟: 那你猜得也太准了。 #line:ch1_020
+凯: 别问了，手冻掉之前先回去。梅林在路口等着，他找你。 #line:ch1_021
+<<progress_quest 1001 1102>>
+===
+title: Ch1_StoneCircle
+tags: vision
+---
+梅林站在平石旁边，灰兜帽上落了一层雪。石面的凹坑里积着雨水，没有结冰。 #line:ch1_022
+梅林: 你小时候说过，水里有人。现在还有吗？ #line:ch1_023
+-> 有时候有。看不清。 #line:ch1_024
+    梅林: 今天看清楚。别眨眼。 #line:ch1_025
+-> 我早就不看了。 #line:ch1_026
+    梅林: 那就再看一次。 #line:ch1_027
+<<vision D1>>
+你的太阳穴一跳一跳地疼。水面又平了，只照出灰白的天。 #line:ch1_028
+梅林: 你看见谁了？ #line:ch1_029
+-> 亚瑟。还有凯。 #line:ch1_030
+    梅林: 嗯。 #line:ch1_031
+梅林: 先别跟人说。明天到阁楼来。 #line:ch1_032
+<<progress_quest 1001 1103>>
+===
+title: Merlin
+tags: npc
+---
+<<if quest_part(1001) == 1103>>
+    阁楼里一股干草和蜡油的味道。梅林把门闩上了。 #line:ch1_033
+    梅林: 你知道亚瑟是怎么到这个家里来的？ #line:ch1_034
+    -> 埃克托说，是一个冬天抱回来的。 #line:ch1_035
+        梅林: 是我抱来的。 #line:ch1_036
+    梅林: 他父亲是尤瑟王。 #line:ch1_037
+    梅林: 那一夜，尤瑟想要廷塔杰尔城里的伊格赖因。我让他变成她丈夫的样子进了城。她丈夫当晚死在城外。 #line:ch1_038
+    梅林: 孩子生下来归我，这是尤瑟答应过的。我把他抱到了这里。 #line:ch1_039
+    -> 亚瑟知道吗？ #line:ch1_040
+        梅林: 还不该知道。 #line:ch1_041
+    -> 你为什么告诉我？ #line:ch1_042
+        梅林: 我不会一直在。 #line:ch1_043
+    梅林: 我走了以后，你替我看着他。 #line:ch1_044
+    梅林: 跟我下楼。光会看，还不够。 #line:ch1_045
+    <<jump Ch1_Training>>
+<<else>>
+    梅林: 嗯？ #line:ch1_046
+<<endif>>
+===
+title: Ch1_Training
+tags: battle
+---
+院子里，梅林朝雪地吹了口气。一个人影从雪里站起来，手里握着一把灰色的剑。 #line:ch1_047
+梅林: 它要劈你。看见了吗？ #line:ch1_048
+梅林: 看见了，就让它停下。 #line:ch1_049
+<<unlock u_interrupt>>
+<<fight_npcs merlin_shadow>>
+影子散成一地雪粉，落回原处。 #line:ch1_050
+梅林: 一个影子，你让它停下了。到了伦敦，有的事你停不了。 #line:ch1_051
+梅林: 哪些能停，你得自己分。 #line:ch1_052
+<<progress_quest 1001 1104>>
+===
+title: Ch1_Stable
+tags: decision
+---
+马厩里点着一盏油灯。凯在给马刷毛，亚瑟坐在草料堆上，把凯的剑擦了又擦。 #line:ch1_053
+凯: 明天到了伦敦，在比武场边上站好，别给我丢人。 #line:ch1_054
+亚瑟: 你上回比武，是谁替你牵的马？ #line:ch1_055
+凯: 所以这回让你牵两匹。 #line:ch1_056
+你想起石圈积水里那一幕：亚瑟手里的剑，凯举着同一把剑对父亲开口。 #line:ch1_057
+-> 提醒凯：到了伦敦，不管发生什么，别对父亲说谎 #key #line:ch1_058
+    <<set $D1 to "D1a">>
+    <<set $kay_believes_you to true>>
+    凯: ……你今晚怎么了？ #line:ch1_059
+    凯: 行。我记着。 #line:ch1_060
+-> 告诉亚瑟：凯会说剑是他拔的 #key #line:ch1_061
+    <<set $D1 to "D1b">>
+    <<set $kay_shamed to true>>
+    <<set $kay_rift to true>>
+    亚瑟: 什么剑？ #line:ch1_062
+    你把他拉到马厩外面说完了。亚瑟半天没出声，呼出的白气一团一团散开。 #line:ch1_063
+-> 谁都不说 #key #line:ch1_064
+    <<set $D1 to "D1c">>
+    <<set $kay_shamed to true>>
+    你没有开口。凯把刷子扔进水桶，水溅到了亚瑟的靴子上。 #line:ch1_065
+<<autosave>>
+<<complete_quest 1001>>
+<<chapter 2>>
+===
