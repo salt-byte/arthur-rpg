@@ -1,0 +1,24 @@
+{
+  "_说明": "参数登记，来自 design/systems/quests.md 第 6 节；代码只读这里的数，改数先改设计页。",
+  "main_steps_per_chapter": [
+    3,
+    5
+  ],
+  "side_quests_total": [
+    2,
+    4
+  ],
+  "side_quests_per_chapter_max": 1,
+  "mark_main_on_map": true,
+  "mark_side_on_map": false,
+  "warn_before_chapter_end": true,
+  "main_step_xp": "ref:progression.quest_xp.main_step",
+  "side_quest_xp": "ref:progression.quest_xp.side_quest",
+  "step_types": [
+    "go_to",
+    "talk_to",
+    "win_battle",
+    "make_decision",
+    "bring_item"
+  ]
+}

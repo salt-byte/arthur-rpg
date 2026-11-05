@@ -1,0 +1,200 @@
+{
+  "_说明": "系统清单。按核心循环需要什么列，不按参考作品有什么列。tier：mvp = 白盒切片就要有（没有它核心循环闭不上）；playable = 确认点 C 之前要有；full = 之后。depends 写系统 id；skill 写负责的 skill 名；design 写设计页路径（game-design 产出）。",
+  "concept": "design/CONCEPT.md",
+  "systems": [
+    {
+      "id": "dialogue",
+      "name": "对话与剧情变量",
+      "what": "对白、纯选择（不掷骰）、变量；NPC 按你告诉过他什么说不同的话；两章内回读",
+      "verbs": [
+        "找人说话",
+        "说给谁听"
+      ],
+      "tier": "mvp",
+      "depends": [],
+      "skill": "dialogue-authoring",
+      "design": "design/systems/dialogue.md"
+    },
+    {
+      "id": "prophecy",
+      "name": "看水面与预言簿",
+      "what": "在有水面的地点看见一幕将来，记进预言簿；决定说给谁听，选完自动存档、不可撤回",
+      "verbs": [
+        "看水面",
+        "说给谁听",
+        "拼出预言"
+      ],
+      "tier": "mvp",
+      "depends": [
+        "dialogue"
+      ],
+      "skill": "quest-design",
+      "design": "design/systems/prophecy.md"
+    },
+    {
+      "id": "companions",
+      "name": "同伴",
+      "what": "同伴加入 / 在队 / 离开 / 离世四种状态，只由关键选择和剧情改变；决定谁能出战；第 3 章起面板画成圆桌",
+      "verbs": [
+        "说给谁听"
+      ],
+      "tier": "mvp",
+      "depends": [
+        "prophecy",
+        "dialogue"
+      ],
+      "skill": "quest-design",
+      "design": "design/systems/companions.md"
+    },
+    {
+      "id": "quests",
+      "name": "任务",
+      "what": "主线每章一条、支线 2–4 条（每条围绕一位骑士的将来）；接、进度、完成；任务表驱动 NPC 和敌人出现",
+      "verbs": [
+        "找人说话"
+      ],
+      "tier": "mvp",
+      "depends": [
+        "dialogue",
+        "prophecy"
+      ],
+      "skill": "quest-design",
+      "design": "design/systems/quests.md"
+    },
+    {
+      "id": "overworld",
+      "name": "大地图与探索",
+      "what": "按章节线性开放的区域、碰撞、物件交互、看水面的地点；明雷敌人站在任务路上、不追人、打完不再出现；四处地图看得出玩家的选择（湖边、圆桌大厅、城下河边、卡姆兰营地）",
+      "verbs": [
+        "找人说话",
+        "看水面"
+      ],
+      "tier": "mvp",
+      "depends": [],
+      "skill": "world-map",
+      "design": "design/systems/overworld.md"
+    },
+    {
+      "id": "combat",
+      "name": "回合制战斗",
+      "what": "JRPG 式菜单回合制，不讲站位；敌人意图预告；学徒用法术（护身、打断等），同伴攻击、防御、各有一样自己的招；一场 3–5 回合；输了从这场开头重来",
+      "verbs": [
+        "打仗时看敌人下一步"
+      ],
+      "tier": "mvp",
+      "depends": [
+        "companions",
+        "story-unlocks"
+      ],
+      "skill": "combat-system",
+      "design": "design/systems/combat.md"
+    },
+    {
+      "id": "story-unlocks",
+      "name": "叙事进展",
+      "what": "不做经验和等级：剧情事件给新法术、法力上限、新同伴和他们的招；有几样看玩家之前的选择（静水、偏转、凯的「挡在前面」、加雷斯）；也会失去（剑鞘）",
+      "verbs": [
+        "拼出预言"
+      ],
+      "tier": "mvp",
+      "depends": [
+        "prophecy"
+      ],
+      "skill": "progression-system",
+      "design": "design/systems/story-unlocks.md"
+    },
+    {
+      "id": "ending",
+      "name": "结局回顾",
+      "what": "最后一战后按说给谁听的记录和同伴状态逐人念出下场",
+      "verbs": [
+        "说给谁听"
+      ],
+      "tier": "playable",
+      "depends": [
+        "prophecy",
+        "companions"
+      ],
+      "skill": "dialogue-authoring",
+      "design": "design/systems/prophecy.md"
+    },
+    {
+      "id": "save",
+      "name": "存档",
+      "what": "一个 JSON；说给谁听之后自动存档；兼容旧版",
+      "verbs": [],
+      "tier": "playable",
+      "depends": [
+        "quests",
+        "overworld",
+        "prophecy",
+        "companions",
+        "story-unlocks"
+      ],
+      "skill": "save-load",
+      "design": null
+    },
+    {
+      "id": "ui",
+      "name": "界面",
+      "what": "对话框、预言簿、同伴面板（圆桌）、战斗面板和意图显示、触屏方向键与确认键",
+      "verbs": [],
+      "tier": "playable",
+      "depends": [
+        "dialogue",
+        "combat",
+        "companions",
+        "prophecy"
+      ],
+      "skill": "ui-layout",
+      "design": "design/ui/SCREENS.md"
+    },
+    {
+      "id": "i18n",
+      "name": "文本表",
+      "what": "CSV 文本键、中文字体裁剪",
+      "verbs": [],
+      "tier": "playable",
+      "depends": [],
+      "skill": "localization-table",
+      "design": null
+    },
+    {
+      "id": "release",
+      "name": "网页版发布",
+      "what": "导出、GitHub Pages",
+      "verbs": [],
+      "tier": "playable",
+      "depends": [
+        "save"
+      ],
+      "skill": "web-release",
+      "design": null
+    },
+    {
+      "id": "items",
+      "name": "道具",
+      "what": "药草等少量消耗品；不在核心动作路径上，原型先不做",
+      "verbs": [],
+      "tier": "full",
+      "depends": [],
+      "skill": "progression-system",
+      "design": null
+    },
+    {
+      "id": "npc-life",
+      "name": "NPC 日常",
+      "what": "张望、闲逛、干活",
+      "verbs": [],
+      "tier": "full",
+      "depends": [
+        "overworld"
+      ],
+      "skill": "world-map",
+      "design": null
+    }
+  ],
+  "gdd": "design/GDD.md",
+  "screens": "design/ui/SCREENS.md",
+  "content_schedule": "design/CONTENT_SCHEDULE.md"
+}

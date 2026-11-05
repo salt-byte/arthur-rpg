@@ -1,0 +1,127 @@
+{
+  "_说明": "参数登记，来自 design/systems/story-unlocks.md 第 6 节；代码只读这里的数，改数先改设计页。 节点用剧情谱 outline.json 的数字编号。",
+  "starting_spells": [
+    "spark",
+    "ward",
+    "focus"
+  ],
+  "mana_max_after_staff": 8,
+  "show_unlock_popup": true,
+  "unlocks": [
+    {
+      "id": "u_interrupt",
+      "kind": "spell",
+      "what": "interrupt",
+      "at": "1103",
+      "requires": []
+    },
+    {
+      "id": "u_arthur_king",
+      "kind": "stat",
+      "what": "arthur_ch2",
+      "at": "1204",
+      "requires": []
+    },
+    {
+      "id": "u_excalibur",
+      "kind": "stat",
+      "what": "arthur_ch3",
+      "at": "1303",
+      "requires": []
+    },
+    {
+      "id": "u_scabbard",
+      "kind": "companion_move",
+      "what": "scabbard",
+      "at": "1303",
+      "requires": []
+    },
+    {
+      "id": "u_still_water",
+      "kind": "spell",
+      "what": "still_water",
+      "at": "1303",
+      "requires": [
+        "D2b"
+      ]
+    },
+    {
+      "id": "u_round_table",
+      "kind": "panel",
+      "what": "table",
+      "at": "1304",
+      "requires": []
+    },
+    {
+      "id": "u_gawain",
+      "kind": "companion",
+      "what": "gawain",
+      "at": "1304",
+      "requires": []
+    },
+    {
+      "id": "u_deflect",
+      "kind": "spell",
+      "what": "deflect",
+      "at": "1305",
+      "usable_from_chapter": 4,
+      "requires": [
+        "D2b",
+        "D3a"
+      ]
+    },
+    {
+      "id": "u_staff",
+      "kind": "stat",
+      "what": "mana_max_after_staff",
+      "at": "1401",
+      "requires": []
+    },
+    {
+      "id": "u_scabbard_lost",
+      "kind": "lose",
+      "what": "scabbard",
+      "at": "1402",
+      "requires": []
+    },
+    {
+      "id": "u_lancelot",
+      "kind": "companion",
+      "what": "lancelot",
+      "at": "1403",
+      "requires": []
+    },
+    {
+      "id": "u_kay_cover",
+      "kind": "companion_move",
+      "what": "kay_cover",
+      "at": "1401",
+      "requires": [
+        "D1c"
+      ]
+    },
+    {
+      "id": "u_reveal",
+      "kind": "spell",
+      "what": "reveal",
+      "at": "first_boss_ch4",
+      "requires": []
+    },
+    {
+      "id": "u_gareth",
+      "kind": "companion",
+      "what": "gareth",
+      "at": "2401",
+      "requires": [
+        "S2_done"
+      ]
+    },
+    {
+      "id": "u_bedivere",
+      "kind": "companion",
+      "what": "bedivere",
+      "at": "1502",
+      "requires": []
+    }
+  ]
+}

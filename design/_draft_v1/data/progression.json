@@ -1,0 +1,80 @@
+{
+  "_说明": "参数登记，来自 design/systems/progression.md 第 6 节；代码只读这里的数，改数先改设计页。",
+  "xp_curve_k": 50,
+  "xp_curve": "total_xp_to_reach(L) = k * L * (L - 1)",
+  "level_cap": 6,
+  "hp_base": 10,
+  "hp_per_level": 2,
+  "offer_count": 3,
+  "rewards": [
+    {
+      "id": "spell_ward",
+      "type": "spell",
+      "name": "护盾",
+      "mana": 2,
+      "range": 3,
+      "absorb": 4
+    },
+    {
+      "id": "spell_swap",
+      "type": "spell",
+      "name": "交换",
+      "mana": 3,
+      "range": 3
+    },
+    {
+      "id": "spell_delay",
+      "type": "spell",
+      "name": "迟滞",
+      "mana": 3,
+      "range": 4,
+      "delay_turns": 1
+    },
+    {
+      "id": "spell_deflect",
+      "type": "spell",
+      "name": "偏转",
+      "mana": 2,
+      "range": 3,
+      "shift_cells": 1
+    },
+    {
+      "id": "farsight",
+      "type": "foresight",
+      "name": "远见",
+      "sight_turn2_cost_delta": -1,
+      "min_cost": 0
+    },
+    {
+      "id": "insight",
+      "type": "foresight",
+      "name": "洞察",
+      "reveal_hidden_cost": 0
+    },
+    {
+      "id": "secret_site",
+      "type": "foresight",
+      "name": "秘地",
+      "unlocks": "optional_vision_site",
+      "excluded_chapters": [
+        6
+      ]
+    },
+    {
+      "id": "mana_up",
+      "type": "stat",
+      "name": "灵力上限 +2",
+      "mana_max_delta": 2
+    }
+  ],
+  "filler_reward": {
+    "id": "mana_up_small",
+    "type": "stat",
+    "name": "灵力上限 +1",
+    "mana_max_delta": 1
+  },
+  "quest_xp": {
+    "main_step": 40,
+    "side_quest": 60
+  }
+}

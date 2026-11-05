@@ -1,0 +1,20 @@
+{
+  "_说明": "系统清单。按核心循环需要什么列，不按传说里有什么列。tier：mvp = 白盒切片就要有（没有它核心循环闭不上）；playable = 确认点 C 之前要有；full = 之后。depends 写系统 id；skill 写负责的 skill 名；design 写设计页路径（game-design 产出）。",
+  "concept": "design/CONCEPT.md",
+  "systems": [
+    {"id": "dialogue", "name": "对话与剧情变量", "what": "Yarn 对白、选项、变量；NPC 按你告诉过他什么说不同的话", "verbs": ["走访", "告知 / 隐瞒"], "tier": "mvp", "depends": [], "skill": "dialogue-authoring", "design": "design/systems/dialogue.md"},
+    {"id": "prophecy", "name": "预言碎片", "what": "在预言之地或事件里得到碎片；对某人告知或隐瞒；记录谁知道了什么，告知后自动存档、不能撤回", "verbs": ["预视", "告知 / 隐瞒"], "tier": "mvp", "depends": ["dialogue"], "skill": "quest-design", "design": "design/systems/prophecy.md"},
+    {"id": "fellowship", "name": "圆桌座位与信任", "what": "每位骑士的状态（未加入 / 在桌 / 离开）和信任；决定谁能进队、谁说什么话", "verbs": ["告知 / 隐瞒", "走访"], "tier": "mvp", "depends": ["prophecy", "dialogue"], "skill": "quest-design", "design": "design/systems/fellowship.md"},
+    {"id": "quests", "name": "任务", "what": "接、进度、完成、复命；每条支线围绕一位骑士的预言碎片", "verbs": ["走访"], "tier": "mvp", "depends": ["dialogue", "prophecy"], "skill": "quest-design", "design": "design/systems/quests.md"},
+    {"id": "exploration", "name": "地图与探索", "what": "格子地图、分区、碰撞、物件交互、预言之地（石圈、圣泉）", "verbs": ["走访", "预视"], "tier": "mvp", "depends": [], "skill": "world-map", "design": "design/systems/exploration.md"},
+    {"id": "combat", "name": "预视战斗", "what": "小队回合制：敌人下一招以虚影显现；灵视决定看几步；每回合一个行动（挡、打断、换位、施法）；输了当场重来", "verbs": ["预视", "应对"], "tier": "mvp", "depends": ["fellowship"], "skill": "combat-system", "design": "design/systems/combat.md"},
+    {"id": "progression", "name": "成长", "what": "经验、等级、升级三选一：多看一回合 / 新咒语 / 新预言之地", "verbs": ["升级三选一"], "tier": "mvp", "depends": [], "skill": "progression-system", "design": "design/systems/progression.md"},
+    {"id": "ending", "name": "结局回顾", "what": "最后一战后按告知记录和座位状态逐人念出下场", "verbs": ["告知 / 隐瞒"], "tier": "playable", "depends": ["prophecy", "fellowship"], "skill": "dialogue-authoring", "design": "design/systems/prophecy.md"},
+    {"id": "save", "name": "存档", "what": "一个 JSON；告知 / 隐瞒后自动存档；兼容旧版", "verbs": [], "tier": "playable", "depends": ["quests", "exploration", "progression", "prophecy", "fellowship"], "skill": "save-load", "design": null},
+    {"id": "ui", "name": "界面", "what": "对话框、HUD、圆桌座位面板、预视虚影、战斗面板、触屏方向键与确认键", "verbs": [], "tier": "playable", "depends": ["dialogue", "combat", "fellowship"], "skill": "ui-layout", "design": "design/ART_DIRECTION.md"},
+    {"id": "i18n", "name": "文本表", "what": "CSV 文本键、中文字体裁剪", "verbs": [], "tier": "playable", "depends": [], "skill": "localization-table", "design": null},
+    {"id": "release", "name": "网页版发布", "what": "导出、GitHub Pages", "verbs": [], "tier": "playable", "depends": ["save"], "skill": "web-release", "design": null},
+    {"id": "items", "name": "信物与物品", "what": "护符、信物等；不在任何核心动词的路径上，先不做", "verbs": [], "tier": "full", "depends": ["progression"], "skill": "progression-system", "design": null},
+    {"id": "npc-life", "name": "NPC 日常", "what": "张望、闲逛、巡逻、干活", "verbs": [], "tier": "full", "depends": ["exploration"], "skill": "world-map", "design": null}
+  ]
+}

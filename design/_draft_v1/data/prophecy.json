@@ -1,0 +1,17 @@
+{
+  "_说明": "参数登记，来自 design/systems/prophecy.md 第 6 节；代码只读这里的数，改数先改设计页。",
+  "main_visions_per_chapter": 1,
+  "options_min": 2,
+  "options_max": 3,
+  "recall_window_chapters": 2,
+  "autosave_on_decision": true,
+  "save_before_decision_scene": true,
+  "expire_as": "silent",
+  "vision_text_max_sentences": 3,
+  "vision_sentence_max_chars": 30,
+  "option_types": [
+    "tell_subject",
+    "tell_other",
+    "silent"
+  ]
+}

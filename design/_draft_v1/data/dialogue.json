@@ -1,0 +1,16 @@
+{
+  "_说明": "参数登记，来自 design/systems/dialogue.md 第 6 节；代码只读这里的数，改数先改设计页。",
+  "text_speed_cps": 30,
+  "box_max_chars": 60,
+  "line_max_chars": 20,
+  "recall_window_chapters": "ref:prophecy.recall_window_chapters",
+  "key_choice_confirm": true,
+  "fast_forward_stops_at_choice": true,
+  "match_priority": [
+    "recall",
+    "known_fact",
+    "fellowship_state",
+    "quest_progress",
+    "chapter_default"
+  ]
+}

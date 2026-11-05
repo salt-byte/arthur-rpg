@@ -1,0 +1,23 @@
+{
+  "_说明": "参数登记，来自 design/systems/fellowship.md 第 6 节；代码只读这里的数，改数先改设计页。",
+  "states": [
+    "not_joined",
+    "seated",
+    "left",
+    "dead"
+  ],
+  "state_names": {
+    "not_joined": "未加入",
+    "seated": "在桌",
+    "left": "离开",
+    "dead": "离世"
+  },
+  "rejoin_max_per_person": 1,
+  "panel_rename_chapter": 3,
+  "panel_names": {
+    "before": "身边的人",
+    "after": "圆桌"
+  },
+  "change_popup_seconds": 2,
+  "roster_max": 8
+}

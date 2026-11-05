@@ -1,0 +1,347 @@
+<title>梅林的学徒（暂定）剧情谱</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;900&display=swap">
+<style>
+/* 布局：顶部横向故事轨道（按幕分段，支线挂在下方，结局在末端分叉）→ 下方是选中节点的详情；另有「走一遍」和「全部卡片」两个视图 */
+:root {
+  --bg: #f3f1f4; --panel: #ffffff; --ink: #1d1a22; --dim: #6b6474; --line: #d9d3de;
+  --accent: #8e2b3c; --accent-soft: #f4e3e6; --gold: #8a6a1f; --gold-soft: #f3ead2;
+  --side: #2f6b5a; --side-soft: #e1efe9; --new: #7a5aa6;
+  --display: "Noto Serif SC", "Songti SC", "STSong", serif;
+  --body: system-ui, -apple-system, "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #141118; --panel: #1d1922; --ink: #ece6dc; --dim: #9b93a3; --line: #342d3b;
+  --accent: #e0697d; --accent-soft: #3a1f27; --gold: #d8b46a; --gold-soft: #33291a;
+  --side: #7cc4a9; --side-soft: #1a2c27; --new: #b79be0; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #141118; --panel: #1d1922; --ink: #ece6dc; --dim: #9b93a3; --line: #342d3b;
+  --accent: #e0697d; --accent-soft: #3a1f27; --gold: #d8b46a; --gold-soft: #33291a;
+  --side: #7cc4a9; --side-soft: #1a2c27; --new: #b79be0; color-scheme: dark }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.65 }
+.wrap { max-width: 1160px; margin: 0 auto; padding-block: 28px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)) }
+h1 { font-family: var(--display); font-weight: 900; font-size: clamp(28px, 5vw, 42px); margin: 0; letter-spacing: .02em; text-wrap: balance }
+.eyebrow { font-size: 12px; letter-spacing: .14em; color: var(--accent); font-weight: 600 }
+.premise { max-width: 64ch; font-size: 16px; margin: 10px 0 0 }
+.stats { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 10px; color: var(--dim); font-size: 13px; font-variant-numeric: tabular-nums }
+.stats b { color: var(--ink) }
+button { font: inherit; color: inherit; cursor: pointer }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
+.tabs { display: flex; gap: 4px; margin-top: 22px; border-bottom: 1px solid var(--line) }
+.tabs button { background: none; border: 0; border-bottom: 3px solid transparent; padding: 8px 14px; font-weight: 600; color: var(--dim) }
+.tabs button[aria-selected="true"] { color: var(--ink); border-color: var(--accent) }
+.who { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 14px 0 0 }
+.who .lab { font-size: 12px; color: var(--dim) }
+.chip { font-size: 12px; padding: 2px 9px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel) }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink) }
+.tag { font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 3px; letter-spacing: .03em; white-space: nowrap }
+.tag.q { background: var(--accent-soft); color: var(--accent) }
+.tag.s { background: var(--side-soft); color: var(--side) }
+.tag.new { color: var(--new); border: 1px dashed var(--new) }
+.tag.cond { color: var(--gold); border: 1px solid var(--gold); background: var(--gold-soft) }
+.act-name { font-family: var(--display); font-size: 13px; color: var(--accent); white-space: nowrap }
+
+/* ---------- 故事线轨道 ---------- */
+.track-wrap { overflow-x: auto; margin-top: 16px; padding-bottom: 6px }
+.track { display: flex; align-items: flex-start; min-width: max-content; padding: 6px 4px 4px }
+.act { display: flex; flex-direction: column; gap: 6px; padding: 0 10px; border-left: 1px dashed var(--line) }
+.act:first-child { border-left: 0 }
+.stations { display: flex; position: relative }
+.stations::before { content: ""; position: absolute; left: 0; right: 0; top: 15px; height: 3px; background: var(--accent); opacity: .45 }
+.st { position: relative; width: 108px; display: flex; flex-direction: column; align-items: center; background: none; border: 0; padding: 0 4px; text-align: center }
+.st .dot { width: 32px; height: 32px; border-radius: 50%; background: var(--panel); border: 3px solid var(--accent); display: grid; place-items: center; font-size: 13px; font-weight: 700; color: var(--accent); position: relative; z-index: 1; font-variant-numeric: tabular-nums }
+.st.choice .dot { border-radius: 4px; transform: rotate(45deg) scale(.88) }
+.st.choice .dot span { transform: rotate(-45deg) }
+.st .name { font-size: 13px; font-weight: 600; margin-top: 6px; line-height: 1.3 }
+.st .sub { font-size: 11px; color: var(--dim) }
+.st[aria-current="true"] .dot { background: var(--accent); color: var(--bg) }
+.st.isnew .dot { border-style: dashed }
+.sides { display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 8px; position: relative }
+.sides::before { content: ""; position: absolute; top: -8px; height: 8px; width: 0; border-left: 2px dotted var(--side) }
+.sq { font-size: 11px; padding: 1px 7px; border-radius: 3px; background: var(--side-soft); color: var(--side); border: 1px solid transparent; white-space: nowrap }
+.sq.isnew { border: 1px dashed var(--side) }
+.sq[aria-current="true"] { border-color: var(--side); font-weight: 700 }
+.ends { display: flex; flex-direction: column; gap: 8px; padding: 26px 6px 0 14px; border-left: 1px dashed var(--line) }
+.end-n { font-size: 12px; padding: 4px 10px; border-radius: 4px; background: var(--gold-soft); color: var(--gold); border: 1px solid var(--gold); font-weight: 600; white-space: nowrap }
+.end-n[aria-current="true"] { background: var(--gold); color: var(--bg) }
+.dimmed { opacity: .25 }
+.hint { font-size: 12px; color: var(--dim); margin-top: 4px }
+
+/* ---------- 详情 ---------- */
+.detail { margin-top: 18px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; display: grid; grid-template-columns: minmax(0, 1fr) 240px; gap: 24px }
+@media (max-width: 760px) { .detail { grid-template-columns: minmax(0, 1fr) } }
+.detail h2 { font-family: var(--display); font-size: 24px; margin: 2px 0 4px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px }
+.where { color: var(--dim); font-size: 14px }
+.what { font-size: 16px; max-width: 60ch; margin: 10px 0 0 }
+.choice-box { margin-top: 14px; border-left: 3px solid var(--accent); padding: 8px 0 8px 14px; background: linear-gradient(90deg, var(--accent-soft), transparent 75%) }
+.choice-box.side { border-left-color: var(--side); background: linear-gradient(90deg, var(--side-soft), transparent 75%) }
+.ask { font-weight: 700 }
+.opts { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 3px }
+.opts li { display: flex; flex-wrap: wrap; gap: 6px }
+.pick { font-weight: 600 }
+.res { color: var(--dim) }
+.endtag { background: var(--gold-soft); color: var(--gold); font-weight: 600; padding: 0 7px; border-radius: 3px; font-size: 13px }
+.ctx h3 { font-size: 12px; letter-spacing: .1em; color: var(--dim); margin: 0 0 6px; font-weight: 600 }
+.ctx section + section { margin-top: 16px }
+.ctx ul { margin: 0; padding-left: 18px; font-size: 14px }
+.ctx button.link { background: none; border: 0; padding: 0; color: var(--side); text-decoration: underline; text-underline-offset: 3px }
+.nav { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap }
+.btn { border: 1px solid var(--line); background: var(--panel); border-radius: 6px; padding: 6px 14px; font-weight: 600 }
+.btn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent) }
+.btn:disabled { opacity: .4; cursor: default }
+
+/* ---------- 走一遍 ---------- */
+.play { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 24px; margin-top: 18px }
+@media (max-width: 760px) { .play { grid-template-columns: minmax(0, 1fr) } }
+.stage { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 22px; min-height: 320px }
+.stage h2 { font-family: var(--display); font-size: 26px; margin: 4px 0 2px }
+.stage .q { font-size: 17px; font-weight: 700; margin-top: 18px }
+.options { display: grid; gap: 8px; margin-top: 10px }
+.options button { text-align: left; border: 1px solid var(--line); background: var(--bg); border-radius: 6px; padding: 10px 14px; font-size: 15px }
+.options button:hover { border-color: var(--accent) }
+.options button:disabled { opacity: .55; cursor: not-allowed; border-style: dashed }
+.options button:disabled:hover { border-color: var(--line) }
+.options .why { display: block; font-size: 13px; color: var(--dim); margin-top: 2px }
+.offer { margin-top: 18px; padding: 10px 14px; border: 1px dashed var(--side); border-radius: 6px; background: var(--side-soft); font-size: 14px }
+.offer button { margin-top: 6px }
+.ending-card { text-align: center; padding: 30px 10px }
+.ending-card .big { font-family: var(--display); font-size: 30px; color: var(--gold) }
+.log h3 { font-size: 12px; letter-spacing: .1em; color: var(--dim); margin: 0 0 8px }
+.log ol { margin: 0; padding-left: 20px; font-size: 14px; display: grid; gap: 4px }
+.log li span { color: var(--dim) }
+.progress { height: 4px; background: var(--line); border-radius: 2px; margin-top: 16px; overflow: hidden }
+.progress i { display: block; height: 100%; background: var(--accent); transition: width .3s }
+
+/* ---------- 全部卡片 ---------- */
+.cards { margin-top: 18px; display: grid; gap: 10px }
+.cards .act-h { font-family: var(--display); font-size: 18px; margin: 14px 0 0 }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 12px 16px }
+.card.side { margin-left: 24px; border-left: 3px solid var(--side) }
+.card.isnew { border-style: dashed }
+.card h3 { margin: 0; font-size: 16px; display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline }
+.card .where { font-size: 13px }
+.card .what { font-size: 14px; margin-top: 4px }
+@media (prefers-reduced-motion: reduce) { .progress i { transition: none } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">剧情谱 · 写对白之前先把故事线看懂</div>
+    <h1 id="t"></h1>
+    <p class="premise" id="premise"></p>
+    <div class="stats" id="stats"></div>
+  </header>
+  <div class="tabs" role="tablist">
+    <button role="tab" id="tab-line" aria-selected="true">故事线</button>
+    <button role="tab" id="tab-play" aria-selected="false">走一遍</button>
+    <button role="tab" id="tab-cards" aria-selected="false">全部卡片</button>
+  </div>
+  <div class="who" id="who"><span class="lab">看某个角色在哪里出场：</span></div>
+
+  <section id="v-line">
+    <div class="track-wrap"><div class="track" id="track"></div></div>
+    <div class="hint">点任意一站看详情 · ← → 键前后移动 · 方块 = 这里玩家要做选择 · 绿色 = 在这一站解锁的支线 · 虚线 = 原作没有、我们补写的</div>
+    <div class="detail" id="detail"></div>
+  </section>
+  <section id="v-play" hidden>
+    <div class="play">
+      <div><div class="stage" id="stage"></div><div class="progress"><i id="bar"></i></div></div>
+      <div class="log"><h3>你这一路的选择</h3><ol id="log"></ol><div class="nav"><button class="btn" id="restart">从头再走</button></div></div>
+    </div>
+  </section>
+  <section id="v-cards" hidden><div class="cards" id="cards"></div></section>
+</div>
+
+<script id="outline" type="application/json">{"_说明": "剧情谱大纲，由 tools/build_outline.py 从 bible.json 生成。节点 id 是任务编号：主线第 N 章第 k 站 = 1N0k，支线 2xxx。选项 id 和 bible.json 的决定编号一致；requires_any 是若干组选项 id，任意一组全部选过就满足。", "title": "梅林的学徒（暂定）", "premise": "一个能在水面上看见将来的孩子，被梅林送进埃克托爵士家，和亚瑟、凯一起长大。梅林走后，只有你知道这个家和这个王国会怎样走到尽头，你要决定把看见的事说给谁听。 知道结局，却改不了大结局；能改的只是每个人怎样走到那一步。", "acts": [{"name": "第 1 章 · 庄园", "beats": [{"id": "1101", "title": "庄园的冬天", "where": "埃克托爵士的庄园 → 森林", "who": "凯、亚瑟、埃克托", "what": "你和凯、亚瑟一起长大；狼群进了林子，凯带你和亚瑟去赶狼。你第一次在战斗里看见敌人的下一步", "source": "补写"}, {"id": "1102", "title": "石圈的积水", "where": "石圈", "who": "梅林", "what": "你从小偶尔在水里看见模糊的人影；这天在平石的积水里，第一次看清一整幕：亚瑟拔出石中剑，凯对父亲说剑是他拔的", "source": "补写（画面内容出自第 1 卷）"}, {"id": "1103", "title": "梅林的秘密", "where": "庄园阁楼", "who": "梅林", "what": "梅林摘下灰兜帽，告诉你亚瑟是尤瑟王的儿子，讲了戈洛伊斯那一夜，要你在他走后看着亚瑟；大主教召集贵族去伦敦"}, {"id": "1104", "title": "出发前一晚", "where": "庄园马厩", "who": "凯、亚瑟", "what": "全家明天去伦敦，你知道到了那里会发生什么", "choices": [{"label": "亚瑟拔出石中剑，凯对父亲说剑是他拔的——说给谁听？（D1）", "options": [{"id": "D1a", "label": "提醒凯：到了伦敦，不管发生什么，别对父亲说谎", "result": "第 2 章凯拿着剑刚说出「是我拔的」，看见你站在旁边，自己改了口；埃克托不必逼他在教堂起誓。凯从此半信半疑地觉得你能看见以后的事：以后你再提醒他什么，他会听。"}, {"id": "D1b", "label": "告诉亚瑟：凯会说剑是他拔的", "result": "第 2 章凯冒认时，亚瑟一声不吭；在教堂里埃克托逼问凯时，亚瑟脱口说了一句「父亲，我知道他会这么说，别逼他」。凯听见了，知道亚瑟早就知道，觉得被弟弟可怜了，兄弟之间从此有了疙瘩。埃克托照样逼凯起誓认错（原文）。"}, {"id": "D1c", "label": "谁都不说", "result": "照原文：凯冒认，埃克托带两人回教堂，逼凯按着书起誓，凯当众认错。凯从此一心想证明自己：第 4 章起他在战斗里学会「挡在前面」（替同伴挨下一击）；可他也更看不得别人冒名顶替，第 4 章对新来的厨房帮工格外刻薄。"}]}]}]}, {"name": "第 2 章 · 石中剑", "beats": [{"id": "1201", "title": "石中剑", "where": "伦敦大教堂墓地", "who": "坎特伯雷大主教、贵族们", "what": "墓地里有一把插在石头上的剑，没有贵族拔得动"}, {"id": "1202", "title": "忘了剑", "where": "比武场 → 墓地", "who": "凯、亚瑟", "what": "新年比武，凯把剑忘在住处，亚瑟回去取，顺手拔出了石中剑"}, {"id": "1203", "title": "「是我拔的」", "where": "教堂", "who": "凯、埃克托、亚瑟", "what": "你第 1 章看见的那一幕发生了，结果看你在出发前一晚的选择"}, {"id": "1204", "title": "加冕与叛乱", "where": "伦敦 → 贝德格兰森林", "who": "亚瑟、梅林、十一王", "what": "亚瑟加冕、封凯为总管；十一位国王起兵，贝德格兰之战；梅林当众说出亚瑟的身世"}, {"id": "1205", "title": "庆功宴的酒杯", "where": "伦敦", "who": "亚瑟、梅林", "what": "你在酒杯里看见亚瑟和一位骑士决斗，剑断成两截", "choices": [{"label": "亚瑟和一位骑士决斗，剑断成两截——说给谁听？（D2）", "options": [{"id": "D2a", "label": "告诉亚瑟：他的剑会在一场决斗里断掉", "result": "亚瑟照样去和佩利诺决斗（剑断、得到湖中剑是原文大事），但他从此确信你的话靠得住，遇事会先来问你：第 3 章梅林警告王后的事之后，他私下来问你；第 6 章你提醒他蛇的事，他会照做（见 D5a）。"}, {"id": "D2b", "label": "告诉梅林", "result": "梅林说他早知道，又说你已经能看这么远了，开始正式教你。第 3 章剧情解锁一个新法术「静水」（战斗里能多看一回合）。"}, {"id": "D2c", "label": "谁都不说", "result": "照原文：亚瑟毫无预知地去决斗，剑断，险些被杀，梅林救下他。事后梅林单独问你为什么不说；亚瑟不知道你看见过，你在他眼里还只是梅林身边的孩子。"}]}]}]}, {"name": "第 3 章 · 湖中剑与圆桌", "beats": [{"id": "1301", "title": "梅林的话", "where": "亚瑟的营帐", "who": "梅林、亚瑟", "what": "梅林告诉亚瑟：他和摩高斯有了一个孩子，这孩子将来会毁掉他；你在场"}, {"id": "1302", "title": "断剑", "where": "林中泉边", "who": "佩利诺、亚瑟、梅林", "what": "亚瑟和佩利诺决斗，剑断，险些被杀；梅林让佩利诺睡着"}, {"id": "1303", "title": "湖中剑", "where": "湖", "who": "湖中仙女、梅林、亚瑟", "what": "湖中仙女给亚瑟王者之剑，说到时候要还；梅林说剑鞘比剑贵十倍"}, {"id": "1304", "title": "婚礼与圆桌", "where": "卡美洛", "who": "王后、亚瑟、梅林、高文", "what": "梅林警告王后将来会爱上兰斯洛特，亚瑟仍娶；圆桌和一百名骑士作为嫁妆来到卡美洛"}, {"id": "1305", "title": "梅林要出远门", "where": "卡美洛", "who": "梅林、妮妙", "what": "你在湖面上看见妮妙站在海边一块巨石旁，石缝里露出梅林那顶灰兜帽的一角；梅林说要跟她出一趟远门", "choices": [{"label": "妮妙站在海边一块巨石旁，石缝里露出梅林那顶灰兜帽的一角——说给谁听？（D3）", "options": [{"id": "D3a", "label": "告诉梅林你看见了什么", "result": "梅林说他很多年前就看见了，自己就在拦不住的那几个人里，还是要去。他把地方告诉你：康沃尔，海边一块巨石。如果他之前已经在正式教你（D2b），临走前还教了你最后一样东西「最后一课」。"}, {"id": "D3b", "label": "告诉亚瑟", "result": "亚瑟派高文去追。梅林隐去了行迹，高文跟丢了；几个月后，他在康沃尔听人说海边多了一块谁也推不动的石头，赶去时只看见石缝里夹着那顶灰兜帽。亚瑟第一次明白你看见的事拦不住，从此有些事他不想听你说。"}, {"id": "D3c", "label": "谁都不说", "result": "梅林走了，没有告别。你在阁楼里找到他的手杖和一张字条：「别来找我。」宫廷第二天才发现梅林不见了。第 4 章你去湖边时，看见那顶灰兜帽挂在芦苇上。"}]}]}]}, {"name": "第 4 章 · 梅林离开", "beats": [{"id": "1401", "title": "梅林不见了", "where": "卡美洛", "who": "亚瑟、高文", "what": "梅林被妮妙封在康沃尔的巨石下；你接替他，成了宫里唯一能看见将来的人", "source": "补写（接替一事）"}, {"id": "1402", "title": "剑鞘", "where": "卡美洛 → 湖", "who": "摩根", "what": "摩根偷走剑鞘，扔进湖里；亚瑟从此会流血"}, {"id": "1403", "title": "十几年后", "where": "卡美洛", "who": "兰斯洛特、加雷斯、凯", "what": "十几年过去，你、亚瑟、凯都已是大人；兰斯洛特早已来到卡美洛，成了最强的骑士；厨房里来了一个不肯说名字的年轻人"}, {"id": "1404", "title": "莫德雷德", "where": "卡美洛", "who": "莫德雷德、高文、阿格规文、亚瑟", "what": "莫德雷德长大成人，以高文弟弟的身份来到宫廷；亚瑟私下叫住他，话到嘴边，只说了一句「好好当差」", "source": "补写（时间点和这场戏）"}, {"id": "1405", "title": "圆桌宴席", "where": "圆桌大厅", "who": "兰斯洛特、王后", "what": "一次普通的宴席，王后隔着桌子看了兰斯洛特一眼；你在酒杯里看见门外站着阿格规文和莫德雷德", "choices": [{"label": "王后和兰斯洛特在一间屋子里，门外站着阿格规文和莫德雷德——说给谁听？（D4）", "options": [{"id": "D4a", "label": "告诉兰斯洛特：有一天门外会站着人", "result": "兰斯洛特从此身边总带着剑。第 5 章揭发照样发生（原文大事），但他早有防备，突围时没有杀阿格规文。兰斯洛特知道你看见过，不再当面看你的眼睛。"}, {"id": "D4b", "label": "告诉亚瑟", "result": "要看亚瑟之前怎么待你。如果他已经不想听你说（D3b），他抬手打断你，什么也没做，结果和「谁都不说」一样。否则他听完一言不发，当天就下令让阿格规文去北方边境驻守，直到召回为止。第 5 章揭发由莫德雷德带着别的骑士来做，阿格规文不在卡美洛，活了下来，揭发之后才被召回；亚瑟从此是知情的人。阿格规文在边境写信给莫德雷德，抱怨这道调令来得蹊跷，莫德雷德开始怀疑王早就知道。"}, {"id": "D4c", "label": "谁都不说", "result": "照原文：第 5 章阿格规文和莫德雷德带人当场揭发，兰斯洛特突围时杀了阿格规文。"}]}]}]}, {"name": "第 5 章 · 圣杯与裂痕", "beats": [{"id": "1501", "title": "圣杯", "where": "圆桌大厅", "who": "加拉哈德、骑士们", "what": "五旬节宴会上圣杯显现，骑士们发誓出发去找（过场）"}, {"id": "1502", "title": "留守的卡美洛", "where": "卡美洛", "who": "凯、贝狄威尔、王后", "what": "城里空了一半，你和凯、贝狄威尔留下守城、接待回来的伤者；传回加拉哈德找到圣杯、很多人没回来的消息", "source": "补写（留守）"}, {"id": "1503", "title": "揭发", "where": "王后的房间外", "who": "莫德雷德、阿格规文、兰斯洛特", "what": "揭发照样发生；阿格规文的生死看你第 4 章的选择"}, {"id": "1504", "title": "法场", "where": "卡美洛城外", "who": "兰斯洛特、加雷斯、加赫里斯、亚瑟", "what": "王后被判火刑；亚瑟命加雷斯和加赫里斯护送她去法场，两人不肯带武器；兰斯洛特劫法场救走王后，误杀加赫里斯，加雷斯的生死看「美手」支线；和亚瑟有疙瘩又没在法场救过人的凯，在这之后请辞回了庄园"}, {"id": "1505", "title": "高文的誓言", "where": "卡美洛礼拜堂", "who": "高文", "what": "高文当众发誓不杀兰斯洛特不罢休；你在圣水盆里看见那条蛇", "choices": [{"label": "高文当众发誓之后，你要不要私下开口？", "options": [{"id": "V0", "label": "什么也不说", "result": "誓言照原样发了。"}, {"id": "V1", "label": "私下提醒高文：你也失过一次信", "result": "誓言照样当众发了（规则 6，收不回），但高文私下对你承认，自己可能错怪了兰斯洛特。第 6 章围欢乐堡时，他没有拦着亚瑟接见兰斯洛特的使者；兰斯洛特去法国前，在对岸留了船，等这边的消息。高文死前的信里先认了错，请他立刻回来；船早就备好，兰斯洛特赶在载亚瑟的船离岸前到了湖边，和亚瑟说上了最后一句话。", "requires": "做过绿衣骑士支线，选了「劝他别说」（S1b）", "requires_any": [["S1b"]]}, {"id": "V2", "label": "请高文答应：上战场之前，先给兰斯洛特写一封信", "result": "誓言照原样发了。第 6 章登陆多佛之前，高文照约定先写了信寄出。兰斯洛特收到信要先召集船和人，赶到湖边时载亚瑟的船刚离岸，只远远看见了那条船。", "requires": "做过毒苹果支线，选了「告诉高文」（S3a）", "requires_any": [["S3a"]]}]}, {"label": "两军中间的空地上，几个没披甲的人面对面站着；一条蛇从草里钻出来咬了一名骑士的脚，他拔剑去砍，两边的人马跟着冲了起来——说给谁听？（D5）", "options": [{"id": "D5a", "label": "告诉亚瑟：谈判的时候会有一条蛇", "result": "第 6 章围欢乐堡时亚瑟和兰斯洛特谈过一次，什么也没发生，你以为自己看错了。到了卡姆兰，和莫德雷德谈判之前，亚瑟想起你的话。他信不信你，看第 2 章（D2a）：信，他当众下令自己这边谁也不许拔剑，还在开战前把你叫到身边道别；蛇照样出现，咬的却是莫德雷德那边的骑士，对面先拔了剑，大战照样开始（原文大事换了一条路）。不信，他只说「我记住了」，没有下令，蛇咬的是他这边的人，和原文一样。两种情况你都站在亚瑟身边。"}, {"id": "D5b", "label": "告诉凯（凯已经离开，或者不信你时，改成告诉贝狄威尔）", "result": "第 6 章到了卡姆兰，他带人到两军中间去找那条蛇。凯和贝狄威尔的下场见下场表。"}, {"id": "D5c", "label": "谁都不说", "result": "照原文：蛇咬了人，大战开始。你在后队，等你赶到亚瑟身边，莫德雷德的那一剑已经落下了。"}]}]}]}, {"name": "第 6 章 · 最后一战", "beats": [{"id": "1601", "title": "欢乐堡", "where": "兰斯洛特的欢乐堡", "who": "亚瑟、高文、兰斯洛特、王后", "what": "亚瑟围攻欢乐堡；教皇调停，王后被送回，兰斯洛特去了法国"}, {"id": "1602", "title": "渡海与监国", "where": "海边", "who": "亚瑟、高文、莫德雷德", "what": "亚瑟渡海追击，把国家交给莫德雷德看管；你提醒他，他说：「梅林说过的事拦不住。我宁可给他一次机会。」", "source": "补写（这场对话）"}, {"id": "1603", "title": "假死讯", "where": "伦敦", "who": "莫德雷德、王后", "what": "莫德雷德伪造亚瑟的死讯，自立为王，对王后说「他连一句话都不肯给我」；王后躲进伦敦塔"}, {"id": "1604", "title": "多佛", "where": "多佛海岸", "who": "高文", "what": "亚瑟回师，高文在登陆战中战死；信是登陆前寄的还是死前才写的、兰斯洛特那边有没有备好船，看绿衣骑士支线和你第 5 章有没有开口"}, {"id": "1605", "title": "卡姆兰", "where": "卡姆兰", "who": "亚瑟、莫德雷德、凯、贝狄威尔", "what": "谈判时一条蛇咬了一名骑士，他拔剑砍蛇，两军开战（咬的是哪边的人、你站在哪，看第 5 章的选择）；亚瑟刺死莫德雷德，自己受了致命伤，没有剑鞘，血止不住"}, {"id": "1606", "title": "湖边", "where": "湖边", "who": "贝狄威尔、摩根、几位女王、亚瑟", "what": "贝狄威尔第三次才把剑扔回湖里；一条船把亚瑟接往阿瓦隆，摩根也在船上；船走远以后，你做最后的选择", "choices": [{"label": "船走远以后，你去哪？（D6）", "options": [{"id": "E1", "label": "把木碗扔进湖里", "to": "E1"}, {"id": "E2", "label": "回卡美洛", "to": "E2", "requires": "凯或加雷斯还在你身边", "requires_any": [["S2a"], ["S2b"], ["S2c", "D1c"], ["S2c", "D1a", "D5a"], ["S2c", "D1a", "D5c"]]}, {"id": "E3", "label": "去康沃尔找那块巨石", "to": "E3", "requires": "你知道梅林在哪（第 3 章 D3a 或 D3b）", "requires_any": [["D3a"], ["D3b"]]}]}]}]}], "endings": [{"id": "E1", "title": "湖边", "what": "把木碗扔进湖里，不再看将来。之后逐个念出每个人的下场。"}, {"id": "E2", "title": "卡美洛", "what": "回到卡美洛，把看见的一切写下来。之后逐个念出每个人的下场。"}, {"id": "E3", "title": "康沃尔的巨石", "what": "去海边守着封住梅林的石头。之后逐个念出每个人的下场。"}], "side": [{"id": "2301", "title": "高文与绿衣骑士", "who": "高文、绿衣骑士", "where": "卡美洛 → 绿色礼拜堂", "unlock_at": "1304", "what": "圣诞宴会上，一个绿衣骑士提出：谁砍他一斧，一年后就要去绿色礼拜堂挨他一斧。高文砍下了他的头，绿衣骑士捡起头走了。一年后，高文在一座城堡里收下一条据说能保命的绿腰带，瞒着城堡主人；到了礼拜堂，斧头只在他脖子上划了一道浅口，因为他瞒了那条腰带。", "choices": [{"label": "高文在一座城堡的卧房里，把一条绿腰带塞进行李最底下，门外有人在叫他的名字——说给谁听？（S1）", "options": [{"id": "S1a", "label": "劝他说出来", "result": "高文当众认了自己因为怕死藏起腰带，从此把绿腰带系在身上（原文）。第 6 章登陆多佛前，他想起自己在礼拜堂前怕过死，先把给兰斯洛特的信写好寄出，不等到临死。（和 V2 一样是登陆前寄出；两个都有时还是同一封信。）"}, {"id": "S1b", "label": "劝他别说，这件事只有你们两个知道", "result": "高文把腰带藏进箱底，这件事成了你们之间的秘密。第 5 章高文发誓复仇时，你可以私下提起这件事（附加选项 V1）。"}]}], "skip_as": "S1_skip", "source": "14 世纪《高文爵士与绿衣骑士》"}, {"id": "2401", "title": "厨房里的「美手」", "who": "加雷斯、凯、兰斯洛特", "where": "卡美洛厨房", "unlock_at": "1403", "what": "一个高个子年轻人来到卡美洛，不说名字，只求在厨房干一年活。凯给他起外号「美手」，天天挖苦他。一年后他跟着一位少女出去冒险，一路打赢，兰斯洛特封他为骑士。原来他是高文的弟弟加雷斯。", "choices": [{"label": "加雷斯没穿盔甲站在人群里，兰斯洛特的剑朝他落下——说给谁听？（S2）", "options": [{"id": "S2a", "label": "告诉加雷斯：别在兰斯洛特面前不带剑", "result": "加雷斯笑了，但记住了。第 5 章亚瑟命他和加赫里斯护送王后去法场，两人说可以去，但不带武器（原文）。加雷斯想起你的话，违抗命令没有去，还劝加赫里斯也别去。加赫里斯说「王的命令，兄弟里总得有一个人去」，照样空手去了，死在那里。加雷斯活了下来；高文的复仇照样发生（高文在拦不住的人里）。"}, {"id": "S2b", "label": "告诉凯", "result": "凯不再嘲笑他。第 5 章法场上，凯穿着盔甲站到加雷斯旁边，混乱里把他拖了出来，自己挨了一刀。加雷斯活下来后去找高文作证：兰斯洛特根本没认出他们。高文的誓言已经当众发了（规则 6），不肯听，两兄弟当着宫里的人吵了一场。"}, {"id": "S2c", "label": "谁都不说", "result": "照原文：第 5 章加雷斯和加赫里斯不带武器护送王后去法场，被兰斯洛特误杀。"}]}], "skip_as": "S2c", "source": "第 7 卷"}, {"id": "2501", "title": "毒苹果", "who": "高文、王后、皮内尔", "where": "卡美洛宴会厅", "unlock_at": "1502", "what": "王后设宴，席上一位骑士吃了一只苹果倒地死去。苹果是另一位骑士下了毒、想害高文的，却让王后背上了下毒的罪名，只有兰斯洛特肯为她决斗。", "choices": [{"label": "一个人在厨房里往一盘苹果最上面那只里抹了什么，盘子是端给高文的——说给谁听？（S3）", "options": [{"id": "S3a", "label": "告诉高文", "result": "高文让人当场查那盘苹果，下毒的皮内尔被抓住，没有人死，王后也没被冤枉。高文欠你一条命：第 5 章他发誓复仇时，你可以开口请他答应一件事（附加选项 V2）。"}, {"id": "S3b", "label": "告诉王后", "result": "王后没有声张，让人撤下那盘苹果，暗中查出是皮内尔下的毒，第二天找了个由头把他打发出宫。她不声张，是怕宴席上出了事会被说成是她下的毒。她从此把你当成自己人；第 6 章她躲进伦敦塔前，派人请你跟她走。"}, {"id": "S3c", "label": "谁都不说", "result": "照原文：一位骑士吃了苹果死去，王后被控下毒，兰斯洛特为她决斗洗清罪名。宫里开始有人议论，兰斯洛特为什么总肯为王后拼命。"}]}], "skip_as": "S3c", "source": "第 18 卷"}, {"id": "2502", "title": "阿斯托拉特的伊莲恩", "who": "伊莲恩、兰斯洛特", "where": "阿斯托拉特", "unlock_at": "1502", "what": "兰斯洛特为了不被认出，比武时戴了阿斯托拉特城主女儿伊莲恩的红袖子。他受了伤，伊莲恩照顾他、爱上了他；他告诉她心里另有人。伊莲恩死后，人们照她的遗愿把她放在船上，顺水漂到了卡美洛。", "choices": [{"label": "一条小船顺着河漂到卡美洛城下，船上躺着一个穿白衣的少女，手里握着一封信——说给谁听？（S4）", "options": [{"id": "S4a", "label": "告诉伊莲恩：他心里的人不是你", "result": "伊莲恩哭了一夜，第二天说想回家。她活了下来，但从此不肯再见兰斯洛特，还把红袖子的事告诉了别人，宫里关于兰斯洛特心里那个人的议论更多了。"}, {"id": "S4b", "label": "告诉兰斯洛特", "result": "兰斯洛特在伤好之前就把话说清楚了，留下自己的盾牌给她父亲作谢礼。伊莲恩还是走了：她没有死，进了修道院。兰斯洛特从此很少再戴别人的信物。"}, {"id": "S4c", "label": "谁都不说", "result": "照原文：伊莲恩死去，载着她的小船漂到卡美洛城下，信里写着她为谁而死。"}]}], "skip_as": "S4c", "source": "第 18 卷"}], "characters": [{"name": "你（梅林的学徒）"}, {"name": "梅林"}, {"name": "亚瑟"}, {"name": "凯"}, {"name": "桂妮维亚"}, {"name": "兰斯洛特"}, {"name": "高文"}, {"name": "莫德雷德"}, {"name": "摩根"}, {"name": "埃克托爵士"}, {"name": "妮妙"}, {"name": "加雷斯"}, {"name": "阿格规文"}, {"name": "加拉哈德"}, {"name": "贝狄威尔"}, {"name": "加赫里斯"}, {"name": "伊莲恩"}, {"name": "皮内尔"}, {"name": "绿衣骑士"}, {"name": "佩利诺"}], "locations": [{"name": "埃克托爵士的庄园"}, {"name": "石圈"}, {"name": "伦敦大教堂墓地"}, {"name": "贝德格兰森林"}, {"name": "湖"}, {"name": "卡美洛"}, {"name": "康沃尔的巨石"}, {"name": "科尔贝尼克城堡"}, {"name": "欢乐堡"}, {"name": "卡姆兰（索尔兹伯里平原）"}, {"name": "阿斯托拉特"}, {"name": "绿色礼拜堂"}, {"name": "多佛海岸"}, {"name": "伦敦塔"}]}</script>
+<script>
+const O = JSON.parse(document.getElementById('outline').textContent);
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const isNew = x => x.source && x.source !== '原作';
+const ends = Object.fromEntries((O.endings || []).map(e => [e.id, e]));
+const SIDE = O.side || [];
+// 主线按幕顺序排成一条；每个节点记住属于哪一幕
+const LINE = [];
+O.acts.forEach(a => a.beats.forEach(b => LINE.push({...b, act: a.name})));
+const byId = Object.fromEntries(LINE.map((b, i) => [b.id, i]));
+const sideAt = {};
+SIDE.forEach(s => (sideAt[s.unlock_at] ||= []).push(s));
+const tagOf = (x, side) => `<span class="tag ${side ? 's' : 'q'}">${/^\d+$/.test(x.id) ? (side ? '支线 ' : '任务 ') + x.id : (side ? '支线' : '过场')}</span>${isNew(x) ? '<span class="tag new">补写</span>' : ''}`;
+const condTag = o => o.requires ? `<span class="tag cond">需要：${esc(o.requires)}</span>` : '';
+function optTail(o) {
+  if (o.to && ends[o.to]) return condTag(o) + `<span class="endtag">→ 结局：${esc(ends[o.to].title)}</span>`;
+  if (o.to && ends[o.to]) return `<span class="endtag">→ 结局：${esc(ends[o.to].title)}</span>`;
+  if (o.to && byId[o.to] !== undefined) return condTag(o) + `<span class="res">→ 跳到「${esc(LINE[byId[o.to]].title)}」</span>`;
+  return condTag(o) + (o.result ? `<span class="res">→ ${esc(o.result)}</span>` : '');
+}
+const choiceHtml = (list, side) => (list || []).map(c => `<div class="choice-box${side ? ' side' : ''}"><div class="ask">◇ ${esc(c.label)}</div><ul class="opts">${c.options.map(o => `<li><span class="pick">${esc(o.label)}</span>${optTail(o)}</li>`).join('')}</ul></div>`).join('');
+
+// ---------- 头部 ----------
+$('t').textContent = O.title;
+$('premise').textContent = O.premise || '';
+const nChoices = LINE.reduce((n, b) => n + (b.choices || []).length, 0) + SIDE.reduce((n, s) => n + (s.choices || []).length, 0);
+$('stats').innerHTML = [[O.acts.length, '幕'], [LINE.length, '个主线节点'], [nChoices, '处选择'], [(O.endings || []).length, '个结局'], [SIDE.length, '条支线'], [LINE.filter(isNew).length + SIDE.filter(isNew).length, '处补写']].map(([n, l]) => `<span><b>${n}</b> ${l}</span>`).join('');
+
+// ---------- 故事线 ----------
+let sel = {kind: 'beat', i: 0};
+function drawTrack() {
+  let h = '', n = 0;
+  O.acts.forEach(a => {
+    h += `<div class="act"><div class="act-name">${esc(a.name)}</div><div class="stations">`;
+    a.beats.forEach(b => {
+      const i = byId[b.id]; n++;
+      const sides = sideAt[b.id] || [];
+      h += `<div><button class="st${(b.choices || []).length ? ' choice' : ''}${isNew(b) ? ' isnew' : ''}" data-i="${i}" aria-current="${sel.kind === 'beat' && sel.i === i}"><span class="dot"><span>${n}</span></span><span class="name">${esc(b.title)}</span><span class="sub">${esc(b.who || '')}</span></button>`;
+      if (sides.length) h += `<div class="sides">${sides.map(s => `<button class="sq${isNew(s) ? ' isnew' : ''}" data-side="${esc(s.id)}" aria-current="${sel.kind === 'side' && sel.id === s.id}">${esc(s.title)}</button>`).join('')}</div>`;
+      h += '</div>';
+    });
+    h += '</div></div>';
+  });
+  if ((O.endings || []).length) h += `<div class="ends">${O.endings.map(e => `<button class="end-n" data-end="${esc(e.id)}" aria-current="${sel.kind === 'end' && sel.id === e.id}">结局 · ${esc(e.title)}</button>`).join('')}</div>`;
+  $('track').innerHTML = h;
+  applyWho();
+}
+function drawDetail() {
+  let main = '', ctx = '';
+  if (sel.kind === 'beat') {
+    const b = LINE[sel.i];
+    main = `<div class="act-name">${esc(b.act)} · 第 ${sel.i + 1} / ${LINE.length} 站</div><h2>${esc(b.title)} ${tagOf(b)}</h2><div class="where">${esc(b.where || '')}${b.who ? ' · ' + esc(b.who) : ''}</div><p class="what">${esc(b.what || '')}</p>${choiceHtml(b.choices)}`;
+    if (!(b.choices || []).length) main += '<p class="res" style="margin-top:12px">这一站玩家没有选择，剧情直接往下走。</p>';
+    main += `<div class="nav"><button class="btn" id="prev" ${sel.i === 0 ? 'disabled' : ''}>← 上一站</button><button class="btn primary" id="next" ${sel.i === LINE.length - 1 ? 'disabled' : ''}>下一站 →</button></div>`;
+    const before = sel.i > 0 ? LINE[sel.i - 1] : null, after = LINE[sel.i + 1];
+    const sides = sideAt[b.id] || [];
+    ctx = `<section><h3>前后</h3><ul>${before ? `<li>之前：${esc(before.title)}</li>` : '<li>故事从这里开始</li>'}${after ? `<li>之后：${esc(after.title)}</li>` : '<li>之后：进入结局</li>'}</ul></section>`;
+    ctx += `<section><h3>在这一站解锁的支线</h3>${sides.length ? `<ul>${sides.map(s => `<li><button class="link" data-side="${esc(s.id)}">${esc(s.title)}</button></li>`).join('')}</ul>` : '<p class="res" style="margin:0;font-size:14px">没有</p>'}</section>`;
+  } else if (sel.kind === 'side') {
+    const s = SIDE.find(x => x.id === sel.id);
+    const at = byId[s.unlock_at];
+    main = `<div class="act-name">支线</div><h2>${esc(s.title)} ${tagOf(s, true)}</h2><div class="where">${esc(s.where || '')}${s.who ? ' · ' + esc(s.who) : ''}</div><p class="what">${esc(s.what || '')}</p>${choiceHtml(s.choices, true)}`;
+    main += `<div class="nav">${at !== undefined ? `<button class="btn" data-goto="${at}">← 回到主线「${esc(LINE[at].title)}」</button>` : ''}</div>`;
+    ctx = `<section><h3>什么时候能做</h3><ul><li>${at !== undefined ? `主线走到「${esc(LINE[at].title)}」之后` : '随时'}</li></ul></section>`;
+  } else {
+    const e = ends[sel.id];
+    const from = LINE.flatMap(b => (b.choices || []).flatMap(c => c.options.filter(o => o.to === e.id).map(o => ({b, c, o}))));
+    main = `<div class="act-name">结局</div><h2 style="color:var(--gold)">${esc(e.title)}</h2><p class="what">${esc(e.what || '')}</p>`;
+    ctx = `<section><h3>怎么走到这里</h3><ul>${from.map(f => `<li>在「${esc(f.b.title)}」面对「${esc(f.c.label)}」时，选「${esc(f.o.label)}」</li>`).join('') || '<li>主线走完</li>'}</ul></section>`;
+  }
+  $('detail').innerHTML = `<div style="min-width:0">${main}</div><aside class="ctx">${ctx}</aside>`;
+}
+function select(s) { sel = s; drawTrack(); drawDetail(); }
+$('v-line').addEventListener('click', e => {
+  const st = e.target.closest('[data-i]'), sq = e.target.closest('[data-side]'), en = e.target.closest('[data-end]'), go = e.target.closest('[data-goto]');
+  if (e.target.closest('#prev')) return select({kind: 'beat', i: Math.max(0, sel.i - 1)});
+  if (e.target.closest('#next')) return select({kind: 'beat', i: Math.min(LINE.length - 1, sel.i + 1)});
+  if (go) return select({kind: 'beat', i: +go.dataset.goto});
+  if (st) return select({kind: 'beat', i: +st.dataset.i});
+  if (sq) return select({kind: 'side', id: sq.dataset.side});
+  if (en) return select({kind: 'end', id: en.dataset.end});
+});
+document.addEventListener('keydown', e => {
+  if ($('v-line').hidden) return;
+  if (e.key === 'ArrowRight' && sel.kind === 'beat' && sel.i < LINE.length - 1) select({kind: 'beat', i: sel.i + 1});
+  if (e.key === 'ArrowLeft' && sel.kind === 'beat' && sel.i > 0) select({kind: 'beat', i: sel.i - 1});
+});
+
+// ---------- 角色高亮 ----------
+const CH = (O.characters || []).map(c => c.name);
+let who = null;
+$('who').insertAdjacentHTML('beforeend', CH.map((c, i) => `<button class="chip" data-c="${i}" aria-pressed="false">${esc(c)}</button>`).join(''));
+const namesOf = c => c.replace(/✎/g, '').split(/[\/、（(]/).map(s => s.replace(/[）)]/g, '').trim()).filter(Boolean);
+// 单字名（比如主角「你」）每处都在：全部算出场；其余按「谁」和「发生什么」匹配
+function hits(x) {
+  if (who === null || !x) return true;
+  const text = (x.who || '') + (x.what || '');
+  return namesOf(CH[who]).some(n => n.length < 2 || text.includes(n));
+}
+function applyWho() {
+  document.querySelectorAll('#track [data-i]').forEach(el => el.classList.toggle('dimmed', !hits(LINE[+el.dataset.i])));
+  document.querySelectorAll('#track [data-side]').forEach(el => el.classList.toggle('dimmed', !hits(SIDE.find(s => s.id === el.dataset.side))));
+  document.querySelectorAll('#cards [data-k]').forEach(el => el.classList.toggle('dimmed', !hits(JSON.parse(el.dataset.k))));
+}
+$('who').addEventListener('click', e => {
+  const b = e.target.closest('[data-c]'); if (!b) return;
+  who = who === +b.dataset.c ? null : +b.dataset.c;
+  document.querySelectorAll('#who [data-c]').forEach(x => x.setAttribute('aria-pressed', String(+x.dataset.c === who)));
+  applyWho();
+});
+
+// ---------- 走一遍 ----------
+let P;
+function startPlay() { P = {i: 0, c: 0, log: [], end: null, side: null, sc: 0, picked: []}; drawPlay(); }
+// 选项条件：requires_any 是若干组选项 id，任意一组全部选过就满足；走过解锁站却没做的支线，按它的 skip_as 算
+function effPicked() {
+  const s = new Set(P.picked);
+  SIDE.forEach(sd => { const at = byId[sd.unlock_at]; if (sd.skip_as && at !== undefined && at < P.i && !P.log.some(l => l.side === sd.id)) s.add(sd.skip_as); });
+  return s;
+}
+const avail = o => !o.requires_any || o.requires_any.some(g => g.every(id => effPicked().has(id)));
+const optBtn = (o, k, attr) => avail(o) ? `<button ${attr}="${k}">${esc(o.label)}</button>` : `<button disabled>${esc(o.label)}<span class="why">这一路没满足：${esc(o.requires || '条件')}</span></button>`;
+function drawPlay() {
+  $('log').innerHTML = P.log.map(l => `<li>${esc(l.pick)} <span>· ${esc(l.at)}</span></li>`).join('') || '<li style="list-style:none;margin-left:-20px;color:var(--dim)">还没有做选择</li>';
+  $('bar').style.width = (P.end ? 100 : Math.round(P.i / LINE.length * 100)) + '%';
+  const st = $('stage');
+  if (P.end) {
+    const e = ends[P.end];
+    st.innerHTML = `<div class="ending-card"><div class="act-name">结局</div><div class="big">${esc(e.title)}</div><p class="what" style="margin:12px auto">${esc(e.what || '')}</p><p class="res">你做了 ${P.log.length} 个选择走到这里。换几个选项再走一遍，看看会不会到另一个结局。</p></div>`;
+    return;
+  }
+  if (P.side) {
+    const s = P.side, c = (s.choices || [])[P.sc];
+    st.innerHTML = `<div class="act-name">支线 · 暂时离开主线</div><h2>${esc(s.title)}</h2><div class="where">${esc(s.where || '')}${s.who ? ' · ' + esc(s.who) : ''}</div><p class="what">${esc(s.what || '')}</p>` +
+      (c ? `<div class="q">${esc(c.label)}</div><div class="options">${c.options.map((o, k) => optBtn(o, k, 'data-sopt')).join('')}</div>` : '<div class="nav"><button class="btn primary" id="back">回到主线</button></div>');
+    return;
+  }
+  const b = LINE[P.i], c = (b.choices || [])[P.c];
+  let h = `<div class="act-name">${esc(b.act)} · 第 ${P.i + 1} / ${LINE.length} 站</div><h2>${esc(b.title)}</h2><div class="where">${esc(b.where || '')}${b.who ? ' · ' + esc(b.who) : ''}</div><p class="what">${esc(b.what || '')}</p>`;
+  if (c) h += `<div class="q">${esc(c.label)}</div><div class="options">${c.options.map((o, k) => optBtn(o, k, 'data-opt')).join('')}</div>`;
+  else {
+    const offers = (sideAt[b.id] || []).filter(s => !P.log.some(l => l.side === s.id));
+    h += offers.map(s => `<div class="offer">这时你还可以去做支线 <b>${esc(s.title)}</b>${s.who ? '（' + esc(s.who) + '）' : ''}<br><button class="btn" data-doside="${esc(s.id)}">去做这条支线</button></div>`).join('');
+    h += `<div class="nav"><button class="btn primary" id="cont">${P.i < LINE.length - 1 ? '继续往下 →' : '走向结局 →'}</button></div>`;
+  }
+  st.innerHTML = h;
+}
+$('stage').addEventListener('click', e => {
+  const opt = e.target.closest('[data-opt]'), sopt = e.target.closest('[data-sopt]'), ds = e.target.closest('[data-doside]');
+  if (opt) {
+    const b = LINE[P.i], o = b.choices[P.c].options[+opt.dataset.opt];
+    P.log.push({at: b.title, pick: o.label + (o.result ? '（' + o.result + '）' : '')});
+    if (o.id) P.picked.push(o.id);
+    if (o.to && ends[o.to]) P.end = o.to;
+    else if (o.to && byId[o.to] !== undefined) { P.i = byId[o.to]; P.c = 0; }
+    else P.c++;
+  } else if (sopt) {
+    const o = P.side.choices[P.sc].options[+sopt.dataset.sopt];
+    P.log.push({at: '支线 · ' + P.side.title, pick: o.label + (o.result ? '（' + o.result + '）' : ''), side: P.side.id});
+    if (o.id) P.picked.push(o.id);
+    P.sc++;
+  } else if (ds) {
+    P.side = SIDE.find(s => s.id === ds.dataset.doside); P.sc = 0;
+    if (!(P.side.choices || []).length) P.log.push({at: '支线', pick: '做了「' + P.side.title + '」', side: P.side.id});
+  } else if (e.target.closest('#back')) P.side = null;
+  else if (e.target.closest('#cont')) {
+    if (P.i < LINE.length - 1) { P.i++; P.c = 0; }
+    else P.end = (O.endings || [])[0]?.id || null;
+  } else return;
+  drawPlay();
+});
+$('restart').onclick = startPlay;
+
+// ---------- 全部卡片 ----------
+const cardHtml = (x, side) => `<article class="card${side ? ' side' : ''}${isNew(x) ? ' isnew' : ''}" data-k="${esc(JSON.stringify({who: x.who, what: x.what}))}"><h3>${esc(x.title)} ${tagOf(x, side)}</h3><div class="where">${esc(x.where || '')}${x.who ? ' · ' + esc(x.who) : ''}</div><p class="what">${esc(x.what || '')}</p>${choiceHtml(x.choices, side)}</article>`;
+let ch = '';
+O.acts.forEach(a => { ch += `<div class="act-h">${esc(a.name)}</div>`; a.beats.forEach(b => { ch += cardHtml(b); (sideAt[b.id] || []).forEach(s => ch += cardHtml(s, true)); }); });
+SIDE.filter(s => byId[s.unlock_at] === undefined).forEach(s => ch += cardHtml(s, true));
+if ((O.endings || []).length) ch += '<div class="act-h">结局</div>' + O.endings.map(e => `<article class="card" style="border-color:var(--gold)"><h3 style="color:var(--gold)">${esc(e.title)}</h3><p class="what">${esc(e.what || '')}</p></article>`).join('');
+$('cards').innerHTML = ch;
+
+// ---------- 视图切换 ----------
+const views = {line: 'v-line', play: 'v-play', cards: 'v-cards'};
+function show(v) {
+  Object.entries(views).forEach(([k, id]) => { $(id).hidden = k !== v; $('tab-' + k).setAttribute('aria-selected', String(k === v)); });
+  if (v === 'play' && !P) startPlay();
+}
+Object.keys(views).forEach(k => $('tab-' + k).onclick = () => show(k));
+select({kind: 'beat', i: 0});
+</script>

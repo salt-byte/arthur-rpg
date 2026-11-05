@@ -1,0 +1,80 @@
+{
+  "_说明": "参数登记，来自 design/systems/overworld.md 第 6 节；代码只读这里的数，改数先改设计页。 areas 第 9 步做地图时补全。",
+  "tile_px": 32,
+  "move_speed_tiles": 4,
+  "enemies_chase": false,
+  "enemy_respawn": false,
+  "areas": [
+    {
+      "id": "manor",
+      "chapter": 1,
+      "name": "埃克托爵士的庄园"
+    },
+    {
+      "id": "forest",
+      "chapter": 1,
+      "name": "森林"
+    },
+    {
+      "id": "stone_circle",
+      "chapter": 1,
+      "name": "石圈"
+    }
+  ],
+  "water_spots": [
+    {
+      "area": "stone_circle",
+      "glows_at": "1102"
+    }
+  ],
+  "world_states": [
+    {
+      "id": "W1",
+      "area": "lake",
+      "chapter": 4,
+      "reads": [
+        "D3"
+      ],
+      "variants": {
+        "D3c": "灰兜帽挂在芦苇上",
+        "D3a": "无",
+        "D3b": "无"
+      }
+    },
+    {
+      "id": "W2",
+      "area": "round_table_hall",
+      "chapter": 5,
+      "reads": [
+        "companions_state"
+      ],
+      "variants": {
+        "rule": "离世盖布，离开空着并留下物件"
+      }
+    },
+    {
+      "id": "W3",
+      "area": "camelot_riverside",
+      "chapter": 5,
+      "reads": [
+        "S4"
+      ],
+      "variants": {
+        "S4c": "白衣少女的小船",
+        "S4a": "无",
+        "S4b": "无"
+      }
+    },
+    {
+      "id": "W4",
+      "area": "camlann_camp",
+      "chapter": 6,
+      "reads": [
+        "companions_state"
+      ],
+      "variants": {
+        "rule": "篝火边站着还在队的凯、加雷斯、贝狄威尔；凯离开时他的石头空着"
+      }
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "_说明": "参数登记，来自 design/systems/quests.md 第 6 节；代码只读这里的数，改数先改设计页。 步骤第 10 步填全。",
+  "main_marker": true,
+  "side_marker": false,
+  "warn_before_close": true,
+  "autosave_on_step": true,
+  "quests": [
+    {
+      "id": "main1",
+      "kind": "main",
+      "chapter": 1,
+      "name": "庄园的冬天",
+      "steps": [
+        "1101",
+        "1102",
+        "1103",
+        "1104"
+      ],
+      "battles": [
+        "wolves",
+        "merlin_shadow"
+      ]
+    },
+    {
+      "id": "main2",
+      "kind": "main",
+      "chapter": 2,
+      "name": "石中剑",
+      "steps": [
+        "1201",
+        "1202",
+        "1203",
+        "1204",
+        "1205"
+      ],
+      "battles": [
+        "bedegraine"
+      ]
+    },
+    {
+      "id": "main3",
+      "kind": "main",
+      "chapter": 3,
+      "name": "湖中剑与圆桌",
+      "steps": [
+        "1301",
+        "1302",
+        "1303",
+        "1304",
+        "1305"
+      ],
+      "battles": [
+        "pellinore"
+      ]
+    },
+    {
+      "id": "main4",
+      "kind": "main",
+      "chapter": 4,
+      "name": "梅林离开",
+      "steps": [
+        "1401",
+        "1402",
+        "1403",
+        "1404",
+        "1405"
+      ],
+      "battles": [
+        "morgan_chase"
+      ]
+    },
+    {
+      "id": "main5",
+      "kind": "main",
+      "chapter": 5,
+      "name": "圣杯与裂痕",
+      "steps": [
+        "1501",
+        "1502",
+        "1503",
+        "1504",
+        "1505"
+      ],
+      "battles": [
+        "camelot_defense"
+      ]
+    },
+    {
+      "id": "main6",
+      "kind": "main",
+      "chapter": 6,
+      "name": "最后一战",
+      "steps": [
+        "1601",
+        "1602",
+        "1603",
+        "1604",
+        "1605",
+        "1606"
+      ],
+      "battles": [
+        "joyous_gard",
+        "dover",
+        "camlann"
+      ]
+    },
+    {
+      "id": "S1",
+      "kind": "side",
+      "chapter": 3,
+      "name": "高文与绿衣骑士",
+      "opens_at": "1304",
+      "closes_before": "1305",
+      "skip_as": "S1_skip",
+      "battles": [
+        "wild_men"
+      ]
+    },
+    {
+      "id": "S2",
+      "kind": "side",
+      "chapter": 4,
+      "name": "厨房里的「美手」",
+      "opens_at": "1403",
+      "closes_before": "1405",
+      "skip_as": "S2c",
+      "battles": [
+        "red_knight"
+      ]
+    },
+    {
+      "id": "S3",
+      "kind": "side",
+      "chapter": 5,
+      "name": "毒苹果",
+      "opens_at": "1502",
+      "closes_before": "1503",
+      "skip_as": "S3c",
+      "battles": []
+    },
+    {
+      "id": "S4",
+      "kind": "side",
+      "chapter": 5,
+      "name": "阿斯托拉特的伊莲恩",
+      "opens_at": "1502",
+      "closes_before": "1503",
+      "skip_as": "S4c",
+      "battles": [
+        "tournament"
+      ]
+    }
+  ]
+}

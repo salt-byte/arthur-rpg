@@ -1,0 +1,92 @@
+--- orig/story_page.template.html	2026-11-05 16:56:45.827883039 +0800
++++ b/skills/story-map/scripts/story_page.template.html	2026-11-05 16:56:45.847824604 +0800
+@@ -39,6 +39,7 @@
+ .tag.q { background: var(--accent-soft); color: var(--accent) }
+ .tag.s { background: var(--side-soft); color: var(--side) }
+ .tag.new { color: var(--new); border: 1px dashed var(--new) }
++.tag.cond { color: var(--gold); border: 1px solid var(--gold); background: var(--gold-soft) }
+ .act-name { font-family: var(--display); font-size: 13px; color: var(--accent); white-space: nowrap }
+ 
+ /* ---------- 故事线轨道 ---------- */
+@@ -99,6 +100,9 @@
+ .options { display: grid; gap: 8px; margin-top: 10px }
+ .options button { text-align: left; border: 1px solid var(--line); background: var(--bg); border-radius: 6px; padding: 10px 14px; font-size: 15px }
+ .options button:hover { border-color: var(--accent) }
++.options button:disabled { opacity: .55; cursor: not-allowed; border-style: dashed }
++.options button:disabled:hover { border-color: var(--line) }
++.options .why { display: block; font-size: 13px; color: var(--dim); margin-top: 2px }
+ .offer { margin-top: 18px; padding: 10px 14px; border: 1px dashed var(--side); border-radius: 6px; background: var(--side-soft); font-size: 14px }
+ .offer button { margin-top: 6px }
+ .ending-card { text-align: center; padding: 30px 10px }
+@@ -164,10 +168,12 @@
+ const sideAt = {};
+ SIDE.forEach(s => (sideAt[s.unlock_at] ||= []).push(s));
+ const tagOf = (x, side) => `<span class="tag ${side ? 's' : 'q'}">${/^\d+$/.test(x.id) ? (side ? '支线 ' : '任务 ') + x.id : (side ? '支线' : '过场')}</span>${isNew(x) ? '<span class="tag new">补写</span>' : ''}`;
++const condTag = o => o.requires ? `<span class="tag cond">需要：${esc(o.requires)}</span>` : '';
+ function optTail(o) {
++  if (o.to && ends[o.to]) return condTag(o) + `<span class="endtag">→ 结局：${esc(ends[o.to].title)}</span>`;
+   if (o.to && ends[o.to]) return `<span class="endtag">→ 结局：${esc(ends[o.to].title)}</span>`;
+-  if (o.to && byId[o.to] !== undefined) return `<span class="res">→ 跳到「${esc(LINE[byId[o.to]].title)}」</span>`;
+-  return o.result ? `<span class="res">→ ${esc(o.result)}</span>` : '';
++  if (o.to && byId[o.to] !== undefined) return condTag(o) + `<span class="res">→ 跳到「${esc(LINE[byId[o.to]].title)}」</span>`;
++  return condTag(o) + (o.result ? `<span class="res">→ ${esc(o.result)}</span>` : '');
+ }
+ const choiceHtml = (list, side) => (list || []).map(c => `<div class="choice-box${side ? ' side' : ''}"><div class="ask">◇ ${esc(c.label)}</div><ul class="opts">${c.options.map(o => `<li><span class="pick">${esc(o.label)}</span>${optTail(o)}</li>`).join('')}</ul></div>`).join('');
+ 
+@@ -262,7 +268,15 @@
+ 
+ // ---------- 走一遍 ----------
+ let P;
+-function startPlay() { P = {i: 0, c: 0, log: [], end: null, side: null, sc: 0}; drawPlay(); }
++function startPlay() { P = {i: 0, c: 0, log: [], end: null, side: null, sc: 0, picked: []}; drawPlay(); }
++// 选项条件：requires_any 是若干组选项 id，任意一组全部选过就满足；走过解锁站却没做的支线，按它的 skip_as 算
++function effPicked() {
++  const s = new Set(P.picked);
++  SIDE.forEach(sd => { const at = byId[sd.unlock_at]; if (sd.skip_as && at !== undefined && at < P.i && !P.log.some(l => l.side === sd.id)) s.add(sd.skip_as); });
++  return s;
++}
++const avail = o => !o.requires_any || o.requires_any.some(g => g.every(id => effPicked().has(id)));
++const optBtn = (o, k, attr) => avail(o) ? `<button ${attr}="${k}">${esc(o.label)}</button>` : `<button disabled>${esc(o.label)}<span class="why">这一路没满足：${esc(o.requires || '条件')}</span></button>`;
+ function drawPlay() {
+   $('log').innerHTML = P.log.map(l => `<li>${esc(l.pick)} <span>· ${esc(l.at)}</span></li>`).join('') || '<li style="list-style:none;margin-left:-20px;color:var(--dim)">还没有做选择</li>';
+   $('bar').style.width = (P.end ? 100 : Math.round(P.i / LINE.length * 100)) + '%';
+@@ -275,12 +289,12 @@
+   if (P.side) {
+     const s = P.side, c = (s.choices || [])[P.sc];
+     st.innerHTML = `<div class="act-name">支线 · 暂时离开主线</div><h2>${esc(s.title)}</h2><div class="where">${esc(s.where || '')}${s.who ? ' · ' + esc(s.who) : ''}</div><p class="what">${esc(s.what || '')}</p>` +
+-      (c ? `<div class="q">${esc(c.label)}</div><div class="options">${c.options.map((o, k) => `<button data-sopt="${k}">${esc(o.label)}</button>`).join('')}</div>` : '<div class="nav"><button class="btn primary" id="back">回到主线</button></div>');
++      (c ? `<div class="q">${esc(c.label)}</div><div class="options">${c.options.map((o, k) => optBtn(o, k, 'data-sopt')).join('')}</div>` : '<div class="nav"><button class="btn primary" id="back">回到主线</button></div>');
+     return;
+   }
+   const b = LINE[P.i], c = (b.choices || [])[P.c];
+   let h = `<div class="act-name">${esc(b.act)} · 第 ${P.i + 1} / ${LINE.length} 站</div><h2>${esc(b.title)}</h2><div class="where">${esc(b.where || '')}${b.who ? ' · ' + esc(b.who) : ''}</div><p class="what">${esc(b.what || '')}</p>`;
+-  if (c) h += `<div class="q">${esc(c.label)}</div><div class="options">${c.options.map((o, k) => `<button data-opt="${k}">${esc(o.label)}</button>`).join('')}</div>`;
++  if (c) h += `<div class="q">${esc(c.label)}</div><div class="options">${c.options.map((o, k) => optBtn(o, k, 'data-opt')).join('')}</div>`;
+   else {
+     const offers = (sideAt[b.id] || []).filter(s => !P.log.some(l => l.side === s.id));
+     h += offers.map(s => `<div class="offer">这时你还可以去做支线 <b>${esc(s.title)}</b>${s.who ? '（' + esc(s.who) + '）' : ''}<br><button class="btn" data-doside="${esc(s.id)}">去做这条支线</button></div>`).join('');
+@@ -293,12 +307,14 @@
+   if (opt) {
+     const b = LINE[P.i], o = b.choices[P.c].options[+opt.dataset.opt];
+     P.log.push({at: b.title, pick: o.label + (o.result ? '（' + o.result + '）' : '')});
++    if (o.id) P.picked.push(o.id);
+     if (o.to && ends[o.to]) P.end = o.to;
+     else if (o.to && byId[o.to] !== undefined) { P.i = byId[o.to]; P.c = 0; }
+     else P.c++;
+   } else if (sopt) {
+     const o = P.side.choices[P.sc].options[+sopt.dataset.sopt];
+     P.log.push({at: '支线 · ' + P.side.title, pick: o.label + (o.result ? '（' + o.result + '）' : ''), side: P.side.id});
++    if (o.id) P.picked.push(o.id);
+     P.sc++;
+   } else if (ds) {
+     P.side = SIDE.find(s => s.id === ds.dataset.doside); P.sc = 0;
+--- orig/SKILL.md	2026-11-05 16:56:45.829929337 +0800
++++ b/skills/story-map/SKILL.md	2026-11-05 16:56:45.865797242 +0800
+@@ -31,6 +31,7 @@
+ 规则：
+ - 节点 `id` 用任务编号（1xxx 主线、2xxx 支线），后面写 quests.json 时直接用；不是任务的过场（如「被转化」）用英文短名。
+ - 选项有 `to`（跳到某个节点或结局）就是分叉；只有 `result` 就是「选完汇合，继续往下」。一个节点里的多个选择按发生顺序写。
++- **条件选项**：只在满足条件时出现的选项（做过某条支线才有、某人还活着才有），给选项写 `id`，再写 `requires`（给人看的一句条件，图上标成「需要：…」）和 `requires_any`（若干组选项 id，任意一组全部选过就满足，例 `[["S1b"], ["D3a"]]`）。支线写 `skip_as`：走过解锁站却没做这条支线时，按哪个选项 id 算（一般是它的「谁都不说」）。「走一遍」按一路选过的 id 判断：满足的选项能点，不满足的灰掉并写明缺什么。不要把条件写进 `what` 或选项文字的括号里。
+ - 原作没有、我们补写的部分标 `"source": "补写"`，图上会画成虚线框和 ✎。用户要求只用原作故事时，这一项必须准确。
+ - 每个节点只写一句 `what`，这一步不写台词。
+ 

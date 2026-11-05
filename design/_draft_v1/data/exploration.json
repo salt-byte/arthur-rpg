@@ -1,0 +1,17 @@
+{
+  "_说明": "参数登记，来自 design/systems/exploration.md 第 6 节；代码只读这里的数，改数先改设计页。",
+  "tile_px": 32,
+  "move_tiles_per_sec": 4,
+  "region_size_tiles": [
+    40,
+    30
+  ],
+  "interact_range_tiles": 1,
+  "enemy_respawn": false,
+  "autosave_on_region_change": true,
+  "touch_dpad": true,
+  "touch_confirm": true,
+  "chapters_regions": {
+    "1": "埃克托爵士的庄园与森林（暂定，story-bible 定）"
+  }
+}

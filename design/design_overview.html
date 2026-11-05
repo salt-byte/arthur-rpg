@@ -1,0 +1,2960 @@
+<title>梅林的学徒设计总览</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap">
+<style>
+/* 布局：一栏长文档，顶部一条吸顶目录；正文限宽，宽表格在自己的容器里横向滚动 */
+:root {
+  --bg: #f4f7f7;        /* 带一点湖水青的浅灰 */
+  --surface: #ffffff;
+  --fg: #1a2326;
+  --muted: #56676c;
+  --line: #d3dcdd;
+  --accent: #1d6b74;    /* 湖水青 */
+  --accent-soft: #e0eeef;
+  --pending: #8a5a00;
+  --pending-soft: #f6ead2;
+  --font-display: "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif;
+  --font-body: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --measure: 46em;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101618; --surface: #172024; --fg: #e2e9ea; --muted: #94a5a9; --line: #2a373b;
+    --accent: #72bcc4; --accent-soft: #1b2b2f; --pending: #e7b65a; --pending-soft: #2e2615;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101618; --surface: #172024; --fg: #e2e9ea; --muted: #94a5a9; --line: #2a373b;
+  --accent: #72bcc4; --accent-soft: #1b2b2f; --pending: #e7b65a; --pending-soft: #2e2615;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font: 15px/1.8 var(--font-body);
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+.wrap {
+  max-width: 72rem; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+header.top { padding-block: 2.2rem 1.2rem; display: grid; gap: .5rem; }
+.eyebrow { font-size: .8rem; letter-spacing: .08em; color: var(--muted); }
+h1 { font-family: var(--font-display); font-size: 2rem; line-height: 1.3; margin: 0; text-wrap: balance; }
+.lede { max-width: var(--measure); color: var(--muted); margin: 0; }
+.chip { display: inline-block; font-size: .78rem; padding: .1rem .55rem; border-radius: 999px; background: var(--pending-soft); color: var(--pending); font-weight: 500; vertical-align: middle; margin-left: .4rem; }
+nav.toc {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--surface); border-bottom: 1px solid var(--line);
+}
+nav.toc .wrap { display: flex; gap: .25rem; overflow-x: auto; padding-block: .45rem; scrollbar-width: thin; }
+nav.toc a {
+  flex: none; color: var(--muted); text-decoration: none; font-size: .9rem;
+  padding: .3rem .7rem; border-radius: 6px; white-space: nowrap;
+}
+nav.toc a:hover { color: var(--fg); background: var(--accent-soft); }
+nav.toc a.on { color: var(--accent); background: var(--accent-soft); font-weight: 500; }
+nav.toc a:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+main { padding-block: 1rem 4rem; display: grid; gap: 3.5rem; }
+.doc { min-width: 0; scroll-margin-top: 4rem; }
+.doc > p, .doc > ul, .doc > ol, .doc > blockquote, .doc > h3, .doc > h4 { max-width: var(--measure); }
+h2.sec-title {
+  font-family: var(--font-display); font-size: 1.55rem; line-height: 1.35; margin: 0 0 .4rem;
+  padding-top: 1.2rem; border-top: 2px solid var(--fg); text-wrap: balance;
+}
+h2.split {
+  display: flex; align-items: center; gap: .8rem; margin: 2.4rem 0 .6rem;
+  font: 500 .85rem/1 var(--font-body); letter-spacing: .12em; color: var(--muted);
+}
+h2.split::before, h2.split::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+h3 { font-family: var(--font-display); font-size: 1.15rem; margin: 1.8rem 0 .4rem; text-wrap: balance; }
+h4 { font-size: 1rem; margin: 1.3rem 0 .3rem; }
+p { margin: .5rem 0; }
+ul, ol { padding-left: 1.4em; margin: .5rem 0; }
+li + li { margin-top: .2rem; }
+a { color: var(--accent); }
+code { font-family: var(--font-mono); font-size: .86em; background: var(--accent-soft); padding: .05em .35em; border-radius: 4px; }
+blockquote { margin: .8rem 0; padding: .6rem .9rem; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; color: var(--muted); }
+blockquote p { margin: 0; }
+.table-wrap { overflow-x: auto; margin: .8rem 0; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; line-height: 1.65; }
+th, td { text-align: left; vertical-align: top; padding: .5rem .7rem; border-bottom: 1px solid var(--line); min-width: 5.5em; }
+th { background: var(--accent-soft); font-weight: 500; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td { font-variant-numeric: tabular-nums; }
+.doc-schedule th, .doc-schedule td { min-width: 13em; }
+.doc-schedule th:first-child, .doc-schedule td:first-child { min-width: 2.5em; text-align: center; }
+.doc-screens td:first-child, .doc-gdd td:first-child { white-space: nowrap; font-weight: 500; }
+.diagram { overflow-x: auto; margin: 1rem 0; padding: 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.diagram pre { margin: 0; background: none; }
+.fig { margin: 0; }
+.fig svg { display: block; width: 100%; max-width: 600px; height: auto; margin: 0 auto; font-family: var(--font-body); }
+.fig.wide svg { min-width: 400px; }
+.fig.narrow svg { max-width: 460px; }
+@media (max-width: 480px) { .diagram { padding: .6rem; } }
+.fig .n { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; }
+.fig .n-key { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+.fig .t { fill: var(--fg); font-size: 15px; font-weight: 500; }
+.fig .s { fill: var(--muted); font-size: 13px; }
+.fig .e { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+.fig .el { fill: var(--muted); font-size: 12px; }
+.fig .ah { fill: var(--muted); }
+.fig figcaption { max-width: var(--measure); margin: .8rem auto 0; color: var(--muted); font-size: .88rem; line-height: 1.7; }
+.flows .flow-start { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; }
+.flows .flowrows { list-style: none; margin: .4rem 0 0 1.1rem; padding: .2rem 0 .2rem 1.1rem; border-left: 2px solid var(--line); display: grid; gap: .55rem; }
+.flows .flowrows li { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem .45rem; margin: 0; position: relative; }
+.flows .flowrows li::before { content: ""; position: absolute; left: -1.1rem; top: 50%; width: .8rem; border-top: 2px solid var(--line); }
+.flows .trig { color: var(--muted); font-size: .85rem; min-width: 7.5em; }
+.flows .chip { border: 1px solid var(--line); background: var(--bg); border-radius: 6px; padding: .1rem .6rem; font-size: .92rem; white-space: nowrap; }
+.flows .chip.key, .flows .chip.hub { border-color: var(--accent); background: var(--accent-soft); }
+.flows .chip.hub { font-weight: 500; }
+.flows .arr { color: var(--muted); }
+.flows .note { color: var(--muted); font-size: .8rem; }
+footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
+@media (max-width: 480px) {
+  h1 { font-size: 1.6rem; }
+  h2.sec-title { font-size: 1.3rem; }
+}
+</style>
+
+<header class="top wrap">
+  <div class="eyebrow">第 5 / 18 步 · 系统设计 · 2026-11-05</div>
+  <h1>梅林的学徒 · 设计总览<span class="chip">待你确认</span></h1>
+  <p class="lede">每个系统一页：上半页讲玩家会碰到什么，下半页是给做游戏的人看的公式、参数和验收条件。先看「总览」里的图，再点进各页。</p>
+</header>
+<nav class="toc" aria-label="目录"><div class="wrap"><a href="#gdd" data-sec="gdd">总览</a><a href="#dialogue" data-sec="dialogue">对话与剧情变量</a><a href="#prophecy" data-sec="prophecy">看水面与预言簿</a><a href="#companions" data-sec="companions">同伴</a><a href="#quests" data-sec="quests">任务</a><a href="#overworld" data-sec="overworld">大地图与探索</a><a href="#combat" data-sec="combat">回合制战斗</a><a href="#story-unlocks" data-sec="story-unlocks">叙事进展</a><a href="#screens" data-sec="screens">界面清单</a><a href="#schedule" data-sec="schedule">章节内容表</a></div></nav>
+<main class="wrap">
+<section id="gdd" class="doc doc-gdd"><h2 class="sec-title">GDD · 梅林的学徒（暂定名）</h2>
+<p>更新于 2026-11-05。这是整个设计的入口：上半页一页看懂这个游戏，下半页是所有设计文档的目录。任何一份文档改了，回来更新目录里那一行。</p>
+<h3>一页看懂</h3>
+<p><strong>一句话</strong>：你能在水面上看见家里人的将来。每一章，你都要决定把看见的事说给谁听；大结局改不了，但谁陪亚瑟走到最后，由你说出口的话决定。</p>
+<p><strong>RPG 类型</strong>：CRPG 式对话抉择 + 大地图加回合制遭遇 + 回合制（JRPG）战斗 · <strong>给谁玩、在什么设备上、一次玩多久</strong>：喜欢剧情和选择的人，不考操作；网页上玩，电脑键盘为主，手机触屏也能玩；一场仗 2–3 分钟，一章 15–30 分钟，全程约 2 小时 50 分钟。</p>
+<h4>一章怎么玩</h4>
+<div class="diagram"><figure class="fig wide">
+<svg viewBox="0 0 470 500" role="img" aria-label="一章怎么玩：进入新地方，在地图上走、找人说话；路上碰到敌人、剧情事件、发光的水面三种事；敌人和剧情处理完回到地图，水面上看见的那一幕在章末决定说给谁听；下一章照你的选择发生，然后进入下一章。">
+<defs><marker id="ahA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+<rect class="n" x="75" y="14" width="300" height="46" rx="6"/>
+<text class="t" x="225" y="42" text-anchor="middle">进入这一章的新地方</text>
+<line class="e" x1="225" y1="60" x2="225" y2="84" marker-end="url(#ahA)"/>
+<rect class="n" x="75" y="86" width="300" height="62" rx="6"/>
+<text class="t" x="225" y="112" text-anchor="middle">在地图上走，找人说话</text>
+<text class="s" x="225" y="134" text-anchor="middle">屏幕上方写着下一步去哪</text>
+<line class="e" x1="150" y1="148" x2="84" y2="188" marker-end="url(#ahA)"/>
+<line class="e" x1="225" y1="148" x2="225" y2="188" marker-end="url(#ahA)"/>
+<line class="e" x1="300" y1="148" x2="366" y2="188" marker-end="url(#ahA)"/>
+<rect class="n" x="14" y="190" width="124" height="84" rx="6"/>
+<text class="t" x="76" y="216" text-anchor="middle">站在路上的敌人</text>
+<text class="s" x="76" y="240" text-anchor="middle">开打，先管哪个</text>
+<text class="s" x="76" y="260" text-anchor="middle">打完回到地图</text>
+<rect class="n" x="163" y="190" width="124" height="84" rx="6"/>
+<text class="t" x="225" y="216" text-anchor="middle">剧情事件</text>
+<text class="s" x="225" y="240" text-anchor="middle">有时学到新法术</text>
+<text class="s" x="225" y="260" text-anchor="middle">演完回到地图</text>
+<rect class="n" x="312" y="190" width="124" height="84" rx="6"/>
+<text class="t" x="374" y="216" text-anchor="middle">发光的水面</text>
+<text class="s" x="374" y="240" text-anchor="middle">看见将来的一幕</text>
+<text class="s" x="374" y="260" text-anchor="middle">记进预言簿</text>
+<line class="e" x1="374" y1="274" x2="334" y2="310" marker-end="url(#ahA)"/>
+<rect class="n-key" x="75" y="312" width="300" height="62" rx="6"/>
+<text class="t" x="225" y="338" text-anchor="middle">章末：决定把这一幕说给谁听</text>
+<text class="s" x="225" y="360" text-anchor="middle">选完自动存档，不能反悔</text>
+<line class="e" x1="225" y1="374" x2="225" y2="398" marker-end="url(#ahA)"/>
+<rect class="n" x="75" y="400" width="300" height="82" rx="6"/>
+<text class="t" x="225" y="426" text-anchor="middle">下一章：那一幕照你的选择发生</text>
+<text class="s" x="225" y="449" text-anchor="middle">之后两章内有人提起你说过的话</text>
+<text class="s" x="225" y="469" text-anchor="middle">身边的人可能留下、离开或死去</text>
+<path class="e" d="M375 441 C 458 441, 458 37, 377 37" marker-end="url(#ahA)"/>
+<text class="el" x="418" y="26" text-anchor="middle">下一章</text>
+</svg>
+<figcaption>敌人和剧情处理完都回到地图接着走；只有水面上看见的那一幕，会一直等到章末让你决定。支线也一样：听人说了才去，最后也是看水面、决定说给谁听。</figcaption>
+</figure>
+</div>
+<h4>你说出口的话改变什么</h4>
+<div class="diagram"><figure class="fig narrow">
+<svg viewBox="0 0 360 394" role="img" aria-label="你说出口的话改变四样东西：同伴的去留、几样新法术、之后两章别人说的话、结局回顾里每一页的内容。">
+<defs><marker id="ahB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+<rect class="n-key" x="20" y="10" width="320" height="56" rx="6"/>
+<text class="t" x="180" y="44" text-anchor="middle">关键选择：把看见的事说给谁听</text>
+<line class="e" x1="50" y1="66" x2="50" y2="349"/>
+<line class="e" x1="50" y1="115" x2="76" y2="115" marker-end="url(#ahB)"/>
+<line class="e" x1="50" y1="193" x2="76" y2="193" marker-end="url(#ahB)"/>
+<line class="e" x1="50" y1="271" x2="76" y2="271" marker-end="url(#ahB)"/>
+<line class="e" x1="50" y1="349" x2="76" y2="349" marker-end="url(#ahB)"/>
+<rect class="n" x="78" y="84" width="268" height="62" rx="6"/>
+<text class="t" x="92" y="110">同伴</text>
+<text class="s" x="92" y="132">谁留下、谁走、谁活下来</text>
+<rect class="n" x="78" y="162" width="268" height="62" rx="6"/>
+<text class="t" x="92" y="188">叙事进展</text>
+<text class="s" x="92" y="210">有几个选择会给新法术或新招</text>
+<rect class="n" x="78" y="240" width="268" height="62" rx="6"/>
+<text class="t" x="92" y="266">对话</text>
+<text class="s" x="92" y="288">之后两章内有人提起你说的话</text>
+<rect class="n" x="78" y="318" width="268" height="62" rx="6"/>
+<text class="t" x="92" y="344">结局回顾</text>
+<text class="s" x="92" y="366">每一页念出：看见、告诉谁、后来</text>
+</svg>
+<figcaption>同伴的去留还会往下传：决定打仗时谁能上场、圆桌上空着哪几把椅子、最后能不能选回卡美洛。</figcaption>
+</figure>
+</div>
+<h4>一场仗从哪来、打完去哪</h4>
+<div class="diagram"><figure class="fig wide">
+<svg viewBox="10 0 430 390" role="img" aria-label="一场仗从哪来：任务把敌人放到大地图上，碰到敌人进入战斗，打赢了任务往前走一步；同伴决定谁能上场，叙事进展决定学徒会哪些法术。">
+<defs><marker id="ahC" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+<rect class="n" x="135" y="14" width="200" height="56" rx="6"/>
+<text class="t" x="235" y="38" text-anchor="middle">任务</text>
+<text class="s" x="235" y="58" text-anchor="middle">每章一条主线</text>
+<line class="e" x1="235" y1="70" x2="235" y2="108" marker-end="url(#ahC)"/>
+<text class="el" x="245" y="94">放下敌人、标出下一步</text>
+<rect class="n" x="135" y="110" width="200" height="56" rx="6"/>
+<text class="t" x="235" y="134" text-anchor="middle">大地图</text>
+<text class="s" x="235" y="154" text-anchor="middle">敌人站在路上，看得见</text>
+<line class="e" x1="235" y1="166" x2="235" y2="204" marker-end="url(#ahC)"/>
+<text class="el" x="245" y="190">碰到敌人</text>
+<rect class="n-key" x="135" y="206" width="200" height="56" rx="6"/>
+<text class="t" x="235" y="230" text-anchor="middle">战斗</text>
+<text class="s" x="235" y="250" text-anchor="middle">3–5 回合</text>
+<path class="e" d="M135 234 C 60 234, 60 42, 133 42" marker-end="url(#ahC)"/>
+<text class="el" x="44" y="124" text-anchor="middle">打赢了</text>
+<text class="el" x="44" y="142" text-anchor="middle">任务往前</text>
+<text class="el" x="44" y="160" text-anchor="middle">走一步</text>
+<rect class="n" x="40" y="318" width="160" height="56" rx="6"/>
+<text class="t" x="120" y="342" text-anchor="middle">同伴</text>
+<text class="s" x="120" y="362" text-anchor="middle">谁能上场</text>
+<rect class="n" x="270" y="318" width="160" height="56" rx="6"/>
+<text class="t" x="350" y="342" text-anchor="middle">叙事进展</text>
+<text class="s" x="350" y="362" text-anchor="middle">会哪些法术、法力多少</text>
+<line class="e" x1="140" y1="318" x2="200" y2="264" marker-end="url(#ahC)"/>
+<line class="e" x1="330" y1="318" x2="270" y2="264" marker-end="url(#ahC)"/>
+</svg>
+<figcaption>打仗不给经验。赢一场只让任务往前走一步，学徒变强靠剧情给的法术。</figcaption>
+</figure>
+</div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>系统</th>
+<th>一句大白话</th>
+<th>设计页</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>看水面与预言簿</td>
+<td>在水面上看见将来的一幕，选把它说给谁听，选完不能改</td>
+<td><a href="#prophecy">prophecy.md</a></td>
+</tr>
+<tr>
+<td>对话</td>
+<td>走到人跟前说话；不掷骰；人们记得你告诉过他们什么</td>
+<td><a href="#dialogue">dialogue.md</a></td>
+</tr>
+<tr>
+<td>同伴</td>
+<td>谁在你身边、谁能上场，由剧情和你说的话决定；第 3 章起画成圆桌</td>
+<td><a href="#companions">companions.md</a></td>
+</tr>
+<tr>
+<td>战斗</td>
+<td>敌人这回合要做什么先亮出来，你给每个人选一个行动，决定先管哪个</td>
+<td><a href="#combat">combat.md</a></td>
+</tr>
+<tr>
+<td>叙事进展</td>
+<td>不升级；新法术、法力上限、新同伴都由剧情给，有的看你的选择</td>
+<td><a href="#story-unlocks">story-unlocks.md</a></td>
+</tr>
+<tr>
+<td>任务</td>
+<td>每章一条主线标着下一步；支线靠别人的话找，章末关</td>
+<td><a href="#quests">quests.md</a></td>
+</tr>
+<tr>
+<td>大地图</td>
+<td>一章一片地方；敌人站在路上看得见；四个地方看得出你的选择</td>
+<td><a href="#overworld">overworld.md</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3>目录</h3>
+<p>「设计总览」页面（<a href="https://claude.ai/artifact/PDbi5mUqefHPVFycQwW7Nc">打开</a>）把这份总览、七个设计页、界面清单和章节内容表放在一页里看，由 tools/render_design.py 从下面这些 .md 生成。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>文档</th>
+<th>写什么</th>
+<th>负责 skill</th>
+<th>更新于</th>
+<th>状态</th>
+<th>在哪看</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GAME_BRIEF.md</td>
+<td>需求和已经定了的事</td>
+<td>producer</td>
+<td>2026-11-05</td>
+<td>已确认（A0、A1、A2）</td>
+<td>项目「RPG游戏」→ arthur-rpg/GAME_BRIEF.md</td>
+</tr>
+<tr>
+<td>design/CONCEPT.md</td>
+<td>这是个什么样的游戏</td>
+<td>game-concept</td>
+<td>2026-11-05</td>
+<td>已确认（A1）；第 5 步改了两处，见它的改动记录</td>
+<td>项目 → arthur-rpg/design/CONCEPT.md</td>
+</tr>
+<tr>
+<td>content/story/bible.md</td>
+<td>故事圣经：世界、人物、选择和后果</td>
+<td>story-bible</td>
+<td>2026-11-05</td>
+<td>已确认（A2）</td>
+<td>项目 → arthur-rpg/content/story/bible.md</td>
+</tr>
+<tr>
+<td>content/story/story.html</td>
+<td>剧情谱</td>
+<td>story-map</td>
+<td>2026-11-05</td>
+<td>已确认（A2）</td>
+<td>「剧情谱」页面（<a href="https://claude.ai/artifact/YBTU7Z3DxcNxYVBdA8YWhW">打开</a>）</td>
+</tr>
+<tr>
+<td>content/story/review_A2.md</td>
+<td>剧情审查报告和复查</td>
+<td>story-review</td>
+<td>2026-11-05</td>
+<td>已确认（A2）</td>
+<td>项目 → arthur-rpg/content/story/review_A2.md</td>
+</tr>
+<tr>
+<td>design/systems/*.md</td>
+<td>七个系统的规则</td>
+<td>game-design</td>
+<td>2026-11-05</td>
+<td>待你确认</td>
+<td>「设计总览」页面；项目 → arthur-rpg/design/systems/</td>
+</tr>
+<tr>
+<td><a href="#screens">SCREENS.md</a></td>
+<td>有哪些屏幕、怎么跳</td>
+<td>game-design → ui-layout</td>
+<td>2026-11-05</td>
+<td>待你确认</td>
+<td>「设计总览」页面；项目 → arthur-rpg/<a href="#screens">SCREENS.md</a></td>
+</tr>
+<tr>
+<td><a href="#schedule">CONTENT_SCHEDULE.md</a></td>
+<td>每章第一次出现什么、难到什么程度</td>
+<td>game-design → story-bible → quest-design</td>
+<td>2026-11-05</td>
+<td>故事列已确认；玩法列待你确认；遭遇列第 10 步填</td>
+<td>「设计总览」页面；项目 → arthur-rpg/<a href="#schedule">CONTENT_SCHEDULE.md</a></td>
+</tr>
+<tr>
+<td>content/data/*.json</td>
+<td>设计页里每个会调的数</td>
+<td>game-design → balancing</td>
+<td>2026-11-05</td>
+<td>草稿</td>
+<td>项目 → arthur-rpg/content/data/</td>
+</tr>
+<tr>
+<td>design/design_overview.html</td>
+<td>「设计总览」页面：上面几份设计文档合成的一页</td>
+<td>game-design</td>
+<td>2026-11-05</td>
+<td>跟着各 .md 重新生成</td>
+<td>「设计总览」页面</td>
+</tr>
+<tr>
+<td>design/ART_DIRECTION.md</td>
+<td>画风</td>
+<td>art-direction</td>
+<td>—</td>
+<td>未开始（第 7 步）</td>
+<td>—</td>
+</tr>
+<tr>
+<td>design/_draft_v1/</td>
+<td>换流程之前的旧草稿</td>
+<td>—</td>
+<td>2026-11-05</td>
+<td>只作参考，不再更新</td>
+<td>项目 → arthur-rpg/design/_draft_v1/</td>
+</tr>
+</tbody>
+</table></div></section>
+<section id="dialogue" class="doc doc-dialogue"><h2 class="sec-title">对话与剧情变量设计页</h2>
+<p>系统 id：dialogue · 层：mvp · 负责 skill：dialogue-authoring · 参数文件：<code>content/data/dialogue.json</code>
+上游：<code>design/CONCEPT.md</code> 的「找人说话」「决定说给谁听」两个动作；定调题「纯选择，不掷骰」；硬否决第 7 条（世界回读玩家行为）</p>
+<blockquote>
+<p>这页分两层。上半页给人看，下半页给实现看。</p>
+</blockquote>
+<h3>一句话</h3>
+<p>走到人跟前和他说话、选怎么回答；不掷骰，选了什么就是什么；人们记得你告诉过他们什么，之后说的话会跟着变。</p>
+<h3>一个例子</h3>
+<p>第 1 章开头，凯在庄园院子里磨剑。</p>
+<ol>
+<li>你走过去按确认，对话框出现凯的头像和一句话：「林子里又有狼了。昨晚咬死了磨坊家两只羊。我带亚瑟去，你来不来？」</li>
+<li>下面两个选项：「我跟你去」「亚瑟也去？他连剑都拿不稳」。这是普通选项，选哪个都会去，只是凯回你的那句话不同。</li>
+<li>到了出发前一晚，马厩里的那次选择旁边有一个水滴标记：这是关键选择，选完要确认、会自动存档（看水面与预言簿页）。</li>
+<li>你选了提醒凯。第 2 章比武结束后，凯把你拉到一边：「你那天晚上到底看见了什么？」如果你选的是别的，这句话不会出现，换成别的人说别的话。</li>
+</ol>
+<h3>1. 玩家感受</h3>
+<p>说话是这个游戏的主要玩法。没有骰子、没有口才数值，你选的每句话都会照原样说出口。</p>
+<p>普通对话轻松，随便选；关键选择有明显的标记，玩家知道这一下是要紧的。</p>
+<p>被人提起的那一刻，玩家发现：「他还记得我说过的话。」</p>
+<h3>2. 规则</h3>
+<h4>怎么开始说话</h4>
+<ul>
+<li>走到人跟前按确认，或者在手机上点他。</li>
+<li>有新话要说的人头上冒一个「…」；没有新话的人，再说一次只回一句平常的话。</li>
+<li>剧情要求的对话会自动开始（比如走进阁楼，梅林就开口）。</li>
+</ul>
+<h4>两种选项</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>选项</th>
+<th>长什么样</th>
+<th>会改变什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>普通选项</td>
+<td>没有标记</td>
+<td>只改对方接下来回你的那一两句；不改剧情往哪走</td>
+</tr>
+<tr>
+<td>关键选择</td>
+<td>带水滴标记，选完要确认，自动存档</td>
+<td>改变剧情、同伴、结局（看水面与预言簿页）</td>
+</tr>
+</tbody>
+</table></div>
+<p>所有选项都一定说得出口，不会「说服失败」。</p>
+<h4>人们记得什么</h4>
+<ul>
+<li>你做过的每个关键选择、支线里的每个选择，都会记下来。</li>
+<li>谁知道了什么也会记下来（比如凯知不知道你能看见将来）。没听说过一件事的人，不会提这件事。</li>
+<li>每个关键选择，之后两章内至少有一个人提起（故事圣经里每个选项都写了谁在第几章说什么）。</li>
+<li>要做过某条支线才有的选项，没做就不显示。</li>
+</ul>
+<h4>怎么称呼你</h4>
+<p>你的外观开场自己选，所以台词不用「他」或「她」叫你。别人当面叫你「你」，或者叫你的名字；说起你时叫「梅林的学徒」或名字。名字在开场选外观时一起起，给一个默认的，不改也行。</p>
+<h4>文字的规矩（用户定）</h4>
+<ul>
+<li>写具体的事：谁、在哪、做了什么、说了什么。不写诗意的压缩句，不写「命运的齿轮开始转动」这种话。</li>
+<li>每一句都要有来由：人物为什么在这时说这句，他凭什么知道这件事。</li>
+<li>用大白话，人物各有说话的样子（凯嘴硬、高文直、梅林爱绕弯子，但绕完要把话说清楚）。</li>
+</ul>
+<h4>回看</h4>
+<p>对话中随时可以打开「回看」，看这段对话前面说过的话。</p>
+<hr />
+<h2 class="split">给实现看</h2>
+<h3>3. 公式</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>名字</th>
+<th>公式</th>
+<th>为什么是这个数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>每个对话框字数</td>
+<td>不超过 40 个字</td>
+<td>手机竖屏两行放下</td>
+</tr>
+<tr>
+<td>普通选项数</td>
+<td>2–3</td>
+<td>多了玩家要读太久，普通对话不值得</td>
+</tr>
+<tr>
+<td>回读窗口</td>
+<td>关键选择后 2 章内至少 1 句</td>
+<td>和预言簿页同一个数，只存一处（这里）</td>
+</tr>
+<tr>
+<td>打字速度</td>
+<td>每秒 30 字；点一下直接显示整句</td>
+<td>先按感觉定，白盒后调</td>
+</tr>
+</tbody>
+</table></div>
+<h3>4. 边界情况</h3>
+<ul>
+<li><strong>0</strong>：某个人没有任何新话，只回平常的话；平常的话按章换。</li>
+<li><strong>同时满足几种条件</strong>：一个人有几句回读要说，按「最近的选择优先」只说一句，其余放到下次见面。</li>
+<li><strong>人已经离开或离世</strong>：离开的人台词换成离开以后的样子；离世的人不再出现，原来该他说的回读改由故事圣经里指定的另一个人说，没有就跳过并在检查脚本里报出来。</li>
+<li><strong>存档中途</strong>：普通对话不存档，退出后回到这段对话之前；关键选择见预言簿页。</li>
+<li><strong>玩家反着来</strong>：不跟任何人闲聊，只走剧情要求的对话，也能通关；闲聊只补背景，不藏通关必需的信息。</li>
+</ul>
+<h3>5. 依赖</h3>
+<ul>
+<li>用到：故事圣经（人物的说话方式、认知边界、回读表）；看水面与预言簿（关键选择）；同伴（谁还在）。</li>
+<li>被谁用：任务（「和谁说话」是任务的一步，支线由对话口头指路）；看水面与预言簿（决定场景在对话里）；结局；存档（剧情变量）。</li>
+</ul>
+<h3>6. 可调参数（登记进 content/data/dialogue.json）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>当前值</th>
+<th>范围</th>
+<th>调它会改变什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>max_chars_per_box</td>
+<td>40</td>
+<td>30–60</td>
+<td>一屏的字数</td>
+</tr>
+<tr>
+<td>max_normal_options</td>
+<td>3</td>
+<td>2–4</td>
+<td>普通对话的选择多少</td>
+</tr>
+<tr>
+<td>readback_window_chapters</td>
+<td>2</td>
+<td>1–3</td>
+<td>回读要多快出现</td>
+</tr>
+<tr>
+<td>text_speed_cps</td>
+<td>30</td>
+<td>15–60</td>
+<td>打字速度</td>
+</tr>
+<tr>
+<td>new_talk_marker</td>
+<td>「…」</td>
+<td>—</td>
+<td>有新话的标记</td>
+</tr>
+<tr>
+<td>key_choice_marker</td>
+<td>水滴</td>
+<td>—</td>
+<td>关键选择的标记</td>
+</tr>
+</tbody>
+</table></div>
+<p>剧情变量的名字和类型由 game-data-schema（第 6 步）定；这里不另起一套。</p>
+<h3>7. 验收条件（进 TASKS.md）</h3>
+<ul>
+<li>[ ] 对白检查脚本通过：语法、跳转、变量都存在。</li>
+<li>[ ] 回读检查：每个关键选择和支线选择在之后 2 章内至少有 1 句台词读取它，缺一个报错。</li>
+<li>[ ] 认知边界检查（knowledge_check.py）0 个违规：没有人提起他还不知道的事。</li>
+<li>[ ] <code>--playtest</code> 每个关键选择之后打印改变了哪些变量。</li>
+<li>[ ] 没满足条件的附加选项不出现（和预言簿页验收一起跑）。</li>
+<li>[ ] 截图：40 个字在手机宽度下两行放下；关键选择的水滴标记看得见。</li>
+</ul>
+<h3>8. 需要的素材</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>素材</th>
+<th>用在哪</th>
+<th>必需 / 可降级</th>
+<th>数量、动作或状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>对话框</td>
+<td>所有对话</td>
+<td>必需</td>
+<td>名字栏、文字区、继续提示</td>
+</tr>
+<tr>
+<td>人物头像</td>
+<td>对话框</td>
+<td>必需（和同伴页共用）</td>
+<td>见同伴页，另加埃克托、妮妙、摩根、湖中仙女、佩利诺、伊莲恩、皮内尔、村民</td>
+</tr>
+<tr>
+<td>选项列表</td>
+<td>对话框下方</td>
+<td>必需</td>
+<td>普通、关键（水滴标记）、按下状态</td>
+</tr>
+<tr>
+<td>「…」标记</td>
+<td>地图上人物头顶</td>
+<td>必需</td>
+<td>1</td>
+</tr>
+<tr>
+<td>回看面板</td>
+<td>对话中</td>
+<td>可降级（mvp 可不做）</td>
+<td>1</td>
+</tr>
+</tbody>
+</table></div>
+<h3>改动记录（quick-design）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>日期</th>
+<th>改什么</th>
+<th>从 → 到</th>
+<th>为什么</th>
+<th>怎么验</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-11-05</td>
+<td>整页重写</td>
+<td>旧草稿对话页 → 按故事圣经的回读表和认知边界写</td>
+<td>故事圣经下半已定每个选项的回读</td>
+<td>旧草稿在 design/_draft_v1/systems/dialogue.md</td>
+</tr>
+</tbody>
+</table></div></section>
+<section id="prophecy" class="doc doc-prophecy"><h2 class="sec-title">看水面与预言簿设计页</h2>
+<p>系统 id：prophecy · 层：mvp（最后的结局回顾属于 playable） · 负责 skill：quest-design、dialogue-authoring · 参数文件：<code>content/data/prophecy.json</code>
+上游：<code>design/CONCEPT.md</code> 的「看水面」「决定说给谁听」「一页页拼出预言」三个动作和招牌画面；世界规则第 1 条（预见要靠静止的水面）；硬否决第 7 条</p>
+<blockquote>
+<p>这页分两层。上半页给人看，下半页给实现看。</p>
+</blockquote>
+<h3>一句话</h3>
+<p>在静止的水面上看见将来的一幕，记进预言簿；到了该决定的时候，选把它说给谁听，选完就不能改，下一章照着你的选择发生。</p>
+<h3>一个例子</h3>
+<p>第 1 章，赶完狼回来，你路过石圈。</p>
+<ol>
+<li>平石上积着雨水，水面在发光。你走过去按确认，画面切成一张静止的图，下面两行字：「亚瑟双手把一把剑从石头里拔出来，剑刃上还沾着石屑。接着是凯，他举着同一把剑，对埃克托说：『父亲，是我拔出来的。』」</li>
+<li>预言簿多了一页，写着这一幕和「还没决定告诉谁」。</li>
+<li>出发去伦敦的前一晚，你在马厩里和凯、亚瑟待在一起，屏幕上出现三个选项：提醒凯别对父亲说谎、告诉亚瑟、谁都不说。你选了提醒凯，弹出一句「说出口就不能收回。确定吗？」，你点了确定，游戏自动存档。</li>
+<li>第 2 章在教堂里，凯拿着剑刚说出「是我拔的」，看见你站在旁边，自己改了口。预言簿那一页多了一行「后来：凯在教堂里改了口」。</li>
+</ol>
+<h3>1. 玩家感受</h3>
+<p>你比所有人都先知道一件事，然后要自己决定告诉谁。这是全游戏最重的选择：不掷骰，没有对错提示，选完自动存档，读档也回不到选之前。</p>
+<p>看见的永远只是一幕，没有前因后果（世界规则第 1 条）。玩家要从画面里自己推：这是谁、在哪、什么时候。</p>
+<p>之后两章内一定有人提起你的选择；到最后，预言簿会一页页念出每个人后来怎样。</p>
+<h3>2. 规则</h3>
+<h4>在哪看见</h4>
+<p>一章一次大的，在故事里有水的地方；没有现成的水，就用你随身带的浅木碗倒一碗清水。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>章</th>
+<th>在哪看见</th>
+<th>看见什么</th>
+<th>什么时候决定</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>石圈平石上的积水</td>
+<td>亚瑟拔出石中剑，凯对父亲说剑是他拔的</td>
+<td>本章末，出发前一晚的马厩</td>
+</tr>
+<tr>
+<td>2</td>
+<td>庆功宴的酒杯</td>
+<td>亚瑟和一位骑士决斗，剑断成两截</td>
+<td>当场</td>
+</tr>
+<tr>
+<td>3</td>
+<td>湖面</td>
+<td>妮妙站在海边一块巨石旁，石缝里露出梅林那顶灰兜帽的一角</td>
+<td>当晚</td>
+</tr>
+<tr>
+<td>4</td>
+<td>圆桌宴席的酒杯</td>
+<td>王后和兰斯洛特在一间屋子里，门外站着阿格规文和莫德雷德</td>
+<td>当场</td>
+</tr>
+<tr>
+<td>5</td>
+<td>礼拜堂的圣水盆</td>
+<td>两军中间几个没披甲的人面对面站着，一条蛇咬了一名骑士的脚，他拔剑去砍</td>
+<td>当场</td>
+</tr>
+<tr>
+<td>支线</td>
+<td>木碗里的清水</td>
+<td>绿腰带、加雷斯、毒苹果、伊莲恩的小船，各一幕</td>
+<td>支线结尾</td>
+</tr>
+</tbody>
+</table></div>
+<p>第 6 章没有新的画面，只剩最后一个选择：船走远以后，你去哪。</p>
+<p>水面只在剧情走到这里时才会发光，平时走过去按确认只显示一句「水面很平静」。看一次会头痛（世界规则第 1 条），所以一章只有一次大的。</p>
+<h4>一页预言的一生</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>发生什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>看见</td>
+<td>画面切成一张静止的图，下面两三句具体的描写；预言簿多一页</td>
+</tr>
+<tr>
+<td>等着</td>
+<td>这一页写着「还没决定告诉谁」；玩家随时可以翻预言簿看</td>
+</tr>
+<tr>
+<td>决定</td>
+<td>到了决定的场景，弹出选项：说给当事人、说给另一个人、谁都不说；有的选项要做过某条支线才出现</td>
+</tr>
+<tr>
+<td>确认</td>
+<td>选中后再问一次「说出口就不能收回。确定吗？」；确定后立刻自动存档</td>
+</tr>
+<tr>
+<td>应验</td>
+<td>下一章（或这一章稍后）画面里的事发生，按你的选择发生</td>
+</tr>
+<tr>
+<td>后来</td>
+<td>应验以后，这一页多一行「后来：……」</td>
+</tr>
+<tr>
+<td>回顾</td>
+<td>最后一战之后，按页念出：你看见了什么；你告诉了谁，或者没说；那个人后来怎样</td>
+</tr>
+</tbody>
+</table></div>
+<h4>选项</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>选项</th>
+<th>何时有</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>说给当事人或另一个人</td>
+<td>每次 2 个，故事圣经里写定是谁</td>
+</tr>
+<tr>
+<td>谁都不说</td>
+<td>每次都有；照原文发生，但也有它自己的回读</td>
+</tr>
+<tr>
+<td>附加选项</td>
+<td>做过某条支线才出现（第 5 章高文发誓时的两句），没做就不显示</td>
+</tr>
+</tbody>
+</table></div>
+<h4>支线没做完</h4>
+<p>章末支线就关了。没做完的那一页按「谁都不说」结算；绿衣骑士那条按两个选项都不算（故事圣经已定）。章节过渡时告诉玩家「这一章你没做的事：……」。</p>
+<h4>只有一个存档</h4>
+<p>全程一个存档位，只有自动存档，没有手动存档。玩家没法存档后试一遍再读回来反悔。</p>
+<hr />
+<h2 class="split">给实现看</h2>
+<h3>3. 公式</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>名字</th>
+<th>公式</th>
+<th>为什么是这个数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>主线决定数</td>
+<td>5（第 1–5 章各一）+ 第 6 章结局选择 1</td>
+<td>每章一个最重的决定，玩家记得住；多了就稀释分量</td>
+</tr>
+<tr>
+<td>支线决定数</td>
+<td>4</td>
+<td>用户选了四条支线全做</td>
+</tr>
+<tr>
+<td>选项数</td>
+<td>3（附加选项最多再加 2）</td>
+<td>两个太像是非题，四个以上算不过来后果；附加选项只在一处</td>
+</tr>
+<tr>
+<td>回读窗口</td>
+<td>决定后 2 章内至少一句</td>
+<td>再远玩家就忘了自己选过什么；来自 CONCEPT 硬否决第 7 条</td>
+</tr>
+<tr>
+<td>画面文字</td>
+<td>每幕 2–3 句，每句不超过 30 字</td>
+<td>手机一屏内看完，不用翻页</td>
+</tr>
+</tbody>
+</table></div>
+<h3>4. 边界情况</h3>
+<ul>
+<li><strong>当事人不在了</strong>：第 5 章「告诉凯」时凯已经离开或不信你，选项文字改成「告诉贝狄威尔」（故事圣经已定）。其他选项写的人都一定在场。</li>
+<li><strong>附加选项的条件都满足</strong>：两句附加选项同时出现，加上「什么也不说」一共 3 个。</li>
+<li><strong>存档中途</strong>：进决定场景前先存一次；选项出现时关掉网页，再打开回到选项面前，不会跳过，也不会默认成「谁都不说」。</li>
+<li><strong>确认框点了取消</strong>：回到选项，不存档。</li>
+<li><strong>同时发生</strong>：一个选择改变几个人（比如 D4b 同时改阿格规文和莫德雷德），剧情里全部执行，预言簿只记一行「后来」。</li>
+<li><strong>玩家反着来</strong>：全部谁都不说，故事照原文走，结局回顾逐页念出「你没有说」；每次都说也行，同样有代价。</li>
+</ul>
+<h3>5. 依赖</h3>
+<ul>
+<li>用到：对话（决定的场景和回读台词）；故事圣经（每一幕的画面、选项、后果、谁知道了什么）；大地图（水面在哪）；任务（支线结尾是决定点、章末关闭支线）。</li>
+<li>被谁用：同伴（选项改变同伴状态）；叙事进展（D1c、D2b、D3a 给能力）；结局（读每一页）；存档。</li>
+</ul>
+<h3>6. 可调参数（登记进 content/data/prophecy.json）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>当前值</th>
+<th>范围</th>
+<th>调它会改变什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>visions[]</td>
+<td>每幕：决定 id、在哪、用什么水面、画面文字、决定的节点</td>
+<td>—</td>
+<td>看见什么、在哪决定；内容来自 bible.json，这里只放画面文字和节点编号</td>
+</tr>
+<tr>
+<td>vision_max_sentences / vision_max_chars</td>
+<td>3 / 30</td>
+<td>—</td>
+<td>画面文字长短</td>
+</tr>
+<tr>
+<td>confirm_irreversible</td>
+<td>true</td>
+<td>—</td>
+<td>选完要不要再确认一次</td>
+</tr>
+<tr>
+<td>autosave_on_decide</td>
+<td>true</td>
+<td>—</td>
+<td>选完立刻存档</td>
+</tr>
+<tr>
+<td>single_save_slot</td>
+<td>true</td>
+<td>—</td>
+<td>能不能读档反悔</td>
+</tr>
+<tr>
+<td>show_locked_options</td>
+<td>false</td>
+<td>—</td>
+<td>没满足条件的附加选项显示成灰色还是不显示</td>
+</tr>
+<tr>
+<td>idle_water_text</td>
+<td>「水面很平静。」</td>
+<td>—</td>
+<td>平时看水面的回应</td>
+</tr>
+</tbody>
+</table></div>
+<h3>7. 验收条件（进 TASKS.md）</h3>
+<ul>
+<li>[ ] <code>--playtest</code> 走到 1102 打印「看见：D1」和预言簿页数 1；1104 打印三个选项、确认、「已自动存档」。</li>
+<li>[ ] 选 D1a 后到 1203，打印的结果和剧情谱 D1a 的后果一致，预言簿那一页打印「后来：」一行。三个选项各跑一遍。</li>
+<li>[ ] 没做绿衣骑士支线：第 5 章高文发誓时只打印「什么也不说」一个附加选项（另一个是 D5 的三个主选项）。做了并选 S1b：多打印「私下提醒高文」。</li>
+<li>[ ] 每个决定在之后 2 章内至少被一句台词提起（对白检查脚本统计，缺一个就报错）。</li>
+<li>[ ] 选项出现时退出再进，打印回到同一组选项。</li>
+<li>[ ] 截图：看水面画面的图和两三句文字在手机宽度下一屏放下；预言簿一页里看得清「看见了什么 / 告诉了谁 / 后来」三块。</li>
+</ul>
+<h3>8. 需要的素材</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>素材</th>
+<th>用在哪</th>
+<th>必需 / 可降级</th>
+<th>数量、动作或状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>看水面画面</td>
+<td>每一幕</td>
+<td>必需，可降级（先用对应场景的地图截图加水纹遮罩）</td>
+<td>9 张：5 幕主线 + 4 幕支线</td>
+</tr>
+<tr>
+<td>水面发光标记</td>
+<td>大地图上的水面</td>
+<td>必需</td>
+<td>石圈积水、湖、泉；酒杯、圣水盆、木碗在剧情里出现</td>
+</tr>
+<tr>
+<td>预言簿</td>
+<td>菜单</td>
+<td>必需</td>
+<td>封面、一页的版式（画面缩略图、三块文字）</td>
+</tr>
+<tr>
+<td>确认框</td>
+<td>决定时</td>
+<td>必需</td>
+<td>「说出口就不能收回」</td>
+</tr>
+<tr>
+<td>浅木碗</td>
+<td>支线看水面、预言簿封面</td>
+<td>可降级（用文字）</td>
+<td>1</td>
+</tr>
+</tbody>
+</table></div>
+<h3>改动记录（quick-design）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>日期</th>
+<th>改什么</th>
+<th>从 → 到</th>
+<th>为什么</th>
+<th>怎么验</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-11-05</td>
+<td>整页重写</td>
+<td>旧草稿「预言碎片」→ 看水面与预言簿</td>
+<td>定概念时换成大白话；故事圣经定了每章看见什么、在哪决定</td>
+<td>旧草稿在 design/_draft_v1/systems/prophecy.md</td>
+</tr>
+</tbody>
+</table></div></section>
+<section id="companions" class="doc doc-companions"><h2 class="sec-title">同伴设计页</h2>
+<p>系统 id：companions · 层：mvp · 负责 skill：quest-design · 参数文件：<code>content/data/companions.json</code>
+上游：<code>design/CONCEPT.md</code> 的「世界回应 · 同伴」和卖点「同伴的去留由你说的话决定」；故事圣经第八节的下场表</p>
+<blockquote>
+<p>这页分两层。上半页给人看，下半页给实现看。</p>
+</blockquote>
+<h3>一句话</h3>
+<p>谁在你身边、谁能和你一起上场打仗，只由剧情和你说出口的话决定；第 3 章圆桌来到卡美洛以后，同伴面板画成一张圆桌，谁还坐在桌边一眼看得见。</p>
+<h3>一个例子</h3>
+<p>第 1 章出发前一晚，你选了「告诉亚瑟：凯会说剑是他拔的」。</p>
+<ol>
+<li>第 2 章在教堂里，亚瑟脱口说了一句「父亲，我知道他会这么说，别逼他」。凯听见了。</li>
+<li>你打开同伴面板，凯的卡片上原来写着「把你当家里人」，现在多了一句「觉得被弟弟可怜了，和亚瑟之间有了疙瘩」。</li>
+<li>凯照样跟你们一起打仗，没有数值变化。</li>
+<li>到了第 5 章法场之后，如果你在「美手」支线里没让凯去帮加雷斯，凯会请辞回庄园。圆桌上他那把椅子空了，椅背上搭着他的总管钥匙；第 6 章出战时，名单里没有凯。</li>
+</ol>
+<h3>1. 玩家感受</h3>
+<p>同伴的去留跟着你说出口的话走：有人因为你的一句话活下来、留下来，有人因此离开。</p>
+<p>没有好感度数字。卡片上用一两句话写他现在怎么看你，玩家从句子里读出关系的变化。</p>
+<p>圆桌是全游戏最直观的「你改变了什么」：第 6 章打开面板，空椅子和盖着布的椅子，就是你这一路的选择。</p>
+<h3>2. 规则</h3>
+<h4>状态</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>状态</th>
+<th>是什么</th>
+<th>能上场吗</th>
+<th>面板上</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>还没来</td>
+<td>剧情还没走到他出场</td>
+<td>不能</td>
+<td>圆桌上椅子空着，没有名字</td>
+</tr>
+<tr>
+<td>在队</td>
+<td>跟着你</td>
+<td>能</td>
+<td>坐在椅子上</td>
+</tr>
+<tr>
+<td>离开</td>
+<td>因为剧情走了（请辞、成了对面的人、被封印）</td>
+<td>不能</td>
+<td>椅子空着，椅背上留着他的一样东西</td>
+</tr>
+<tr>
+<td>离世</td>
+<td>死了</td>
+<td>不能</td>
+<td>椅子盖着布</td>
+</tr>
+</tbody>
+</table></div>
+<p>另外，有时候某个人这一段剧情不在场（比如第 5 章高文、兰斯洛特出发去找圣杯），状态还是「在队」，只是这一段不能选他上场。</p>
+<p>状态只由剧情事件和你在预言簿里做的决定改变，战斗里倒下不算。</p>
+<h4>谁能上场</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>同伴</th>
+<th>什么时候来</th>
+<th>什么时候可能走</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>凯</td>
+<td>第 1 章起</td>
+<td>第 1 章告诉了亚瑟（D1b）又没让他在法场帮加雷斯（S2b）：第 5 章法场之后请辞。第 5 章把蛇的事告诉了他、他信你、又没有加雷斯跟着：第 6 章卡姆兰战死</td>
+</tr>
+<tr>
+<td>亚瑟</td>
+<td>第 1 章起</td>
+<td>第 6 章湖边，船把他接走</td>
+</tr>
+<tr>
+<td>高文</td>
+<td>第 3 章婚礼与圆桌</td>
+<td>第 6 章多佛登陆战死（原文，拦不住）</td>
+</tr>
+<tr>
+<td>兰斯洛特</td>
+<td>第 4 章十几年后</td>
+<td>第 5 章法场之后，成了对面的人</td>
+</tr>
+<tr>
+<td>加雷斯</td>
+<td>第 4 章「美手」支线，受封以后</td>
+<td>支线里谁都没告诉或没做支线：第 5 章死在法场（原文）</td>
+</tr>
+<tr>
+<td>贝狄威尔</td>
+<td>第 5 章留守</td>
+<td>一直在</td>
+</tr>
+</tbody>
+</table></div>
+<p>梅林、埃克托、王后、阿格规文、加赫里斯、莫德雷德也在面板上，不上场，状态照样变（梅林第 4 章「离开」、莫德雷德第 6 章成了对面的人）。</p>
+<h4>出战</h4>
+<ul>
+<li>每场最多带 2 个同伴（战斗页）。</li>
+<li>能上场的人超过 2 个时，开打前弹出「出战选择」，选两个。第 3 章第一次出现。</li>
+<li>剧情战可以规定某个人一定上场（比如佩利诺那一仗只有亚瑟，卡姆兰一定有亚瑟），名单上他的名字带一个锁。</li>
+</ul>
+<h4>面板</h4>
+<ul>
+<li>第 1–2 章：「身边的人」，一张名单。</li>
+<li>第 3 章起：一张圆桌，每人一把椅子。点椅子打开他的卡片。</li>
+<li>卡片上写：名字和状态；他现在怎么看你（一两句）；你告诉过他什么（连到预言簿那一页）；能上场的人再写他在战斗里的招。</li>
+</ul>
+<h4>离开的人</h4>
+<p>离开的人在地图上还能遇到时（比如凯回了庄园），台词换成离开以后的样子。离世的人不再出现。</p>
+<hr />
+<h2 class="split">给实现看</h2>
+<h3>3. 公式</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>名字</th>
+<th>公式</th>
+<th>为什么是这个数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>出战人数</td>
+<td>最多 2（参数在 combat.json）</td>
+<td>和战斗页同一个数，只存一处</td>
+</tr>
+<tr>
+<td>每张卡片的关系句</td>
+<td>最多 2 句，按优先级取最新的</td>
+<td>多了像好感度清单</td>
+</tr>
+<tr>
+<td>每章能上场的人（最少到最多）</td>
+<td>第 1 章 2；第 2 章 2；第 3 章 2–3；第 4 章 3–5；第 5 章 2–4；第 6 章 2–4</td>
+<td>由下场表推出；最少的情况要能打赢每一场（见验收）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>4. 边界情况</h3>
+<ul>
+<li><strong>0</strong>：某一段能上场的同伴只剩 1 个，就带 1 个上场；剧情战的人数按最少的路线设计。不会出现 0 个（亚瑟或贝狄威尔总在）。</li>
+<li><strong>同时发生</strong>：法场一幕可能同时有人离世（加赫里斯、可能还有加雷斯）、有人离开（兰斯洛特），之后还可能有凯请辞。面板按发生顺序逐个提示。</li>
+<li><strong>正在队里的人走了</strong>：剧情演完立刻从队里拿掉；下一场出战选择里没有他。</li>
+<li><strong>存档中途</strong>：状态变化和剧情事件一起存。</li>
+<li><strong>玩家反着来</strong>：从不打开面板也能玩，状态变化会在剧情里看到；结局回顾再念一遍。</li>
+</ul>
+<h3>5. 依赖</h3>
+<ul>
+<li>用到：看水面与预言簿（决定改变状态）；对话（关系句来自剧情标记）；叙事进展（同伴的招什么时候有）。</li>
+<li>被谁用：战斗（出战名单、每人的招）；结局（「凯或加雷斯还在你身边」决定能不能选回卡美洛）；大地图（第 6 章卡姆兰营地篝火边站着谁）；界面（同伴面板、出战选择）。</li>
+</ul>
+<h3>6. 可调参数（登记进 content/data/companions.json）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>当前值</th>
+<th>范围</th>
+<th>调它会改变什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>roster[]</td>
+<td>每人：id、名字、能不能上场、在哪个剧情节点加入、面板上留下的东西</td>
+<td>—</td>
+<td>面板和出战名单</td>
+</tr>
+<tr>
+<td>table_panel_from_chapter</td>
+<td>3</td>
+<td>—</td>
+<td>什么时候从名单变成圆桌</td>
+</tr>
+<tr>
+<td>relation_lines{}</td>
+<td>剧情标记 → 一句话（比如 kay_rift → 「觉得被弟弟可怜了，和亚瑟之间有了疙瘩」）</td>
+<td>—</td>
+<td>卡片上的关系句；正文放进文本表</td>
+</tr>
+<tr>
+<td>relation_lines_max</td>
+<td>2</td>
+<td>1–3</td>
+<td>卡片上最多几句</td>
+</tr>
+</tbody>
+</table></div>
+<p>离开、离世的条件不在这里另写一份，读 bible.json 的下场表。</p>
+<h3>7. 验收条件（进 TASKS.md）</h3>
+<ul>
+<li>[ ] <code>--playtest</code> 每章开头打印每个同伴的状态。</li>
+<li>[ ] 路线 D1b、没有 S2b：1504 之后打印「凯 → 离开」，第 6 章出战选择里没有凯。</li>
+<li>[ ] 路线 S2c（或没做「美手」）：1504 打印「加雷斯 → 离世」。所有路线：1504 打印「兰斯洛特 → 离开」「加赫里斯 → 离世」，1604 打印「高文 → 离世」。</li>
+<li>[ ] 第 3 章第一场能上场的人超过 2 个时弹出出战选择；佩利诺那一仗不弹，直接是亚瑟。</li>
+<li>[ ] 模拟：每场战斗用所有路线里能上场人数最少的阵容也能赢（和战斗页验收一起跑）。</li>
+<li>[ ] 截图：第 6 章圆桌，坐着、空椅子、盖布的椅子三种状态分得清；卡片在手机宽度下一屏放下。</li>
+</ul>
+<h3>8. 需要的素材</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>素材</th>
+<th>用在哪</th>
+<th>必需 / 可降级</th>
+<th>数量、动作或状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>人物头像</td>
+<td>面板、卡片、对话框</td>
+<td>必需</td>
+<td>凯、亚瑟（少年 / 王）、高文、兰斯洛特、加雷斯、贝狄威尔、梅林、埃克托、王后、阿格规文、加赫里斯、莫德雷德</td>
+</tr>
+<tr>
+<td>圆桌俯视图</td>
+<td>第 3 章起的面板</td>
+<td>必需</td>
+<td>1 张桌子，12 把椅子</td>
+</tr>
+<tr>
+<td>椅子状态</td>
+<td>圆桌上</td>
+<td>必需</td>
+<td>坐着、空着、留着东西、盖着布、还没来</td>
+</tr>
+<tr>
+<td>留下的东西</td>
+<td>离开的人的椅背</td>
+<td>可降级（用文字）</td>
+<td>凯的总管钥匙、兰斯洛特的披风；梅林什么也没留（他的手杖在你手里）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>改动记录（quick-design）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>日期</th>
+<th>改什么</th>
+<th>从 → 到</th>
+<th>为什么</th>
+<th>怎么验</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-11-05</td>
+<td>整页重写</td>
+<td>旧草稿「圆桌座位」→ 同伴</td>
+<td>定概念时用户选了离散状态；故事圣经定了每个人的去留</td>
+<td>旧草稿在 design/_draft_v1/systems/fellowship.md</td>
+</tr>
+</tbody>
+</table></div></section>
+<section id="quests" class="doc doc-quests"><h2 class="sec-title">任务设计页</h2>
+<p>系统 id：quests · 层：mvp · 负责 skill：quest-design · 参数文件：<code>content/data/quests.json</code>
+上游：<code>design/CONCEPT.md</code> 的「找人说话」；剧情谱 outline.json 的主线节点和四条支线；定调题「混合指引」</p>
+<blockquote>
+<p>这页分两层。上半页给人看，下半页给实现看。</p>
+</blockquote>
+<h3>一句话</h3>
+<p>每章一条主线任务，一步步带你走完这章的剧情，地图上标着下一步去哪；几条支线各围着一位骑士的将来，要听别人说了才知道去哪找，章末就关了。</p>
+<h3>一个例子</h3>
+<p>第 1 章的主线叫「庄园的冬天」。</p>
+<ol>
+<li>一开始，屏幕上方写着「下一步：跟凯去林子里赶狼」，地图上林子入口有一个标记。</li>
+<li>打完狼群，下一步变成「回庄园的路上经过石圈」，标记移到石圈。</li>
+<li>第 3 章的支线「高文与绿衣骑士」不一样：圣诞宴会上绿衣骑士走后，高文对你说：「一年以后我得去北边找一座绿色礼拜堂，我连它在哪都不知道。」任务记录里抄下他这句话，地图上没有标记；你得自己去找知道路的人。</li>
+<li>支线没做完就往前走到梅林要出远门那一幕，会先弹一句「往前走，『高文与绿衣骑士』就做不了了」。</li>
+</ol>
+<h3>1. 玩家感受</h3>
+<p>主线不让人迷路：任何时候都知道下一步去哪（用户定：主线标点）。</p>
+<p>支线像真的在打听消息：谁告诉你的、原话怎么说，都记在任务记录里，要自己顺着去找（用户定：支线口述）。</p>
+<p>支线会过期，但不会悄悄过期：关门之前一定提醒一次。</p>
+<h3>2. 规则</h3>
+<h4>主线</h4>
+<p>一章一条，每一步就是剧情谱里的一个节点。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>章</th>
+<th>主线</th>
+<th>步骤（剧情谱节点）</th>
+<th>其中的仗</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>庄园的冬天</td>
+<td>赶狼（1101）→ 石圈（1102）→ 阁楼见梅林（1103）→ 出发前一晚（1104）</td>
+<td>狼群；梅林的影子</td>
+</tr>
+<tr>
+<td>2</td>
+<td>石中剑</td>
+<td>墓地（1201）→ 比武（1202）→ 教堂（1203）→ 加冕与叛乱（1204）→ 庆功宴（1205）</td>
+<td>贝德格兰之战</td>
+</tr>
+<tr>
+<td>3</td>
+<td>湖中剑与圆桌</td>
+<td>营帐（1301）→ 泉边决斗（1302）→ 湖（1303）→ 婚礼与圆桌（1304）→ 梅林要出远门（1305）</td>
+<td>和佩利诺</td>
+</tr>
+<tr>
+<td>4</td>
+<td>梅林离开</td>
+<td>梅林不见了（1401）→ 剑鞘（1402）→ 十几年后（1403）→ 莫德雷德（1404）→ 圆桌宴席（1405）</td>
+<td>追摩根</td>
+</tr>
+<tr>
+<td>5</td>
+<td>圣杯与裂痕</td>
+<td>圣杯（1501）→ 留守（1502）→ 揭发（1503）→ 法场（1504）→ 高文的誓言（1505）</td>
+<td>守城</td>
+</tr>
+<tr>
+<td>6</td>
+<td>最后一战</td>
+<td>欢乐堡（1601）→ 渡海（1602）→ 假死讯（1603）→ 多佛（1604）→ 卡姆兰（1605）→ 湖边（1606）</td>
+<td>欢乐堡；多佛登陆；卡姆兰</td>
+</tr>
+</tbody>
+</table></div>
+<h4>支线</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>支线</th>
+<th>什么时候开</th>
+<th>谁告诉你、怎么说</th>
+<th>什么时候关</th>
+<th>其中的仗</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>高文与绿衣骑士</td>
+<td>第 3 章婚礼之后的圣诞宴会</td>
+<td>高文说他得去北边找绿色礼拜堂</td>
+<td>梅林要出远门（1305）之前</td>
+<td>去礼拜堂路上的野人</td>
+</tr>
+<tr>
+<td>厨房里的「美手」</td>
+<td>第 4 章十几年后</td>
+<td>凯抱怨厨房来了个不肯说名字的帮工；一年后，凯说「那小子跟着一个姑娘出了北门，说是去红地」</td>
+<td>圆桌宴席（1405）之前</td>
+<td>红骑士</td>
+</tr>
+<tr>
+<td>毒苹果</td>
+<td>第 5 章留守</td>
+<td>王后的侍女说王后要为高文他们设宴</td>
+<td>揭发（1503）之前</td>
+<td>没有</td>
+</tr>
+<tr>
+<td>阿斯托拉特的伊莲恩</td>
+<td>第 5 章留守，兰斯洛特回来以后</td>
+<td>贝狄威尔说比武场上有个戴红袖子的骑士，没人认得</td>
+<td>揭发（1503）之前</td>
+<td>比武</td>
+</tr>
+</tbody>
+</table></div>
+<p>每条支线最后都是一次看水面和一个关键选择（看水面与预言簿页）。</p>
+<h4>指引</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>主线</th>
+<th>支线</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>地图标记</td>
+<td>有，标在下一步的地点</td>
+<td>没有</td>
+</tr>
+<tr>
+<td>屏幕上方</td>
+<td>「下一步：……」一行</td>
+<td>不显示</td>
+</tr>
+<tr>
+<td>任务记录</td>
+<td>当前这一步</td>
+<td>谁告诉你的、他的原话、已经做到哪</td>
+</tr>
+<tr>
+<td>新地方</td>
+<td>走到哪开到哪</td>
+<td>有人告诉你以后，那个地方才出现在地图上</td>
+</tr>
+</tbody>
+</table></div>
+<h4>关门</h4>
+<ul>
+<li>每章的关键选择那一步之前，开着的支线会关。</li>
+<li>关之前弹一次提醒：「往前走，『……』就做不了了。现在往前走吗？」可以选「先不走」回去做。</li>
+<li>关了的支线按「谁都不说」结算（绿衣骑士按两个选项都不算），章节过渡时告诉玩家这章没做的事。</li>
+</ul>
+<h4>任务决定谁在哪</h4>
+<p>任务走到哪一步，决定地图上出现哪些人、哪些敌人。比如「美手」支线开了，厨房里才有那个不说名字的帮工。</p>
+<hr />
+<h2 class="split">给实现看</h2>
+<h3>3. 公式</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>名字</th>
+<th>公式</th>
+<th>为什么是这个数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>主线步数</td>
+<td>每章 4–6 步，等于剧情谱这章的节点数</td>
+<td>一步一个节点，剧情谱改了任务跟着改</td>
+</tr>
+<tr>
+<td>仗的数量</td>
+<td>主线每章 1–3 场，每条支线 0–1 场</td>
+<td>一场 2–3 分钟，一章 20–30 分钟里打仗不超过三分之一</td>
+</tr>
+<tr>
+<td>支线关门点</td>
+<td>本章关键选择那一步的前一步结束时</td>
+<td>支线的结果要赶在主线决定之前定下来（V1、V2 要在高文发誓时可用）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>4. 边界情况</h3>
+<ul>
+<li><strong>0</strong>：不做任何支线也能通关。结局「湖边」总能选；「康沃尔的巨石」只看主线第 3 章；「卡美洛」要凯还在身边（不做支线时加雷斯会死在法场），所以有的路线没有它。</li>
+<li><strong>同时发生</strong>：第 5 章两条支线同时开着，各走各的，同一次提醒里一起列出。</li>
+<li><strong>还没被告诉就走到支线地点</strong>：支线的地点在被告诉之前不出现在地图上；卡美洛城里的支线人物（厨房帮工）在支线开之前不出现。</li>
+<li><strong>提醒时选了「先不走」</strong>：回到原地，不再弹，直到下次走到同一个关门点。</li>
+<li><strong>存档中途</strong>：每完成一步自动存档（单一存档位）；战斗中不存。</li>
+<li><strong>玩家反着来</strong>：先跑完所有支线再走主线，可以；主线某一步之后才开的支线，之前不出现。</li>
+</ul>
+<h3>5. 依赖</h3>
+<ul>
+<li>用到：剧情谱（节点、支线、开关点）；对话（「和谁说话」的步骤、口头指路）；看水面与预言簿（每条支线最后的决定）；战斗（「打赢某场」）。</li>
+<li>被谁用：大地图（标记、谁出现在哪、敌人放在哪）；界面（任务记录、屏幕上方的下一步）；存档。</li>
+</ul>
+<h3>6. 可调参数（登记进 content/data/quests.json）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>当前值</th>
+<th>范围</th>
+<th>调它会改变什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>quests[]</td>
+<td>每条：id、主线 / 支线、章、开的节点、关的节点、步骤（类型：去哪 / 和谁说话 / 打赢哪场 / 看水面 / 关键选择）</td>
+<td>—</td>
+<td>任务内容；第 10 步填全</td>
+</tr>
+<tr>
+<td>main_marker</td>
+<td>true</td>
+<td>—</td>
+<td>主线标点</td>
+</tr>
+<tr>
+<td>side_marker</td>
+<td>false</td>
+<td>—</td>
+<td>支线口述（用户定）</td>
+</tr>
+<tr>
+<td>warn_before_close</td>
+<td>true</td>
+<td>—</td>
+<td>支线关门前提醒</td>
+</tr>
+<tr>
+<td>autosave_on_step</td>
+<td>true</td>
+<td>—</td>
+<td>每步自动存档</td>
+</tr>
+</tbody>
+</table></div>
+<h3>7. 验收条件（进 TASKS.md）</h3>
+<ul>
+<li>[ ] <code>--playtest</code> 每一步打印任务状态变化：「主线 1：赶狼 → 石圈」。</li>
+<li>[ ] 主线每一步打印标记坐标，支线任何时候都不打印标记。</li>
+<li>[ ] 不做支线的路线：1305、1405、1503 之前各打印一次关门提醒；之后打印「S1 关闭：两个都不算」「S2 关闭：按 S2c」等。</li>
+<li>[ ] 走完整条主线的脚本在三条路线（全说、全不说、混合）上都能从第 1 章走到结局。</li>
+<li>[ ] 截图：任务记录里支线那一条显示告诉你的人的原话。</li>
+</ul>
+<h3>8. 需要的素材</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>素材</th>
+<th>用在哪</th>
+<th>必需 / 可降级</th>
+<th>数量、动作或状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>地图标记</td>
+<td>主线下一步</td>
+<td>必需</td>
+<td>1</td>
+</tr>
+<tr>
+<td>下一步提示条</td>
+<td>屏幕上方</td>
+<td>必需</td>
+<td>1</td>
+</tr>
+<tr>
+<td>任务记录面板</td>
+<td>菜单</td>
+<td>必需</td>
+<td>主线、支线两栏；已完成、进行中、已关闭三种</td>
+</tr>
+<tr>
+<td>关门提醒框</td>
+<td>关门前</td>
+<td>必需</td>
+<td>1</td>
+</tr>
+</tbody>
+</table></div>
+<h3>改动记录（quick-design）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>日期</th>
+<th>改什么</th>
+<th>从 → 到</th>
+<th>为什么</th>
+<th>怎么验</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-11-05</td>
+<td>整页重写</td>
+<td>旧草稿任务页 → 按剧情谱的节点和四条支线写</td>
+<td>剧情谱 A2 已通过；用户选了混合指引</td>
+<td>旧草稿在 design/_draft_v1/systems/quests.md</td>
+</tr>
+</tbody>
+</table></div></section>
+<section id="overworld" class="doc doc-overworld"><h2 class="sec-title">大地图与探索设计页</h2>
+<p>系统 id：overworld · 层：mvp · 负责 skill：world-map · 参数文件：<code>content/data/overworld.json</code>
+上游：<code>design/CONCEPT.md</code> 的「在地图上走、找人说话」「看水面」；定调题「明雷」「按章节线性开放」「世界状态变化：只做关键几处」</p>
+<blockquote>
+<p>这页分两层。上半页给人看，下半页给实现看。</p>
+</blockquote>
+<h3>一句话</h3>
+<p>一章开一片地方，你在里面走动、找人说话、在发光的水面上看将来；敌人在地图上看得见，站在要去的路上，碰到就开打。</p>
+<h3>一个例子</h3>
+<p>第 1 章，你从庄园院子出发。</p>
+<ol>
+<li>院子里凯在磨剑，头上冒着「…」；屏幕上方写着「下一步：跟凯去林子里赶狼」，林子入口有标记。</li>
+<li>进了林子，小路上站着三只狼，看得清是一只头狼、两只狼。你走过去碰到它们，切进战斗。</li>
+<li>打完，狼从地图上消失，不会再来。回去的路上经过石圈，平石上的积水在发光，你走过去按确认，看见了那一幕。</li>
+<li>第 1 章结束后，庄园、林子、石圈都关了，第 2 章换成伦敦。</li>
+</ol>
+<h3>1. 玩家感受</h3>
+<p>地方不大，走几步就有人可以说话，不让人在空地图上找路。</p>
+<p>敌人看得见，开打前就知道要打什么，可以先换好上场的人（用户定：明雷）。</p>
+<p>一章一片地方，跟着故事往前走，走过的地方不再回去（用户定：按章节线性开放）。</p>
+<p>世界只在几处关键的地方看得出你的选择（用户定：只做关键几处）：玩家路过时会认出「这是因为我那时候……」。</p>
+<h3>2. 规则</h3>
+<h4>每章的地方</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>章</th>
+<th>主线去的地方</th>
+<th>支线去的地方</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>埃克托爵士的庄园（院子、马厩、阁楼）、森林、石圈</td>
+<td>—</td>
+</tr>
+<tr>
+<td>2</td>
+<td>伦敦（教堂墓地、比武场、教堂、住处）、贝德格兰森林</td>
+<td>—</td>
+</tr>
+<tr>
+<td>3</td>
+<td>亚瑟的营帐、林中泉边、湖、卡美洛</td>
+<td>往北的路、城堡、绿色礼拜堂</td>
+</tr>
+<tr>
+<td>4</td>
+<td>卡美洛（大厅、厨房、阁楼）、湖</td>
+<td>去红地的路</td>
+</tr>
+<tr>
+<td>5</td>
+<td>卡美洛（大厅、宴会厅、王后的房间外、礼拜堂）、城外法场、城下河边</td>
+<td>比武场、阿斯托拉特</td>
+</tr>
+<tr>
+<td>6</td>
+<td>欢乐堡外的营地、海边、多佛海岸、卡姆兰（营地、战场）、湖边</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p>第 6 章伦敦塔那一段（莫德雷德对王后说话）你不在场，用过场演，不进地图。</p>
+<h4>走动和说话</h4>
+<ul>
+<li>俯视的格子地图，上下左右四个方向走。电脑用方向键或 WASD；手机用屏幕左下的方向键，右下一个确认键、一个菜单键。</li>
+<li>面对人或东西按确认：和人说话、看水面、开门、看物件。</li>
+</ul>
+<h4>敌人</h4>
+<ul>
+<li>敌人站在任务要走的路上，看得见是什么、几个，原地待着，不追人。</li>
+<li>碰到就开打。能上场的同伴超过 2 个时，先弹出出战选择。</li>
+<li>打赢了敌人从地图上消失，不会再出现。输了选「回地图」，你退回碰到敌人之前的那一格。</li>
+<li>没有随机遇敌，也没有能刷的敌人。不做经验和等级，绕开一群敌人也省不下什么，所以地图上的敌人都是任务里要打的。</li>
+</ul>
+<h4>水面</h4>
+<ul>
+<li>能看将来的水面（石圈的积水、湖、泉）只在剧情走到这里时发光。</li>
+<li>不发光时按确认，只显示「水面很平静。」</li>
+</ul>
+<h4>看得出你的选择的四个地方</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>地方</th>
+<th>第几章</th>
+<th>看你的什么选择</th>
+<th>你会看见什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>湖边</td>
+<td>第 4 章，去追摩根时</td>
+<td>第 3 章末谁都没说（D3c）</td>
+<td>梅林的灰兜帽挂在芦苇上，可以拿起来；告诉过梅林或亚瑟的路线，芦苇上什么也没有</td>
+</tr>
+<tr>
+<td>圆桌大厅</td>
+<td>第 5 章法场之后</td>
+<td>第 4 章的选择、「美手」支线、凯走没走</td>
+<td>死去的人的椅子盖着布，离开的人的椅子空着；阿格规文、加雷斯、凯的椅子按你的选择不同</td>
+</tr>
+<tr>
+<td>卡美洛城下的河边</td>
+<td>第 5 章</td>
+<td>伊莲恩支线</td>
+<td>谁都不说（或没做）：一条小船漂到城下，船上躺着穿白衣的少女；其他路线：河边只有洗衣服的人</td>
+</tr>
+<tr>
+<td>卡姆兰营地</td>
+<td>第 6 章开战前夜</td>
+<td>凯、加雷斯的下场</td>
+<td>篝火边站着还在的人；凯走了的路线，他常坐的那块石头空着</td>
+</tr>
+</tbody>
+</table></div>
+<p>这四处之外，地图不随选择变化；人说的话会变（对话页）。</p>
+<h4>换章</h4>
+<p>章末弹出章节过渡，告诉你这章没做的支线；上一章的地方全部关闭，不能回去。</p>
+<hr />
+<h2 class="split">给实现看</h2>
+<h3>3. 公式</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>名字</th>
+<th>公式</th>
+<th>为什么是这个数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>一片地方的大小</td>
+<td>约 30 × 20 格</td>
+<td>一屏多一点，走到边不超过十几秒</td>
+</tr>
+<tr>
+<td>走路速度</td>
+<td>每秒 4 格</td>
+<td>先按感觉定，白盒后调</td>
+</tr>
+<tr>
+<td>每章地方数</td>
+<td>3–5 片</td>
+<td>一章 20–30 分钟里走路不超过三分之一</td>
+</tr>
+<tr>
+<td>关键地点之间</td>
+<td>走路不超过 30 秒</td>
+<td>不让人在空地图上找路</td>
+</tr>
+</tbody>
+</table></div>
+<h3>4. 边界情况</h3>
+<ul>
+<li><strong>敌人站在窄路上</strong>：只有这一条路，必须打过去；任务数据保证每片地方只有任务要求的敌人。</li>
+<li><strong>回地图后又碰上</strong>：退回的那一格不和敌人相邻，不会一回来就又开打。</li>
+<li><strong>同时发生</strong>：走进新地方时正好触发剧情对话，先演剧情，演完再显示「下一步」。</li>
+<li><strong>存档中途</strong>：进新的一章、每完成一个任务步骤自动存档；读档时回到存档那一刻站的位置。</li>
+<li><strong>四个地方的变体</strong>：进入这片地方时按剧情变量选一种样子，在这片地方里不再变。</li>
+<li><strong>玩家反着来</strong>：不跟着标记走，到处乱逛也行；章内的地方都能去，只是人和敌人按任务出现。</li>
+</ul>
+<h3>5. 依赖</h3>
+<ul>
+<li>用到：任务（标记、谁出现在哪、敌人放在哪、什么时候开新地方）；看水面与预言簿（哪些水面在发光）；同伴（营地篝火边站着谁）。</li>
+<li>被谁用：战斗（碰到敌人开打）；对话（走到人跟前说话）；存档（位置）。</li>
+</ul>
+<h3>6. 可调参数（登记进 content/data/overworld.json）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>当前值</th>
+<th>范围</th>
+<th>调它会改变什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tile_px</td>
+<td>32</td>
+<td>—</td>
+<td>格子大小，和 LPC 素材一致</td>
+</tr>
+<tr>
+<td>move_speed_tiles</td>
+<td>4</td>
+<td>3–6</td>
+<td>走路快慢</td>
+</tr>
+<tr>
+<td>areas[]</td>
+<td>每片：id、章、名字、大小、出口</td>
+<td>—</td>
+<td>每章的地方；第 9 步做地图时补全</td>
+</tr>
+<tr>
+<td>enemies_chase</td>
+<td>false</td>
+<td>—</td>
+<td>敌人追不追人</td>
+</tr>
+<tr>
+<td>enemy_respawn</td>
+<td>false</td>
+<td>—</td>
+<td>打完的敌人回不回来</td>
+</tr>
+<tr>
+<td>water_spots[]</td>
+<td>每处：在哪片地方、哪个剧情节点发光</td>
+<td>—</td>
+<td>看水面的地点</td>
+</tr>
+<tr>
+<td>idle_water_text</td>
+<td>「水面很平静。」（和预言簿页共用，存在 prophecy.json）</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>world_states[]</td>
+<td>4 处：地方、章、读哪些变量、每种样子</td>
+<td>—</td>
+<td>看得出选择的地方</td>
+</tr>
+</tbody>
+</table></div>
+<h3>7. 验收条件（进 TASKS.md）</h3>
+<ul>
+<li>[ ] <code>--playtest</code> 进入每片地方时打印名字和这片地方里的人、敌人、发光的水面。</li>
+<li>[ ] 碰到敌人打印「开打：狼群」和出战名单；赢了打印「狼群 已移除」；再走到那里不再开打。</li>
+<li>[ ] 输了选回地图，打印的位置和敌人不相邻。</li>
+<li>[ ] 四个地方各按两种路线打印选中的样子（例：D3c → 湖边「灰兜帽」；D3a → 湖边「无」）。</li>
+<li>[ ] 第 2 章开始后打印第 1 章的地方全部关闭。</li>
+<li>[ ] 截图：发光和不发光的水面分得清；四个地方的不同样子各一张；手机宽度下方向键、确认键、菜单键都在拇指够得到的地方。</li>
+</ul>
+<h3>8. 需要的素材</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>素材</th>
+<th>用在哪</th>
+<th>必需 / 可降级</th>
+<th>数量、动作或状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>图块</td>
+<td>各片地方</td>
+<td>必需</td>
+<td>庄园、森林、石圈、伦敦街道和教堂、卡美洛城内城外、湖和泉、海边、平原和营地</td>
+</tr>
+<tr>
+<td>人物行走图</td>
+<td>地图上</td>
+<td>必需</td>
+<td>学徒（可换外观）、所有会说话的人；四个方向走、站立</td>
+</tr>
+<tr>
+<td>敌人地图形象</td>
+<td>地图上</td>
+<td>必需</td>
+<td>狼、叛军、骑士、强盗、士兵；站立</td>
+</tr>
+<tr>
+<td>水面发光</td>
+<td>石圈、湖、泉</td>
+<td>必需</td>
+<td>发光、不发光</td>
+</tr>
+<tr>
+<td>四个地方的变体物件</td>
+<td>见上表</td>
+<td>必需</td>
+<td>芦苇上的灰兜帽、盖布的椅子、白衣少女的小船、空着的石头</td>
+</tr>
+<tr>
+<td>触屏按键</td>
+<td>手机</td>
+<td>必需</td>
+<td>方向键、确认、菜单</td>
+</tr>
+<tr>
+<td>主线标记</td>
+<td>地图上</td>
+<td>必需（和任务页共用）</td>
+<td>1</td>
+</tr>
+</tbody>
+</table></div>
+<h3>改动记录（quick-design）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>日期</th>
+<th>改什么</th>
+<th>从 → 到</th>
+<th>为什么</th>
+<th>怎么验</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-11-05</td>
+<td>整页重写</td>
+<td>旧草稿探索页 → 按六章的地点和世界状态变化写</td>
+<td>用户选了按章线性开放、只做关键几处</td>
+<td>旧草稿在 design/_draft_v1/systems/exploration.md</td>
+</tr>
+<tr>
+<td>2026-11-05</td>
+<td>地图上的敌人</td>
+<td>概念页写「可以去打，也可以绕开」→ 敌人都站在任务要走的路上</td>
+<td>不做经验和等级以后，可以绕开的敌人打了也没有收获</td>
+<td>验收第 2 条</td>
+</tr>
+</tbody>
+</table></div></section>
+<section id="combat" class="doc doc-combat"><h2 class="sec-title">回合制战斗设计页</h2>
+<p>系统 id：combat · 层：mvp · 负责 skill：combat-system · 参数文件：<code>content/data/combat.json</code>
+上游：<code>design/CONCEPT.md</code> 的「打仗时看敌人下一步」；世界规则第 1 条（离开水面只能看见几息之后的事）；最大风险里的次要风险「每回合有没有真正的两难」</p>
+<blockquote>
+<p>这页分两层。上半页给人看，下半页给实现看。</p>
+</blockquote>
+<h3>一句话</h3>
+<p>菜单式回合制战斗：敌人这一回合要对谁出什么招，开打前就亮在头上；你给学徒和每个同伴各选一个行动，决定先管哪一个威胁。</p>
+<h3>一个例子</h3>
+<p>第 1 章，凯带你和亚瑟进林子赶狼。</p>
+<ol>
+<li>第 2 回合开始，三只狼头上亮出这回合要做的事：头狼「扑咬 → 亚瑟，5 点」，灰狼「咬 → 凯，3 点」，瘦狼「嚎叫 → 下回合叫来 2 只狼」。</li>
+<li>你们三个人，每人只能做一件事。瘦狼只剩 4 点血：凯砍一刀（3 点）加亚瑟一剑（2 点），正好在它叫出声之前打倒它；你就空出手来，给亚瑟施「护身」，头狼那一口只剩 1 点。</li>
+<li>如果三个人都去打头狼，瘦狼叫来两只狼，这一仗要多打两三个回合，五只狼一起扑过来，亚瑟多半先倒下。</li>
+<li>你选了先打瘦狼。第 4 回合，头狼也倒下了。</li>
+</ol>
+<h3>1. 玩家感受</h3>
+<p>一场普通战斗打 3–5 回合，两三分钟（用户定）。</p>
+<p>敌人这一回合的目标和招式默认全部公开，玩家不靠猜。每回合最难的是目标优先级：威胁总比你们这回合能处理的多一个，先管哪个（用户定）。</p>
+<p>你操作所有人：学徒和最多两个同伴，每人每回合一个行动（用户定）。</p>
+<p>输了从这场开头重来，敌人怎么出手完全一样，可以换个打法再试（概念页：检查点重试）。</p>
+<h3>2. 规则</h3>
+<h4>一回合</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>发生什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>亮出意图</td>
+<td>每个敌人头上显示这回合要做的事：对谁、什么招、多少点；按出手顺序标 1、2、3</td>
+</tr>
+<tr>
+<td>你的回合</td>
+<td>学徒和同伴每人选一个行动，先后随你；选完点「结束回合」。结束前可以改</td>
+</tr>
+<tr>
+<td>你们出手</td>
+<td>按你选的先后执行</td>
+</tr>
+<tr>
+<td>敌人出手</td>
+<td>按标好的顺序执行；已经被打倒的敌人不出手</td>
+</tr>
+<tr>
+<td>回合结束</td>
+<td>学徒回 1 点法力；「防御」「护身」这些只管一回合的效果消失；进入下一回合，敌人亮出新的意图</td>
+</tr>
+</tbody>
+</table></div>
+<h4>敌人的招</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>招</th>
+<th>头上显示</th>
+<th>执行时</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>攻击</td>
+<td>箭头指向目标 + 点数</td>
+<td>打目标一下</td>
+</tr>
+<tr>
+<td>群攻</td>
+<td>箭头指向你们全体 + 点数</td>
+<td>你们每人挨一下</td>
+</tr>
+<tr>
+<td>蓄力</td>
+<td>「蓄力」+ 下回合要放的招</td>
+<td>这回合不动手，下回合放出那一招；被打断就作废</td>
+</tr>
+<tr>
+<td>召唤</td>
+<td>「召唤」+ 叫来几个</td>
+<td>下回合多出增援；被打断就作废</td>
+</tr>
+<tr>
+<td>防御</td>
+<td>盾</td>
+<td>这回合挨的伤害减半</td>
+</tr>
+<tr>
+<td>隐藏</td>
+<td>「？」</td>
+<td>照常执行，但你花法力揭开之前看不到是什么（只有首领有，第 4 章起）</td>
+</tr>
+</tbody>
+</table></div>
+<p>敌人怎么出手由固定的规则决定，不看运气。所以你看见的就是会发生的，重来一次也一样。</p>
+<h4>学徒的行动（每回合一个）</h4>
+<p>学徒不拿剑，用法术。法术全部来自剧情，不靠升级，什么时候学会见叙事进展页和章节内容表。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>行动</th>
+<th>法力</th>
+<th>效果</th>
+<th>什么时候有</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>星火</td>
+<td>1</td>
+<td>打一个敌人，2 点</td>
+<td>一开始就会</td>
+</tr>
+<tr>
+<td>护身</td>
+<td>2</td>
+<td>一个人（可以是自己）这回合挨的伤害少 4 点</td>
+<td>一开始就会</td>
+</tr>
+<tr>
+<td>凝神</td>
+<td>0</td>
+<td>不出手，这回合多回 1 点法力</td>
+<td>一开始就会</td>
+</tr>
+<tr>
+<td>打断</td>
+<td>3</td>
+<td>让一个敌人的蓄力或召唤作废</td>
+<td>第 1 章，梅林教的</td>
+</tr>
+<tr>
+<td>静水</td>
+<td>2</td>
+<td>再往后多看一回合的意图；不占这回合的行动</td>
+<td>第 3 章，第 2 章末告诉了梅林才有</td>
+</tr>
+<tr>
+<td>偏转</td>
+<td>3</td>
+<td>一个敌人打向你们某个人的一下，改打另一个敌人</td>
+<td>第 4 章起，梅林的「最后一课」，要第 2、3 章都告诉了梅林</td>
+</tr>
+<tr>
+<td>揭开</td>
+<td>1</td>
+<td>看清一个「？」；不占这回合的行动</td>
+<td>第 4 章起首领有「？」时</td>
+</tr>
+</tbody>
+</table></div>
+<h4>同伴的行动（每回合一个）</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>行动</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>攻击</td>
+<td>打一个敌人，点数看这个人的武器</td>
+</tr>
+<tr>
+<td>防御</td>
+<td>自己这回合挨的伤害减半</td>
+</tr>
+<tr>
+<td>自己的招</td>
+<td>每个同伴有一样只有他会的招，见下表</td>
+</tr>
+</tbody>
+</table></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>同伴</th>
+<th>自己的招</th>
+<th>什么时候有</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>凯</td>
+<td>「挡在前面」：这回合打向另一个同伴的一下，改打凯，凯少挨 2 点</td>
+<td>第 1 章出发前一晚谁都没告诉（D1c），第 4 章起</td>
+</tr>
+<tr>
+<td>亚瑟</td>
+<td>「剑鞘」：带着剑鞘时，血不会掉到 1 以下（不用选，一直生效）</td>
+<td>第 3 章湖中剑到第 4 章剑鞘被偷</td>
+</tr>
+<tr>
+<td>高文</td>
+<td>「正午之力」：每场前 3 回合，攻击多 3 点（不用选，一直生效）</td>
+<td>第 3 章加入起</td>
+</tr>
+<tr>
+<td>兰斯洛特</td>
+<td>「连斩」：一次打两个敌人，各 3 点</td>
+<td>第 4 章加入起</td>
+</tr>
+<tr>
+<td>加雷斯</td>
+<td>「后发」：上回合防御过，这回合攻击翻倍</td>
+<td>第 4 章「美手」支线起</td>
+</tr>
+<tr>
+<td>贝狄威尔</td>
+<td>「包扎」：给一个人回 4 点血，一场最多两次</td>
+<td>第 5 章加入起</td>
+</tr>
+</tbody>
+</table></div>
+<p>亚瑟、高文的招不用选，一直生效；其他人选「自己的招」就占掉这回合的行动。高文的「正午之力」、加雷斯「美手」的来历都出自原文（马洛礼第 7、20 卷）。</p>
+<h4>胜负</h4>
+<ul>
+<li>敌人全倒，或者撑过这场规定的回合数（比如第 3 章和佩利诺那一仗），就赢。</li>
+<li>学徒倒下，或者同伴全倒，就输。同伴倒下只是这一场不能再动，战后回满，不会死；谁会死只由剧情决定。</li>
+<li>输了弹出两个选项：「再来一次」从这场开头重来；「回地图」回到碰上敌人之前，可以换上场的人再来。没有惩罚。</li>
+<li>赢了没有经验和战利品，回满血，剧情或任务往前走一步。</li>
+</ul>
+<h4>怎么设计每一场（给写遭遇的人）</h4>
+<ol>
+<li>每场至少有一回合，威胁比你们这回合能完全处理的多一个。</li>
+<li>每场至少有一个解法要靠「先管哪个」：打断、护人、抢先打倒要出手的那个。</li>
+<li>首领战至少有一个「？」（第 4 章起）。</li>
+<li>只靠必得的能力（不靠静水、偏转、凯的「挡在前面」这些看选择才有的）也要能在 5 回合内打赢。</li>
+</ol>
+<hr />
+<h2 class="split">给实现看</h2>
+<h3>3. 公式</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>名字</th>
+<th>公式</th>
+<th>为什么是这个数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>伤害</td>
+<td>先算 max(1, 招的点数 − 目标护甲)；目标防御时减半，向上取整；凯「挡在前面」再 −2；最后护身吸收最多 4 点，可以吸收到 0</td>
+<td>用减法，玩家看着意图上的数就能心算出结果</td>
+</tr>
+<tr>
+<td>法力</td>
+<td>开场 = 上限 = 6（第 4 章拿到梅林的手杖后 8）；每回合结束 +1，凝神那回合再 +1</td>
+<td>第 1 回合能做一件大事再看一回合（打断 3 + 静水 2）；之后大约两回合一件大事，逼出取舍。先按感觉定，白盒后调</td>
+</tr>
+<tr>
+<td>回合数</td>
+<td>敌方总血量 ÷ 我方每回合能打出的伤害 ≈ 3，再加 1 回合花在护人或打断上 ≈ 4</td>
+<td>用户定 3–5 回合；写遭遇时按这条反推敌人血量</td>
+</tr>
+<tr>
+<td>队伍人数</td>
+<td>学徒 + 最多 2 个同伴</td>
+<td>你操作所有人；3 个行动对 4 个威胁，取舍最清楚</td>
+</tr>
+<tr>
+<td>意图</td>
+<td>每个敌人有一张固定的招式表，按回合轮着用；目标规则写在敌人数据里（固定某人 / 血最少的人 / 学徒）</td>
+<td>不看运气，重来一次完全一样，静水看见的第二回合也一定准</td>
+</tr>
+</tbody>
+</table></div>
+<p>第 1 章狼群战的反推：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>情形</th>
+<th>敌方总血量</th>
+<th>我方每回合能打出</th>
+<th>回合数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>先打倒瘦狼</td>
+<td>头狼 8 + 灰狼 4 + 瘦狼 4 = 16</td>
+<td>凯 3 + 亚瑟 2 + 星火 2 = 7（护人的回合少 2）</td>
+<td>约 4</td>
+</tr>
+<tr>
+<td>让瘦狼叫来 2 只狼</td>
+<td>24</td>
+<td>同上</td>
+<td>5–6，亚瑟多半先倒下</td>
+</tr>
+</tbody>
+</table></div>
+<h3>4. 边界情况</h3>
+<ul>
+<li><strong>0 / 满 / 负数</strong>：法力不够的法术灰掉，显示要几点；法力不超过上限；伤害先算最少 1 点，护身可以把它吸收到 0。</li>
+<li><strong>敌人在出手前被打倒</strong>：他的意图作废，不用打断。</li>
+<li><strong>打断没有蓄力或召唤的敌人</strong>：不允许选，目标灰掉。</li>
+<li><strong>凯「挡在前面」和护身在同一回合</strong>：攻击改打凯以后，原来那个人身上的护身用不上，凯身上的护身照常吸收。选的时候提示「护身会落空」。</li>
+<li><strong>两个人都要替同一个人挡</strong>：只有凯会「挡在前面」，不会出现两个人。</li>
+<li><strong>偏转没有第二个敌人</strong>：只剩一个敌人时偏转灰掉。</li>
+<li><strong>群攻</strong>：「挡在前面」和偏转只对打一个人的攻击有用，对群攻无效，选的时候提示。</li>
+<li><strong>召唤时敌方已满</strong>：敌方最多 5 个，超出的不出现。</li>
+<li><strong>看了第二回合以后局面变了</strong>（比如你打倒了一个敌人）：第二回合的预览自动重算，不再扣法力。</li>
+<li><strong>剧情规定的结果</strong>：有的仗剧情上必须输或中途停下（第 3 章亚瑟的剑断在佩利诺手里），写成「撑过 N 回合」，到回合数由剧情接管，不算玩家输。</li>
+<li><strong>存档中途</strong>：战斗中不存档；关掉网页再打开，回到碰上敌人之前。</li>
+<li><strong>玩家反着来</strong>：一直凝神、只让同伴攻击。按「怎么设计每一场」第 1 条，至少有一回合会有人倒下；白盒里验证「不用学徒的法术」很难赢。</li>
+</ul>
+<h3>5. 依赖</h3>
+<ul>
+<li>用到：同伴（谁能上场、每人的血量、武器、自己的招）；叙事进展（学徒会哪些法术、法力上限）；大地图（在哪碰到敌人）；任务（这一仗是哪个任务的一步、赢了以后发生什么）。</li>
+<li>被谁用：任务（「打赢某场」是任务的一步）；界面（意图、法力、行动菜单、出战选择）。</li>
+</ul>
+<h3>6. 可调参数（登记进 content/data/combat.json）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>当前值</th>
+<th>范围</th>
+<th>调它会改变什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>party_max_companions</td>
+<td>2</td>
+<td>1–3</td>
+<td>一回合能处理几个威胁，直接影响取舍</td>
+</tr>
+<tr>
+<td>mana_start / mana_max</td>
+<td>6 / 6（拿到手杖后 8 / 8）</td>
+<td>4–10</td>
+<td>一场开头能做几件大事</td>
+</tr>
+<tr>
+<td>mana_regen / focus_bonus</td>
+<td>1 / 1</td>
+<td>1–3 / 0–2</td>
+<td>大事之间要等几回合</td>
+</tr>
+<tr>
+<td>spells{}</td>
+<td>星火 1 法力 2 点；护身 2 法力 吸收 4；凝神 0；打断 3；静水 2；偏转 3；揭开 1</td>
+<td>—</td>
+<td>学徒每个行动的分量</td>
+</tr>
+<tr>
+<td>min_damage</td>
+<td>1</td>
+<td>0–2</td>
+<td>高护甲能不能完全挡住</td>
+</tr>
+<tr>
+<td>defend_factor</td>
+<td>0.5</td>
+<td>0.3–0.7</td>
+<td>防御值不值得选</td>
+</tr>
+<tr>
+<td>enemy_cap</td>
+<td>5</td>
+<td>4–6</td>
+<td>召唤的上限</td>
+</tr>
+<tr>
+<td>apprentice{}</td>
+<td>血量 10，护甲 0</td>
+<td>—</td>
+<td>学徒多脆</td>
+</tr>
+<tr>
+<td>companions{}</td>
+<td>凯：血 12、武器 3。亚瑟：第 1 章血 8、武器 2；第 2 章血 12、武器 4；第 3 章起武器 6。高文：血 14、武器 4、正午 +3。兰斯洛特：血 16、武器 5、连斩每下 3。加雷斯：血 12、武器 4。贝狄威尔：血 12、武器 3、包扎 4 × 2</td>
+<td>—</td>
+<td>同伴强度，按章变</td>
+</tr>
+<tr>
+<td>kay_cover_reduce</td>
+<td>2</td>
+<td>0–3</td>
+<td>凯的招值不值得选</td>
+</tr>
+<tr>
+<td>enemies{}</td>
+<td>狼：血 4、咬 3。头狼：血 8、扑咬 5。瘦狼：血 4、嚎叫叫来 2 只狼。梅林的影子：血 6、蓄力后重劈 12。其他章节的敌人第 10 步写遭遇时补</td>
+<td>—</td>
+<td>遭遇难度</td>
+</tr>
+<tr>
+<td>target_turns</td>
+<td>[3, 5]</td>
+<td>—</td>
+<td>模拟验收的回合区间</td>
+</tr>
+</tbody>
+</table></div>
+<h3>7. 验收条件（进 TASKS.md）</h3>
+<ul>
+<li>[ ] <code>--playtest</code> 每回合开始打印敌人意图：顺序、敌人、招、目标、点数；学过静水并施放时，多打印下一回合。</li>
+<li>[ ] 同一场输了重来，按同样的操作走，两次打印的每回合意图逐字相同。</li>
+<li>[ ] 第 1 章狼群战第 2 回合同时打印「头狼 扑咬 → 亚瑟 5」「灰狼 咬 → 凯 3」「瘦狼 召唤 2」。</li>
+<li>[ ] 在那一回合，凯和亚瑟打瘦狼、学徒护身亚瑟：打印瘦狼倒下、召唤作废、亚瑟挨 1 点。</li>
+<li>[ ] 梅林的影子那一仗：第 1 回合打断，打印「蓄力作废」；不打断，第 2 回合打印学徒挨 12 点、倒下、出现「再来一次」。</li>
+<li>[ ] 凯「挡在前面」只在 D1c 且第 4 章起出现在凯的菜单里；其他路线菜单里没有这一项。</li>
+<li>[ ] 模拟（balancing）：每章每场的最优打法 3–5 回合赢；只用必得能力的打法也能赢；完全不用学徒法术的打法胜率低于 30%。</li>
+<li>[ ] 截图：三个意图的目标箭头、点数、顺序编号互不遮挡；手机宽度下行动菜单的每个按钮都能点到。</li>
+</ul>
+<h3>8. 需要的素材</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>素材</th>
+<th>用在哪</th>
+<th>必需 / 可降级</th>
+<th>数量、动作或状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>战斗背景</td>
+<td>每场</td>
+<td>可降级（同一章可共用一张）</td>
+<td>林地、庄园院子、贝德格兰森林、泉边、往北的路、湖边、卡美洛城外、红地、比武场、欢乐堡、多佛海岸、卡姆兰</td>
+</tr>
+<tr>
+<td>我方战斗形象</td>
+<td>战斗画面</td>
+<td>必需</td>
+<td>学徒、凯、亚瑟（少年 / 王）、高文、兰斯洛特、加雷斯、贝狄威尔；待机、出手、挨打、倒下</td>
+</tr>
+<tr>
+<td>敌人形象</td>
+<td>战斗画面</td>
+<td>必需</td>
+<td>狼、头狼、瘦狼、梅林的影子、叛军步兵、叛军骑兵、盾兵、佩利诺、野人、摩根的骑士和护卫队长、红骑士、强盗、比武骑士、欢乐堡守军、多佛的弓箭手（箭雨）、莫德雷德和他的兵；待机、出手、倒下</td>
+</tr>
+<tr>
+<td>意图图标</td>
+<td>敌人头上</td>
+<td>必需</td>
+<td>攻击、群攻、蓄力、召唤、防御、「？」；出手顺序数字</td>
+</tr>
+<tr>
+<td>行动图标</td>
+<td>行动菜单</td>
+<td>必需</td>
+<td>星火、护身、凝神、打断、静水、偏转、揭开；攻击、防御；六个同伴各自的招</td>
+</tr>
+<tr>
+<td>状态标记</td>
+<td>角色身上</td>
+<td>必需</td>
+<td>防御、护身、剑鞘、正午之力、倒下</td>
+</tr>
+<tr>
+<td>出手特效</td>
+<td>法术命中</td>
+<td>可降级（先用闪白）</td>
+<td>星火、护身、打断、偏转</td>
+</tr>
+</tbody>
+</table></div>
+<h3>改动记录（quick-design）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>日期</th>
+<th>改什么</th>
+<th>从 → 到</th>
+<th>为什么</th>
+<th>怎么验</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-11-05</td>
+<td>整页重写</td>
+<td>旧草稿的 6×4 格子战斗 → 菜单式回合制</td>
+<td>定概念时用户选了回合制（JRPG），不选战棋</td>
+<td>旧草稿在 design/_draft_v1/systems/combat.md</td>
+</tr>
+<tr>
+<td>2026-11-05</td>
+<td>「多看一回合」</td>
+<td>旧草稿里人人花 2 法力就能看 → 只有学会「静水」的人能看</td>
+<td>故事圣经写定「静水」是告诉了梅林才得到的新法术（D2b）；人人都能看，这个选择就没有分量</td>
+<td>验收第 1、7 条</td>
+</tr>
+<tr>
+<td>2026-11-05</td>
+<td>「守护」</td>
+<td>人人会 → 只有凯在 D1c 时第 4 章起会（「挡在前面」）</td>
+<td>故事圣经写定这是凯的新招</td>
+<td>验收第 6 条</td>
+</tr>
+</tbody>
+</table></div></section>
+<section id="story-unlocks" class="doc doc-story-unlocks"><h2 class="sec-title">叙事进展设计页</h2>
+<p>系统 id：story-unlocks · 层：mvp · 负责 skill：progression-system · 参数文件：<code>content/data/story-unlocks.json</code>
+上游：<code>design/CONCEPT.md</code> 的「一页页拼出预言」和 A1 确认的「不做经验和等级」；故事圣经各选项的「解锁」一栏</p>
+<blockquote>
+<p>这页分两层。上半页给人看，下半页给实现看。</p>
+</blockquote>
+<h3>一句话</h3>
+<p>不刷经验、不升级：新法术、法力上限、新同伴、新地方，全部由剧情里的某件事给你，有的还要看你之前把话说给了谁。</p>
+<h3>一个例子</h3>
+<p>第 1 章，梅林在阁楼里告诉你亚瑟是尤瑟王的儿子，要你在他走后看着亚瑟。</p>
+<ol>
+<li>说完，他带你到院子里，变出一个影子骑士。影子头上亮出「蓄力 → 下回合重劈你，12 点」。</li>
+<li>梅林教你「打断」：「看见了，就要学会让它停下来。」屏幕上弹出「学会了：打断」。</li>
+<li>你在这场只有一个敌人的小仗里第一次用它：打断以后，影子的重劈作废。</li>
+<li>从这以后，每场战斗你的菜单里都多了这一项。</li>
+</ol>
+<h3>1. 玩家感受</h3>
+<p>变强的感觉来自故事。每个新能力都有一个人、一件事做来历，玩家记得「这是梅林在院子里教的」「这是他留下的手杖」。</p>
+<p>有几样能力要看你之前的选择：第 2 章末把酒杯里看见的事告诉梅林，第 3 章他才开始正式教你「静水」。玩家在这里第一次感觉到，说给谁听不只改变别人，也改变自己。</p>
+<p>也会失去：第 4 章剑鞘被偷，亚瑟从此会倒下；同伴离开，他的招也跟着走了。</p>
+<h3>2. 规则</h3>
+<h4>谁都会得到的</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>什么时候</th>
+<th>剧情里发生什么</th>
+<th>得到什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第 1 章开头</td>
+<td>梅林这些年教过你几样小把戏</td>
+<td>星火、护身、凝神</td>
+</tr>
+<tr>
+<td>第 1 章，梅林说出秘密之后</td>
+<td>梅林在院子里用影子教你</td>
+<td>打断</td>
+</tr>
+<tr>
+<td>第 2 章加冕</td>
+<td>亚瑟成了王，佩上石中剑</td>
+<td>亚瑟变强（血量、武器）</td>
+</tr>
+<tr>
+<td>第 3 章湖中剑</td>
+<td>湖中仙女给亚瑟王者之剑和剑鞘</td>
+<td>亚瑟武器更强；带剑鞘时血不会掉到 1 以下</td>
+</tr>
+<tr>
+<td>第 3 章婚礼与圆桌</td>
+<td>圆桌来到卡美洛，高文入席</td>
+<td>同伴面板变成圆桌；高文可以上场</td>
+</tr>
+<tr>
+<td>第 4 章开头</td>
+<td>梅林走了，他的白蜡木杖留在你手里</td>
+<td>法力上限 6 → 8</td>
+</tr>
+<tr>
+<td>第 4 章剑鞘</td>
+<td>摩根偷走剑鞘扔进湖里</td>
+<td>亚瑟失去「剑鞘」</td>
+</tr>
+<tr>
+<td>第 4 章十几年后</td>
+<td>兰斯洛特已是最强的骑士</td>
+<td>兰斯洛特可以上场</td>
+</tr>
+<tr>
+<td>第 4 章起首领战</td>
+<td>首领开始藏招</td>
+<td>「揭开」（花 1 点法力看清「？」）</td>
+</tr>
+<tr>
+<td>第 5 章留守</td>
+<td>骑士们走了，贝狄威尔留下来</td>
+<td>贝狄威尔可以上场</td>
+</tr>
+</tbody>
+</table></div>
+<h4>要看你的选择才得到的</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>条件</th>
+<th>什么时候得到</th>
+<th>得到什么</th>
+<th>故事里的来历</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第 2 章末告诉了梅林（D2b）</td>
+<td>第 3 章，在湖边</td>
+<td>静水：战斗里多看一回合</td>
+<td>梅林：「你来问我，是对的。」开始正式教你</td>
+</tr>
+<tr>
+<td>D2b，并且第 3 章末也告诉了梅林（D3a）</td>
+<td>第 3 章末，第 4 章起能用</td>
+<td>偏转：让一个敌人的攻击打到另一个敌人身上</td>
+<td>梅林临走前的「最后一课」</td>
+</tr>
+<tr>
+<td>第 1 章末谁都没说（D1c）</td>
+<td>第 4 章起</td>
+<td>凯的「挡在前面」</td>
+<td>凯当众认错以后一心想证明自己</td>
+</tr>
+<tr>
+<td>做了「美手」支线</td>
+<td>第 4 章，加雷斯受封以后</td>
+<td>加雷斯可以上场，会「后发」</td>
+<td>他在厨房忍了一年，出去一路打赢</td>
+</tr>
+</tbody>
+</table></div>
+<p>只告诉了梅林一次（D2b 或 D3a 只有一个）不会得到「最后一课」：D3a 时梅林把地方告诉你，这件事只管结局「康沃尔的巨石」。</p>
+<h4>失去的</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>什么时候</th>
+<th>失去什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第 4 章剑鞘被偷</td>
+<td>亚瑟的「剑鞘」</td>
+</tr>
+<tr>
+<td>同伴离开或离世（见同伴页）</td>
+<td>这个人不再上场，他的招一起消失</td>
+</tr>
+</tbody>
+</table></div>
+<h4>怎么告诉玩家</h4>
+<ul>
+<li>得到新法术或新同伴时，剧情演完弹出一张「新能力」提示：名字、一句效果、一句来历。</li>
+<li>失去时也弹一张，写清是哪件事让它没了（「剑鞘沉进了湖里。亚瑟从此会流血。」）。</li>
+<li>新法术第一次出现的那一仗，菜单里这一项会闪一下；之后不再提示。</li>
+</ul>
+<h4>不做的</h4>
+<ul>
+<li>不做经验、等级、技能点、装备、商店。打赢一仗只让剧情往前走。</li>
+<li>不做「可以错过的强力法术」：看选择才有的能力只让打法更多，没有它们也能打赢（战斗页「怎么设计每一场」第 4 条）。</li>
+</ul>
+<hr />
+<h2 class="split">给实现看</h2>
+<h3>3. 公式</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>名字</th>
+<th>公式</th>
+<th>为什么是这个数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>必得法术</td>
+<td>一开始 3 个，第 1 章 +1</td>
+<td>第 1 章就要能演示「剧情给法术」（概念页白盒清单）；一开始三个刚好覆盖打、护、回法力</td>
+</tr>
+<tr>
+<td>法力上限</td>
+<td>6；第 4 章手杖后 8</td>
+<td>第 4 章起有偏转、揭开，开销变多；+2 刚好多一件中等大事</td>
+</tr>
+<tr>
+<td>选择给的能力</td>
+<td>全程最多 3 样（静水、偏转、凯的招）+ 1 个同伴（加雷斯）</td>
+<td>每样都对应故事圣经里已写的解锁；不另外发明</td>
+</tr>
+</tbody>
+</table></div>
+<h3>4. 边界情况</h3>
+<ul>
+<li><strong>0 / 满 / 负数</strong>：一个能力只得到一次；同一个解锁事件重复触发（比如读档后又走到）不重复弹提示。</li>
+<li><strong>同时发生</strong>：一段剧情同时给两样（第 3 章湖边，D2b 的玩家同时拿到静水，其他人此时没有），提示一张一张弹，先法术后同伴。</li>
+<li><strong>条件在得到以后变了</strong>：不会发生。解锁只读已经做过、不能撤回的选择。</li>
+<li><strong>存档中途</strong>：解锁随剧情事件发生，事件结束时一起存档；提示弹出前关掉网页，再打开时能力已经在，提示补弹一次。</li>
+<li><strong>玩家反着来</strong>：一次都不告诉梅林、谁都不说，也能通关；验收里跑「什么选择都不给能力」那条路线。</li>
+<li><strong>支线没做</strong>：加雷斯不会加入；第 5 章他照原文死在法场（剧情页「跳过支线」规则）。</li>
+</ul>
+<h3>5. 依赖</h3>
+<ul>
+<li>用到：剧情变量（选了哪个选项、走到了哪个节点）；看水面与预言簿（决定在那里做）。</li>
+<li>被谁用：战斗（学徒的法术菜单、法力上限、同伴的招）；同伴（谁可以上场）；界面（新能力提示、预言簿里的「学会了什么」）。</li>
+</ul>
+<h3>6. 可调参数（登记进 content/data/story-unlocks.json）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>当前值</th>
+<th>范围</th>
+<th>调它会改变什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>starting_spells</td>
+<td>星火、护身、凝神</td>
+<td>—</td>
+<td>第一仗能做什么</td>
+</tr>
+<tr>
+<td>unlocks[]</td>
+<td>每条：id、类型（法术 / 同伴的招 / 数值 / 失去）、在哪个剧情节点、条件</td>
+<td>—</td>
+<td>什么时候得到什么；节点用剧情谱里的数字编号</td>
+</tr>
+<tr>
+<td>mana_max_after_staff</td>
+<td>8</td>
+<td>7–10</td>
+<td>第 4 章起的法力宽裕程度</td>
+</tr>
+<tr>
+<td>show_unlock_popup</td>
+<td>true</td>
+<td>—</td>
+<td>关掉后只在菜单里闪一下</td>
+</tr>
+</tbody>
+</table></div>
+<h3>7. 验收条件（进 TASKS.md）</h3>
+<ul>
+<li>[ ] <code>--playtest</code> 走到第 1 章 1103 打印「学会：打断」；在那之前的狼群战里，学徒菜单没有打断。</li>
+<li>[ ] 路线 D2b：1303 打印「学会：静水」。路线 D2a、D2c：全程不打印静水。</li>
+<li>[ ] 路线 D2b + D3a：1305 打印「学会：偏转」，第 4 章第一场起菜单里有偏转。D2c + D3a、D2b + D3b：都没有。</li>
+<li>[ ] 路线 D1c：第 4 章第一场起凯的菜单里有「挡在前面」；D1a、D1b 没有。</li>
+<li>[ ] 所有路线：1401 打印「法力上限 8」；1402 打印「失去：剑鞘」，之后亚瑟的血能掉到 0。</li>
+<li>[ ] 读档后重走同一事件，不重复打印、不重复弹提示。</li>
+<li>[ ] 截图：新能力提示一屏内显示名字、效果、来历三行。</li>
+</ul>
+<h3>8. 需要的素材</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>素材</th>
+<th>用在哪</th>
+<th>必需 / 可降级</th>
+<th>数量、动作或状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>新能力提示框</td>
+<td>剧情演完</td>
+<td>必需</td>
+<td>得到、失去两种样式</td>
+</tr>
+<tr>
+<td>法术图标</td>
+<td>提示框、行动菜单</td>
+<td>必需（和战斗页共用）</td>
+<td>7 个</td>
+</tr>
+<tr>
+<td>物件图</td>
+<td>提示框</td>
+<td>可降级（用文字）</td>
+<td>白蜡木杖、剑鞘、王者之剑</td>
+</tr>
+</tbody>
+</table></div>
+<h3>改动记录（quick-design）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>日期</th>
+<th>改什么</th>
+<th>从 → 到</th>
+<th>为什么</th>
+<th>怎么验</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-11-05</td>
+<td>新写</td>
+<td>旧草稿的「成长」页（升级）→ 叙事进展</td>
+<td>用户选了叙事进展，A1 确认不做经验和等级</td>
+<td>旧草稿在 design/_draft_v1/systems/progression.md</td>
+</tr>
+</tbody>
+</table></div></section>
+<section id="screens" class="doc doc-screens"><h2 class="sec-title">界面清单 · 梅林的学徒（暂定名）</h2>
+<p>第 5 步写出有哪些屏幕、从哪进、怎么跳；布局和样式之后由 ui-layout 按画风文档补（第 7 步之后）。一屏 = 玩家能看到的一个完整画面，或盖在上面的一个面板、一个弹窗。</p>
+<h3>怎么跳</h3>
+<div class="diagram"><figure class="fig flows">
+<div class="flow-start"><span class="chip">标题</span><span class="arr">→</span><span class="chip">选外观、起名字</span><span class="arr">→</span><span class="chip hub">大地图</span></div>
+<ul class="flowrows">
+<li><span class="trig">走到人跟前</span><span class="chip">对话</span><span class="arr">→</span><span class="chip key">说出口确认</span><span class="note">关键选择时</span></li>
+<li><span class="trig">发光的水面</span><span class="chip">看水面</span></li>
+<li><span class="trig">碰到敌人</span><span class="chip">出战选择</span><span class="note">人多于 2 个时</span><span class="arr">→</span><span class="chip">战斗</span><span class="arr">→</span><span class="chip">再来一次 / 回地图</span><span class="note">输了时</span></li>
+<li><span class="trig">剧情给了能力</span><span class="chip">新能力提示</span></li>
+<li><span class="trig">按菜单键</span><span class="chip">菜单</span><span class="arr">→</span><span class="chip">预言簿</span><span class="chip">同伴面板</span><span class="chip">任务记录</span><span class="chip">设置</span></li>
+<li><span class="trig">往前走会关支线</span><span class="chip">支线关门提醒</span></li>
+<li><span class="trig">章末</span><span class="chip">章节过渡</span></li>
+<li><span class="trig">第 6 章湖边</span><span class="chip">结局回顾</span><span class="arr">→</span><span class="chip">标题</span></li>
+</ul>
+<figcaption>每一行都从大地图出发，走完回到大地图；只有最后一行回到标题。</figcaption>
+</figure>
+</div>
+<p>每一条从大地图出发的路，走完都回到大地图；只有结局回顾回到标题。</p>
+<h3>每一屏</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>屏幕</th>
+<th>从哪进 / 回到哪</th>
+<th>上面有什么</th>
+<th>玩家在这里做什么</th>
+<th>用到的系统</th>
+<th>层</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>大地图</td>
+<td>开场、对话 / 战斗 / 菜单结束后</td>
+<td>地图和人物；屏幕上方「下一步：……」；主线标记；人物头上的「…」；发光的水面；手机上的方向键、确认键、菜单键</td>
+<td>去哪、先找谁说话、要不要现在碰那群敌人</td>
+<td>大地图、任务</td>
+<td>mvp</td>
+</tr>
+<tr>
+<td>对话</td>
+<td>走到人跟前按确认，或剧情自动开始 / 回到大地图</td>
+<td>头像、名字、一句话（不超过 40 字）；选项列表，关键选择带水滴标记</td>
+<td>选怎么回答；关键选择时决定说给谁听</td>
+<td>对话、看水面与预言簿</td>
+<td>mvp</td>
+</tr>
+<tr>
+<td>说出口确认</td>
+<td>选中关键选择 / 回到对话（取消回到选项）</td>
+<td>「说出口就不能收回。确定吗？」、确定、取消</td>
+<td>确定还是再想想</td>
+<td>看水面与预言簿</td>
+<td>mvp</td>
+</tr>
+<tr>
+<td>看水面</td>
+<td>在发光的水面按确认，或剧情里看酒杯、圣水盆、木碗 / 回到对话或大地图</td>
+<td>一张静止的画面，下面两三句描写；「记进预言簿」</td>
+<td>看清这一幕是谁、在哪</td>
+<td>看水面与预言簿</td>
+<td>mvp</td>
+</tr>
+<tr>
+<td>战斗</td>
+<td>在地图上碰到敌人，或剧情战 / 赢了回大地图</td>
+<td>敌人和他们头上的意图（目标箭头、点数、出手顺序、「？」）；我方每人的血量；学徒的法力；当前选人的行动菜单（法力不够的灰掉）；「结束回合」；学过静水时，多看一回合的预览</td>
+<td>每回合先管哪个威胁：打谁、护谁、打断谁、要不要花法力多看一回合或揭开「？」</td>
+<td>战斗、同伴、叙事进展</td>
+<td>mvp</td>
+</tr>
+<tr>
+<td>再来一次 / 回地图</td>
+<td>战斗输了 / 回到这场开头，或回到碰到敌人之前</td>
+<td>一句「你们倒下了」；两个按钮</td>
+<td>原样再打，还是回去换上场的人</td>
+<td>战斗</td>
+<td>mvp</td>
+</tr>
+<tr>
+<td>新能力提示</td>
+<td>剧情演完得到或失去能力 / 回到大地图</td>
+<td>名字、一句效果、一句来历（「梅林在院子里教你的」）；得到和失去两种样子</td>
+<td>读完就关</td>
+<td>叙事进展</td>
+<td>mvp</td>
+</tr>
+<tr>
+<td>菜单</td>
+<td>大地图按菜单键 / 回到大地图</td>
+<td>预言簿、同伴、任务记录、设置</td>
+<td>打开哪一个</td>
+<td>界面</td>
+<td>mvp</td>
+</tr>
+<tr>
+<td>预言簿</td>
+<td>菜单；看水面以后 / 回到菜单</td>
+<td>每页一幕：画面缩略图、看见了什么、告诉了谁（或「还没决定」）、后来怎样</td>
+<td>翻回去看自己看见过什么、还有哪件事没决定</td>
+<td>看水面与预言簿</td>
+<td>mvp</td>
+</tr>
+<tr>
+<td>同伴面板</td>
+<td>菜单 / 回到菜单</td>
+<td>第 1–2 章一张名单，第 3 章起一张圆桌；每人的状态（坐着、空椅子、盖布）；点开是他的卡片：现在怎么看你、你告诉过他什么、他在战斗里的招</td>
+<td>看谁还在、关系怎么变了</td>
+<td>同伴</td>
+<td>mvp（第 1–2 章名单）/ playable（圆桌）</td>
+</tr>
+<tr>
+<td>章节过渡</td>
+<td>一章最后一步结束 / 进入下一章的大地图</td>
+<td>章名；这章没做的支线；下一章的地名</td>
+<td>读完继续</td>
+<td>任务、大地图</td>
+<td>mvp</td>
+</tr>
+<tr>
+<td>选外观、起名字</td>
+<td>新游戏 / 进入大地图</td>
+<td>几种外观，一个名字输入框（有默认名）</td>
+<td>选你长什么样、叫什么</td>
+<td>对话</td>
+<td>playable</td>
+</tr>
+<tr>
+<td>标题</td>
+<td>打开网页 / 进入选外观，或继续存档</td>
+<td>游戏名；新游戏；继续（有存档时）</td>
+<td>开始新的还是继续</td>
+<td>存档</td>
+<td>playable</td>
+</tr>
+<tr>
+<td>出战选择</td>
+<td>碰到敌人且能上场的人超过 2 个 / 进入战斗</td>
+<td>能上场的同伴（头像、血量、招）；剧情规定的人带锁；选够 2 个才能开打</td>
+<td>带哪两个人去</td>
+<td>同伴、战斗</td>
+<td>playable（第 3 章起才用到）</td>
+</tr>
+<tr>
+<td>任务记录</td>
+<td>菜单 / 回到菜单</td>
+<td>主线：当前一步。支线：谁告诉你的、他的原话、做到哪、开着还是关了</td>
+<td>想起支线该去哪找</td>
+<td>任务</td>
+<td>playable</td>
+</tr>
+<tr>
+<td>支线关门提醒</td>
+<td>走向会关掉支线的那一步 / 回到大地图</td>
+<td>「往前走，『……』就做不了了。现在往前走吗？」；往前走、先不走</td>
+<td>先回去做支线，还是往前走</td>
+<td>任务</td>
+<td>playable</td>
+</tr>
+<tr>
+<td>结局回顾</td>
+<td>第 6 章湖边做完最后的选择 / 回到标题</td>
+<td>逐页念出：你看见了什么、告诉了谁、那个人后来怎样；最后是你自己的结局</td>
+<td>读完</td>
+<td>看水面与预言簿、同伴</td>
+<td>playable</td>
+</tr>
+<tr>
+<td>设置</td>
+<td>菜单 / 回到菜单</td>
+<td>打字速度</td>
+<td>调快调慢</td>
+<td>对话</td>
+<td>playable</td>
+</tr>
+<tr>
+<td>对话回看</td>
+<td>对话中 / 回到对话</td>
+<td>这段对话前面说过的话</td>
+<td>回看漏掉的一句</td>
+<td>对话</td>
+<td>full</td>
+</tr>
+</tbody>
+</table></div>
+<p>第 6 章「船走远以后，你去哪」是一次关键选择，用的就是对话和说出口确认这两屏，不另做屏幕。</p>
+<h3>规则</h3>
+<ul>
+<li>设计页里提到的每个面板、按钮栏、提示框、弹窗，都要在这张表里有一行；表里没有的，ui-layout 不做。</li>
+<li>「上面有什么」只写信息和控件，不写颜色、字号和尺寸，那是 ui-layout 的事。</li>
+<li>白盒切片只做 mvp 层的屏幕。</li>
+</ul></section>
+<section id="schedule" class="doc doc-schedule"><h2 class="sec-title">章节内容表 · 梅林的学徒（暂定名）</h2>
+<p>这张表一章一行，告诉你每一章发生什么、第一次出现什么、难到什么程度。</p>
+<ul>
+<li><strong>左边两列是故事</strong>：第 3 步填好，第 5 步按剧情谱补全了每章的几件事。</li>
+<li><strong>中间玩法几列</strong>：第 5 步按每章的故事填。</li>
+<li><strong>「遭遇」一列</strong>：第 10 步写任务时填。</li>
+</ul>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>章</th>
+<th>故事：这章发生什么</th>
+<th>故事：玩家要做的决定</th>
+<th>玩法：第一次出现的机制</th>
+<th>玩法：这章能学到的新招 / 新能力</th>
+<th>玩法：新敌人 / 新敌人行为</th>
+<th>玩法：目标难度（1–5）</th>
+<th>玩法：这章战斗里最难的一个取舍</th>
+<th>遭遇：主要几场战斗</th>
+<th>预计时长</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>庄园：凯带你和亚瑟进林子赶狼；你在石圈的积水里第一次看清一整幕将来；梅林告诉你亚瑟是尤瑟王的儿子，要你在他走后看着亚瑟；出发去伦敦的前一晚</td>
+<td>主线：提醒凯：到了伦敦，不管发生什么，别对父亲说谎 / 告诉亚瑟：凯会说剑是他拔的 / 谁都不说</td>
+<td>在地图上走、找人说话；回合制战斗和意图预告（狼群）；打断蓄力（梅林的影子）；看水面、预言簿；关键选择。第 1 章就是整套核心循环，一场只教一样：狼群教看意图，影子教打断，石圈教看水面，马厩教说给谁听</td>
+<td>一开始会：星火、护身、凝神。梅林说出秘密之后教：打断</td>
+<td>狼（咬）、头狼（扑咬）、瘦狼（嚎叫：下回合叫来 2 只狼）；梅林的影子（蓄力：下回合重劈 12 点）</td>
+<td>1</td>
+<td>狼群第 2 回合：护住要被头狼扑的亚瑟，还是先打倒要嚎叫的瘦狼</td>
+<td>第 10 步填（设计页已定两场：狼群、梅林的影子）</td>
+<td>约 15 分钟</td>
+</tr>
+<tr>
+<td>2</td>
+<td>石中剑：伦敦教堂墓地的石中剑没有贵族拔得动；新年比武，凯忘了剑，亚瑟回去取，拔出石中剑；「是我拔的」，你第 1 章看见的那一幕发生；亚瑟加冕，十一王起兵，贝德格兰之战；庆功宴上你在酒杯里看见亚瑟的剑断成两截</td>
+<td>主线：告诉亚瑟：他的剑会在一场决斗里断掉 / 告诉梅林 / 谁都不说</td>
+<td>应验（预言簿多一行「后来」）；回读（有人提起你那晚的话）；群攻（一下打你们所有人）</td>
+<td>亚瑟成了王，佩上石中剑：血量和武器变强</td>
+<td>叛军步兵（攻击）、叛军骑兵（蓄力冲锋：下回合打你们全部）、盾兵（轮流防御）</td>
+<td>2</td>
+<td>骑兵蓄力冲锋时：花 3 点法力打断，还是让亚瑟和凯先把他砍倒、自己硬吃步兵一刀</td>
+<td>第 10 步填（设计页已定：贝德格兰之战）</td>
+<td>约 20 分钟</td>
+</tr>
+<tr>
+<td>3</td>
+<td>湖中剑与圆桌：梅林告诉亚瑟，他和摩高斯的孩子将来会毁掉他；亚瑟和佩利诺决斗，剑断，梅林让佩利诺睡着；湖中仙女给亚瑟王者之剑和剑鞘；亚瑟娶王后，圆桌来到卡美洛；你在湖面上看见梅林的灰兜帽夹在海边巨石的石缝里，梅林说要跟妮妙出远门</td>
+<td>主线：告诉梅林你看见了什么 / 告诉亚瑟 / 谁都不说<br>支线「高文与绿衣骑士」：劝他说出来 / 劝他别说，这件事只有你们两个知道</td>
+<td>「撑过几回合」的仗（和佩利诺，剑断后剧情接管）；出战选择（第一次有 3 个同伴可选）；同伴面板变成圆桌；只靠口头指路的支线；看选择才有的能力</td>
+<td>亚瑟：王者之剑；剑鞘（血不会掉到 1 以下）。高文加入：「正午之力」。D2b：静水（湖边）。D2b 且 D3a：「最后一课」偏转（第 4 章起用）</td>
+<td>佩利诺（首领：轮流攻击和蓄力重劈）；支线路上的野人（成群，两个一起扑同一个人）</td>
+<td>3</td>
+<td>佩利诺蓄力重劈亚瑟：这回合就花 3 点法力打断，还是等它落下时让亚瑟防御、你再给他护身</td>
+<td>第 10 步填（设计页已定：佩利诺；支线：野人）</td>
+<td>约 25 分钟，支线另 8 分钟</td>
+</tr>
+<tr>
+<td>4</td>
+<td>梅林离开：梅林被封在康沃尔的巨石下，你接替他；摩根偷走剑鞘扔进湖里；十几年后，兰斯洛特已是最强的骑士，厨房来了个不肯说名字的年轻人；莫德雷德来到宫廷，亚瑟话到嘴边只说了「好好当差」；圆桌宴席上你在酒杯里看见王后和兰斯洛特，门外站着阿格规文和莫德雷德</td>
+<td>主线：告诉兰斯洛特：有一天门外会站着人 / 告诉亚瑟 / 谁都不说<br>支线「厨房里的『美手』」：告诉加雷斯：别在兰斯洛特面前不带剑 / 告诉凯 / 谁都不说</td>
+<td>首领藏招「？」和揭开；失去能力（剑鞘被偷，亚瑟会倒下了）；地图上第一处看得出你选择的地方（湖边芦苇上的灰兜帽，D3c）</td>
+<td>梅林的手杖：法力上限 6 → 8。兰斯洛特加入：「连斩」。D1c：凯「挡在前面」。做了「美手」支线：加雷斯加入，「后发」。揭开</td>
+<td>摩根的骑士（召唤增援、轮流防御）；摩根的护卫队长（第一个有「？」的首领）；红骑士（支线首领：越打越强，前 3 回合每回合多 2 点）</td>
+<td>2</td>
+<td>首领头上一个「？」：花 1 点法力揭开再决定，还是攒着法力留给打断</td>
+<td>第 10 步填（设计页已定：追摩根；支线：红骑士）</td>
+<td>约 25 分钟，支线另 10 分钟</td>
+</tr>
+<tr>
+<td>5</td>
+<td>圣杯与裂痕：圣杯显现，骑士们出发去找；你和凯、贝狄威尔留守空了一半的卡美洛；阿格规文、莫德雷德揭发兰斯洛特和王后；法场上兰斯洛特劫走王后，误杀加赫里斯；高文发誓复仇，你在圣水盆里看见那条蛇</td>
+<td>主线：告诉亚瑟：谈判的时候会有一条蛇 / 告诉凯（凯已经离开，或者不信你时，改成告诉贝狄威尔） / 谁都不说<br>支线「毒苹果」：告诉高文 / 告诉王后 / 谁都不说<br>支线「阿斯托拉特的伊莲恩」：告诉伊莲恩：他心里的人不是你 / 告诉兰斯洛特 / 谁都不说<br>高文发誓时的附加选项：什么也不说 / 提醒他也失过信（需 S1b）/ 请他先写信（需 S3a）</td>
+<td>同伴离开和离世（法场之后，圆桌上第一次出现空椅子和盖布的椅子）；做过支线才出现的附加选项；地图上两处看得出选择的地方（圆桌大厅、城下河边）</td>
+<td>贝狄威尔加入：「包扎」</td>
+<td>强盗（盯人：总扑向血最少的人）；比武骑士（支线：打倒一个，下回合补上一个）</td>
+<td>4</td>
+<td>强盗盯着血最少的人：让贝狄威尔包扎（一场只有两次），还是给那个人护身、让贝狄威尔出手</td>
+<td>第 10 步填（设计页已定：守城；支线：比武）</td>
+<td>约 25 分钟，两条支线另 14 分钟</td>
+</tr>
+<tr>
+<td>6</td>
+<td>最后一战：亚瑟围攻欢乐堡，教皇调停；亚瑟渡海追击，把国家交给莫德雷德；莫德雷德伪造死讯篡位；多佛登陆，高文战死；卡姆兰，一条蛇引发大战，亚瑟刺死莫德雷德，自己受了致命伤；湖边，贝狄威尔还剑，船把亚瑟接往阿瓦隆</td>
+<td>结局：把木碗扔进湖里 / 回卡美洛 / 去康沃尔找那块巨石</td>
+<td>结局回顾；你自己的三个结局；卡姆兰营地篝火边站着谁（第四处看得出选择的地方）。最后一章不教新东西</td>
+<td>没有新招，用前五章学会的全部；高文在多佛战死后不再上场</td>
+<td>欢乐堡守军（全员轮流防御）；多佛箭雨（每回合固定打你们全部，撑过 4 回合）；莫德雷德（首领：两个「？」、召唤增援、蓄力重击亚瑟）</td>
+<td>5</td>
+<td>卡姆兰：莫德雷德蓄力重击亚瑟和召唤增援在同一回合，只能打断一个</td>
+<td>第 10 步填（设计页已定：欢乐堡、多佛、卡姆兰）</td>
+<td>约 30 分钟</td>
+</tr>
+</tbody>
+</table></div>
+<p>全程：主线约 2 小时 20 分钟，四条支线约 30 分钟，合计约 2 小时 50 分钟（GAME_BRIEF 估的 2.5–3 小时以内）。</p>
+<h3>规则（默认做法，可以改）</h3>
+<ul>
+<li>一章最多引入一到两样新东西。新东西先在一场简单的战斗或事件里单独出现，下一场再和旧的混在一起。第 1 章是例外：它要把整套核心循环演一遍，所以按「一场只教一样」排开。</li>
+<li>难度每 2–3 章一个小高峰，最后一章最高；不要连续三章同一个难度。现在是 1、2、3、2、4、5。</li>
+<li>设计页里的每个机制、新招、敌人类型，都要在这张表里有「第几章第一次出现」。表里没有的，就是还没决定什么时候教给玩家。</li>
+<li>故事列和玩法列对不上时（比如这章故事里没有打仗，玩法列却要教新敌人），回来改其中一边，不要硬塞。</li>
+<li>看选择才有的能力（静水、偏转、凯的「挡在前面」、加雷斯）只让打法更多：每场仗只靠必得的能力也要能赢（战斗页「怎么设计每一场」第 4 条）。</li>
+</ul></section>
+</main>
+<footer class="wrap">这一页由项目里的 .md 文件生成；改设计以那些文件为准。</footer>
+<script>
+(function () {
+  try {
+    var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+    var byId = {};
+    links.forEach(function (a) { byId[a.getAttribute('data-sec')] = a; });
+    function mark(id) {
+      links.forEach(function (a) { a.classList.toggle('on', a.getAttribute('data-sec') === id); });
+      var a = byId[id];
+      if (a && a.scrollIntoView) { a.parentNode.scrollLeft = a.offsetLeft - 16; }
+    }
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) mark(e.target.id); });
+      }, { rootMargin: '-20% 0px -70% 0px' });
+      document.querySelectorAll('section.doc').forEach(function (s) { io.observe(s); });
+    }
+    mark((location.hash || '#gdd').slice(1));
+  } catch (e) {}
+})();
+</script>

@@ -1,0 +1,78 @@
+{
+  "_说明": "参数登记，来自 design/systems/companions.md 第 6 节；代码只读这里的数，改数先改设计页。 离开、离世的条件读 bible.json 的下场表，不在这里另写；血量和招在 combat.json。",
+  "table_panel_from_chapter": 3,
+  "relation_lines_max": 2,
+  "roster": [
+    {
+      "id": "kay",
+      "combat": true,
+      "joins_at": "1101",
+      "left_item": "总管钥匙"
+    },
+    {
+      "id": "arthur",
+      "combat": true,
+      "joins_at": "1101"
+    },
+    {
+      "id": "gawain",
+      "combat": true,
+      "joins_at": "1304"
+    },
+    {
+      "id": "lancelot",
+      "combat": true,
+      "joins_at": "1403",
+      "left_item": "披风"
+    },
+    {
+      "id": "gareth",
+      "combat": true,
+      "joins_at": "2401",
+      "requires": [
+        "S2_done"
+      ]
+    },
+    {
+      "id": "bedivere",
+      "combat": true,
+      "joins_at": "1502"
+    },
+    {
+      "id": "merlin",
+      "combat": false,
+      "joins_at": "1102"
+    },
+    {
+      "id": "ector",
+      "combat": false,
+      "joins_at": "1101"
+    },
+    {
+      "id": "guinevere",
+      "combat": false,
+      "joins_at": "1304"
+    },
+    {
+      "id": "agravaine",
+      "combat": false,
+      "joins_at": "1404"
+    },
+    {
+      "id": "gaheris",
+      "combat": false,
+      "joins_at": "1403"
+    },
+    {
+      "id": "mordred",
+      "combat": false,
+      "joins_at": "1404"
+    }
+  ],
+  "relation_lines": {
+    "kay_believes_you": "半信半疑地觉得你能看见以后的事",
+    "kay_rift": "觉得被弟弟可怜了，和亚瑟之间有了疙瘩",
+    "kay_shamed": "当众认过错，一心想证明自己",
+    "_其他": "其余标记的句子第 8 步写对白时补，正文放进文本表"
+  }
+}

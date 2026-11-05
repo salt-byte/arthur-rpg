@@ -1,0 +1,9 @@
+{
+  "_说明": "参数登记，来自 design/systems/dialogue.md 第 6 节；代码只读这里的数，改数先改设计页。",
+  "max_chars_per_box": 40,
+  "max_normal_options": 3,
+  "readback_window_chapters": 2,
+  "text_speed_cps": 30,
+  "new_talk_marker": "…",
+  "key_choice_marker": "水滴"
+}

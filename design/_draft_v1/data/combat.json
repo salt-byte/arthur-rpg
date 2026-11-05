@@ -1,0 +1,121 @@
+{
+  "_说明": "参数登记，来自 design/systems/combat.md 第 6 节；代码只读这里的数，改数先改设计页。",
+  "grid_w": 6,
+  "grid_h": 4,
+  "party_max_knights": 2,
+  "mana_start": 6,
+  "mana_max": 6,
+  "mana_regen": 2,
+  "sight_turn2_cost": 2,
+  "reveal_hidden_cost": 1,
+  "spells": {
+    "spark": {
+      "name": "星火",
+      "mana": 1,
+      "range": 3,
+      "damage": 2
+    },
+    "push": {
+      "name": "推开",
+      "mana": 2,
+      "range": 3,
+      "distance": 1
+    },
+    "interrupt": {
+      "name": "打断",
+      "mana": 3,
+      "range": 4,
+      "cancels": [
+        "charge",
+        "summon"
+      ]
+    },
+    "focus": {
+      "name": "凝神",
+      "mana": 0,
+      "bonus_regen": 1
+    }
+  },
+  "starting_spells": [
+    "spark",
+    "push",
+    "interrupt",
+    "focus"
+  ],
+  "min_damage": 1,
+  "collision_damage": 1,
+  "guard_enabled": true,
+  "apprentice": {
+    "hp": 10,
+    "move": 2,
+    "armor": 0
+  },
+  "knights": {
+    "ch1": {
+      "kay": {
+        "name": "凯",
+        "hp": 14,
+        "armor": 1,
+        "weapon": 3,
+        "move": 2
+      }
+    }
+  },
+  "enemies": {
+    "wolf": {
+      "name": "狼",
+      "hp": 5,
+      "armor": 0,
+      "move": 2,
+      "moves": {
+        "bite": {
+          "type": "attack",
+          "power": 3,
+          "range": 1
+        }
+      }
+    },
+    "alpha_wolf": {
+      "name": "头狼",
+      "hp": 10,
+      "armor": 0,
+      "move": 3,
+      "moves": {
+        "lunge": {
+          "type": "charge_attack",
+          "power": 5,
+          "line": 3
+        },
+        "howl": {
+          "type": "charge",
+          "release": "summon",
+          "summon": "wolf",
+          "count": 2
+        }
+      }
+    }
+  },
+  "statuses": {
+    "rooted": {
+      "name": "缠住",
+      "turns": 1
+    },
+    "ward": {
+      "name": "护盾",
+      "until": "enemy_phase_end"
+    },
+    "downed": {
+      "name": "倒地",
+      "until": "battle_end"
+    }
+  },
+  "xp": {
+    "normal": 25,
+    "elite": 50,
+    "boss": 100
+  },
+  "target_turns": [
+    3,
+    5
+  ]
+}

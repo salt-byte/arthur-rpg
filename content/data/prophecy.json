@@ -1,0 +1,66 @@
+{
+  "_说明": "参数登记，来自 design/systems/prophecy.md 第 6 节；代码只读这里的数，改数先改设计页。 选项、后果、回读在 bible.json，这里只放画面文字的限制和节点。",
+  "vision_max_sentences": 3,
+  "vision_max_chars": 30,
+  "confirm_irreversible": true,
+  "autosave_on_decide": true,
+  "single_save_slot": true,
+  "show_locked_options": false,
+  "idle_water_text": "水面很平静。",
+  "visions": [
+    {
+      "decision": "D1",
+      "seen_at": "1102",
+      "surface": "石圈平石上的积水",
+      "decide_at": "1104"
+    },
+    {
+      "decision": "D2",
+      "seen_at": "1205",
+      "surface": "庆功宴的酒杯",
+      "decide_at": "1205"
+    },
+    {
+      "decision": "D3",
+      "seen_at": "1305",
+      "surface": "湖面",
+      "decide_at": "1305"
+    },
+    {
+      "decision": "D4",
+      "seen_at": "1405",
+      "surface": "圆桌宴席的酒杯",
+      "decide_at": "1405"
+    },
+    {
+      "decision": "D5",
+      "seen_at": "1505",
+      "surface": "礼拜堂的圣水盆",
+      "decide_at": "1505"
+    },
+    {
+      "decision": "S1",
+      "seen_at": "2301",
+      "surface": "木碗",
+      "decide_at": "2301"
+    },
+    {
+      "decision": "S2",
+      "seen_at": "2401",
+      "surface": "木碗",
+      "decide_at": "2401"
+    },
+    {
+      "decision": "S3",
+      "seen_at": "2501",
+      "surface": "木碗",
+      "decide_at": "2501"
+    },
+    {
+      "decision": "S4",
+      "seen_at": "2502",
+      "surface": "木碗",
+      "decide_at": "2502"
+    }
+  ]
+}

@@ -1,0 +1,184 @@
+{
+  "_说明": "参数登记，来自 design/systems/combat.md 第 6 节；代码只读这里的数，改数先改设计页。",
+  "party_max_companions": 2,
+  "mana_start": 6,
+  "mana_max": 6,
+  "mana_regen": 1,
+  "focus_bonus": 1,
+  "min_damage": 1,
+  "defend_factor": 0.5,
+  "enemy_cap": 5,
+  "kay_cover_reduce": 2,
+  "target_turns": [
+    3,
+    5
+  ],
+  "spells": {
+    "spark": {
+      "name": "星火",
+      "mana": 1,
+      "damage": 2
+    },
+    "ward": {
+      "name": "护身",
+      "mana": 2,
+      "absorb": 4,
+      "target": "ally_or_self"
+    },
+    "focus": {
+      "name": "凝神",
+      "mana": 0,
+      "bonus_regen": 1
+    },
+    "interrupt": {
+      "name": "打断",
+      "mana": 3,
+      "cancels": [
+        "charge",
+        "summon"
+      ]
+    },
+    "still_water": {
+      "name": "静水",
+      "mana": 2,
+      "free_action": true,
+      "extra_turns_shown": 1
+    },
+    "deflect": {
+      "name": "偏转",
+      "mana": 3,
+      "redirect": "single_target_attack_to_other_enemy"
+    },
+    "reveal": {
+      "name": "揭开",
+      "mana": 1,
+      "free_action": true
+    }
+  },
+  "apprentice": {
+    "hp": 10,
+    "armor": 0
+  },
+  "companions": {
+    "kay": {
+      "name": "凯",
+      "hp": 12,
+      "armor": 0,
+      "weapon": 3,
+      "move": "kay_cover"
+    },
+    "arthur": {
+      "name": "亚瑟",
+      "by_chapter": {
+        "1": {
+          "hp": 8,
+          "weapon": 2
+        },
+        "2": {
+          "hp": 12,
+          "weapon": 4
+        },
+        "3": {
+          "hp": 12,
+          "weapon": 6
+        },
+        "4": {
+          "hp": 14,
+          "weapon": 6
+        }
+      },
+      "armor": 0,
+      "move": "scabbard"
+    },
+    "gawain": {
+      "name": "高文",
+      "hp": 14,
+      "armor": 0,
+      "weapon": 4,
+      "move": "noon_strength",
+      "noon_bonus": 3,
+      "noon_turns": 3
+    },
+    "lancelot": {
+      "name": "兰斯洛特",
+      "hp": 16,
+      "armor": 0,
+      "weapon": 5,
+      "move": "double_strike",
+      "double_strike_damage": 3
+    },
+    "gareth": {
+      "name": "加雷斯",
+      "hp": 12,
+      "armor": 0,
+      "weapon": 4,
+      "move": "riposte",
+      "riposte_mult": 2
+    },
+    "bedivere": {
+      "name": "贝狄威尔",
+      "hp": 12,
+      "armor": 0,
+      "weapon": 3,
+      "move": "bandage",
+      "bandage_heal": 4,
+      "bandage_uses": 2
+    }
+  },
+  "enemies": {
+    "wolf": {
+      "name": "狼",
+      "hp": 4,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 3
+        }
+      ]
+    },
+    "wolf_leader": {
+      "name": "头狼",
+      "hp": 8,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 5
+        }
+      ]
+    },
+    "wolf_howler": {
+      "name": "瘦狼",
+      "hp": 4,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 3
+        },
+        {
+          "act": "summon",
+          "what": "wolf",
+          "count": 2
+        }
+      ]
+    },
+    "merlin_shadow": {
+      "name": "梅林的影子",
+      "hp": 6,
+      "pattern": [
+        {
+          "act": "charge",
+          "then": {
+            "act": "attack",
+            "power": 12,
+            "target": "apprentice"
+          }
+        },
+        {
+          "act": "attack",
+          "power": 2
+        }
+      ]
+    },
+    "_其他": "第 2–6 章的敌人第 10 步写遭遇时补"
+  }
+}

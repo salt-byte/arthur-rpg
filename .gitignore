@@ -1,0 +1,7 @@
+.godot/
+*.translation
+__pycache__/
+*.pyc
+.DS_Store
+/web/
+qa/tmp/

@@ -1,0 +1,883 @@
+diff -ruN ai-rpg-studio.orig/.claude-plugin/plugin.json ai-rpg-studio/.claude-plugin/plugin.json
+--- ai-rpg-studio.orig/.claude-plugin/plugin.json	2026-11-05 20:09:02.000000000 +0800
++++ ai-rpg-studio/.claude-plugin/plugin.json	2026-11-05 20:32:17.377094098 +0800
+@@ -1,6 +1,6 @@
+ {
+   "name": "ai-rpg-studio",
+-  "version": "0.4.0",
++  "version": "0.5.0",
+   "description": "Make a 2D RPG inspired by a story you love. 用 AI 把一个你喜欢的故事（小说、剧本、电影，或你自己的设定）做成 2D RPG 的工作流：制作人接需求、game-concept 定概念、game-design 写设计页、story-bible/story-review 写有逻辑的故事、先白盒再铺美术、verify.py 用六项证据验收、每一步动笔前问定调题、做完交接等你点头、产出都给你看得见的链接，六个停靠点主动找人确认；所有文字照「肘击指令」（作者将生）写，反 AI 八股、电影感叙事。做法来自 graveholme（仿 Vampire's Fall 2，Godot 4 + LPC）的实际开发过程；借鉴的开源 skill 见 CREDITS.md。",
+   "author": {
+     "name": "Yudie Deng"
+diff -ruN ai-rpg-studio.orig/README.md ai-rpg-studio/README.md
+--- ai-rpg-studio.orig/README.md	2026-11-05 20:08:56.000000000 +0800
++++ ai-rpg-studio/README.md	2026-11-05 20:32:05.177342733 +0800
+@@ -8,7 +8,7 @@
+ - **开工前主动提问**：用户一说要做游戏或写游戏的故事大纲，agent 先用 producer，先单独问「你想把哪个故事做成游戏」，再按故事问三轮 11 件事（改编范围、玩家身份、故事体量、玩法参考；完成度、引擎、美术路线、交付；不做什么、记录、仓库），一条消息只问一轮，时间预算不在开头问，每个选项写取舍；答案写进项目根目录 `GAME_BRIEF.md`。低风险的空白不拦停，记成「未确认假设」。
+ - **绕不过去**：每个 skill 的第一个动作是打开 `GAME_BRIEF.md`，先于建文档、搜索、写正文；还没有需求档案时，每条和游戏有关的消息都会被钩子再提醒一次。只建一份文档、没有项目文件，不算做完。
+ - **一步一步走**：替你拿主意的几步（世界与故事、定概念、故事圣经下半、玩法设计、美术方向）动笔前先问两三道定调题，选项标签用游戏设计的标准说法，说明先一句大白话说玩家在干什么，回字母就行。每一步做完都按固定格式交接：「✓ 第 N / M 步做完了什么 → 看这里（你点得开的链接）→ 下一步做什么」，等你点头再往下；说「一路做下去」就只在停靠点停。
+-- **产出你都看得见**：给人读的发布成文档或页面，要看效果的发布成网页，机器用的推到 GitHub；不会只写进你看不见的云端文件夹。
++- **产出你都看得见**：接完需求第 1 步就建 GitHub 仓库，之后每一步交接前把产物提交并推上去；给人读的另外发布成文档或页面，要看效果的发布成网页。不会只写进你看不见的云端文件夹。
+ - **美术路线和引擎由你选，但会说清哪条跑通过**：开源素材 / AI 生图（工具在你自己的电脑或账号上）/ 混合；Godot / three.js / 不用引擎自写 Canvas。从头到尾跑通的只有 Godot 4 + 开源素材 + 大地图加回合制遭遇；选别的照样做，开场就告诉你哪几步要现写（见下面「跑通的路线」）。
+ - **先讲清故事和世界观**：story-bible 上半写世界观、人物卡、因果主线、分章梗概（改编作品先用 story-extraction 按章整理原作），停靠点 A0 请你确认。
+ - **再决定做成什么游戏**：game-concept 对着上半写一页概念（玩家承诺、核心循环、招牌画面、最大风险、借原作什么 / 拒什么），过七条硬否决，拆系统清单。
+@@ -23,7 +23,7 @@
+ 
+ ## 流程
+ ```
+-GAME_BRIEF → story-bible 上半（世界与故事）← A0 → game-concept ← A1
++GAME_BRIEF → 建仓库（GitHub，之后每步推送）→ story-bible 上半（世界与故事）← A0 → game-concept ← A1
+   → story-bible 下半（玩家在故事里）→ story-map → story-review ← A2 → game-design
+   → game-data-schema + godot-project-structure → art-direction + ui-layout 观察 ← B
+   → 白盒切片（verify + 盲玩）← 白盒试玩 → 范围复盘 ①
+diff -ruN ai-rpg-studio.orig/hooks/scripts/check_brief.sh ai-rpg-studio/hooks/scripts/check_brief.sh
+--- ai-rpg-studio.orig/hooks/scripts/check_brief.sh	2026-11-05 20:08:56.000000000 +0800
++++ ai-rpg-studio/hooks/scripts/check_brief.sh	2026-11-05 20:32:05.177175788 +0800
+@@ -12,5 +12,5 @@
+   echo "----- GAME_BRIEF.md -----"
+   head -c 4000 "$brief"
+ else
+-  echo "[ai-rpg-studio] 已安装做 RPG 的插件。如果用户要做或改游戏，或要写游戏的故事大纲、剧情、任务、人物、世界观（包括把某部作品改编成游戏）：先用 producer skill，按 producer/references/intake-questions.md 主动向用户提问：先单独问「你想把哪个故事做成游戏」，答完再按故事问三轮（改编范围、玩家身份、故事体量、玩法参考；完成度、引擎、美术路线、交付；不做什么、记录、仓库），一条消息只问一轮，每个选项写取舍，把答案写进项目根目录 GAME_BRIEF.md，再从第 1 步「世界与故事」（story-bible 上半）开工，之后才定概念；用户只要一份大纲或文档时也先走这一步。之后每一步动笔前问定调题、做完交接并等用户点头。写任何文字前先加载 writing-style（「肘击指令」，作者将生），写完跑它的 check_style.py。用户不是在做游戏就忽略这条。"
++  echo "[ai-rpg-studio] 已安装做 RPG 的插件。如果用户要做或改游戏，或要写游戏的故事大纲、剧情、任务、人物、世界观（包括把某部作品改编成游戏）：先用 producer skill，按 producer/references/intake-questions.md 主动向用户提问：先单独问「你想把哪个故事做成游戏」，答完再按故事问三轮（改编范围、玩家身份、故事体量、玩法参考；完成度、引擎、美术路线、交付；不做什么、记录、仓库），一条消息只问一轮，每个选项写取舍，把答案写进项目根目录 GAME_BRIEF.md；第 1 步建 GitHub 仓库（之后每步交接前提交并推送），第 2 步「世界与故事」（story-bible 上半），之后才定概念；用户只要一份大纲或文档时也先走这一步。之后每一步动笔前问定调题、做完交接并等用户点头。写任何文字前先加载 writing-style（「肘击指令」，作者将生），写完跑它的 check_style.py。用户不是在做游戏就忽略这条。"
+ fi
+diff -ruN ai-rpg-studio.orig/hooks/scripts/check_prompt.sh ai-rpg-studio/hooks/scripts/check_prompt.sh
+--- ai-rpg-studio.orig/hooks/scripts/check_prompt.sh	2026-11-05 20:08:56.000000000 +0800
++++ ai-rpg-studio/hooks/scripts/check_prompt.sh	2026-11-05 20:32:10.030623841 +0800
+@@ -15,6 +15,6 @@
+ 
+ # 只认游戏专用的说法；「任务」「故事」「地图」这类通用词单独出现不算，避免在别的项目里误报。
+ if printf '%s' "$prompt" | grep -qiE '游戏|RPG|剧情|主线|支线|对白|台词|关卡|NPC|故事大纲|剧情大纲|人物小传|story ?outline|side ?quest|main ?quest|quest|dialogue tree|game'; then
+-  echo "[ai-rpg-studio] 这个项目还没有 GAME_BRIEF.md，而这条消息和做游戏有关（只是写故事大纲、列主线支线、写一段对话也算）。第一步用 producer，按 producer/references/intake-questions.md 向用户提问并写好 GAME_BRIEF.md；之后第 1 步是世界与故事（story-bible 上半：世界观、人物卡、主线、分章梗概），再定概念；quest-design 在故事和玩法设计之后。产出写进项目文件，不要先建通用文档或在回复里直接写正文。所有文字照 writing-style（「肘击指令」，作者将生）写。用户不是在做游戏就忽略这条。"
++  echo "[ai-rpg-studio] 这个项目还没有 GAME_BRIEF.md，而这条消息和做游戏有关（只是写故事大纲、列主线支线、写一段对话也算）。第一步用 producer，按 producer/references/intake-questions.md 向用户提问并写好 GAME_BRIEF.md；之后第 1 步建 GitHub 仓库（之后每步交接前提交并推送），第 2 步是世界与故事（story-bible 上半：世界观、人物卡、主线、分章梗概），再定概念；quest-design 在故事和玩法设计之后。产出写进项目文件，不要先建通用文档或在回复里直接写正文。所有文字照 writing-style（「肘击指令」，作者将生）写。用户不是在做游戏就忽略这条。"
+ fi
+ exit 0
+diff -ruN ai-rpg-studio.orig/skills/game-design/SKILL.md ai-rpg-studio/skills/game-design/SKILL.md
+--- ai-rpg-studio.orig/skills/game-design/SKILL.md	2026-11-05 20:08:24.000000000 +0800
++++ ai-rpg-studio/skills/game-design/SKILL.md	2026-11-05 20:29:56.719272663 +0800
+@@ -41,11 +41,24 @@
+ ## 设计页写完，再出三份全局文档
+ 单看每个系统的页，看不出它们怎么连在一起、玩家在哪个屏幕上做事、每章教什么。这三份补上（做法借自 Tim Ryan 的功能规格和 Stone Librande 的一页设计，见 CREDITS.md）：
+ 
+-1. **`design/GDD.md`：一页总览 + 目录**（模板 `references/GDD.template.md`）。上半页是「一章怎么玩」流程图和「系统怎么互相影响」关系图（mermaid），箭头上写清影响了什么；再加一张每个系统一句大白话的表。下半页是全部设计文档的目录：写什么、谁负责、更新于、状态、用户点得开的链接。之后每份文档改了，producer 交接时回来更新目录里那一行。
+-2. **`design/ui/SCREENS.md`：界面清单**（模板 `references/screens.template.md`）。一张跳转图 + 每屏一行：从哪进、上面有什么、玩家在这里做什么决定、用到哪些系统、层。设计页里提到的每个面板、弹窗都要在表里有一行。布局和样式留给 ui-layout。
++1. **`design/GDD.md`：一页总览 + 目录**（模板 `references/GDD.template.md`）。上半页是「一章怎么玩」流程图，再按问题拆几张小图讲系统怎么互相影响（mermaid）：一张图只回答一个问题，带字的箭头不超过 5 条，箭头上写清影响了什么；再加一张每个系统一句大白话的表。下半页是全部设计文档的目录：写什么、谁负责、更新于、状态、用户点得开的链接。之后每份文档改了，producer 交接时回来更新目录里那一行。
++2. **`design/ui/SCREENS.md`：界面清单**（模板 `references/screens.template.md`）。一张跳转图（屏幕多于 8 个时改成「从大地图出发的几条路」）+ 每屏一行：从哪进、上面有什么、玩家在这里做什么决定、用到哪些系统、层。设计页里提到的每个面板、弹窗都要在表里有一行。布局和样式留给 ui-layout。
+ 3. **`design/CONTENT_SCHEDULE.md`：章节内容表**（模板 `references/content-schedule.template.md`）。每章一行：第一次出现的机制、能学到的新招、新敌人或新敌人行为、目标难度、这章战斗里最难的取舍。故事两列 story-bible 下半已经填好；本 skill 按每章的故事填玩法几列（这章故事里没有仗可打，就不在这章教新敌人），遭遇一列之后由 quest-design 填。设计页里的每个机制、新招、敌人类型都要在表里有「第几章第一次出现」。
+ 
+-交接时「看这里」给 GDD.md 的链接：用户从它的总览图看起，再点进各页。
++交接时「看这里」给「设计总览」页面的链接（下一节）：用户从总览图看起，再点进各页。没有页面工具时，给 GDD.md 在仓库里的链接。
++
++## 出图和总览页
++.md 是事实，页面是给人看的展示版。mermaid 在 .md 预览里常常显示不出来，页面自带的 mermaid 又会截掉长的中文标签（arthur-rpg 第 5 步，用户说「这个图都看不清楚」）。所以：
++
++1. **.md 里写 mermaid**，按问题拆图（规矩见 `references/figures.md` 第 1 节）。
++2. **给总览页手画图**：每张 mermaid 配一张 SVG，放 `design/figures/<名字>.html`，mermaid 块前一行写 `<!-- figure: <名字> -->`。做法、类名、例子见 `references/figures.md`。
++3. **生成页面**：
++   ```
++   python3 ${CLAUDE_PLUGIN_ROOT}/skills/game-design/scripts/render_design.py <项目根> --step "第 N / M 步 · 系统设计" --status 待你确认
++   ```
++   读 GDD、systems-index 里每个系统的设计页、SCREENS、CONTENT_SCHEDULE，写 `design/design_overview.html`。终端的「提醒」逐条处理：没配手画图、带字箭头太多、标签太长。
++4. **看一遍再发**：桌面宽度和手机宽度（深色）各截一张图，看字有没有截断、线有没有穿过别的框、页面有没有横向滚动条。
++5. **发布成页面**，链接写进 GDD 目录那一行，提交并推到仓库。之后任何一份 .md 改了，重跑第 3 步，更新原来的页面，不另发新链接。
+ ## 规矩
+ - **先写页再写码**。实现 skill（`combat-system` / `progression-system` / `world-map` / `balancing`）开工第一步是读对应设计页；没有就回这里写。
+ - **参数进数据，不进代码**。`content/data/<系统id>.json` 是参数的家；代码读它。graveholme 要把 `data.gd` 里的 `need()`、BOONS、敌人表逐个搬过去。
+diff -ruN ai-rpg-studio.orig/skills/game-design/references/GDD.template.md ai-rpg-studio/skills/game-design/references/GDD.template.md
+--- ai-rpg-studio.orig/skills/game-design/references/GDD.template.md	2026-11-05 20:00:46.000000000 +0800
++++ ai-rpg-studio/skills/game-design/references/GDD.template.md	2026-11-05 20:29:45.033218199 +0800
+@@ -8,25 +8,40 @@
+ **RPG 类型**：〈来自 CONCEPT〉 · **给谁玩、在什么设备上、一次玩多久**：〈来自 CONCEPT〉
+ 
+ ### 一章怎么玩
+-从进入一章到章末，玩家依次经历什么；有分支就画出分支。节点写玩家做的事，不写系统名。
++从进入一章到章末，玩家依次经历什么；有分支就画出分支。节点写玩家做的事，不写系统名。竖着画，手机上也看得清。
+ 
++<!-- figure: chapter-loop -->
+ ```mermaid
+-flowchart LR
+-  A[〈进入新区域〉] --> B[〈找人说话、接任务〉] --> C{〈遇到什么〉}
+-  C -->|〈敌人〉| D[〈战斗〉] --> E[〈升级〉]
+-  C -->|〈剧情地点〉| F[〈剧情事件〉] --> G[〈玩家做决定〉]
+-  E --> H[〈章末，进入下一章〉]
+-  G --> H
++flowchart TD
++  A[〈进入这一章的新地方〉] --> B[〈找人说话、接任务〉]
++  B --> C1[〈路上的敌人：开打〉]
++  B --> C2[〈剧情地点：剧情事件〉]
++  C1 -->|〈打完〉| B
++  C2 --> D[〈章末：玩家做决定〉]
++  D -->|〈进入下一章〉| A
+ ```
+ 
+-### 系统怎么互相影响
+-每个系统一个框；箭头上写清「影响了什么」，不能只连线。看不出箭头含义的连线删掉。
++### 系统怎么互相影响：按问题拆成几张小图
++一张图只回答一个问题；带字的箭头不超过 5 条，箭头上的字不超过 10 个，解释写在图下一句话。不画一张全连的大图：挑玩家最关心的两三个问题各画一张。规矩和手画的做法见 `figures.md`。
+ 
++#### 〈问题一，例：玩家的选择改变什么〉
++<!-- figure: choice-effects -->
+ ```mermaid
+ flowchart LR
+-  combat[战斗] -- 〈给经验〉 --> progression[成长]
+-  progression -- 〈新招式、上限〉 --> combat
++  K[〈关键选择〉] --> P1[〈同伴：谁留下、谁走〉]
++  K --> P2[〈成长：学到哪一招〉]
++```
++〈一句话：这张图想让人看懂什么〉
++
++#### 〈问题二，例：一场仗从哪来、打完去哪〉
++<!-- figure: battle-loop -->
++```mermaid
++flowchart TD
++  Q[〈任务〉] -->|〈放下敌人〉| M[〈大地图〉]
++  M -->|〈碰到敌人〉| F[〈战斗〉]
++  F -->|〈打赢了，往前走一步〉| Q
+ ```
++〈一句话：这张图想让人看懂什么〉
+ 
+ | 系统 | 一句大白话 | 设计页 |
+ |---|---|---|
+@@ -42,6 +57,7 @@
+ | design/CONTENT_SCHEDULE.md | 每章第一次出现什么、难到什么程度 | game-design → story-bible → quest-design | | | |
+ | content/story/bible.md | 故事圣经 | story-bible | | | |
+ | content/story/story.html | 剧情谱 | story-map | | | |
++| design/design_overview.html | 「设计总览」页面：本页、各设计页、界面清单、章节内容表合成的一页 | game-design | | | |
+ | design/ART_DIRECTION.md | 画风 | art-direction | | | |
+ 
+ 状态只用这几种：未开始 / 草稿 / 待你确认 / 已确认。链接写用户点得开的地址（文档、页面或仓库里的文件），不写工作目录里的路径。
+diff -ruN ai-rpg-studio.orig/skills/game-design/references/figures.md ai-rpg-studio/skills/game-design/references/figures.md
+--- ai-rpg-studio.orig/skills/game-design/references/figures.md	1970-01-01 08:00:00.000000000 +0800
++++ ai-rpg-studio/skills/game-design/references/figures.md	2026-11-05 20:29:33.480986217 +0800
+@@ -0,0 +1,77 @@
++# 总览图怎么画
++
++GDD 和界面清单里的图，在 .md 里用 mermaid 写（插件格式，谁都能改）；给用户看的「设计总览」页面里，换成手画的 SVG。
++
++为什么手画：arthur-rpg 第 5 步，用户看完总览页说「这个图都看不清楚」。一张「系统怎么互相影响」塞了 8 个系统、14 条带字的箭头，线搅在一起；页面自带的 mermaid 在网页字体载入前量字宽，中文长标签被截掉半截。拆成三张小图、手画以后，用户能看懂。
++
++## 1. 先拆图，再动笔
++- **一张图只回答一个问题。** 例：「一章怎么玩」「玩家的选择改变什么」「一场仗从哪来、打完去哪」「变强靠什么」。系统多于 5 个时，不画一张全连的大图，挑玩家最关心的两三个问题各画一张。
++- **带字的箭头不超过 5 条，节点不超过 8 个。** 一条一条往下走的流程（A → B → C）不算在内，只数从一个框分出去、又连回来的那些。
++- **箭头上的字不超过 10 个。** 解释写进图下的一句话（figcaption），不塞进图里。
++- **节点写玩家做的事或看到的东西**（「发光的水面：看见将来的一幕」），系统名只在「系统怎么互相影响」的图里用。
++- **竖着排。** 手机竖屏是窄的；横着排的长链在手机上会缩成看不清的小字。
++- 只强调一个节点：这张图要说的那一件事（关键选择、战斗）。其余节点一个样子。
++
++.md 里的 mermaid 按同样的拆法写，两边说同一件事。`render_design.py` 会数每张 mermaid 的带字箭头和标签长度，超了在终端提醒。
++
++## 2. 手画的规矩
++图放在 `design/figures/<名字>.html`，一个文件一个 `<figure>`。.md 里 mermaid 块的前一行写 `<!-- figure: <名字> -->`，`render_design.py` 生成页面时用这张图替换那块 mermaid。
++
++- **尺寸**：`viewBox` 宽不超过 470，按内容定高。宽过 360 的图给 `<figure class="fig wide">`：手机上最小 400 像素宽，放不下时在图框里左右滑；窄图给 `fig narrow`，桌面上不放得太大。
++- **字宽**：中文一个字约等于字号宽。框宽 ≥ 字数 × 字号 + 28（左右各留 14）。标题 15px，说明 13px，线上的字 12px。
++- **类名**（样式在页面模板里，跟着浅色、深色主题变；SVG 里不写颜色、不写 `<style>`）：
++
++  | 类名 | 用在哪 |
++  |---|---|
++  | `n` | 普通节点的框 |
++  | `n-key` | 这张图要强调的那一个框 |
++  | `t` | 框里的标题 |
++  | `s` | 框里的说明 |
++  | `e` | 线和箭头的线身 |
++  | `el` | 线旁边的字 |
++  | `ah` | 箭头头部（marker 里的 path） |
++
++- **箭头**：每张图自己的 `<marker>`，id 不和别的图重复（`ahA`、`ahB`……），`marker-end="url(#ahA)"`。
++- **说明**：`<figcaption>` 一两句，说这张图想让人看懂什么；`<svg role="img" aria-label="…">` 写同样的意思。
++- **对齐**：同一行的框同高、同一个 y；框之间的空隙一样大。
++- 线绕回去（循环）时从框的侧面走，不穿过别的框；线旁的字放在线的外侧，不压在线上。
++
++## 3. 界面跳转图：屏幕多就改成一张路线表
++屏幕多于 8 个时，网状的跳转图看不清。改成「从大地图出发的几条路」：每条路一行，写触发的事和依次经过的屏幕，走完回到大地图。这种图用 HTML 写（手机上会自动换行），不用 SVG：
++
++```html
++<figure class="fig flows">
++<div class="flow-start"><span class="chip">标题</span><span class="arr">→</span><span class="chip hub">大地图</span></div>
++<ul class="flowrows">
++<li><span class="trig">走到人跟前</span><span class="chip">对话</span><span class="arr">→</span><span class="chip key">关键选择确认</span><span class="note">关键选择时</span></li>
++<li><span class="trig">碰到敌人</span><span class="chip">战斗</span><span class="arr">→</span><span class="chip">再来一次</span><span class="note">输了时</span></li>
++</ul>
++<figcaption>每一行都从大地图出发，走完回到大地图。</figcaption>
++</figure>
++```
++
++## 4. 例子：一个选择分出几条线
++```html
++<figure class="fig narrow">
++<svg viewBox="0 0 360 238" role="img" aria-label="玩家的关键选择改变两样东西：同伴的去留、能学到的新招。">
++<defs><marker id="ahX" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
++<rect class="n-key" x="20" y="10" width="320" height="56" rx="6"/>
++<text class="t" x="180" y="44" text-anchor="middle">关键选择：〈玩家决定什么〉</text>
++<line class="e" x1="50" y1="66" x2="50" y2="193"/>
++<line class="e" x1="50" y1="115" x2="76" y2="115" marker-end="url(#ahX)"/>
++<line class="e" x1="50" y1="193" x2="76" y2="193" marker-end="url(#ahX)"/>
++<rect class="n" x="78" y="84" width="268" height="62" rx="6"/>
++<text class="t" x="92" y="110">同伴</text>
++<text class="s" x="92" y="132">〈谁留下、谁走〉</text>
++<rect class="n" x="78" y="162" width="268" height="62" rx="6"/>
++<text class="t" x="92" y="188">成长</text>
++<text class="s" x="92" y="210">〈学到哪一招〉</text>
++</svg>
++<figcaption>〈一句话：这张图想让人看懂什么〉</figcaption>
++</figure>
++```
++
++## 5. 画完怎么验
++1. 跑 `render_design.py`，看终端提醒：没配手画图的 mermaid、带字箭头太多、标签太长。
++2. 本地截图看一遍：桌面宽度（1280）一张、手机宽度（390，深色）一张。看三件事：框里的字有没有出框或截断，线有没有穿过别的框，页面有没有横向滚动条。
++3. 发布页面；链接写进 GDD 目录。
+diff -ruN ai-rpg-studio.orig/skills/game-design/references/screens.template.md ai-rpg-studio/skills/game-design/references/screens.template.md
+--- ai-rpg-studio.orig/skills/game-design/references/screens.template.md	2026-11-05 20:00:46.000000000 +0800
++++ ai-rpg-studio/skills/game-design/references/screens.template.md	2026-11-05 20:29:45.033673613 +0800
+@@ -3,14 +3,17 @@
+ game-design 在 mvp 阶段写出有哪些屏幕、从哪进、怎么跳；布局和样式之后由 ui-layout 按 ART_DIRECTION 补。一屏 = 玩家能看到的一个完整画面，或盖在上面的一个面板、一个弹窗。
+ 
+ ## 怎么跳
++屏幕不多于 8 个时画一张跳转图。多于 8 个时不画网状图，按「从大地图出发的几条路」写：每条路一行，走完回到大地图；总览页里换成路线表（做法见 `figures.md` 第 3 节）。
+ 
++<!-- figure: screen-flow -->
+ ```mermaid
+ flowchart LR
+   title[〈标题〉] --> map[〈大地图〉]
+-  map -- 〈碰到敌人〉 --> battle[〈战斗〉]
+-  battle -- 〈赢了〉 --> map
+-  map -- 〈按菜单键〉 --> menu[〈菜单〉]
++  map -->|〈走到人跟前〉| talk[〈对话〉]
++  map -->|〈碰到敌人〉| battle[〈战斗〉] -->|〈输了〉| retry[〈再来一次〉]
++  map -->|〈按菜单键〉| menu[〈菜单〉]
+ ```
++〈一句话：哪些路走完回到大地图，哪条回到标题〉
+ 
+ ## 每一屏
+ | 屏幕 | 从哪进 / 回到哪 | 上面有什么 | 玩家在这里做什么 | 用到的系统 | 层 |
+diff -ruN ai-rpg-studio.orig/skills/game-design/scripts/design_overview.template.html ai-rpg-studio/skills/game-design/scripts/design_overview.template.html
+--- ai-rpg-studio.orig/skills/game-design/scripts/design_overview.template.html	1970-01-01 08:00:00.000000000 +0800
++++ ai-rpg-studio/skills/game-design/scripts/design_overview.template.html	2026-11-05 20:29:03.762300188 +0800
+@@ -0,0 +1,155 @@
++<title><!--GAME-->设计总览</title>
++<meta name="claude:viewport-fit-sides" content="cover">
++<link rel="preconnect" href="https://fonts.googleapis.com">
++<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
++<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap">
++<style>
++/* 布局：一栏长文档，顶部一条吸顶目录；正文限宽，宽表格在自己的容器里横向滚动 */
++:root {
++  --bg: #f4f7f7;        /* 带一点湖水青的浅灰 */
++  --surface: #ffffff;
++  --fg: #1a2326;
++  --muted: #56676c;
++  --line: #d3dcdd;
++  --accent: #1d6b74;    /* 湖水青 */
++  --accent-soft: #e0eeef;
++  --pending: #8a5a00;
++  --pending-soft: #f6ead2;
++  --font-display: "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif;
++  --font-body: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
++  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
++  --measure: 46em;
++}
++@media (prefers-color-scheme: dark) {
++  :root:not([data-theme="light"]) {
++    --bg: #101618; --surface: #172024; --fg: #e2e9ea; --muted: #94a5a9; --line: #2a373b;
++    --accent: #72bcc4; --accent-soft: #1b2b2f; --pending: #e7b65a; --pending-soft: #2e2615;
++    color-scheme: dark;
++  }
++}
++:root[data-theme="dark"] {
++  --bg: #101618; --surface: #172024; --fg: #e2e9ea; --muted: #94a5a9; --line: #2a373b;
++  --accent: #72bcc4; --accent-soft: #1b2b2f; --pending: #e7b65a; --pending-soft: #2e2615;
++  color-scheme: dark;
++}
++* { box-sizing: border-box; }
++body {
++  background: var(--bg); color: var(--fg);
++  font: 15px/1.8 var(--font-body);
++}
++body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
++.wrap {
++  max-width: 72rem; margin: 0 auto;
++  padding-left: max(16px, env(safe-area-inset-left, 0px));
++  padding-right: max(16px, env(safe-area-inset-right, 0px));
++}
++header.top { padding-block: 2.2rem 1.2rem; display: grid; gap: .5rem; }
++.eyebrow { font-size: .8rem; letter-spacing: .08em; color: var(--muted); }
++h1 { font-family: var(--font-display); font-size: 2rem; line-height: 1.3; margin: 0; text-wrap: balance; }
++.lede { max-width: var(--measure); color: var(--muted); margin: 0; }
++.chip { display: inline-block; font-size: .78rem; padding: .1rem .55rem; border-radius: 999px; background: var(--pending-soft); color: var(--pending); font-weight: 500; vertical-align: middle; margin-left: .4rem; }
++nav.toc {
++  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
++  background: var(--surface); border-bottom: 1px solid var(--line);
++}
++nav.toc .wrap { display: flex; gap: .25rem; overflow-x: auto; padding-block: .45rem; scrollbar-width: thin; }
++nav.toc a {
++  flex: none; color: var(--muted); text-decoration: none; font-size: .9rem;
++  padding: .3rem .7rem; border-radius: 6px; white-space: nowrap;
++}
++nav.toc a:hover { color: var(--fg); background: var(--accent-soft); }
++nav.toc a.on { color: var(--accent); background: var(--accent-soft); font-weight: 500; }
++nav.toc a:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
++main { padding-block: 1rem 4rem; display: grid; gap: 3.5rem; }
++.doc { min-width: 0; scroll-margin-top: 4rem; }
++.doc > p, .doc > ul, .doc > ol, .doc > blockquote, .doc > h3, .doc > h4 { max-width: var(--measure); }
++h2.sec-title {
++  font-family: var(--font-display); font-size: 1.55rem; line-height: 1.35; margin: 0 0 .4rem;
++  padding-top: 1.2rem; border-top: 2px solid var(--fg); text-wrap: balance;
++}
++h2.split {
++  display: flex; align-items: center; gap: .8rem; margin: 2.4rem 0 .6rem;
++  font: 500 .85rem/1 var(--font-body); letter-spacing: .12em; color: var(--muted);
++}
++h2.split::before, h2.split::after { content: ""; flex: 1; height: 1px; background: var(--line); }
++h3 { font-family: var(--font-display); font-size: 1.15rem; margin: 1.8rem 0 .4rem; text-wrap: balance; }
++h4 { font-size: 1rem; margin: 1.3rem 0 .3rem; }
++p { margin: .5rem 0; }
++ul, ol { padding-left: 1.4em; margin: .5rem 0; }
++li + li { margin-top: .2rem; }
++a { color: var(--accent); }
++code { font-family: var(--font-mono); font-size: .86em; background: var(--accent-soft); padding: .05em .35em; border-radius: 4px; }
++blockquote { margin: .8rem 0; padding: .6rem .9rem; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; color: var(--muted); }
++blockquote p { margin: 0; }
++.table-wrap { overflow-x: auto; margin: .8rem 0; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
++table { border-collapse: collapse; width: 100%; font-size: .9rem; line-height: 1.65; }
++th, td { text-align: left; vertical-align: top; padding: .5rem .7rem; border-bottom: 1px solid var(--line); min-width: 5.5em; }
++th { background: var(--accent-soft); font-weight: 500; white-space: nowrap; }
++tr:last-child td { border-bottom: 0; }
++td { font-variant-numeric: tabular-nums; }
++.doc-schedule th, .doc-schedule td { min-width: 13em; }
++.doc-schedule th:first-child, .doc-schedule td:first-child { min-width: 2.5em; text-align: center; }
++.doc-screens td:first-child, .doc-gdd td:first-child { white-space: nowrap; font-weight: 500; }
++.diagram { overflow-x: auto; margin: 1rem 0; padding: 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
++.diagram pre { margin: 0; background: none; }
++.fig { margin: 0; }
++.fig svg { display: block; width: 100%; max-width: 600px; height: auto; margin: 0 auto; font-family: var(--font-body); }
++.fig.wide svg { min-width: 400px; }
++.fig.narrow svg { max-width: 460px; }
++@media (max-width: 480px) { .diagram { padding: .6rem; } }
++.fig .n { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; }
++.fig .n-key { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
++.fig .t { fill: var(--fg); font-size: 15px; font-weight: 500; }
++.fig .s { fill: var(--muted); font-size: 13px; }
++.fig .e { stroke: var(--muted); stroke-width: 1.5; fill: none; }
++.fig .el { fill: var(--muted); font-size: 12px; }
++.fig .ah { fill: var(--muted); }
++.fig figcaption { max-width: var(--measure); margin: .8rem auto 0; color: var(--muted); font-size: .88rem; line-height: 1.7; }
++.flows .flow-start { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; }
++.flows .flowrows { list-style: none; margin: .4rem 0 0 1.1rem; padding: .2rem 0 .2rem 1.1rem; border-left: 2px solid var(--line); display: grid; gap: .55rem; }
++.flows .flowrows li { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem .45rem; margin: 0; position: relative; }
++.flows .flowrows li::before { content: ""; position: absolute; left: -1.1rem; top: 50%; width: .8rem; border-top: 2px solid var(--line); }
++.flows .trig { color: var(--muted); font-size: .85rem; min-width: 7.5em; }
++.flows .chip { border: 1px solid var(--line); background: var(--bg); border-radius: 6px; padding: .1rem .6rem; font-size: .92rem; white-space: nowrap; }
++.flows .chip.key, .flows .chip.hub { border-color: var(--accent); background: var(--accent-soft); }
++.flows .chip.hub { font-weight: 500; }
++.flows .arr { color: var(--muted); }
++.flows .note { color: var(--muted); font-size: .8rem; }
++footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
++@media (max-width: 480px) {
++  h1 { font-size: 1.6rem; }
++  h2.sec-title { font-size: 1.3rem; }
++}
++</style>
++
++<header class="top wrap">
++  <div class="eyebrow"><!--STEP--></div>
++  <h1><!--GAME--> · 设计总览<span class="chip"><!--STATUS--></span></h1>
++  <p class="lede">每个系统一页：上半页讲玩家会碰到什么，下半页是给做游戏的人看的公式、参数和验收条件。先看「总览」里的图，再点进各页。</p>
++</header>
++<nav class="toc" aria-label="目录"><div class="wrap"><!--NAV--></div></nav>
++<main class="wrap">
++<!--BODY-->
++</main>
++<footer class="wrap">这一页由项目里的 .md 文件生成；改设计以那些文件为准。</footer>
++<script>
++(function () {
++  try {
++    var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
++    var byId = {};
++    links.forEach(function (a) { byId[a.getAttribute('data-sec')] = a; });
++    function mark(id) {
++      links.forEach(function (a) { a.classList.toggle('on', a.getAttribute('data-sec') === id); });
++      var a = byId[id];
++      if (a && a.scrollIntoView) { a.parentNode.scrollLeft = a.offsetLeft - 16; }
++    }
++    if ('IntersectionObserver' in window) {
++      var io = new IntersectionObserver(function (entries) {
++        entries.forEach(function (e) { if (e.isIntersecting) mark(e.target.id); });
++      }, { rootMargin: '-20% 0px -70% 0px' });
++      document.querySelectorAll('section.doc').forEach(function (s) { io.observe(s); });
++    }
++    mark((location.hash || '#gdd').slice(1));
++  } catch (e) {}
++})();
++</script>
+diff -ruN ai-rpg-studio.orig/skills/game-design/scripts/render_design.py ai-rpg-studio/skills/game-design/scripts/render_design.py
+--- ai-rpg-studio.orig/skills/game-design/scripts/render_design.py	1970-01-01 08:00:00.000000000 +0800
++++ ai-rpg-studio/skills/game-design/scripts/render_design.py	2026-11-05 20:30:26.988686312 +0800
+@@ -0,0 +1,145 @@
++#!/usr/bin/env python3
++"""把 GDD、各系统设计页、界面清单、章节内容表合成一页「设计总览」网页，给用户从总览图看起。
++
++用法：
++  python3 render_design.py <项目根> [--step "第 6 / 19 步 · 系统设计"] [--status 待你确认]
++
++读：
++  design/GDD.md                 第一节「总览」；标题「# GDD · 〈游戏名〉」里取游戏名
++  design/systems-index.json     按顺序取每个系统的 design 页（文件存在的才放进来），节名用 name
++  design/ui/SCREENS.md          「界面清单」
++  design/CONTENT_SCHEDULE.md    「章节内容表」
++  design/figures/<名字>.html    手画的图。.md 里在 mermaid 块前一行写 <!-- figure: 名字 -->，
++                                页面就用这张图替换那块 mermaid（.md 里的 mermaid 原样保留）
++写：
++  design/design_overview.html   发布成页面给用户看；改设计以各 .md 为准，改完重跑
++
++没配手画图的 mermaid 块原样交给页面渲染，并在终端提醒：页面自带的 mermaid 会把长的中文标签截掉。
++需要 Python 的 markdown 包（pip install markdown）。
++"""
++import argparse
++import datetime
++import html
++import json
++import re
++import sys
++from pathlib import Path
++
++try:
++    import markdown
++except ImportError:
++    sys.exit("缺少 markdown 包：pip install markdown")
++
++HERE = Path(__file__).resolve().parent
++MAX_LABELED_EDGES = 5
++MAX_LABEL_CHARS = 12
++
++
++def sections_of(root):
++    tail = [("screens", "界面清单", "design/ui/SCREENS.md"),
++            ("schedule", "章节内容表", "design/CONTENT_SCHEDULE.md")]
++    secs = [("gdd", "总览", "design/GDD.md")]
++    seen = {"design/GDD.md"} | {p for _, _, p in tail}
++    idx = root / "design" / "systems-index.json"
++    if idx.exists():
++        for s in json.loads(idx.read_text(encoding="utf-8")).get("systems", []):
++            page = s.get("design")
++            # 几个系统共用一页（如结局写在看水面那页）、界面系统指向 SCREENS 时，只放一次
++            if page and page not in seen and (root / page).exists():
++                seen.add(page)
++                secs.append((s["id"], s.get("name") or s["id"], page))
++    secs += tail
++    return [s for s in secs if (root / s[2]).exists()]
++
++
++def lint_mermaid(src, where, warnings):
++    labels = re.findall(r"-->\s*\|([^|]*)\||--\s+([^->][^>]*?)\s+-->", src)
++    labels = [a or b for a, b in labels]
++    if len(labels) > MAX_LABELED_EDGES:
++        warnings.append(f"{where}：一张图里有 {len(labels)} 条带字的箭头，超过 {MAX_LABELED_EDGES} 条：按问题拆成几张，界面跳转图改成路线表（figures.md 第 3 节）")
++    for lb in labels:
++        if len(lb.strip()) > MAX_LABEL_CHARS:
++            warnings.append(f"{where}：箭头上的字「{lb.strip()}」超过 {MAX_LABEL_CHARS} 个，解释挪到图下一句话")
++
++
++def render(root, sid, path, links, warnings):
++    text = (root / path).read_text(encoding="utf-8")
++    figs, blocks = [], []
++
++    def keep_fig(m):
++        name, src = m.group(1), m.group(2)
++        frag = root / "design" / "figures" / f"{name}.html"
++        if not frag.exists():
++            warnings.append(f"{path}：标了 figure: {name}，但 design/figures/{name}.html 不存在，先用 mermaid 顶上")
++            lint_mermaid(src, path, warnings)
++            blocks.append(src)
++            return f"\n\nMERMAIDBLOCK{len(blocks) - 1}\n\n"
++        figs.append(frag.read_text(encoding="utf-8"))
++        return f"\n\nFIGUREBLOCK{len(figs) - 1}\n\n"
++
++    def keep(m):
++        blocks.append(m.group(1))
++        lint_mermaid(m.group(1), path, warnings)   # 只查要交给页面自己画的 mermaid
++        warnings.append(f"{path}：有一张 mermaid 图没配手画图（design/figures/），页面上长标签可能被截掉")
++        return f"\n\nMERMAIDBLOCK{len(blocks) - 1}\n\n"
++
++    text = re.sub(r"<!-- figure: ([\w-]+) -->\s*\n```mermaid\n(.*?)```", keep_fig, text, flags=re.S)
++    text = re.sub(r"```mermaid\n(.*?)```", keep, text, flags=re.S)
++    # 标题降一级：整页只有一个 h1
++    text = "\n".join(("#" + ln) if ln.startswith("#") else ln for ln in text.split("\n"))
++    # 文档路径换成页内链接
++    for p, target in links.items():
++        text = text.replace(p, f"[{p.split('/')[-1]}](#{target})")
++    text = re.sub(r"[（(]claude\.ai/artifact/(\w+)[）)]", r"（[打开](https://claude.ai/artifact/\1)）", text)
++    out = markdown.markdown(text, extensions=["tables", "fenced_code"])
++    for i, frag in enumerate(figs):
++        out = out.replace(f"<p>FIGUREBLOCK{i}</p>", f'<div class="diagram">{frag}</div>')
++    for i, src in enumerate(blocks):
++        out = out.replace(f"<p>MERMAIDBLOCK{i}</p>",
++                          f'<div class="diagram"><pre class="mermaid">{html.escape(src.strip())}</pre></div>')
++    out = out.replace("<table>", '<div class="table-wrap"><table>').replace("</table>", "</table></div>")
++    first = True
++
++    def h2(m):
++        nonlocal first
++        if first:
++            first = False
++            return f'<h2 class="sec-title">{m.group(1)}</h2>'
++        return f'<h2 class="split">{m.group(1)}</h2>'   # 设计页里的「给实现看」
++
++    out = re.sub(r"<h2>(.*?)</h2>", h2, out)
++    return f'<section id="{sid}" class="doc doc-{sid}">{out}</section>'
++
++
++def main():
++    ap = argparse.ArgumentParser()
++    ap.add_argument("root")
++    ap.add_argument("--step", default="系统设计")
++    ap.add_argument("--status", default="待你确认")
++    a = ap.parse_args()
++    root = Path(a.root).resolve()
++    gdd = root / "design" / "GDD.md"
++    if not gdd.exists():
++        sys.exit("没有 design/GDD.md：先按 references/GDD.template.md 写")
++    m = re.match(r"#\s*GDD\s*[·:：]\s*(.+)", gdd.read_text(encoding="utf-8").splitlines()[0])
++    game = m.group(1).strip() if m else root.name
++    game = re.sub(r"[（(][^）)]*[）)]\s*$", "", game).strip()   # 去掉「（暂定名）」
++    secs = sections_of(root)
++    links = {p: sid for sid, _, p in secs}
++    warnings = []
++    nav = "".join(f'<a href="#{sid}" data-sec="{sid}">{html.escape(name)}</a>' for sid, name, _ in secs)
++    body = "\n".join(render(root, sid, p, links, warnings) for sid, _, p in secs)
++    tpl = (HERE / "design_overview.template.html").read_text(encoding="utf-8")
++    page = (tpl.replace("<!--GAME-->", html.escape(game))
++               .replace("<!--STEP-->", html.escape(f"{a.step} · {datetime.date.today().isoformat()}"))
++               .replace("<!--STATUS-->", html.escape(a.status))
++               .replace("<!--NAV-->", nav).replace("<!--BODY-->", body))
++    dst = root / "design" / "design_overview.html"
++    dst.write_text(page, encoding="utf-8")
++    print(f"写好 {dst.relative_to(root)}：{len(secs)} 节")
++    for w in dict.fromkeys(warnings):
++        print("提醒：" + w)
++
++
++if __name__ == "__main__":
++    main()
+diff -ruN ai-rpg-studio.orig/skills/producer/SKILL.md ai-rpg-studio/skills/producer/SKILL.md
+--- ai-rpg-studio.orig/skills/producer/SKILL.md	2026-11-05 20:08:34.000000000 +0800
++++ ai-rpg-studio/skills/producer/SKILL.md	2026-11-05 20:32:26.069295903 +0800
+@@ -12,7 +12,7 @@
+ ## 0. 第一步永远是读 GAME_BRIEF.md；对话被压缩过就先读 TASKS.md 顶部
+ 
+ 项目根目录的 `GAME_BRIEF.md` 存着用户确认过的需求、停靠点状态、非目标和未确认假设（模板 `references/GAME_BRIEF-template.md`）。
+-- **不存在，或有字段为空/「待定」** → 先做第 1 步提问，问完再做任何事。不要先搭工程、先找素材、先写对白「顺便」问。
++- **不存在，或有字段为空/「待定」** → 先做第 1 节的提问，问完再做任何事。不要先搭工程、先找素材、先写对白「顺便」问。
+ - **存在且填完** → 按里面的决定继续；用户这次的话和里面冲突时，问一句以哪个为准，再更新文件。
+ - 其他游戏开发 skill 开工前也会检查这份文件；缺了会把工作交回本 skill。
+ - **对话被压缩过、换了 agent、或自己记不清做到哪了** → 先读 `TASKS.md` 顶部的「当前状态」段（做到哪、下一步、卡在哪），再读 DEVLOG 最后一节。文件是记忆，对话不是。（做法来自 claude-code-game-studios 的 session-state。）
+@@ -25,7 +25,7 @@
+ - 用户请求里已经说清的题跳过。故事来源或玩法参考选了某部作品、某个游戏但没给名字时，先用一句话问名字。
+ - 低风险空白不拦停：按一个假设做，记进 GAME_BRIEF 的「未确认假设」表，告诉用户。
+ - **说清哪条路线跑通过**：插件从头到尾跑通的只有 Godot 4 + 开源素材（LPC）+ 大地图加回合制遭遇。用户选了别的引擎、美术路线或 RPG 类型，照做，但复述时用一句人话说清哪几步没有现成脚本、要现写，写进 GAME_BRIEF「跑通程度」和 TASKS.md 对应行（做法见 intake-questions「跑通的路线」）。现写出来的模板和脚本，做完沉淀回对应 skill。
+-- 问完写进 `GAME_BRIEF.md`，用 3–5 行复述给用户，再按第 6 节交接：「下一步：第 1 步 · 世界与故事」，直接问 story-bible 上半的定调题，不另问「可以开始了吗」。
++- 问完写进 `GAME_BRIEF.md`，用 3–5 行复述给用户，接着做第 1 步 · 建仓库（`references/github-sync.md`）：能自己建就建好推上去；要用户在 GitHub 建空仓库，就在复述后面用一条消息说清仓库名、公开还是私有、什么都不勾。仓库推上去以后按第 6 节交接：「下一步：第 2 步 · 世界与故事」，直接问 story-bible 上半的定调题，不另问「可以开始了吗」。
+ - **小请求也一样**：「写个故事大纲」「列一条主线两条支线」「写一段村长的对话」都是做游戏。没有 GAME_BRIEF 就先问；问完按第 2 节的流水线走，故事从 `story-bible` 开始，`quest-design` 在它之后，不要因为请求小就直接写正文。
+ 
+ 为什么必须先问：graveholme 里这几件事是用户在前几轮一条条纠正出来的，每次纠正都是返工——
+@@ -44,6 +44,7 @@
+ 
+ ```
+ GAME_BRIEF（接需求：先问故事，再按故事问三轮）
++  → 建仓库（GitHub）：第 1 步；之后每步交接前提交并推送（references/github-sync.md）
+   → story-bible 上半：世界观、人物卡、因果主线、分章梗概（改编作品先用 story-extraction 按章整理原作）   ← 停靠点 A0：故事和世界观
+   → game-concept：CONCEPT.md + systems-index.json，过七条硬否决；例子、中心张力、借 / 拒都对着上半写   ← 停靠点 A1：做成什么游戏
+   → story-bible 下半：玩家在故事里的决定和后果、认知边界、伏笔、facts；建 CONTENT_SCHEDULE 填故事两列
+@@ -125,17 +126,19 @@
+ <下一步有定调题 → 直接在这里问，用户答完就算点头>
+ <没有 → 「没问题回『继续』，想改哪里直接说」>
+ ```
+-- **交接消息也守 `writing-style` 的禁用语录**：结果直说，不绕「不是……而是……」，末尾不加总结段。
++- **交接消息也守 `writing-style` 的禁用语录**：结果直说，不绕「不是……而是……」，末尾不加总结段。 style-ok
+ - **「看这里」必须是用户点得开的东西。** 写进工作目录的文件用户看不见（claude.ai 里的工作目录在云端），没给用户看得见的东西就不算做完：
+ 
+   | 产出 | 怎么给用户 |
+   |---|---|
+   | 给人读的：CONCEPT、设计页、bible.md、ART_DIRECTION、审查报告 | 有文档或页面工具就发布成文档 / 页面，给链接；没有就把文件发给用户 |
+   | 要看效果的：剧情谱 story.html、目标图、白盒、试玩版 | 发布成页面或网页链接；图片直接发 |
+-  | 机器用的：bible.json、content/data、代码 | 推到 GAME_BRIEF 里的仓库，给提交或文件链接；没有仓库就打包发文件 |
++  | 机器用的：bible.json、content/data、代码 | 给仓库里的文件或提交链接；用户选了不用 GitHub 时打包发文件 |
+   | 在 Claude Code 里本地做 | 写出文件在用户项目里的路径，用户自己打开 |
+ 
+-  同一份产出改了就更新原来的链接，不每次发新的。`design/GDD.md` 写出来之后，每次交接同时更新它目录里那一行（更新于、状态、链接）。
++  同一份产出改了就更新原来的链接，不每次发新的。
++- **每步都推到仓库。** 交接前把这一步的全部产物（文档、数据、页面的生成文件、代码）提交并推送，「看这里」除了页面链接，再附仓库里对应文件的链接；没推上去，这一步不算做完。仓库在第 1 步建，做法见 `references/github-sync.md`。
++ `design/GDD.md` 写出来之后，每次交接同时更新它目录里那一行（更新于、状态、链接）。
+ - **先有项目文件，再发给人看。** 文档和页面是项目文件的展示版：先按各 skill 写好下游要读的文件（`GAME_BRIEF.md`、`content/story/bible.json`、`outline.json`……），再按上表发布。只建了一份文档、没有项目文件，下游 skill 读不到，这一步不算做完。
+ - N、M 用 TASKS.md 的行号和总行数；交接时同时更新 TASKS.md 顶部的当前状态。
+ - 交接后**停下来等回答**，不边等边做下一步。用户回「继续」或答完定调题就往下；提了意见就先改这一步，改完再交接一次。
+@@ -168,4 +171,4 @@
+ 
+ ## 10. 交付
+ 
+-每轮结束时：更新 GAME_BRIEF.md 的停靠点表、TASKS.md 顶部的当前状态、写 DEVLOG（含决策记录：问题 / 决定 / 放弃的方案 / 后果）、跑 verify.py、导出并发布（`web-release`）、给用户一段简短总结和链接。
++每轮结束时：更新 GAME_BRIEF.md 的停靠点表、TASKS.md 顶部的当前状态、写 DEVLOG（含决策记录：问题 / 决定 / 放弃的方案 / 后果）、跑 verify.py、提交并推送、导出并发布（`web-release`）、给用户一段简短总结和链接。
+diff -ruN ai-rpg-studio.orig/skills/producer/references/GAME_BRIEF-template.md ai-rpg-studio/skills/producer/references/GAME_BRIEF-template.md
+--- ai-rpg-studio.orig/skills/producer/references/GAME_BRIEF-template.md	2026-11-05 20:00:46.000000000 +0800
++++ ai-rpg-studio/skills/producer/references/GAME_BRIEF-template.md	2026-11-05 20:32:05.176994855 +0800
+@@ -17,7 +17,7 @@
+ | 交付形式 | | |
+ | 预算上限 | 默认「不限，做到完成度目标就停」（开头不问，记成未确认假设）；用户提了限制再写 N 轮 / N 小时 | |
+ | 过程记录 | | |
+-| 仓库 | | |
++| 仓库 | 第 1 步建：仓库链接、公开还是私有；选了不用 GitHub 写「只在本地」 | |
+ | 节奏 | 每步做完停下来交接（默认）；用户说「一路做下去」就改成「只在停靠点停」 | |
+ 
+ ## 玩家承诺
+diff -ruN ai-rpg-studio.orig/skills/producer/references/TASKS-template.md ai-rpg-studio/skills/producer/references/TASKS-template.md
+--- ai-rpg-studio.orig/skills/producer/references/TASKS-template.md	2026-11-05 20:00:46.000000000 +0800
++++ ai-rpg-studio/skills/producer/references/TASKS-template.md	2026-11-05 20:32:05.175691325 +0800
+@@ -1,6 +1,6 @@
+ # TASKS
+ 
+-故事来源：<作品名 / 自己的设定 / AI 原创> · 玩法参考：<游戏名或不指定> · 引擎：<Godot 4 / three.js / 自写 Canvas> · 故事体量：<几包几章> · 成色：<…> · 交付：<网页链接 / 仓库>
++故事来源：<作品名 / 自己的设定 / AI 原创> · 玩法参考：<游戏名或不指定> · 引擎：<Godot 4 / three.js / 自写 Canvas> · 故事体量：<几包几章> · 成色：<…> · 交付：<网页链接 / 仓库> · 仓库：<GitHub 链接，第 1 步建>
+ 
+ ## 当前状态（每轮结束更新；对话压缩后先读这里）
+ - 做到哪：<阶段 + 最后完成的任务编号>
+@@ -10,26 +10,27 @@
+ - 停靠点：<A0 ✓ · A1 ✓ · A2 ✓ · B 未到 …>
+ 
+ 状态：[ ] 待做 · [~] 进行中 · [x] 完成 · [!] 被退回
+-行号就是「第 N 步」：按做的顺序从 1 编到底；每做完一行，按 producer 第 6 节交接，等用户点头再做下一行。
+-GAME_BRIEF「跑通程度」里写了要现写的步骤，在对应行的验收标准前加「先写本项目版本：…」（例：第 6 行「先写本项目版本：three.js 工程骨架和 Yarn 解释器」，第 15 行「先写本项目版本：verify 脚本，六项证据定义不变」）。
++行号就是「第 N 步」：按做的顺序从 1 编到底；每做完一行，提交并推到仓库，按 producer 第 6 节交接，等用户点头再做下一行。
++GAME_BRIEF「跑通程度」里写了要现写的步骤，在对应行的验收标准前加「先写本项目版本：…」（例：第 7 行「先写本项目版本：three.js 工程骨架和 Yarn 解释器」，第 16 行「先写本项目版本：verify 脚本，六项证据定义不变」）。
+ 
+ | # | 状态 | 任务 | 交给 | 依赖 | 层 | 验收标准 | 认领 / 结果 |
+ |---|---|---|---|---|---|---|---|
+-| 1 | [ ] | 世界与故事：世界观、人物卡、因果主线、分章梗概（故事圣经上半） | story-bible（改编作品先 story-extraction） | — | — | bible.md 上半有世界硬规则、势力、地点；每个重要人物一张卡（不含认知边界）；因果主线每个转折有中间环节；分章梗概章数和 GAME_BRIEF 一致，改编标原作出处、补写的标出来；用户在 A0 同意 |  |
+-| 2 | [ ] | 写概念页和系统清单，过硬否决 | game-concept | 1 | — | CONCEPT.md 七节都有内容、七条硬否决逐条有依据；第一章的例子用梗概的第一章、中心张力对着上半查；用户在 A1 同意 |  |
+-| 3 | [ ] | 玩家在故事里：每章的决定和后果、认知边界、伏笔、facts（故事圣经下半） | story-bible | 1,2 | — | bible.json 的 facts 每条有 known_by；伏笔都有回收章；建 CONTENT_SCHEDULE 填好故事两列 |  |
+-| 4 | [ ] | 剧情谱 + 审查 | story-map, story-review | 3 | — | 剧情谱无空卡片、钩子曲线有峰值；审查报告给用户反驳；用户在 A2 同意 |  |
+-| 5 | [ ] | mvp 层每系统一页设计页，参数登记进 content/data/ | game-design | 2,4 | mvp | 每页上下两层齐全（一句话、例子、感受、规则 / 公式、边界、依赖、参数、验收、素材）；GDD.md、ui/SCREENS.md、CONTENT_SCHEDULE.md 玩法列按已定章节填好；代码里的数都能在设计页和 data/ 找到 |  |
+-| 6 | [ ] | 定数据格式、搭工程 | game-data-schema, godot-project-structure | 5 | mvp | 空项目能 headless 运行、能导出网页；对白/变量/任务/NPC/刷新/文本表各有样例 |  |
+-| 7 | [ ] | 美术方向 + 目标图；界面观察 | art-direction, ui-layout | 2,5 | — | ART_DIRECTION 一页 + 1–2 张目标图；用户在 B 同意 |  |
+-| 8 | [ ] | 白盒切片：色块地图 + 占位 NPC，围着最大风险做一章 + 一战 + 一次升级 | world-map, combat-system, dialogue-authoring, quest-design | 5,6 | mvp | verify.py 六项 PASS；盲玩子 agent 记录出来；用户在白盒试玩停靠点同意 |  |
+-| 9 | [ ] | 范围复盘 ① | producer | 8 | — | GAME_BRIEF 范围复盘表填了一行 |  |
+-| 10 | [ ] | 任务链 + 对白（每章过 knowledge_check 和 story-review） | quest-design, dialogue-authoring | 4,8 | playable | check_content.py 零错误；knowledge_check 候选逐条判过 |  |
+-| 11 | [ ] | 地图、战斗、成长、存档、检定（照设计页，用不到的划掉） | world-map, combat-system, progression-system, save-load, skill-checks（CRPG 检定时） | 5,8 | playable | --playtest 打印和设计页验收条件一一对上；存读档一致 |  |
+-| 12 | [ ] | 找素材 / 生图并核对许可，处理素材，统一画风 | asset-sourcing（或 asset-generation）, asset-pipeline, style-consistency | 7 | playable | 候选表 + 许可证 + CREDITS；留存截图无透明块、无遮挡 |  |
+-| 13 | [ ] | 范围复盘 ② | producer | 10,11 | — | GAME_BRIEF 范围复盘表第二行 |  |
+-| 14 | [ ] | 界面、文本表 | ui-layout, localization-table | 7,11 | playable | 每屏留存截图；无方块字 |  |
+-| 15 | [ ] | 证据化验证 | playtest-automation | 10,11,12,14 | — | verification.json 六项 PASS，同一次运行 |  |
+-| 16 | [ ] | 停靠点 C：第一个可试玩版本 | producer | 15 | — | 用户按 3–5 个具体问题试玩并反馈 |  |
+-| 17 | [ ] | 数值模拟与调整 | balancing | 16 | full | 模拟曲线和设计页验收条件对上 |  |
+-| 18 | [ ] | 发布 | web-release | 17 | — | 发布前清单全过；网页版在无头浏览器里能进游戏、能触发对话；用户在 D 同意 |  |
++| 1 | [ ] | 建 GitHub 仓库，推上 GAME_BRIEF、TASKS、DEVLOG、README | producer | — | — | 仓库链接点得开，main 上有这四个文件和 .gitignore；之后每一步交接前提交并推送（producer/references/github-sync.md） |  |
++| 2 | [ ] | 世界与故事：世界观、人物卡、因果主线、分章梗概（故事圣经上半） | story-bible（改编作品先 story-extraction） | 1 | — | bible.md 上半有世界硬规则、势力、地点；每个重要人物一张卡（不含认知边界）；因果主线每个转折有中间环节；分章梗概章数和 GAME_BRIEF 一致，改编标原作出处、补写的标出来；用户在 A0 同意 |  |
++| 3 | [ ] | 写概念页和系统清单，过硬否决 | game-concept | 2 | — | CONCEPT.md 七节都有内容、七条硬否决逐条有依据；第一章的例子用梗概的第一章、中心张力对着上半查；用户在 A1 同意 |  |
++| 4 | [ ] | 玩家在故事里：每章的决定和后果、认知边界、伏笔、facts（故事圣经下半） | story-bible | 2,3 | — | bible.json 的 facts 每条有 known_by；伏笔都有回收章；建 CONTENT_SCHEDULE 填好故事两列 |  |
++| 5 | [ ] | 剧情谱 + 审查 | story-map, story-review | 4 | — | 剧情谱无空卡片、钩子曲线有峰值；审查报告给用户反驳；用户在 A2 同意 |  |
++| 6 | [ ] | mvp 层每系统一页设计页，参数登记进 content/data/ | game-design | 3,5 | mvp | 每页上下两层齐全（一句话、例子、感受、规则 / 公式、边界、依赖、参数、验收、素材）；GDD.md、ui/SCREENS.md、CONTENT_SCHEDULE.md 玩法列按已定章节填好；代码里的数都能在设计页和 data/ 找到 |  |
++| 7 | [ ] | 定数据格式、搭工程 | game-data-schema, godot-project-structure | 6 | mvp | 空项目能 headless 运行、能导出网页；对白/变量/任务/NPC/刷新/文本表各有样例 |  |
++| 8 | [ ] | 美术方向 + 目标图；界面观察 | art-direction, ui-layout | 3,6 | — | ART_DIRECTION 一页 + 1–2 张目标图；用户在 B 同意 |  |
++| 9 | [ ] | 白盒切片：色块地图 + 占位 NPC，围着最大风险做一章 + 一战 + 一次成长（升级，或剧情给的新招，照 CONCEPT） | world-map, combat-system, dialogue-authoring, quest-design | 6,7 | mvp | verify.py 六项 PASS；盲玩子 agent 记录出来；用户在白盒试玩停靠点同意 |  |
++| 10 | [ ] | 范围复盘 ① | producer | 9 | — | GAME_BRIEF 范围复盘表填了一行 |  |
++| 11 | [ ] | 任务链 + 对白（每章过 knowledge_check 和 story-review） | quest-design, dialogue-authoring | 5,9 | playable | check_content.py 零错误；knowledge_check 候选逐条判过 |  |
++| 12 | [ ] | 地图、战斗、成长、存档、检定（照设计页，用不到的划掉） | world-map, combat-system, progression-system, save-load, skill-checks（CRPG 检定时） | 6,9 | playable | --playtest 打印和设计页验收条件一一对上；存读档一致 |  |
++| 13 | [ ] | 找素材 / 生图并核对许可，处理素材，统一画风 | asset-sourcing（或 asset-generation）, asset-pipeline, style-consistency | 8 | playable | 候选表 + 许可证 + CREDITS；留存截图无透明块、无遮挡 |  |
++| 14 | [ ] | 范围复盘 ② | producer | 11,12 | — | GAME_BRIEF 范围复盘表第二行 |  |
++| 15 | [ ] | 界面、文本表 | ui-layout, localization-table | 8,12 | playable | 每屏留存截图；无方块字 |  |
++| 16 | [ ] | 证据化验证 | playtest-automation | 11,12,13,15 | — | verification.json 六项 PASS，同一次运行 |  |
++| 17 | [ ] | 停靠点 C：第一个可试玩版本 | producer | 16 | — | 用户按 3–5 个具体问题试玩并反馈 |  |
++| 18 | [ ] | 数值模拟与调整 | balancing | 17 | full | 模拟曲线和设计页验收条件对上 |  |
++| 19 | [ ] | 发布 | web-release | 18 | — | 发布前清单全过；网页版在无头浏览器里能进游戏、能触发对话；用户在 D 同意 |  |
+diff -ruN ai-rpg-studio.orig/skills/producer/references/feedback-routing.md ai-rpg-studio/skills/producer/references/feedback-routing.md
+--- ai-rpg-studio.orig/skills/producer/references/feedback-routing.md	2026-11-05 20:08:56.000000000 +0800
++++ ai-rpg-studio/skills/producer/references/feedback-routing.md	2026-11-05 20:30:37.588692452 +0800
+@@ -28,5 +28,7 @@
+ | 「故事应该在这些前面，现在都没说清楚故事就来了这些乱七八糟的」「世界观什么的肯定先行」 | producer 流水线, story-bible, game-concept, game-design | story-bible 拆成上下两半：上半（世界观、人物卡、因果主线、分章梗概）成为 GAME_BRIEF 之后的第 1 步，新增停靠点 A0；game-concept 对着上半写；下半（玩家的决定、认知边界、伏笔、facts）在概念之后；game-design 挪到剧情谱和 A2 之后，章节内容表按已定章节填 |
+ | （自测发现）网页版没有对话 | web-release | 导出过滤器加上 *.yarn, *.json, *.csv |
+ | 「把这个写进 skill 里去，让所有文本创作都要符合这个要求」（附「肘击指令」，作者将生） | 新建 writing-style；producer、写文字的各 skill、story-review、钩子 | 原文一字不改收进 writing-style，标注作者将生；定了叙事 / 功能 / 文档三种文字各照哪部分；voice-prompt.md 的「要描写，不要诗意」「不许碎句」「不许留白」按它改写，保留逻辑五问和对白三条；加 `check_style.py` 扫禁用语录，进 producer 的证据表；story-review 的 F 层改成九条；各 skill 开头加「文风」一行，钩子每次会话提醒 |
++| 「这个图都看不清楚」（GDD 总览页的「系统怎么互相影响」塞了 8 个系统、14 条带字的箭头，页面自带的 mermaid 还截掉了中文标签） | game-design | 按问题拆成几张小图，每张带字的箭头不超过 5 条；总览页的图手画成 SVG，`render_design.py` 合成「设计总览」页面；规矩写进 `game-design/references/figures.md` |
++| 「搭建 GitHub 放第一步吧，然后所有生成的产物也都同步放 GitHub 上」 | producer 流水线、TASKS 模板、web-release | 建仓库挪到第 1 步（接完需求就建）；每步交接前提交并推送，「看这里」附仓库里的文件链接；网页版改放 `docs/`，不再另建发布仓库 |
+ 
+ 规律：玩法手感类问题（专注、连击、对话触发、谁在动）只有试玩才发现 → 确认点 C 不能省；结构类问题（数据表、引擎）在接需求时问清就能避免。
+diff -ruN ai-rpg-studio.orig/skills/producer/references/github-sync.md ai-rpg-studio/skills/producer/references/github-sync.md
+--- ai-rpg-studio.orig/skills/producer/references/github-sync.md	1970-01-01 08:00:00.000000000 +0800
++++ ai-rpg-studio/skills/producer/references/github-sync.md	2026-11-05 20:31:32.112993269 +0800
+@@ -0,0 +1,50 @@
++# 仓库：第 1 步建好，每一步都推上去
++
++接完需求，第 1 步就建 GitHub 仓库；之后每一步交接前，把这一步的全部产物提交并推送。用户随时打开仓库，就能看到做到哪、每份文档长什么样、哪一步改了什么。
++
++来由：arthur-rpg 做到第 5 步时，产物分散在云端工作目录、几个页面和项目文档里，GitHub 仓库排在第 6 步才建。用户说「搭建 GitHub 放第一步吧，然后所有生成的产物也都同步放 GitHub 上」。
++
++## 第 1 步怎么建
++1. **定名字和公开与否。** 名字用游戏的英文短名或拼音，小写、用连字符（`merlins-apprentice`）；GAME_BRIEF「仓库」一栏写了就照用。公开还是私有照 GAME_BRIEF；改编有版权顾虑的故事建私有仓库。
++2. **能建就自己建。** gh 已登录时：`gh repo create <用户>/<名字> --public`（或 `--private`）。
++3. **建不了就请用户建空仓库。** 没有 gh、令牌无效、没有建仓库的权限时，用一条消息说清三件事，让用户在 https://github.com/new 建好后回一句：
++   - 仓库名；
++   - 公开还是私有；
++   - 什么都不勾（不加 README、.gitignore、license），建一个空仓库。
++4. **拿到推送权限。** 在 claude.ai 的云端会话里，用会话自带的添加仓库工具，以推送权限把这个仓库加进来。推送返回 403 时，请用户在 GitHub 给 Claude 的 GitHub App 授权这个仓库（Settings → Applications → Installed GitHub Apps）。
++5. **第一次提交。** 项目根目录 `git init -b main`，写 `.gitignore`（见下），提交 `GAME_BRIEF.md`、`TASKS.md`、`DEVLOG.md` 和一份 `README.md`（三五行：这是什么游戏、先看哪份文档），推到 main。
++6. **交接。** `✓ 第 1 / M 步 · 建仓库：<仓库链接>`，下一步是世界与故事，在交接里直接问 story-bible 上半的定调题。
++
++GAME_BRIEF 里已经给了仓库地址：跳过 1–3。
++用户选了「暂时不用 GitHub」：只做第 5 步的本地 git，每步照样提交；交接时说明产物靠页面和文件发给用户。之后要建仓库，补做第 1–4 步再推。
++
++## 每一步怎么同步
++- **交接前提交并推送。** `git add -A`，`git commit -m "第 N 步 · <步骤名>：<一句话结果>"`，`git push`。没推上去，这一步不算做完。
++- **页面的生成文件也提交。** 剧情谱 `content/story/story.html`、设计总览 `design/design_overview.html`、目标图，仓库里都留一份；页面链接写进 GDD 目录。
++- **「看这里」附仓库链接。** 页面链接之外，再给仓库里对应文件的链接：`https://github.com/<用户>/<仓库>/blob/main/<路径>`。只有机器用的产物（bible.json、content/data、代码）时，给提交链接。
++- **返工也推。** 审查后返工、用户改了意见，改完同样提交推送，提交信息写「第 N 步返工：<改了什么>」。
++- **DEVLOG 记提交号。** 每节末尾写这一节对应的提交（`git rev-parse --short HEAD`）。
++- **项目文档和仓库两处都有时**（例：claude.ai 的项目文档），仓库是准的：先推仓库，再同步项目文档。
++
++## 什么不进仓库
++`.gitignore` 起手：
++```
++.godot/
++*.translation
++__pycache__/
++*.pyc
++.DS_Store
++/web/
++qa/tmp/
++```
++- 密钥、令牌、账号密码不进仓库。
++- 素材照常提交，许可证和署名同一次进 `CREDITS.md`。
++- 单个文件超过 50MB 先问用户（GitHub 超过 100MB 拒收）：改用 Git LFS，或者不提交、在 README 写怎么取得。
++
++## 推送踩过的坑
++- 403：没授权这个仓库，见第 4 条。
++- `remote rejected (failure)`：原样重试一次就好。
++- 推送很大的提交被代理断开：按目录拆成几次提交再推。
++
++## 和发布的关系
++网页版放在同一个仓库的 `docs/`，GitHub Pages 选 main 分支的 `/docs`（`web-release`）。不再另建一个发布仓库。
+diff -ruN ai-rpg-studio.orig/skills/producer/references/intake-questions.md ai-rpg-studio/skills/producer/references/intake-questions.md
+--- ai-rpg-studio.orig/skills/producer/references/intake-questions.md	2026-11-05 20:00:46.000000000 +0800
++++ ai-rpg-studio/skills/producer/references/intake-questions.md	2026-11-05 20:32:05.176664775 +0800
+@@ -39,11 +39,11 @@
+ |---|---|---|
+ | 不做什么 | 这一版明确不做什么？（可多选） | 不联机 / 不做声音 / 不做手机操作 / 不做多语言（选了的这一版就不做；之后要加就是新一轮） |
+ | 记录 | 开发过程要不要逐步记录？ | 每一步都记，包括为什么这么定（推荐）/ 只记关键决定 / 不用 |
+-| 仓库 | 代码放在哪？ | 已有 GitHub 仓库（地址写在补充里）/ 帮我新建一个 / 暂时不发布 |
++| 仓库 | 文档、数据、代码放在哪？（接完需求第 1 步就建，之后每步都推上去） | 帮我新建一个公开仓库（推荐：每一步的产物都在一处看得到，网页版也从这里发布）/ 新建私有仓库（改编有版权顾虑时；网页版要发布再改公开）/ 已有 GitHub 仓库（地址写在补充里）/ 暂时不用 GitHub（只在本地用 git 记录，产物靠页面和文件发给你） |
+ 
+ **时间预算不在开头问**：默认「不限，做到第二轮选的程度就停」，写进 GAME_BRIEF 的「未确认假设」。用户自己提了时间或轮次限制，就照他说的写。做到一半发现做不完时，再用一句人话问：「照现在的进度做不完，先删支线还是先删美术？」
+ 
+-问完后：把答案写进 `GAME_BRIEF.md`（模板见 `GAME_BRIEF-template.md`），用 3–5 行复述给用户，接着按 producer 第 6 节交接：「下一步：第 1 步 · 世界与故事」，直接问下面 story-bible 上半的定调题。
++问完后：把答案写进 `GAME_BRIEF.md`（模板见 `GAME_BRIEF-template.md`），用 3–5 行复述给用户，接着做第 1 步 · 建仓库（`github-sync.md`），推上去以后按 producer 第 6 节交接：「下一步：第 2 步 · 世界与故事」，直接问下面 story-bible 上半的定调题。
+ 
+ ## 每一步开头：定调题（动笔前问，答完再写）
+ 
+diff -ruN ai-rpg-studio.orig/skills/story-map/SKILL.md ai-rpg-studio/skills/story-map/SKILL.md
+--- ai-rpg-studio.orig/skills/story-map/SKILL.md	2026-11-05 20:08:24.000000000 +0800
++++ ai-rpg-studio/skills/story-map/SKILL.md	2026-11-05 20:32:10.037777439 +0800
+@@ -33,6 +33,7 @@
+ 规则：
+ - 节点 `id` 用任务编号（1xxx 主线、2xxx 支线），后面写 quests.json 时直接用；不是任务的过场（如「被转化」）用英文短名。
+ - 选项有 `to`（跳到某个节点或结局）就是分叉；只有 `result` 就是「选完汇合，继续往下」。一个节点里的多个选择按发生顺序写。
++- **条件选项**：只在满足条件时出现的选项（做过某条支线才有、某人还活着才有），给选项写 `id`，再写 `requires`（给人看的一句条件，图上标成「需要：…」）和 `requires_any`（若干组选项 id，任意一组全部选过就满足，例 `[["S1b"], ["D3a"]]`）。支线写 `skip_as`：走过解锁站却没做这条支线时，按哪个选项 id 算（一般是它的「谁都不说」）。「走一遍」按一路选过的 id 判断：满足的选项能点，不满足的灰掉并写明缺什么。不要把条件写进 `what` 或选项文字的括号里。
+ - 原作没有、我们补写的部分标 `"source": "补写"`，图上会画成虚线框和 ✎。用户要求只用原作故事时，这一项必须准确。
+ - 每个节点只写一句 `what`，这一步不写台词。
+ 
+diff -ruN ai-rpg-studio.orig/skills/story-map/scripts/story_page.template.html ai-rpg-studio/skills/story-map/scripts/story_page.template.html
+--- ai-rpg-studio.orig/skills/story-map/scripts/story_page.template.html	2026-11-05 20:00:46.000000000 +0800
++++ ai-rpg-studio/skills/story-map/scripts/story_page.template.html	2026-11-05 20:32:10.037290267 +0800
+@@ -39,6 +39,7 @@
+ .tag.q { background: var(--accent-soft); color: var(--accent) }
+ .tag.s { background: var(--side-soft); color: var(--side) }
+ .tag.new { color: var(--new); border: 1px dashed var(--new) }
++.tag.cond { color: var(--gold); border: 1px solid var(--gold); background: var(--gold-soft) }
+ .act-name { font-family: var(--display); font-size: 13px; color: var(--accent); white-space: nowrap }
+ 
+ /* ---------- 故事线轨道 ---------- */
+@@ -99,6 +100,9 @@
+ .options { display: grid; gap: 8px; margin-top: 10px }
+ .options button { text-align: left; border: 1px solid var(--line); background: var(--bg); border-radius: 6px; padding: 10px 14px; font-size: 15px }
+ .options button:hover { border-color: var(--accent) }
++.options button:disabled { opacity: .55; cursor: not-allowed; border-style: dashed }
++.options button:disabled:hover { border-color: var(--line) }
++.options .why { display: block; font-size: 13px; color: var(--dim); margin-top: 2px }
+ .offer { margin-top: 18px; padding: 10px 14px; border: 1px dashed var(--side); border-radius: 6px; background: var(--side-soft); font-size: 14px }
+ .offer button { margin-top: 6px }
+ .ending-card { text-align: center; padding: 30px 10px }
+@@ -164,10 +168,12 @@
+ const sideAt = {};
+ SIDE.forEach(s => (sideAt[s.unlock_at] ||= []).push(s));
+ const tagOf = (x, side) => `<span class="tag ${side ? 's' : 'q'}">${/^\d+$/.test(x.id) ? (side ? '支线 ' : '任务 ') + x.id : (side ? '支线' : '过场')}</span>${isNew(x) ? '<span class="tag new">补写</span>' : ''}`;
++const condTag = o => o.requires ? `<span class="tag cond">需要：${esc(o.requires)}</span>` : '';
+ function optTail(o) {
++  if (o.to && ends[o.to]) return condTag(o) + `<span class="endtag">→ 结局：${esc(ends[o.to].title)}</span>`;
+   if (o.to && ends[o.to]) return `<span class="endtag">→ 结局：${esc(ends[o.to].title)}</span>`;
+-  if (o.to && byId[o.to] !== undefined) return `<span class="res">→ 跳到「${esc(LINE[byId[o.to]].title)}」</span>`;
+-  return o.result ? `<span class="res">→ ${esc(o.result)}</span>` : '';
++  if (o.to && byId[o.to] !== undefined) return condTag(o) + `<span class="res">→ 跳到「${esc(LINE[byId[o.to]].title)}」</span>`;
++  return condTag(o) + (o.result ? `<span class="res">→ ${esc(o.result)}</span>` : '');
+ }
+ const choiceHtml = (list, side) => (list || []).map(c => `<div class="choice-box${side ? ' side' : ''}"><div class="ask">◇ ${esc(c.label)}</div><ul class="opts">${c.options.map(o => `<li><span class="pick">${esc(o.label)}</span>${optTail(o)}</li>`).join('')}</ul></div>`).join('');
+ 
+@@ -262,7 +268,15 @@
+ 
+ // ---------- 走一遍 ----------
+ let P;
+-function startPlay() { P = {i: 0, c: 0, log: [], end: null, side: null, sc: 0}; drawPlay(); }
++function startPlay() { P = {i: 0, c: 0, log: [], end: null, side: null, sc: 0, picked: []}; drawPlay(); }
++// 选项条件：requires_any 是若干组选项 id，任意一组全部选过就满足；走过解锁站却没做的支线，按它的 skip_as 算
++function effPicked() {
++  const s = new Set(P.picked);
++  SIDE.forEach(sd => { const at = byId[sd.unlock_at]; if (sd.skip_as && at !== undefined && at < P.i && !P.log.some(l => l.side === sd.id)) s.add(sd.skip_as); });
++  return s;
++}
++const avail = o => !o.requires_any || o.requires_any.some(g => g.every(id => effPicked().has(id)));
++const optBtn = (o, k, attr) => avail(o) ? `<button ${attr}="${k}">${esc(o.label)}</button>` : `<button disabled>${esc(o.label)}<span class="why">这一路没满足：${esc(o.requires || '条件')}</span></button>`;
+ function drawPlay() {
+   $('log').innerHTML = P.log.map(l => `<li>${esc(l.pick)} <span>· ${esc(l.at)}</span></li>`).join('') || '<li style="list-style:none;margin-left:-20px;color:var(--dim)">还没有做选择</li>';
+   $('bar').style.width = (P.end ? 100 : Math.round(P.i / LINE.length * 100)) + '%';
+@@ -275,12 +289,12 @@
+   if (P.side) {
+     const s = P.side, c = (s.choices || [])[P.sc];
+     st.innerHTML = `<div class="act-name">支线 · 暂时离开主线</div><h2>${esc(s.title)}</h2><div class="where">${esc(s.where || '')}${s.who ? ' · ' + esc(s.who) : ''}</div><p class="what">${esc(s.what || '')}</p>` +
+-      (c ? `<div class="q">${esc(c.label)}</div><div class="options">${c.options.map((o, k) => `<button data-sopt="${k}">${esc(o.label)}</button>`).join('')}</div>` : '<div class="nav"><button class="btn primary" id="back">回到主线</button></div>');
++      (c ? `<div class="q">${esc(c.label)}</div><div class="options">${c.options.map((o, k) => optBtn(o, k, 'data-sopt')).join('')}</div>` : '<div class="nav"><button class="btn primary" id="back">回到主线</button></div>');
+     return;
+   }
+   const b = LINE[P.i], c = (b.choices || [])[P.c];
+   let h = `<div class="act-name">${esc(b.act)} · 第 ${P.i + 1} / ${LINE.length} 站</div><h2>${esc(b.title)}</h2><div class="where">${esc(b.where || '')}${b.who ? ' · ' + esc(b.who) : ''}</div><p class="what">${esc(b.what || '')}</p>`;
+-  if (c) h += `<div class="q">${esc(c.label)}</div><div class="options">${c.options.map((o, k) => `<button data-opt="${k}">${esc(o.label)}</button>`).join('')}</div>`;
++  if (c) h += `<div class="q">${esc(c.label)}</div><div class="options">${c.options.map((o, k) => optBtn(o, k, 'data-opt')).join('')}</div>`;
+   else {
+     const offers = (sideAt[b.id] || []).filter(s => !P.log.some(l => l.side === s.id));
+     h += offers.map(s => `<div class="offer">这时你还可以去做支线 <b>${esc(s.title)}</b>${s.who ? '（' + esc(s.who) + '）' : ''}<br><button class="btn" data-doside="${esc(s.id)}">去做这条支线</button></div>`).join('');
+@@ -293,12 +307,14 @@
+   if (opt) {
+     const b = LINE[P.i], o = b.choices[P.c].options[+opt.dataset.opt];
+     P.log.push({at: b.title, pick: o.label + (o.result ? '（' + o.result + '）' : '')});
++    if (o.id) P.picked.push(o.id);
+     if (o.to && ends[o.to]) P.end = o.to;
+     else if (o.to && byId[o.to] !== undefined) { P.i = byId[o.to]; P.c = 0; }
+     else P.c++;
+   } else if (sopt) {
+     const o = P.side.choices[P.sc].options[+sopt.dataset.sopt];
+     P.log.push({at: '支线 · ' + P.side.title, pick: o.label + (o.result ? '（' + o.result + '）' : ''), side: P.side.id});
++    if (o.id) P.picked.push(o.id);
+     P.sc++;
+   } else if (ds) {
+     P.side = SIDE.find(s => s.id === ds.dataset.doside); P.sc = 0;
+diff -ruN ai-rpg-studio.orig/skills/web-release/SKILL.md ai-rpg-studio/skills/web-release/SKILL.md
+--- ai-rpg-studio.orig/skills/web-release/SKILL.md	2026-11-05 20:00:46.000000000 +0800
++++ ai-rpg-studio/skills/web-release/SKILL.md	2026-11-05 20:32:05.177510754 +0800
+@@ -24,11 +24,11 @@
+ ## 步骤
+ 1. 内容改完：跑 `yarn_lines.py`、`build_fonts.py`、`check_content.py`。
+ 2. 重新导入：`godot --headless --path . --import`。
+-3. 导出：`godot --headless --path . --export-release "Web" ../web/index.html`。产物约 42MB（`index.wasm` 35MB、`index.pck` 7MB）。
++3. 导出：`godot --headless --path . --export-release "Web" docs/index.html`。产物约 42MB（`index.wasm` 35MB、`index.pck` 7MB）。`docs/` 里放一个空的 `.gdignore`，免得 Godot 把导出的文件当资源导入。
+ 4. **测导出版**（`playtest-automation` 第 3 层），确认能进游戏、能触发对话。
+-5. 发布仓库结构：根目录放网页版文件 + `.nojekyll`，`source/` 放项目源码（不含 `.godot/` 和生成的 `.translation`），附 README、DEVLOG、素材署名。
++5. 仓库结构：第 1 步建的仓库根目录就是项目源码（`.godot/` 和生成的 `.translation` 由 `.gitignore` 挡掉）；网页版放 `docs/`，加一个 `.nojekyll`。README、DEVLOG、素材署名本来就在根目录。不另建发布仓库（`producer/references/github-sync.md`）。
+ 6. 提交并推送。提交信息写清本轮改了什么。
+-7. 第一次发布时请用户在仓库 Settings → Pages 选 main 分支、根目录（这一步 API 可能被代理拦住，需要用户手动点）。链接：`https://<用户>.github.io/<仓库>/`。
++7. 第一次发布时请用户在仓库 Settings → Pages 选 main 分支、`/docs` 目录（这一步 API 可能被代理拦住，需要用户手动点）。链接：`https://<用户>.github.io/<仓库>/`。
+ 
+ ## 推送踩过的坑
+ - 403：用户要先在 GitHub 给 Claude 的 GitHub App 授权这个仓库（settings/installations）。
