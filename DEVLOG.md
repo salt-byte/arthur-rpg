@@ -328,7 +328,7 @@
    - producer：新增 references/github-sync.md（第 1 步怎么建仓库、每步怎么同步、什么不进仓库）。TASKS 模板插入第 1 行「建 GitHub 仓库」，其余行号和依赖号顺延，共 19 行；顺手把白盒那行的「一次升级」改成「一次成长（升级，或剧情给的新招）」。提问题库的「仓库」一题换了选项，交接规则加「每步都推到仓库」，钩子和 README 的流程跟着改。
    - web-release：网页版放同一个仓库的 docs/，不另建发布仓库。
    - story-map：条件选项的补丁重新打上。
-   - 改动全文：plugin-patches/v0.5.0-figures-github-first.patch。
+   - 改动全文：plugin-patches/v0.5.1-figures-github-first.patch。
 2. 本项目：手画的图从 tools/figures 挪到 design/figures，改用插件的 render_design.py，删掉项目里的副本。建好本地 git 仓库，第一次提交是到第 5 步为止的全部产物（57 个文件）。
 
 决定：
@@ -339,3 +339,7 @@
 证据：插件校验通过（claude plugin validate）；改过的插件文档 check_style 禁用 0 条；render_design.py 在本项目上生成 10 节、没有提醒，去掉手画图时提醒正确；打过补丁的 story_tree.py 生成的剧情谱和原来逐字相同。
 
 插件问题：插件在本机的同步副本是只读缓存，直接改会在下次更新时丢掉。改插件要打包成 .plugin 交给用户安装。
+
+补记：
+- 用户在 GitHub 建好空仓库 salt-byte/arthur-rpg，本地仓库连上并推送（第一次推送 12efcad）。
+- GDD 目录每一行加上仓库里的文件链接。生成总览页时发现 render_design.py 会把网址里的路径（…/blob/main/design/GDD.md）也换成页内链接，修好后插件改为 0.5.1 重新打包；补丁改名 plugin-patches/v0.5.1-figures-github-first.patch。

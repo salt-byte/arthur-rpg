@@ -4,8 +4,8 @@
 
 ## 当前状态（每轮结束更新；对话压缩后先读这里）
 - 做到哪：第 5 步完成，等用户点头
-- 下一步：先把 GitHub 仓库建好、把到第 5 步为止的产物推上去（用户要求提前做）；然后第 6 步 · 定数据格式、搭工程（game-data-schema、godot-project-structure）
-- 仓库：salt-byte/arthur-rpg（等用户在 GitHub 建好空仓库）。插件 0.5.0 起建仓库是第 1 步；本项目已做到第 5 步，行号不改，仓库算在第 6 步之前补做
+- 下一步：第 6 步 · 定数据格式、搭工程（game-data-schema、godot-project-structure）
+- 仓库：https://github.com/salt-byte/arthur-rpg （2026-11-05 建好，到第 5 步为止的产物已推上去）。插件 0.5 起建仓库是第 1 步；本项目已做到第 5 步，行号不改，仓库算在第 6 步之前补做。之后每步交接前提交并推送
 - 卡在哪：无
 - 最近一次 verify：NOT_RUN（还没有工程）
 - 停靠点：A0 ✓ · A1 ✓ · A2 ✓ · B 未到 · 白盒 未到 · C 未到 · D 未到

@@ -1,11 +1,11 @@
 diff -ruN ai-rpg-studio.orig/.claude-plugin/plugin.json ai-rpg-studio/.claude-plugin/plugin.json
 --- ai-rpg-studio.orig/.claude-plugin/plugin.json	2026-11-05 20:09:02.000000000 +0800
-+++ ai-rpg-studio/.claude-plugin/plugin.json	2026-11-05 20:32:17.377094098 +0800
++++ ai-rpg-studio/.claude-plugin/plugin.json	2026-11-05 20:37:16.396267447 +0800
 @@ -1,6 +1,6 @@
  {
    "name": "ai-rpg-studio",
 -  "version": "0.4.0",
-+  "version": "0.5.0",
++  "version": "0.5.1",
    "description": "Make a 2D RPG inspired by a story you love. 用 AI 把一个你喜欢的故事（小说、剧本、电影，或你自己的设定）做成 2D RPG 的工作流：制作人接需求、game-concept 定概念、game-design 写设计页、story-bible/story-review 写有逻辑的故事、先白盒再铺美术、verify.py 用六项证据验收、每一步动笔前问定调题、做完交接等你点头、产出都给你看得见的链接，六个停靠点主动找人确认；所有文字照「肘击指令」（作者将生）写，反 AI 八股、电影感叙事。做法来自 graveholme（仿 Vampire's Fall 2，Godot 4 + LPC）的实际开发过程；借鉴的开源 skill 见 CREDITS.md。",
    "author": {
      "name": "Yudie Deng"
@@ -411,8 +411,8 @@ diff -ruN ai-rpg-studio.orig/skills/game-design/scripts/design_overview.template
 +</script>
 diff -ruN ai-rpg-studio.orig/skills/game-design/scripts/render_design.py ai-rpg-studio/skills/game-design/scripts/render_design.py
 --- ai-rpg-studio.orig/skills/game-design/scripts/render_design.py	1970-01-01 08:00:00.000000000 +0800
-+++ ai-rpg-studio/skills/game-design/scripts/render_design.py	2026-11-05 20:30:26.988686312 +0800
-@@ -0,0 +1,145 @@
++++ ai-rpg-studio/skills/game-design/scripts/render_design.py	2026-11-05 20:36:53.313938521 +0800
+@@ -0,0 +1,146 @@
 +#!/usr/bin/env python3
 +"""把 GDD、各系统设计页、界面清单、章节内容表合成一页「设计总览」网页，给用户从总览图看起。
 +
@@ -503,8 +503,9 @@ diff -ruN ai-rpg-studio.orig/skills/game-design/scripts/render_design.py ai-rpg-
 +    # 标题降一级：整页只有一个 h1
 +    text = "\n".join(("#" + ln) if ln.startswith("#") else ln for ln in text.split("\n"))
 +    # 文档路径换成页内链接
++    # 网址里的路径（仓库链接 https://github.com/…/blob/main/design/GDD.md）不换
 +    for p, target in links.items():
-+        text = text.replace(p, f"[{p.split('/')[-1]}](#{target})")
++        text = re.sub(r"(?<![/\w.])" + re.escape(p), f"[{p.split('/')[-1]}](#{target})", text)
 +    text = re.sub(r"[（(]claude\.ai/artifact/(\w+)[）)]", r"（[打开](https://claude.ai/artifact/\1)）", text)
 +    out = markdown.markdown(text, extensions=["tables", "fenced_code"])
 +    for i, frag in enumerate(figs):
