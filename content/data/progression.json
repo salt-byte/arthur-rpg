@@ -1,0 +1,333 @@
+{
+  "_说明": "参数登记，来自 design/systems/progression.md 第 6 节；代码只读这里的数，改数先改设计页。格式照 mechanics-library xp-progression（progression + skill_tree 两段），另加 xp（经验从哪来）和 boons（每级随机奖励）。",
+  "progression": {
+    "mode": "xp",
+    "curve": "medium_fast",
+    "max_level": 10,
+    "at_cap": "discard",
+    "points_per_level": 2,
+    "attribute_points_per_level": 0,
+    "heal_on_level_up": true,
+    "rewards": {}
+  },
+  "xp": {
+    "per_enemy_by_chapter": [
+      2,
+      6,
+      9,
+      12,
+      15,
+      18
+    ],
+    "boss_mult": 3,
+    "summoned": 0,
+    "quest_by_chapter": [
+      0,
+      20,
+      30,
+      40,
+      60,
+      0
+    ],
+    "_说明": "一只普通敌人的经验按它所在的章（combat.json enemies.*.chapter）取；主线做完时给 quest_by_chapter。"
+  },
+  "skill_tree": {
+    "respec": "shrine",
+    "respec_charges": -1,
+    "respec_refund": 1.0,
+    "trees": {
+      "spark": {
+        "name": "星火",
+        "ref": "Anger"
+      },
+      "water": {
+        "name": "水面",
+        "ref": "Control"
+      },
+      "ward": {
+        "name": "护身",
+        "ref": "Vitality"
+      },
+      "trick": {
+        "name": "把戏",
+        "ref": "Deceit"
+      }
+    },
+    "nodes": {
+      "spark_heat": {
+        "tree": "spark",
+        "name": "星火加热",
+        "level_req": 1,
+        "max_rank": 3,
+        "cost": 1,
+        "effect": {
+          "spell": "spark",
+          "damage": 1
+        }
+      },
+      "spark_ember": {
+        "tree": "spark",
+        "name": "余烬",
+        "level_req": 3,
+        "max_rank": 1,
+        "cost": 1,
+        "requires": [
+          "spark_heat"
+        ],
+        "effect": {
+          "spell": "spark",
+          "vulnerable": 1
+        }
+      },
+      "spark_twin": {
+        "tree": "spark",
+        "name": "双星",
+        "level_req": 5,
+        "max_rank": 1,
+        "cost": 1,
+        "requires": [
+          "spark_ember"
+        ],
+        "effect": {
+          "new_spell": "twin_spark",
+          "mana": 2,
+          "targets": 2,
+          "damage": "spark"
+        }
+      },
+      "spark_rain": {
+        "tree": "spark",
+        "name": "火雨",
+        "level_req": 7,
+        "max_rank": 1,
+        "cost": 1,
+        "requires": [
+          "spark_twin"
+        ],
+        "effect": {
+          "new_spell": "fire_rain",
+          "mana": 3,
+          "target": "all_enemies",
+          "damage": 2
+        }
+      },
+      "water_deep": {
+        "tree": "water",
+        "name": "深水",
+        "level_req": 1,
+        "max_rank": 3,
+        "cost": 1,
+        "effect": {
+          "mana_max": 1
+        }
+      },
+      "water_ripple": {
+        "tree": "water",
+        "name": "涟漪",
+        "level_req": 3,
+        "max_rank": 1,
+        "cost": 1,
+        "requires": [
+          "water_deep"
+        ],
+        "effect": {
+          "spell": "focus",
+          "restore_mana": 1
+        }
+      },
+      "water_calm": {
+        "tree": "water",
+        "name": "定神",
+        "level_req": 5,
+        "max_rank": 1,
+        "cost": 1,
+        "requires": [
+          "water_ripple"
+        ],
+        "effect": {
+          "spell": "interrupt",
+          "mana": -1
+        }
+      },
+      "water_tide": {
+        "tree": "water",
+        "name": "潮信",
+        "level_req": 7,
+        "max_rank": 1,
+        "cost": 1,
+        "requires": [
+          "water_calm"
+        ],
+        "effect": {
+          "mana_regen": 1
+        }
+      },
+      "ward_sturdy": {
+        "tree": "ward",
+        "name": "结实",
+        "level_req": 1,
+        "max_rank": 3,
+        "cost": 1,
+        "effect": {
+          "apprentice_hp": 3
+        }
+      },
+      "ward_thick": {
+        "tree": "ward",
+        "name": "护身加厚",
+        "level_req": 3,
+        "max_rank": 2,
+        "cost": 1,
+        "requires": [
+          "ward_sturdy"
+        ],
+        "effect": {
+          "spell": "ward",
+          "block": 2
+        }
+      },
+      "ward_twin": {
+        "tree": "ward",
+        "name": "同护",
+        "level_req": 5,
+        "max_rank": 1,
+        "cost": 1,
+        "requires": [
+          "ward_thick"
+        ],
+        "effect": {
+          "spell": "ward",
+          "targets": 2
+        }
+      },
+      "ward_stand": {
+        "tree": "ward",
+        "name": "不倒",
+        "level_req": 7,
+        "max_rank": 1,
+        "cost": 1,
+        "requires": [
+          "ward_twin"
+        ],
+        "effect": {
+          "once_per_battle_survive_at": 1
+        }
+      },
+      "trick_blind": {
+        "tree": "trick",
+        "name": "迷眼",
+        "level_req": 1,
+        "max_rank": 1,
+        "cost": 1,
+        "effect": {
+          "new_spell": "blind",
+          "mana": 1,
+          "target": "enemy",
+          "weak": 2
+        }
+      },
+      "trick_see": {
+        "tree": "trick",
+        "name": "看穿",
+        "level_req": 3,
+        "max_rank": 1,
+        "cost": 1,
+        "requires": [
+          "trick_blind"
+        ],
+        "effect": {
+          "battle_start_all_enemies_vulnerable": 1
+        }
+      },
+      "trick_lever": {
+        "tree": "trick",
+        "name": "借势",
+        "level_req": 5,
+        "max_rank": 1,
+        "cost": 1,
+        "requires": [
+          "trick_see"
+        ],
+        "effect": {
+          "on_interrupt_vulnerable": 2
+        }
+      },
+      "trick_haze": {
+        "tree": "trick",
+        "name": "乱影",
+        "level_req": 7,
+        "max_rank": 1,
+        "cost": 1,
+        "requires": [
+          "trick_lever"
+        ],
+        "effect": {
+          "new_spell": "haze",
+          "mana": 3,
+          "target": "all_enemies",
+          "weak": 1
+        }
+      }
+    },
+    "_说明": "level_req 照暗黑 2 的需求等级缩到 10 级上限；每超过 level_req 1 级才能在这一格多点 1 点（暗黑 2，xp-progression 默认）。剧情给的招不进树（story-unlocks.json）。四棵树一共 23 点。"
+  },
+  "boons": {
+    "choices": 3,
+    "filler": "purse",
+    "pool": [
+      {
+        "id": "sharpen",
+        "name": "{who}磨了剑",
+        "per_companion": true,
+        "max": 3,
+        "effect": {
+          "companion_power": 1
+        }
+      },
+      {
+        "id": "well_fed",
+        "name": "{who}吃得饱",
+        "per_companion": true,
+        "max": 2,
+        "effect": {
+          "companion_hp": 3
+        }
+      },
+      {
+        "id": "iron_shield",
+        "name": "盾牌包铁",
+        "max": 2,
+        "effect": {
+          "guard_block": 2
+        }
+      },
+      {
+        "id": "potion_bag",
+        "name": "药囊",
+        "max": -1,
+        "effect": {
+          "item": "potion_hp",
+          "count": 2
+        }
+      },
+      {
+        "id": "purse",
+        "name": "钱袋",
+        "max": -1,
+        "effect": {
+          "silver_per_chapter": 20
+        }
+      },
+      {
+        "id": "sleep_on_it",
+        "name": "多想了一夜",
+        "max": 2,
+        "from_level": 3,
+        "effect": {
+          "skill_points": 1
+        }
+      }
+    ],
+    "_说明": "每升一级抽 choices 张不重样的挑一张；per_companion 的只给眼下在队里的同伴抽，记在那个人身上，他离开就不生效。池子不够时用 filler 补。"
+  }
+}

@@ -123,20 +123,20 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 </style>
 
 <header class="top wrap">
-  <div class="eyebrow">第 5 / 18 步 · 系统设计 · 2026-11-05</div>
+  <div class="eyebrow">系统设计 · 2026-11-06</div>
   <h1>梅林的学徒 · 设计总览<span class="chip">待你确认</span></h1>
   <p class="lede">每个系统一页：上半页讲玩家会碰到什么，下半页是给做游戏的人看的公式、参数和验收条件。先看「总览」里的图，再点进各页。</p>
 </header>
-<nav class="toc" aria-label="目录"><div class="wrap"><a href="#gdd" data-sec="gdd">总览</a><a href="#dialogue" data-sec="dialogue">对话与剧情变量</a><a href="#prophecy" data-sec="prophecy">看水面与预言簿</a><a href="#companions" data-sec="companions">同伴</a><a href="#quests" data-sec="quests">任务</a><a href="#overworld" data-sec="overworld">大地图与探索</a><a href="#combat" data-sec="combat">回合制战斗</a><a href="#story-unlocks" data-sec="story-unlocks">叙事进展</a><a href="#screens" data-sec="screens">界面清单</a><a href="#schedule" data-sec="schedule">章节内容表</a></div></nav>
+<nav class="toc" aria-label="目录"><div class="wrap"><a href="#gdd" data-sec="gdd">总览</a><a href="#dialogue" data-sec="dialogue">对话与剧情变量</a><a href="#prophecy" data-sec="prophecy">看水面与预言簿</a><a href="#companions" data-sec="companions">同伴</a><a href="#quests" data-sec="quests">任务</a><a href="#overworld" data-sec="overworld">大地图与探索</a><a href="#combat" data-sec="combat">回合制战斗</a><a href="#story-unlocks" data-sec="story-unlocks">叙事进展</a><a href="#progression" data-sec="progression">经验、技能点和随机奖励</a><a href="#items" data-sec="items">装备、掉落和商店</a><a href="#screens" data-sec="screens">界面清单</a><a href="#schedule" data-sec="schedule">章节内容表</a></div></nav>
 <main class="wrap">
 <section id="gdd" class="doc doc-gdd"><h2 class="sec-title">GDD · 梅林的学徒（暂定名）</h2>
-<p>更新于 2026-11-05。这是整个设计的入口：上半页一页看懂这个游戏，下半页是所有设计文档的目录。任何一份文档改了，回来更新目录里那一行。</p>
+<p>更新于 2026-11-06。这是整个设计的入口：上半页一页看懂这个游戏，下半页是所有设计文档的目录。任何一份文档改了，回来更新目录里那一行。</p>
 <h3>一页看懂</h3>
-<p><strong>一句话</strong>：你能在水面上看见家里人的将来。每一章，你都要决定把看见的事说给谁听；大结局改不了，但谁陪亚瑟走到最后，由你说出口的话决定。</p>
-<p><strong>RPG 类型</strong>：CRPG 式对话抉择 + 大地图加回合制遭遇 + 回合制（JRPG）战斗 · <strong>给谁玩、在什么设备上、一次玩多久</strong>：喜欢剧情和选择的人，不考操作；网页上玩，电脑键盘为主，手机触屏也能玩；一场仗 2–3 分钟，一章 15–30 分钟，全程约 2 小时 50 分钟。</p>
+<p><strong>一句话</strong>：你能在水面上看见家里人的将来。每一章，你都要决定把看见的事说给谁听；大结局改不了，但谁陪亚瑟走到最后，由你说出口的话决定。两次看水面之间，你在地图上挑着打看得见的敌人，升级、换装备。</p>
+<p><strong>RPG 类型</strong>：CRPG 式对话抉择 + 明雷大地图（照《Vampire's Fall 2》：看得见的敌人、经验和技能树、随机掉落）+ 意图预告的回合制战斗（照《杀戮尖塔》） · <strong>给谁玩、在什么设备上、一次玩多久</strong>：喜欢剧情和选择的人，不考操作；网页上玩，电脑键盘为主，手机触屏也能玩；一场任务战 2–3 分钟、地图小仗 1–2 分钟，一章 20–35 分钟，全程约 3 小时 20 分钟到 3 小时 50 分钟（比 GAME_BRIEF 估的多，第 11 步范围复盘定砍不砍）。</p>
 <h4>一章怎么玩</h4>
 <div class="diagram"><figure class="fig wide">
-<svg viewBox="0 0 470 500" role="img" aria-label="一章怎么玩：进入新地方，在地图上走、找人说话；路上碰到敌人、剧情事件、发光的水面三种事；敌人和剧情处理完回到地图，水面上看见的那一幕在章末决定说给谁听；下一章照你的选择发生，然后进入下一章。">
+<svg viewBox="0 0 470 500" role="img" aria-label="一章怎么玩：进入新地方，在地图上走、找人说话；路上碰到看得见的敌人、剧情事件、发光的水面三种事；敌人和剧情处理完回到地图，水面上看见的那一幕在章末决定说给谁听；下一章照你的选择发生，然后进入下一章。">
 <defs><marker id="ahA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
 <rect class="n" x="75" y="14" width="300" height="46" rx="6"/>
 <text class="t" x="225" y="42" text-anchor="middle">进入这一章的新地方</text>
@@ -148,9 +148,9 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <line class="e" x1="225" y1="148" x2="225" y2="188" marker-end="url(#ahA)"/>
 <line class="e" x1="300" y1="148" x2="366" y2="188" marker-end="url(#ahA)"/>
 <rect class="n" x="14" y="190" width="124" height="84" rx="6"/>
-<text class="t" x="76" y="216" text-anchor="middle">站在路上的敌人</text>
-<text class="s" x="76" y="240" text-anchor="middle">开打，先管哪个</text>
-<text class="s" x="76" y="260" text-anchor="middle">打完回到地图</text>
+<text class="t" x="76" y="216" text-anchor="middle">看得见的敌人</text>
+<text class="s" x="76" y="240" text-anchor="middle">挑着打，拿经验</text>
+<text class="s" x="76" y="260" text-anchor="middle">血不够回圣龛</text>
 <rect class="n" x="163" y="190" width="124" height="84" rx="6"/>
 <text class="t" x="225" y="216" text-anchor="middle">剧情事件</text>
 <text class="s" x="225" y="240" text-anchor="middle">有时学到新法术</text>
@@ -171,7 +171,7 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <path class="e" d="M375 441 C 458 441, 458 37, 377 37" marker-end="url(#ahA)"/>
 <text class="el" x="418" y="26" text-anchor="middle">下一章</text>
 </svg>
-<figcaption>敌人和剧情处理完都回到地图接着走；只有水面上看见的那一幕，会一直等到章末让你决定。支线也一样：听人说了才去，最后也是看水面、决定说给谁听。</figcaption>
+<figcaption>敌人打不打由你挑，打死的就没了；敌人和剧情处理完都回到地图接着走；只有水面上看见的那一幕，会一直等到章末让你决定。支线也一样：听人说了才去，最后也是看水面、决定说给谁听。</figcaption>
 </figure>
 </div>
 <h4>你说出口的话改变什么</h4>
@@ -203,35 +203,65 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 </div>
 <h4>一场仗从哪来、打完去哪</h4>
 <div class="diagram"><figure class="fig wide">
-<svg viewBox="10 0 430 390" role="img" aria-label="一场仗从哪来：任务把敌人放到大地图上，碰到敌人进入战斗，打赢了任务往前走一步；同伴决定谁能上场，叙事进展决定学徒会哪些法术。">
+<svg viewBox="0 0 470 372" role="img" aria-label="一场仗从哪来、打完去哪：在大地图上碰上看得见的敌人就开打；打赢了拿经验和掉落，升级加点、挑奖励、换装备，接着在地图上走；输了或者逃跑，回到上次祈祷的圣龛，三个人回满血，再回地图去。">
 <defs><marker id="ahC" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
-<rect class="n" x="135" y="14" width="200" height="56" rx="6"/>
-<text class="t" x="235" y="38" text-anchor="middle">任务</text>
-<text class="s" x="235" y="58" text-anchor="middle">每章一条主线</text>
-<line class="e" x1="235" y1="70" x2="235" y2="108" marker-end="url(#ahC)"/>
-<text class="el" x="245" y="94">放下敌人、标出下一步</text>
-<rect class="n" x="135" y="110" width="200" height="56" rx="6"/>
-<text class="t" x="235" y="134" text-anchor="middle">大地图</text>
-<text class="s" x="235" y="154" text-anchor="middle">敌人站在路上，看得见</text>
-<line class="e" x1="235" y1="166" x2="235" y2="204" marker-end="url(#ahC)"/>
-<text class="el" x="245" y="190">碰到敌人</text>
-<rect class="n-key" x="135" y="206" width="200" height="56" rx="6"/>
-<text class="t" x="235" y="230" text-anchor="middle">战斗</text>
-<text class="s" x="235" y="250" text-anchor="middle">3–5 回合</text>
-<path class="e" d="M135 234 C 60 234, 60 42, 133 42" marker-end="url(#ahC)"/>
-<text class="el" x="44" y="124" text-anchor="middle">打赢了</text>
-<text class="el" x="44" y="142" text-anchor="middle">任务往前</text>
-<text class="el" x="44" y="160" text-anchor="middle">走一步</text>
-<rect class="n" x="40" y="318" width="160" height="56" rx="6"/>
-<text class="t" x="120" y="342" text-anchor="middle">同伴</text>
-<text class="s" x="120" y="362" text-anchor="middle">谁能上场</text>
-<rect class="n" x="270" y="318" width="160" height="56" rx="6"/>
-<text class="t" x="350" y="342" text-anchor="middle">叙事进展</text>
-<text class="s" x="350" y="362" text-anchor="middle">会哪些法术、法力多少</text>
-<line class="e" x1="140" y1="318" x2="200" y2="264" marker-end="url(#ahC)"/>
-<line class="e" x1="330" y1="318" x2="270" y2="264" marker-end="url(#ahC)"/>
+<rect class="n" x="100" y="14" width="220" height="56" rx="6"/>
+<text class="t" x="210" y="38" text-anchor="middle">大地图</text>
+<text class="s" x="210" y="58" text-anchor="middle">看得见的敌人，靠近会追</text>
+<line class="e" x1="210" y1="70" x2="210" y2="108" marker-end="url(#ahC)"/>
+<text class="el" x="220" y="94">碰上</text>
+<rect class="n-key" x="100" y="110" width="220" height="56" rx="6"/>
+<text class="t" x="210" y="134" text-anchor="middle">战斗</text>
+<text class="s" x="210" y="154" text-anchor="middle">血带出战斗，不回满</text>
+<line class="e" x1="210" y1="166" x2="210" y2="204" marker-end="url(#ahC)"/>
+<text class="el" x="220" y="190">打赢</text>
+<rect class="n" x="100" y="206" width="220" height="56" rx="6"/>
+<text class="t" x="210" y="230" text-anchor="middle">经验和掉落</text>
+<text class="s" x="210" y="250" text-anchor="middle">银币、药，有时一件装备</text>
+<line class="e" x1="210" y1="262" x2="210" y2="300" marker-end="url(#ahC)"/>
+<rect class="n" x="100" y="302" width="220" height="56" rx="6"/>
+<text class="t" x="210" y="326" text-anchor="middle">升级加点、挑奖励</text>
+<text class="s" x="210" y="346" text-anchor="middle">换上新装备</text>
+<path class="e" d="M100 330 C 30 330, 30 42, 98 42" marker-end="url(#ahC)"/>
+<text class="el" x="20" y="182" text-anchor="middle">接着</text>
+<text class="el" x="20" y="200" text-anchor="middle">走</text>
+<path class="e" d="M320 138 C 395 138, 395 160, 395 300" marker-end="url(#ahC)"/>
+<text class="el" x="388" y="232" text-anchor="end">输了或逃跑</text>
+<rect class="n" x="345" y="302" width="110" height="56" rx="6"/>
+<text class="t" x="400" y="326" text-anchor="middle">圣龛</text>
+<text class="s" x="400" y="346" text-anchor="middle">三人回满血</text>
+<path class="e" d="M435 302 C 435 120, 435 42, 322 42" marker-end="url(#ahC)"/>
+<text class="el" x="441" y="196">再</text>
+<text class="el" x="441" y="214">去</text>
 </svg>
-<figcaption>打仗不给经验。赢一场只让任务往前走一步，学徒变强靠剧情给的法术。</figcaption>
+<figcaption>打赢了血不回满，升级时才回满；血不够就回圣龛。打死的敌人不回来，所以每一仗都只能打一次。</figcaption>
+</figure>
+</div>
+<h4>变强从哪来</h4>
+<div class="diagram"><figure class="fig wide">
+<svg viewBox="0 0 460 324" role="img" aria-label="变强从哪来：剧情给新的一招、新的人；升级的技能点让学徒的招更狠；升级的随机奖励让同伴更结实；装备让学徒血厚、法力多。四样都落到下一仗上。">
+<defs><marker id="ahD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+<rect class="n" x="14" y="14" width="200" height="56" rx="6"/>
+<text class="t" x="114" y="38" text-anchor="middle">剧情</text>
+<text class="s" x="114" y="58" text-anchor="middle">新的一招、新的人</text>
+<rect class="n" x="14" y="94" width="200" height="56" rx="6"/>
+<text class="t" x="114" y="118" text-anchor="middle">升级：技能点</text>
+<text class="s" x="114" y="138" text-anchor="middle">学徒的招更狠</text>
+<rect class="n" x="14" y="174" width="200" height="56" rx="6"/>
+<text class="t" x="114" y="198" text-anchor="middle">升级：随机奖励</text>
+<text class="s" x="114" y="218" text-anchor="middle">同伴更结实</text>
+<rect class="n" x="14" y="254" width="200" height="56" rx="6"/>
+<text class="t" x="114" y="278" text-anchor="middle">装备</text>
+<text class="s" x="114" y="298" text-anchor="middle">学徒血厚、法力多</text>
+<line class="e" x1="214" y1="42" x2="294" y2="150" marker-end="url(#ahD)"/>
+<line class="e" x1="214" y1="122" x2="294" y2="158" marker-end="url(#ahD)"/>
+<line class="e" x1="214" y1="202" x2="294" y2="166" marker-end="url(#ahD)"/>
+<line class="e" x1="214" y1="282" x2="294" y2="174" marker-end="url(#ahD)"/>
+<rect class="n-key" x="296" y="134" width="150" height="56" rx="6"/>
+<text class="t" x="371" y="158" text-anchor="middle">下一仗</text>
+<text class="s" x="371" y="178" text-anchor="middle">三个人上场</text>
+</svg>
+<figcaption>新的一招只从剧情来；升级和装备让已有的招更狠、人更结实。同伴不穿装备，他们变强靠剧情和升级时的随机奖励。</figcaption>
 </figure>
 </div>
 <div class="table-wrap"><table>
@@ -260,13 +290,23 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 </tr>
 <tr>
 <td>战斗</td>
-<td>敌人这回合要做什么先亮出来，你给每个人选一个行动，决定先管哪个</td>
+<td>敌人这回合要对谁出什么招先亮出来，你给三个人各选一招，选满自动开打；血带出战斗</td>
 <td><a href="#combat">combat.md</a></td>
 </tr>
 <tr>
 <td>叙事进展</td>
-<td>不升级；新法术、法力上限、新同伴都由剧情给，有的看你的选择</td>
+<td>关键的新法术、新同伴、梅林的杖由剧情给，有的看你的选择</td>
 <td><a href="#story-unlocks">story-unlocks.md</a></td>
+</tr>
+<tr>
+<td>经验和技能点</td>
+<td>打赢拿经验，升一级 2 个技能点加进四棵树，再挑一张随机奖励</td>
+<td><a href="#progression">progression.md</a></td>
+</tr>
+<tr>
+<td>装备和掉落</td>
+<td>打怪、开宝物掉银币、药和装备；三档品质带词缀；学徒换上样子会变</td>
+<td><a href="#items">items.md</a></td>
 </tr>
 <tr>
 <td>任务</td>
@@ -275,14 +315,14 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 </tr>
 <tr>
 <td>大地图</td>
-<td>一章一片地方；敌人站在路上看得见；四个地方看得出你的选择</td>
+<td>一章一片地方；敌人看得见、会追，打死就没了；圣龛回血；四个地方看得出你的选择</td>
 <td><a href="#overworld">overworld.md</a></td>
 </tr>
 </tbody>
 </table></div>
 <h3>目录</h3>
 <p>全部文件都在 GitHub 仓库 <a href="https://github.com/salt-byte/arthur-rpg">salt-byte/arthur-rpg</a>，每一步交接前推送。</p>
-<p>「设计总览」页面（<a href="https://claude.ai/artifact/PDbi5mUqefHPVFycQwW7Nc">打开</a>）把这份总览、七个设计页、界面清单和章节内容表放在一页里看，由插件 game-design 的 render_design.py 从下面这些 .md 生成，手画的图在 design/figures/。</p>
+<p>项目主页（<a href="https://claude.ai/artifact/7GrrutxtorkDnBVH2DNaTN">打开</a>）把需求、故事、概念、原型、剧情谱、系统设计、画风放在一个页面里分页看，由插件 producer 的 render_site.py 从下面这些文件生成；系统设计那一页的手画图在 design/figures/。</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -299,17 +339,25 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <td>GAME_BRIEF.md</td>
 <td>需求和已经定了的事</td>
 <td>producer</td>
-<td>2026-11-05</td>
-<td>已确认（A0、A1、A2）</td>
-<td><a href="https://github.com/salt-byte/arthur-rpg/blob/main/GAME_BRIEF.md">GitHub</a>；项目「RPG游戏」</td>
+<td>2026-11-06</td>
+<td>已确认（A0、A1、A2）；玩法参考 2026-11-06 改</td>
+<td>项目主页「需求」；<a href="https://github.com/salt-byte/arthur-rpg/blob/main/GAME_BRIEF.md">GitHub</a></td>
 </tr>
 <tr>
 <td>design/CONCEPT.md</td>
 <td>这是个什么样的游戏</td>
 <td>game-concept</td>
-<td>2026-11-05</td>
-<td>已确认（A1）；第 5 步改了两处，见它的改动记录</td>
-<td><a href="https://github.com/salt-byte/arthur-rpg/blob/main/design/CONCEPT.md">GitHub</a>；项目</td>
+<td>2026-11-06</td>
+<td>已确认（A1，2026-11-06 重过）</td>
+<td>项目主页「概念」；<a href="https://github.com/salt-byte/arthur-rpg/blob/main/design/CONCEPT.md">GitHub</a></td>
+</tr>
+<tr>
+<td>prototypes/</td>
+<td>玩法原型：怎么打、两次看水面之间</td>
+<td>gameplay-prototype</td>
+<td>2026-11-06</td>
+<td>怎么打：继续，行动版；两次看水面之间：移到第 10 步白盒</td>
+<td>项目主页「原型」；<a href="https://github.com/salt-byte/arthur-rpg/tree/main/prototypes">GitHub</a></td>
 </tr>
 <tr>
 <td>content/story/bible.md</td>
@@ -317,7 +365,7 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <td>story-bible</td>
 <td>2026-11-05</td>
 <td>已确认（A2）</td>
-<td><a href="https://github.com/salt-byte/arthur-rpg/blob/main/content/story/bible.md">GitHub</a>；项目</td>
+<td>项目主页「故事」；<a href="https://github.com/salt-byte/arthur-rpg/blob/main/content/story/bible.md">GitHub</a></td>
 </tr>
 <tr>
 <td>content/story/story.html</td>
@@ -325,7 +373,7 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <td>story-map</td>
 <td>2026-11-05</td>
 <td>已确认（A2）</td>
-<td>「剧情谱」页面（<a href="https://claude.ai/artifact/YBTU7Z3DxcNxYVBdA8YWhW">打开</a>）；<a href="https://github.com/salt-byte/arthur-rpg/blob/main/content/story/story.html">GitHub</a></td>
+<td>项目主页「剧情谱」；<a href="https://github.com/salt-byte/arthur-rpg/blob/main/content/story/story.html">GitHub</a></td>
 </tr>
 <tr>
 <td>content/story/review_A2.md</td>
@@ -333,47 +381,47 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <td>story-review</td>
 <td>2026-11-05</td>
 <td>已确认（A2）</td>
-<td><a href="https://github.com/salt-byte/arthur-rpg/blob/main/content/story/review_A2.md">GitHub</a>；项目</td>
+<td><a href="https://github.com/salt-byte/arthur-rpg/blob/main/content/story/review_A2.md">GitHub</a></td>
 </tr>
 <tr>
 <td>design/systems/*.md</td>
-<td>七个系统的规则</td>
+<td>九个系统的规则</td>
 <td>game-design</td>
-<td>2026-11-05</td>
-<td>待你确认</td>
-<td>「设计总览」页面；<a href="https://github.com/salt-byte/arthur-rpg/tree/main/design/systems">GitHub</a>；项目</td>
+<td>2026-11-06</td>
+<td>第 7 步重做：战斗、大地图重写，成长、装备新写，叙事进展改了一段；待你确认</td>
+<td>项目主页「系统设计」；<a href="https://github.com/salt-byte/arthur-rpg/tree/main/design/systems">GitHub</a></td>
 </tr>
 <tr>
 <td><a href="#screens">SCREENS.md</a></td>
 <td>有哪些屏幕、怎么跳</td>
 <td>game-design → ui-layout</td>
-<td>2026-11-05</td>
-<td>待你确认</td>
-<td>「设计总览」页面；<a href="https://github.com/salt-byte/arthur-rpg/blob/main/design/ui/SCREENS.md">GitHub</a>；项目</td>
+<td>2026-11-06</td>
+<td>加了圣龛、背包、技能树、升级、商店几屏；待你确认</td>
+<td>项目主页「系统设计」；<a href="https://github.com/salt-byte/arthur-rpg/blob/main/design/ui/SCREENS.md">GitHub</a></td>
 </tr>
 <tr>
 <td><a href="#schedule">CONTENT_SCHEDULE.md</a></td>
 <td>每章第一次出现什么、难到什么程度</td>
 <td>game-design → story-bible → quest-design</td>
-<td>2026-11-05</td>
+<td>2026-11-06</td>
 <td>故事列已确认；玩法列待你确认；遭遇列第 10 步填</td>
-<td>「设计总览」页面；<a href="https://github.com/salt-byte/arthur-rpg/blob/main/design/CONTENT_SCHEDULE.md">GitHub</a>；项目</td>
+<td>项目主页「系统设计」；<a href="https://github.com/salt-byte/arthur-rpg/blob/main/design/CONTENT_SCHEDULE.md">GitHub</a></td>
 </tr>
 <tr>
 <td>content/data/*.json</td>
 <td>设计页里每个会调的数</td>
 <td>game-design → balancing</td>
-<td>2026-11-05</td>
-<td>草稿</td>
-<td><a href="https://github.com/salt-byte/arthur-rpg/tree/main/content/data">GitHub</a>；项目</td>
+<td>2026-11-06</td>
+<td>草稿；第 1 章的战斗数来自原型</td>
+<td><a href="https://github.com/salt-byte/arthur-rpg/tree/main/content/data">GitHub</a></td>
 </tr>
 <tr>
-<td>design/design_overview.html</td>
-<td>「设计总览」页面：上面几份设计文档合成的一页</td>
-<td>game-design</td>
-<td>2026-11-05</td>
-<td>跟着各 .md 重新生成</td>
-<td>「设计总览」页面；<a href="https://github.com/salt-byte/arthur-rpg/blob/main/design/design_overview.html">GitHub</a></td>
+<td>site/</td>
+<td>项目主页的页面文件</td>
+<td>producer</td>
+<td>2026-11-06</td>
+<td>每步重新生成</td>
+<td>项目主页；<a href="https://github.com/salt-byte/arthur-rpg/tree/main/site">GitHub</a></td>
 </tr>
 <tr>
 <td>content/README.md</td>
@@ -388,16 +436,32 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <td>Godot 4.3 工程骨架：读数据、跑对白、存读档</td>
 <td>godot-project-structure</td>
 <td>2026-11-05</td>
-<td>第 1 章样例三条路线跑通</td>
+<td>旧白盒的代码，读的是旧格式的 combat.json；第 10 步白盒重做时改</td>
 <td><a href="https://github.com/salt-byte/arthur-rpg/tree/main/scripts">GitHub</a></td>
 </tr>
 <tr>
 <td>design/ART_DIRECTION.md</td>
-<td>画风</td>
+<td>画风：视觉原则、怎么一眼认出、颜色随章节褪色、界面风格、两张目标图</td>
+<td>art-direction → ui-layout</td>
+<td>2026-11-06</td>
+<td>已确认（B）</td>
+<td>项目主页「画风」；<a href="https://github.com/salt-byte/arthur-rpg/blob/main/design/ART_DIRECTION.md">GitHub</a></td>
+</tr>
+<tr>
+<td>design/targets/</td>
+<td>目标图：庆功宴的酒杯、教堂里凯改口</td>
 <td>art-direction</td>
-<td>—</td>
-<td>未开始（第 7 步）</td>
-<td>—</td>
+<td>2026-11-06</td>
+<td>已确认（B）</td>
+<td><a href="https://github.com/salt-byte/arthur-rpg/tree/main/design/targets">GitHub</a></td>
+</tr>
+<tr>
+<td>CREDITS.md</td>
+<td>用到的美术和字体署名</td>
+<td>asset-sourcing</td>
+<td>2026-11-06</td>
+<td>每加一个素材加一行</td>
+<td><a href="https://github.com/salt-byte/arthur-rpg/blob/main/CREDITS.md">GitHub</a></td>
 </tr>
 <tr>
 <td>design/_draft_v1/</td>
@@ -405,7 +469,7 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <td>—</td>
 <td>2026-11-05</td>
 <td>只作参考，不再更新</td>
-<td><a href="https://github.com/salt-byte/arthur-rpg/tree/main/design/_draft_v1">GitHub</a>；项目</td>
+<td><a href="https://github.com/salt-byte/arthur-rpg/tree/main/design/_draft_v1">GitHub</a></td>
 </tr>
 </tbody>
 </table></div></section>
@@ -1537,26 +1601,32 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 </tbody>
 </table></div></section>
 <section id="overworld" class="doc doc-overworld"><h2 class="sec-title">大地图与探索设计页</h2>
-<p>系统 id：overworld · 层：mvp · 负责 skill：world-map · 参数文件：<code>content/data/overworld.json</code>
-上游：<code>design/CONCEPT.md</code> 的「在地图上走、找人说话」「看水面」；定调题「明雷」「按章节线性开放」「世界状态变化：只做关键几处」</p>
+<p>系统 id：overworld · 层：mvp · 负责 skill：world-map · 参数文件：<code>content/data/overworld.json</code>、<code>content/data/spawns.json</code>
+照：《Vampire's Fall 2》的大地图（敌人看得见、自己走动，你决定什么时候交手；没有随机遇敌；逃跑回上一个圣龛；圣龛祈祷回满血；圣龛之间快速传送；打死的敌人不回来；野外能捡到宝物） · 规则核对来源：Steam 商店页、Pocket Gamer 评测、用户玩过原作（「杀死了就没了」，2026-11-06）；追人的距离和概率查不到，照插件 <code>world-map</code> 的 graveholme 实例，标「未核实」 · 参考代码：<code>overworld-grid</code>
+上游：<code>design/CONCEPT.md</code> 三层循环 5–15 分钟那一层、「在地图上走、找人说话」「看水面」；定调题「明雷」「按章节线性开放」「世界状态变化：只做关键几处」；2026-11-06 玩法参考改成照《Vampire's Fall 2》</p>
 <blockquote>
 <p>这页分两层。上半页给人看，下半页给实现看。</p>
 </blockquote>
 <h3>一句话</h3>
-<p>一章开一片地方，你在里面走动、找人说话、在发光的水面上看将来；敌人在地图上看得见，站在要去的路上，碰到就开打。</p>
+<p>一章开一片地方，你在里面走动、找人说话、在发光的水面上看将来；敌人在地图上看得见、自己走动，靠近了会追你，打哪只、绕开哪只由你挑，打死的就没了；血不够了回圣龛祈祷。</p>
 <h3>一个例子</h3>
-<p>第 1 章，你从庄园院子出发。</p>
+<p>第 1 章，你跟凯和亚瑟进了北边的林子。</p>
 <ol>
-<li>院子里凯在磨剑，头上冒着「…」；屏幕上方写着「下一步：跟凯去林子里赶狼」，林子入口有标记。</li>
-<li>进了林子，小路上站着三只狼，看得清是一只头狼、两只狼。你走过去碰到它们，切进战斗。</li>
-<li>打完，狼从地图上消失，不会再来。回去的路上经过石圈，平石上的积水在发光，你走过去按确认，看见了那一幕。</li>
+<li>小路右边的蕨丛旁有两只狼在来回转，左边路中间横着一只死羊，树后蹲着个弓手。屏幕上方写着「下一步：去林子深处找头狼」。</li>
+<li>你朝那两只狼走过去，还隔四五格，灰狼抬起头朝你跑来。碰上了，开打。两回合打完，学徒拿到经验，地上几枚银币。凯少了 3 点血，没回。</li>
+<li>路边有一座齐腰高的石龛，龛里的圣母像脸都磨平了。你在跟前按确认祈祷：三个人的血都满了，这座石龛记成「上次祈祷的地方」。</li>
+<li>你绕开了死羊那边的弓手，往林子深处走。头狼带着两只狼守在空地中间，一动不动：这是任务要打的，绕不过去。</li>
+<li>打完，狼从地图上没了，不会再来。路边那个弓手还蹲在树后，回头去打他还是直接去石圈，随你。</li>
 <li>第 1 章结束后，庄园、林子、石圈都关了，第 2 章换成伦敦。</li>
 </ol>
 <h3>1. 玩家感受</h3>
 <p>地方不大，走几步就有人可以说话，不让人在空地图上找路。</p>
-<p>敌人看得见，开打前就知道要打什么，可以先换好上场的人（用户定：明雷）。</p>
+<p>敌人看得见，开打前就知道要打什么，可以先换好上场的人（用户定：明雷）。它们会走动、靠近了会追：想打的自己找上门，不想打的绕开（2026-11-06 用户改：照《Vampire's Fall 2》）。</p>
+<p>打死的敌人就没了，一片地方打干净了就安静下来，不会刷怪（用户玩过原作确认）。每只敌人只能打一次，打不打是真的选择：打了多一份经验和掉落，也多挨几口。</p>
+<p>血带出战斗，不够了就回圣龛祈祷。圣龛之间可以直接传过去，回去补血不用走回头路（照原作）。</p>
 <p>一章一片地方，跟着故事往前走，走过的地方不再回去（用户定：按章节线性开放）。</p>
 <p>世界只在几处关键的地方看得出你的选择（用户定：只做关键几处）：玩家路过时会认出「这是因为我那时候……」。</p>
+<p>落在三层循环的 5–15 分钟那一层：在一张地图上挑着打、升级、换装备、回圣龛。</p>
 <h3>2. 规则</h3>
 <h4>每章的地方</h4>
 <div class="table-wrap"><table>
@@ -1604,19 +1674,111 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <h4>走动和说话</h4>
 <ul>
 <li>俯视的格子地图，上下左右四个方向走。电脑用方向键或 WASD；手机用屏幕左下的方向键，右下一个确认键、一个菜单键。</li>
-<li>面对人或东西按确认：和人说话、看水面、开门、看物件。</li>
+<li>面对人或东西按确认：和人说话、看水面、开门、看物件、祈祷、开宝物。</li>
 </ul>
 <h4>敌人</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>规则</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>敌人在地图上看得见，平时在自己那一块地方里转</td>
+<td>看得见、自己走动照原作；只在自己那一块转照 graveholme，未核实</td>
+</tr>
+<tr>
+<td>你离它 4 格以内，它每走一步有六成多的可能朝你追来；不出它那一块地方，隔着墙的不追</td>
+<td>未核实，照 graveholme</td>
+</tr>
+<tr>
+<td>你走一步，它走一步</td>
+<td>未核实，照 graveholme</td>
+</tr>
+<tr>
+<td>和它上下左右挨着就开打；没有随机遇敌</td>
+<td>没有随机遇敌照原作；怎么算碰上原作未核实</td>
+</tr>
+<tr>
+<td>走近时敌人头上显示名字和几只（「狼 ×2」）</td>
+<td>自创</td>
+</tr>
+<tr>
+<td>任务要打的敌人（首领、挡在必经之路上的）站着不动，绕不过去</td>
+<td>首领不动照 graveholme，未核实；挡路是我们的</td>
+</tr>
+<tr>
+<td>打赢了这群敌人从地图上没了，祈祷、换地方、读档都不会让它回来；没有能刷的敌人</td>
+<td>照原作（用户玩过确认，2026-11-06）。Steam 讨论区有人说在洞里刷怪，个别地方可能会刷新，待确认；本作不做</td>
+</tr>
+<tr>
+<td>能上场的同伴超过 2 个时，碰上以后先弹出出战选择</td>
+<td>我们的</td>
+</tr>
+<tr>
+<td>一章里能绕开的敌人 4–6 群，每群 1–3 只，放在支路、空地、宝物旁边</td>
+<td>自创：时长预算，见公式</td>
+</tr>
+</tbody>
+</table></div>
+<h4>圣龛</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>规则</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>每片地方至少一座圣龛：路边的石龛、泉边的石十字、教堂里的小祭坛</td>
+<td>外形是我们的</td>
+</tr>
+<tr>
+<td>面对圣龛按确认祈祷：三个人的血回满，这座记成「上次祈祷的地方」，同时自动存档</td>
+<td>回满血照原作；存档是我们的</td>
+</tr>
+<tr>
+<td>在圣龛跟前可以传送到这一章祈祷过的另一座圣龛</td>
+<td>照原作（圣龛之间快速传送）</td>
+</tr>
+<tr>
+<td>战斗里逃跑，或者输了选「回圣龛」：回到上次祈祷的圣龛跟前，三个人回满血；那群敌人留在原地、血回满</td>
+<td>逃回上一个圣龛照原作；回满血、敌人回满是我们定的</td>
+</tr>
+<tr>
+<td>每章开始时，这章第一座圣龛自动记成「上次祈祷的地方」</td>
+<td>我们的：还没祈祷过就逃跑时也有地方回</td>
+</tr>
+<tr>
+<td>刚回到圣龛的 3 步里，敌人不追你</td>
+<td>照 graveholme，未核实</td>
+</tr>
+<tr>
+<td>祈祷不会让打死的敌人回来</td>
+<td>照原作（用户确认）</td>
+</tr>
+<tr>
+<td>每场任务战前，走路 30 秒内有一座圣龛</td>
+<td>自创：血带出战斗以后，任务战前要能回满</td>
+</tr>
+<tr>
+<td>在圣龛跟前可以重新分配技能点（成长页）</td>
+<td>自创</td>
+</tr>
+</tbody>
+</table></div>
+<h4>宝物</h4>
 <ul>
-<li>敌人站在任务要走的路上，看得见是什么、几个，原地待着，不追人。</li>
-<li>碰到就开打。能上场的同伴超过 2 个时，先弹出出战选择。</li>
-<li>打赢了敌人从地图上消失，不会再出现。输了选「回地图」，你退回碰到敌人之前的那一格。</li>
-<li>没有随机遇敌，也没有能刷的敌人。不做经验和等级，绕开一群敌人也省不下什么，所以地图上的敌人都是任务里要打的。</li>
+<li>每片地方 1–2 处宝物：树洞里塞着的包袱、翻倒的货车、墙角的箱子。面对它按确认打开，掉落见装备页。开过的不再有东西。照原作（野外能捡到宝物）。</li>
+<li>宝物旁边常常守着一群能绕开的敌人：想拿就得打。</li>
 </ul>
 <h4>水面</h4>
 <ul>
 <li>能看将来的水面（石圈的积水、湖、泉）只在剧情走到这里时发光。</li>
-<li>不发光时按确认，只显示「水面很平静。」</li>
+<li>不发光时按确认，只显示“水面很平静。”</li>
 </ul>
 <h4>看得出你的选择的四个地方</h4>
 <div class="table-wrap"><table>
@@ -1657,7 +1819,7 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 </table></div>
 <p>这四处之外，地图不随选择变化；人说的话会变（对话页）。</p>
 <h4>换章</h4>
-<p>章末弹出章节过渡，告诉你这章没做的支线；上一章的地方全部关闭，不能回去。</p>
+<p>章末弹出章节过渡，告诉你这章没做的支线；上一章的地方和圣龛全部关闭，不能回去。</p>
 <hr />
 <h2 class="split">给实现看</h2>
 <h3>3. 公式</h3>
@@ -1683,36 +1845,63 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <tr>
 <td>每章地方数</td>
 <td>3–5 片</td>
-<td>一章 20–30 分钟里走路不超过三分之一</td>
+<td>一章里走路不超过三分之一</td>
 </tr>
 <tr>
 <td>关键地点之间</td>
 <td>走路不超过 30 秒</td>
 <td>不让人在空地图上找路</td>
 </tr>
+<tr>
+<td>追人</td>
+<td>4 格以内，每步 65%</td>
+<td>未核实，照 graveholme（插件 <code>world-map</code>）；按绕墙的走路步数量</td>
+</tr>
+<tr>
+<td>每章能绕开的敌人</td>
+<td>4–6 群，每群 1–3 只</td>
+<td>一群小仗 1–2 分钟，全打一章多 5–10 分钟；全程从约 2 小时 50 分钟变成约 3 小时 20 分钟到 3 小时 50 分钟，超出 GAME_BRIEF 估的 2.5–3 小时，第 11 步范围复盘定砍不砍</td>
+</tr>
+<tr>
+<td>两次碰到敌人之间</td>
+<td>走路 1–3 分钟</td>
+<td>CONCEPT「两次动脑的时刻之间」：旧设计最长隔 10 分钟，白盒踩中</td>
+</tr>
+<tr>
+<td>任务战前的圣龛</td>
+<td>走路 30 秒内</td>
+<td>血带出战斗，任务战按满血来调</td>
+</tr>
 </tbody>
 </table></div>
 <h3>4. 边界情况</h3>
 <ul>
-<li><strong>敌人站在窄路上</strong>：只有这一条路，必须打过去；任务数据保证每片地方只有任务要求的敌人。</li>
-<li><strong>回地图后又碰上</strong>：退回的那一格不和敌人相邻，不会一回来就又开打。</li>
+<li><strong>敌人站在窄路上</strong>：任务要打的才放在唯一的路上；能绕开的会走动，堵在窄路上时等它走开，或者打。</li>
+<li><strong>回到圣龛后又碰上</strong>：圣龛跟前一格不放敌人；回来的 3 步里敌人不追。</li>
+<li><strong>两群敌人同时挨着你</strong>：先挨上的那群开打；另一群原地停 3 步，打完不会马上又开打。</li>
+<li><strong>敌人追着你走进剧情触发的格子</strong>：先演剧情，演的时候地图上所有敌人停住。</li>
 <li><strong>同时发生</strong>：走进新地方时正好触发剧情对话，先演剧情，演完再显示「下一步」。</li>
-<li><strong>存档中途</strong>：进新的一章、每完成一个任务步骤自动存档；读档时回到存档那一刻站的位置。</li>
+<li><strong>存档中途</strong>：进新的一章、每完成一个任务步骤、每次祈祷自动存档；存打败记录、开过的宝物、上次祈祷的圣龛。读档时你回到存档那一刻站的位置，还活着的敌人回到各自的出生点。</li>
 <li><strong>四个地方的变体</strong>：进入这片地方时按剧情变量选一种样子，在这片地方里不再变。</li>
-<li><strong>玩家反着来</strong>：不跟着标记走，到处乱逛也行；章内的地方都能去，只是人和敌人按任务出现。</li>
+<li><strong>玩家反着来</strong>：全绕开，只打任务要打的，也能通关（战斗页「怎么设计每一场」第 4 条按这个等级调任务战）；全打光，一片地方安静下来，没有刷的地方。不跟着标记走、到处乱逛也行。</li>
 </ul>
+<p><strong>退化打法和对策</strong>：
+- <em>拉着敌人去圣龛，祈祷完马上打</em>：等于满血打一仗，这就是原作的节奏，留着。
+- <em>逃跑回满再来</em>：敌人也回满，你还得走回来，不占便宜，留着。
+- <em>读档刷宝物</em>：开宝物的结果由存档里的种子定，读档再开一样（装备页）。</p>
 <h3>5. 依赖</h3>
 <ul>
-<li>用到：任务（标记、谁出现在哪、敌人放在哪、什么时候开新地方）；看水面与预言簿（哪些水面在发光）；同伴（营地篝火边站着谁）。</li>
-<li>被谁用：战斗（碰到敌人开打）；对话（走到人跟前说话）；存档（位置）。</li>
+<li>用到：任务（标记、谁出现在哪、任务敌人放在哪、什么时候开新地方）；看水面与预言簿（哪些水面在发光）；同伴（营地篝火边站着谁）；战斗（碰上开打、逃跑和输了回哪）；装备（宝物掉什么）；成长（圣龛跟前重新加点）。</li>
+<li>被谁用：战斗（碰到敌人开打）；对话（走到人跟前说话）；存档（位置、打败记录、开过的宝物、上次祈祷的圣龛）。</li>
 </ul>
-<h3>6. 可调参数（登记进 content/data/overworld.json）</h3>
+<h3>6. 可调参数（登记进 content/data/overworld.json，敌人放哪进 spawns.json）</h3>
 <div class="table-wrap"><table>
 <thead>
 <tr>
 <th>参数</th>
 <th>当前值</th>
 <th>范围</th>
+<th>类别</th>
 <th>调它会改变什么</th>
 </tr>
 </thead>
@@ -1721,41 +1910,104 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <td>tile_px</td>
 <td>32</td>
 <td>—</td>
+<td>—</td>
 <td>格子大小，和 LPC 素材一致</td>
 </tr>
 <tr>
 <td>move_speed_tiles</td>
 <td>4</td>
 <td>3–6</td>
+<td>手感</td>
 <td>走路快慢</td>
+</tr>
+<tr>
+<td>contact</td>
+<td>adjacent</td>
+<td>adjacent / same</td>
+<td>手感</td>
+<td>挨着就开打，还是要走到同一格</td>
+</tr>
+<tr>
+<td>chase_radius</td>
+<td>4</td>
+<td>2–6</td>
+<td>手感</td>
+<td>多远会被盯上</td>
+</tr>
+<tr>
+<td>chase_chance</td>
+<td>0.65</td>
+<td>0.4–1</td>
+<td>手感</td>
+<td>盯上后多紧，绕开有多难</td>
+</tr>
+<tr>
+<td>idle / wander_radius</td>
+<td>wander / 3</td>
+<td>—</td>
+<td>手感</td>
+<td>不追人时怎么转、转多远</td>
+</tr>
+<tr>
+<td>enemy_move_every</td>
+<td>1</td>
+<td>1–2</td>
+<td>手感</td>
+<td>你走几步它走一步</td>
+</tr>
+<tr>
+<td>respawn</td>
+<td>false</td>
+<td>—</td>
+<td>节奏</td>
+<td>打死的回不回来（用户确认：不回来）</td>
+</tr>
+<tr>
+<td>shrine_respawn</td>
+<td>false</td>
+<td>—</td>
+<td>节奏</td>
+<td>祈祷会不会让敌人回来（用户确认：不会）</td>
+</tr>
+<tr>
+<td>flee_to_shrine / flee_grace_steps</td>
+<td>true / 3</td>
+<td>—</td>
+<td>手感</td>
+<td>逃跑回圣龛；回来后几步不被追</td>
 </tr>
 <tr>
 <td>areas[]</td>
 <td>每片：id、章、名字、大小、出口</td>
 <td>—</td>
+<td>—</td>
 <td>每章的地方；第 9 步做地图时补全</td>
 </tr>
 <tr>
-<td>enemies_chase</td>
-<td>false</td>
+<td>shrines[]</td>
+<td>每座：在哪片地方、哪一格、名字</td>
 <td>—</td>
-<td>敌人追不追人</td>
+<td>节奏</td>
+<td>补血点和传送点；每片至少一座</td>
 </tr>
 <tr>
-<td>enemy_respawn</td>
-<td>false</td>
+<td>chests[]</td>
+<td>每处：在哪片地方、哪一格、掉什么（装备页的掉落表 id）</td>
 <td>—</td>
-<td>打完的敌人回不回来</td>
+<td>节奏</td>
+<td>野外的宝物</td>
 </tr>
 <tr>
 <td>water_spots[]</td>
 <td>每处：在哪片地方、哪个剧情节点发光</td>
 <td>—</td>
+<td>—</td>
 <td>看水面的地点</td>
 </tr>
 <tr>
 <td>idle_water_text</td>
-<td>「水面很平静。」（和预言簿页共用，存在 prophecy.json）</td>
+<td>“水面很平静。”（和预言簿页共用，存在 prophecy.json）</td>
+<td>—</td>
 <td>—</td>
 <td>—</td>
 </tr>
@@ -1763,19 +2015,33 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <td>world_states[]</td>
 <td>4 处：地方、章、读哪些变量、每种样子</td>
 <td>—</td>
+<td>—</td>
 <td>看得出选择的地方</td>
+</tr>
+<tr>
+<td>spawns.zones{} / spawns.spawns[]</td>
+<td>能绕开的敌人：在哪块地方转、几群；任务敌人：哪一格、什么条件出现、站着不动</td>
+<td>—</td>
+<td>节奏</td>
+<td>每章打多少仗</td>
 </tr>
 </tbody>
 </table></div>
 <h3>7. 验收条件（进 TASKS.md）</h3>
-<ul>
-<li>[ ] <code>--playtest</code> 进入每片地方时打印名字和这片地方里的人、敌人、发光的水面。</li>
-<li>[ ] 碰到敌人打印「开打：狼群」和出战名单；赢了打印「狼群 已移除」；再走到那里不再开打。</li>
-<li>[ ] 输了选回地图，打印的位置和敌人不相邻。</li>
-<li>[ ] 四个地方各按两种路线打印选中的样子（例：D3c → 湖边「灰兜帽」；D3a → 湖边「无」）。</li>
-<li>[ ] 第 2 章开始后打印第 1 章的地方全部关闭。</li>
-<li>[ ] 截图：发光和不发光的水面分得清；四个地方的不同样子各一张；手机宽度下方向键、确认键、菜单键都在拇指够得到的地方。</li>
-</ul>
+<p>功能：
+- [ ] <code>--playtest</code> 进入每片地方时打印名字和这片地方里的人、敌人（每群：名字、几只、会不会走动）、圣龛、宝物、发光的水面。
+- [ ] 走到能绕开的敌人 4 格以内，打印「狼 ×2 开始追」；跑出它那一块地方，打印「不追了」。任务敌人始终打印「不动」。
+- [ ] 碰上打印「开打：林子边的狼」和出战名单；赢了打印「林子边的狼 已移除」；再走到那里、祈祷之后、读档之后都不再出现。
+- [ ] 祈祷打印「祈祷：三人回满，记下：林边石龛，已存档」；传送打印「传到：庄园小礼拜堂」。
+- [ ] 逃跑或输了选回圣龛，打印「回到：林边石龛」；那群敌人血满、还在原来那块地方。
+- [ ] 第 1 章「只打任务要打的」路线和「全打」路线都能走完，各打印打了几群、学徒几级。
+- [ ] 四个地方各按两种路线打印选中的样子（例：D3c → 湖边「灰兜帽」；D3a → 湖边「无」）。
+- [ ] 第 2 章开始后打印第 1 章的地方和圣龛全部关闭。</p>
+<p>体验（白盒和停靠点 C 按这几句问）：
+- [ ] 第 1 章森林里，玩家没人提示就去撞下一只看得见的敌人（CONCEPT 最大风险的观察句）。
+- [ ] 打完一场小仗，玩家看一眼血，再决定回石龛还是接着打。</p>
+<p>截图：
+- [ ] 发光和不发光的水面分得清；祈祷过和没祈祷过的圣龛分得清；开过和没开的宝物分得清；四个地方的不同样子各一张；手机宽度下方向键、确认键、菜单键都在拇指够得到的地方。</p>
 <h3>8. 需要的素材</h3>
 <div class="table-wrap"><table>
 <thead>
@@ -1797,13 +2063,31 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <td>人物行走图</td>
 <td>地图上</td>
 <td>必需</td>
-<td>学徒（可换外观）、所有会说话的人；四个方向走、站立</td>
+<td>学徒（换装后样子跟着变）、所有会说话的人；四个方向走、站立</td>
 </tr>
 <tr>
 <td>敌人地图形象</td>
 <td>地图上</td>
 <td>必需</td>
-<td>狼、叛军、骑士、强盗、士兵；站立</td>
+<td>狼、强盗、弓手、叛军、骑士、野人、士兵；四个方向走、站立</td>
+</tr>
+<tr>
+<td>敌人名字牌</td>
+<td>敌人头上</td>
+<td>可降级（只在碰上前显示）</td>
+<td>名字和几只</td>
+</tr>
+<tr>
+<td>圣龛</td>
+<td>每片地方</td>
+<td>必需</td>
+<td>石龛、石十字、小祭坛；祈祷过、没祈祷过</td>
+</tr>
+<tr>
+<td>宝物</td>
+<td>每片地方</td>
+<td>必需</td>
+<td>包袱、货车、箱子；开过、没开</td>
 </tr>
 <tr>
 <td>水面发光</td>
@@ -1857,29 +2141,46 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <td>不做经验和等级以后，可以绕开的敌人打了也没有收获</td>
 <td>验收第 2 条</td>
 </tr>
+<tr>
+<td>2026-11-06</td>
+<td>地图上的敌人</td>
+<td>站在任务路上、不追人 → 看得见、自己走动、4 格内会追、可以绕开；打死就没了</td>
+<td>白盒玩不起来后用户定了大地图照《Vampire's Fall 2》；「打死就没了」是用户玩过原作纠正的（我曾误写成祈祷后刷新）</td>
+<td>验收第 2、3 条</td>
+</tr>
+<tr>
+<td>2026-11-06</td>
+<td>新加圣龛、宝物</td>
+<td>输了退回碰到敌人之前那一格 → 回上次祈祷的圣龛；每片地方 1–2 处宝物</td>
+<td>照《Vampire's Fall 2》：逃跑回圣龛、祈祷回满血、圣龛之间传送、野外有宝物</td>
+<td>验收第 4、5 条</td>
+</tr>
 </tbody>
 </table></div></section>
 <section id="combat" class="doc doc-combat"><h2 class="sec-title">回合制战斗设计页</h2>
 <p>系统 id：combat · 层：mvp · 负责 skill：combat-system · 参数文件：<code>content/data/combat.json</code>
-上游：<code>design/CONCEPT.md</code> 的「打仗时看敌人下一步」；世界规则第 1 条（离开水面只能看见几息之后的事）；最大风险里的次要风险「每回合有没有真正的两难」</p>
+照：《杀戮尖塔》的敌人意图（亮出来的伤害已经算进力量、虚弱、易伤；格挡在自己回合开始清零）；喝药占一个行动、随时能逃照《Vampire's Fall 2》 · 规则核对来源：mechanics-library <code>intent-battle</code> 的「照哪个游戏」表（Slay the Spire wiki 的 Debuffs、Buff、Vulnerable 页和玩家讨论）；Vampire's Fall 2 的 Steam 商店页、Pocket Gamer 评测 · 参考代码：<code>intent-battle</code>、<code>stats-modifiers</code>
+上游：<code>design/CONCEPT.md</code> 三层循环 30 秒那一层；原型报告 <code>prototypes/how-to-fight/REPORT.md</code>（行动版，2026-11-06 用户选）；世界规则第 1 条（离开水面只能看见几息之后的事）</p>
 <blockquote>
 <p>这页分两层。上半页给人看，下半页给实现看。</p>
 </blockquote>
 <h3>一句话</h3>
-<p>菜单式回合制战斗：敌人这一回合要对谁出什么招，开打前就亮在头上；你给学徒和每个同伴各选一个行动，决定先管哪一个威胁。</p>
+<p>敌人这一回合要对谁出什么招、打多少，开打前就亮在头上；你给学徒和两个同伴各选一招，三个人选满就自动开打，先管哪个威胁由你定。</p>
 <h3>一个例子</h3>
-<p>第 1 章，凯带你和亚瑟进林子赶狼。</p>
+<p>第 1 章，林子深处的空地上，头狼、灰狼和瘦狼。</p>
 <ol>
-<li>第 2 回合开始，三只狼头上亮出这回合要做的事：头狼「扑咬 → 亚瑟，5 点」，灰狼「咬 → 凯，3 点」，瘦狼「嚎叫 → 下回合叫来 2 只狼」。</li>
-<li>你们三个人，每人只能做一件事。瘦狼只剩 4 点血：凯砍一刀（3 点）加亚瑟一剑（2 点），正好在它叫出声之前打倒它；你就空出手来，给亚瑟施「护身」，头狼那一口只剩 1 点。</li>
-<li>如果三个人都去打头狼，瘦狼叫来两只狼，这一仗要多打两三个回合，五只狼一起扑过来，亚瑟多半先倒下。</li>
-<li>你选了先打瘦狼。第 4 回合，头狼也倒下了。</li>
+<li>第 2 回合开始，三只狼头上亮出：头狼「长嚎：狼群力量 +1」，灰狼「咬 3 → 亚瑟」，瘦狼「嚎叫：叫来一只狼」。瘦狼还是满血，5 点。</li>
+<li>你先放星火，打瘦狼 2 点，它这回合易伤。凯接着砍它，3 × 1.5，向下取整是 4 点，瘦狼倒下，没叫出声。亚瑟举盾，灰狼那一口 3 点全挡掉。</li>
+<li>要是三个人都去砍头狼，蕨丛里会再钻出一只狼；第 3 回合头狼带着力量 +1 连扑凯两下，每下 4 点。</li>
+<li>第 4 回合，头狼倒下。学徒拿到经验，地上掉了几枚银币。凯身上的伤没回，回去的路上要经过石龛。</li>
 </ol>
 <h3>1. 玩家感受</h3>
-<p>一场普通战斗打 3–5 回合，两三分钟（用户定）。</p>
-<p>敌人这一回合的目标和招式默认全部公开，玩家不靠猜。每回合最难的是目标优先级：威胁总比你们这回合能处理的多一个，先管哪个（用户定）。</p>
-<p>你操作所有人：学徒和最多两个同伴，每人每回合一个行动（用户定）。</p>
-<p>输了从这场开头重来，敌人怎么出手完全一样，可以换个打法再试（概念页：检查点重试）。</p>
+<p>任务战打 3–5 回合，两三分钟（用户定）。地图上能绕开的小仗打 2–3 回合，一两分钟：小仗变多了，每场要快（2026-11-06 改成照《Vampire's Fall 2》以后新定）。</p>
+<p>敌人这一回合的目标、招式和点数默认全部公开，玩家不靠猜。每回合最难的是先管哪个：威胁总比你们这回合能处理的多一个（用户定）。原型里用户玩过行动版，复盘第 1 题答「成立」：意图亮在头上，会停下来算。</p>
+<p>你操作三个人：学徒和两个同伴，每人每回合一招，选满自动开打（原型，用户选了行动版）。</p>
+<p>血带出战斗：打完不回满，要喝药、升级或回圣龛祈祷（照《Vampire's Fall 2》）。小仗里少挨的两口，就是下一仗多出来的余地。</p>
+<p>输了不罚：原样再打一次，或者回圣龛回满血再来。</p>
+<p>落在三层循环的 30 秒那一层；血带出战斗，把它接到 5–15 分钟那一层（打哪只、什么时候回圣龛）。</p>
 <h3>2. 规则</h3>
 <h4>一回合</h4>
 <div class="table-wrap"><table>
@@ -1887,28 +2188,82 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <tr>
 <th>阶段</th>
 <th>发生什么</th>
+<th>出处</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>亮出意图</td>
-<td>每个敌人头上显示这回合要做的事：对谁、什么招、多少点；按出手顺序标 1、2、3</td>
+<td>每个敌人头上显示这回合要做的事：对谁、什么招、打多少；打多少已经算进它的力量、虚弱和目标身上的易伤；按出手顺序标 1、2、3</td>
+<td>照原作</td>
+</tr>
+<tr>
+<td>格挡清零</td>
+<td>你们三个人身上的格挡清零</td>
+<td>照原作</td>
 </tr>
 <tr>
 <td>你的回合</td>
-<td>学徒和同伴每人选一个行动，先后随你；选完点「结束回合」。结束前可以改</td>
+<td>三个人每人选一招，先选谁随你；三个人都选好就自动开打。开打前点已经选的人可以改</td>
+<td>改了：原作打一张牌立刻结算。原型里用户选了「选满自动开打」</td>
 </tr>
 <tr>
 <td>你们出手</td>
-<td>按你选的先后执行</td>
+<td>按学徒 → 第一个同伴 → 第二个同伴的顺序</td>
+<td>改了：原作只有一个人。原型的顺序</td>
 </tr>
 <tr>
 <td>敌人出手</td>
-<td>按标好的顺序执行；已经被打倒的敌人不出手</td>
+<td>敌人身上的格挡先清零，再按标好的顺序出手；已经倒下的敌人不出手</td>
+<td>照原作</td>
 </tr>
 <tr>
 <td>回合结束</td>
-<td>学徒回 1 点法力；「防御」「护身」这些只管一回合的效果消失；进入下一回合，敌人亮出新的意图</td>
+<td>虚弱、易伤各减 1 层：你们的在你们出完手时减，敌人的在敌人出完手时减；第 2 回合起，回合开头学徒回 1 点法力</td>
+<td>减层照原作，谁的回合末减原作未核实；法力是原型的</td>
+</tr>
+</tbody>
+</table></div>
+<h4>伤害怎么算</h4>
+<ul>
+<li>招的点数 + 出手的人的力量；出手的人虚弱时 × 0.75；挨打的人易伤时 × 1.5；乘完向下取整。先扣格挡，剩下的扣血。照原作。</li>
+<li>多段攻击写成「3×2」：每一下单独算，每下都加力量。照原作（每下都加力量来自玩家讨论，部分核实）。</li>
+<li>意图上的数随局面实时改：头狼被「迷眼」弄得虚弱以后，它头上的「扑 4」马上变成「扑 3」。格挡不算进意图：给亚瑟护身以后，意图还是「扑 4」，亚瑟的血条上先显示打完剩多少。</li>
+</ul>
+<h4>状态</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>状态</th>
+<th>效果</th>
+<th>什么时候没</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>格挡</td>
+<td>挨打时先扣它</td>
+<td>自己回合开始清零</td>
+<td>照原作</td>
+</tr>
+<tr>
+<td>力量</td>
+<td>每一下多打几点</td>
+<td>一场里不掉</td>
+<td>照原作</td>
+</tr>
+<tr>
+<td>虚弱</td>
+<td>打出去的伤害 × 0.75</td>
+<td>每回合减 1 层</td>
+<td>照原作</td>
+</tr>
+<tr>
+<td>易伤</td>
+<td>挨的伤害 × 1.5</td>
+<td>每回合减 1 层</td>
+<td>照原作</td>
 </tr>
 </tbody>
 </table></div>
@@ -1928,6 +2283,11 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <td>打目标一下</td>
 </tr>
 <tr>
+<td>多段攻击</td>
+<td>箭头 + 「点数×几下」</td>
+<td>一下一下打</td>
+</tr>
+<tr>
 <td>群攻</td>
 <td>箭头指向你们全体 + 点数</td>
 <td>你们每人挨一下</td>
@@ -1940,12 +2300,22 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <tr>
 <td>召唤</td>
 <td>「召唤」+ 叫来几个</td>
-<td>下回合多出增援；被打断就作废</td>
+<td>敌方多出增援；被打断就作废</td>
 </tr>
 <tr>
-<td>防御</td>
-<td>盾</td>
-<td>这回合挨的伤害减半</td>
+<td>长嚎</td>
+<td>「力量 +几」</td>
+<td>同一类的敌人都加力量；被打断就作废</td>
+</tr>
+<tr>
+<td>撒沙</td>
+<td>「虚弱 几 → 谁」</td>
+<td>那个人虚弱几回合</td>
+</tr>
+<tr>
+<td>躲</td>
+<td>盾 + 点数</td>
+<td>自己加格挡</td>
 </tr>
 <tr>
 <td>隐藏</td>
@@ -1954,83 +2324,107 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 </tr>
 </tbody>
 </table></div>
-<p>敌人怎么出手由固定的规则决定，不看运气。所以你看见的就是会发生的，重来一次也一样。</p>
-<h4>学徒的行动（每回合一个）</h4>
-<p>学徒不拿剑，用法术。法术全部来自剧情，不靠升级，什么时候学会见叙事进展页和章节内容表。</p>
+<p>敌人按一张固定的招式表轮着出，不看运气。你看见的就是会发生的，重来一次也一样。这一条改了原作：《杀戮尖塔》的敌人按概率挑招。改的理由：静水要能准确多看一回合，输了重来要能换个打法再试。</p>
+<h4>学徒的招（每回合一招）</h4>
+<p>学徒不拿剑，用法术。几招关键的法术来自剧情（叙事进展页）；技能树让它们变强，也给几招新的（成长页）；装备加血、加法力、加星火（装备页）。</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
-<th>行动</th>
+<th>招</th>
 <th>法力</th>
 <th>效果</th>
 <th>什么时候有</th>
+<th>出处</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>星火</td>
 <td>1</td>
-<td>打一个敌人，2 点</td>
+<td>打一个敌人 2 点，它易伤 1 回合</td>
 <td>一开始就会</td>
+<td>原型</td>
 </tr>
 <tr>
 <td>护身</td>
 <td>2</td>
-<td>一个人（可以是自己）这回合挨的伤害少 4 点</td>
+<td>给一个人（可以是自己）挡 4</td>
 <td>一开始就会</td>
+<td>原型</td>
 </tr>
 <tr>
 <td>凝神</td>
 <td>0</td>
-<td>不出手，这回合多回 1 点法力</td>
+<td>回 2 点法力</td>
 <td>一开始就会</td>
+<td>原型</td>
 </tr>
 <tr>
 <td>打断</td>
 <td>3</td>
-<td>让一个敌人的蓄力或召唤作废</td>
+<td>让一个敌人的蓄力、召唤或长嚎作废</td>
 <td>第 1 章，梅林教的</td>
+<td>原型</td>
 </tr>
 <tr>
 <td>静水</td>
 <td>2</td>
-<td>再往后多看一回合的意图；不占这回合的行动</td>
+<td>多看下一回合的意图；不占这回合的招</td>
 <td>第 3 章，第 2 章末告诉了梅林才有</td>
+<td>自创（故事圣经）</td>
 </tr>
 <tr>
 <td>偏转</td>
 <td>3</td>
 <td>一个敌人打向你们某个人的一下，改打另一个敌人</td>
 <td>第 4 章起，梅林的「最后一课」，要第 2、3 章都告诉了梅林</td>
+<td>自创（故事圣经）</td>
 </tr>
 <tr>
 <td>揭开</td>
 <td>1</td>
-<td>看清一个「？」；不占这回合的行动</td>
+<td>看清一个「？」；不占这回合的招</td>
 <td>第 4 章起首领有「？」时</td>
+<td>自创</td>
+</tr>
+<tr>
+<td>用药</td>
+<td>0</td>
+<td>喝一瓶药，或喂给身边一个人</td>
+<td>背包里有药时</td>
+<td>照原作：喝药占一个行动</td>
 </tr>
 </tbody>
 </table></div>
-<h4>同伴的行动（每回合一个）</h4>
+<h4>同伴的招（每人每回合一招）</h4>
 <div class="table-wrap"><table>
 <thead>
 <tr>
-<th>行动</th>
+<th>招</th>
 <th>效果</th>
+<th>出处</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>攻击</td>
-<td>打一个敌人，点数看这个人的武器</td>
+<td>砍</td>
+<td>打一个敌人，点数看这个人</td>
+<td>原型</td>
 </tr>
 <tr>
-<td>防御</td>
-<td>自己这回合挨的伤害减半</td>
+<td>举盾</td>
+<td>自己挡 3</td>
+<td>原型（旧设计是「防御：伤害减半」，原型改成格挡）</td>
+</tr>
+<tr>
+<td>用药</td>
+<td>同学徒</td>
+<td>照原作</td>
 </tr>
 <tr>
 <td>自己的招</td>
 <td>每个同伴有一样只有他会的招，见下表</td>
+<td>自创（故事圣经）</td>
 </tr>
 </tbody>
 </table></div>
@@ -2045,7 +2439,7 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <tbody>
 <tr>
 <td>凯</td>
-<td>「挡在前面」：这回合打向另一个同伴的一下，改打凯，凯少挨 2 点</td>
+<td>「挡在前面」：凯挡 4，这回合打向某一个人的攻击都改打凯（群攻不算）</td>
 <td>第 1 章出发前一晚谁都没告诉（D1c），第 4 章起</td>
 </tr>
 <tr>
@@ -2055,7 +2449,7 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 </tr>
 <tr>
 <td>高文</td>
-<td>「正午之力」：每场前 3 回合，攻击多 3 点（不用选，一直生效）</td>
+<td>「正午之力」：每场前 3 回合，力量 +3（不用选，一直生效）</td>
 <td>第 3 章加入起</td>
 </tr>
 <tr>
@@ -2065,7 +2459,7 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 </tr>
 <tr>
 <td>加雷斯</td>
-<td>「后发」：上回合防御过，这回合攻击翻倍</td>
+<td>「后发」：上回合举过盾，这回合砍的点数翻倍</td>
 <td>第 4 章「美手」支线起</td>
 </tr>
 <tr>
@@ -2075,20 +2469,24 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 </tr>
 </tbody>
 </table></div>
-<p>亚瑟、高文的招不用选，一直生效；其他人选「自己的招」就占掉这回合的行动。高文的「正午之力」、加雷斯「美手」的来历都出自原文（马洛礼第 7、20 卷）。</p>
+<p>高文的「正午之力」、加雷斯「美手」的来历出自原文（马洛礼第 7、20 卷）。</p>
+<h4>逃跑</h4>
+<p>你的回合里随时能按「逃跑」：不打了，三个人回到上一次祈祷过的圣龛跟前（大地图页）。一定逃得掉。那群敌人留在原地，挨过的打全回满。剧情战不能逃。照原作：「打不过可以逃，逃回上一个到过的圣龛」；敌人回满血是我们定的，原作怎么处理未核实。</p>
 <h4>胜负</h4>
 <ul>
 <li>敌人全倒，或者撑过这场规定的回合数（比如第 3 章和佩利诺那一仗），就赢。</li>
-<li>学徒倒下，或者同伴全倒，就输。同伴倒下只是这一场不能再动，战后回满，不会死；谁会死只由剧情决定。</li>
-<li>输了弹出两个选项：「再来一次」从这场开头重来；「回地图」回到碰上敌人之前，可以换上场的人再来。没有惩罚。</li>
-<li>赢了没有经验和战利品，回满血，剧情或任务往前走一步。</li>
+<li>三个人都倒下，就输（原型的规矩）。同伴倒下只是这一场不能再动；谁会死只由剧情决定。</li>
+<li>赢了：学徒拿经验（成长页），这群敌人掉东西（装备页）。血不回满；倒下的人站起来，剩 1 点血。召唤出来的敌人不给经验、不掉东西。</li>
+<li>输了弹出两个选项：「再来一次」回到开打那一刻，血量和敌人都原样；「回圣龛」回到上一次祈祷过的圣龛，三个人回满血，这群敌人留在原地、血回满。没有别的惩罚。</li>
 </ul>
 <h4>怎么设计每一场（给写遭遇的人）</h4>
 <ol>
 <li>每场至少有一回合，威胁比你们这回合能完全处理的多一个。</li>
 <li>每场至少有一个解法要靠「先管哪个」：打断、护人、抢先打倒要出手的那个。</li>
 <li>首领战至少有一个「？」（第 4 章起）。</li>
-<li>只靠必得的能力（不靠静水、偏转、凯的「挡在前面」这些看选择才有的）也要能在 5 回合内打赢。</li>
+<li>任务战按「只打必须打的仗」时的等级（成长页反推表）和普通装备来调：只用必得的能力（不靠静水、偏转、凯的「挡在前面」这些看选择才有的）也要能在 5 回合内打赢。多打了地图上的敌人的人会轻松一些，这是对的。</li>
+<li>地图上的小仗 2–3 回合：敌方总血大约是我方每回合伤害的 2.5 倍。每场至少有一回合要在挡和打之间挑。</li>
+<li>每场任务战里，至少有一个敌人越拖越强（长嚎、召唤、蓄力），一直举盾等法力的打法要输。</li>
 </ol>
 <hr />
 <h2 class="split">给实现看</h2>
@@ -2104,75 +2502,96 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <tbody>
 <tr>
 <td>伤害</td>
-<td>先算 max(1, 招的点数 − 目标护甲)；目标防御时减半，向上取整；凯「挡在前面」再 −2；最后护身吸收最多 4 点，可以吸收到 0</td>
-<td>用减法，玩家看着意图上的数就能心算出结果</td>
+<td>floor((点数 + 力量) × (出手的人虚弱 ? 0.75 : 1) × (挨打的人易伤 ? 1.5 : 1))，不低于 0；先扣格挡再扣血</td>
+<td>原作：《杀戮尖塔》<a href="https://slaythespire.wiki.gg/wiki/Debuffs">Debuffs</a>（倍率和先加后乘、最后取整），mechanics-library <code>intent-battle</code> 核对过。不低于 0 原作没查到，未核实</td>
 </tr>
 <tr>
 <td>法力</td>
-<td>开场 = 上限 = 6（第 4 章拿到梅林的手杖后 8）；每回合结束 +1，凝神那回合再 +1</td>
-<td>第 1 回合能做一件大事再看一回合（打断 3 + 静水 2）；之后大约两回合一件大事，逼出取舍。先按感觉定，白盒后调</td>
+<td>开场 = 上限 = 6；第 2 回合起每回合开头 +1；凝神 +2；上限另加技能树、装备、第 4 章梅林的杖</td>
+<td>原型（行动版用户玩过）。第 1 回合能做一件大事再留一点；之后大约两回合一件大事</td>
 </tr>
 <tr>
 <td>回合数</td>
-<td>敌方总血量 ÷ 我方每回合能打出的伤害 ≈ 3，再加 1 回合花在护人或打断上 ≈ 4</td>
-<td>用户定 3–5 回合；写遭遇时按这条反推敌人血量</td>
+<td>任务战：敌方总血 ÷ 我方每回合伤害 ≈ 3，加 1 回合花在护人或打断上 ≈ 4。小仗 ≈ 2–3</td>
+<td>用户定 3–5 回合；小仗这次新定。写遭遇时按这条反推敌人血量</td>
 </tr>
 <tr>
 <td>队伍人数</td>
-<td>学徒 + 最多 2 个同伴</td>
+<td>学徒 + 2 个同伴</td>
 <td>你操作所有人；3 个行动对 4 个威胁，取舍最清楚</td>
 </tr>
 <tr>
 <td>意图</td>
-<td>每个敌人有一张固定的招式表，按回合轮着用；目标规则写在敌人数据里（固定某人 / 血最少的人 / 学徒）</td>
-<td>不看运气，重来一次完全一样，静水看见的第二回合也一定准</td>
+<td>每个敌人一张固定的招式表，按回合轮着用；目标规则写在敌人数据里（固定某人 / 血最少的人 / 学徒）</td>
+<td>改了原作（原作按概率挑招），理由见上半页</td>
+</tr>
+<tr>
+<td>星火的连招</td>
+<td>学徒先出手；星火给的易伤在敌人出完手时才减，所以凯、亚瑟这回合砍同一个敌人都 × 1.5</td>
+<td>原型：顺序固定后自然出现，自动测试里最优打法都在用</td>
 </tr>
 </tbody>
 </table></div>
-<p>第 1 章狼群战的反推：</p>
+<p>第 1 章三场仗的反推（数是原型调过的，自动测试按固定打法打，不算试玩）：</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
-<th>情形</th>
-<th>敌方总血量</th>
+<th>仗</th>
+<th>敌方总血</th>
 <th>我方每回合能打出</th>
 <th>回合数</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>先打倒瘦狼</td>
-<td>头狼 8 + 灰狼 4 + 瘦狼 4 = 16</td>
-<td>凯 3 + 亚瑟 2 + 星火 2 = 7（护人的回合少 2）</td>
-<td>约 4</td>
+<td>林子边的狼（小仗）</td>
+<td>狼 6 + 灰狼 7 = 13</td>
+<td>星火 2 + 凯 3 × 1.5 + 亚瑟 2 × 1.5 ≈ 9（星火先打同一只）</td>
+<td>2</td>
 </tr>
 <tr>
-<td>让瘦狼叫来 2 只狼</td>
-<td>24</td>
-<td>同上</td>
-<td>5–6，亚瑟多半先倒下</td>
+<td>路上的强盗（小仗）</td>
+<td>强盗 10 + 弓手 7，弓手隔回合躲到树后挡 4</td>
+<td>同上；凯被撒沙虚弱时少 1</td>
+<td>2–3</td>
+</tr>
+<tr>
+<td>头狼群（任务战）</td>
+<td>头狼 18 + 灰狼 7 + 瘦狼 5 = 30</td>
+<td>同上，护人的回合少一些</td>
+<td>4–5：先砍会叫狼的、快死的人先挡，4 回合赢，三个人都站着；一直砍头狼、从不挡，5 回合赢，亚瑟倒下；只盯头狼又处处挡，9 回合</td>
 </tr>
 </tbody>
 </table></div>
+<p>原型里每场打完回满血；正式版血带出战斗，所以第 1 章森林里的石龛放在头狼群前面（大地图页「任务战前 30 秒内有圣龛」）。</p>
+<p>第 2 章起同伴的数先按第 1 章的比例定（下面「可调参数」），敌人第 10 步写遭遇时补，每场跑模拟再调。</p>
 <h3>4. 边界情况</h3>
 <ul>
-<li><strong>0 / 满 / 负数</strong>：法力不够的法术灰掉，显示要几点；法力不超过上限；伤害先算最少 1 点，护身可以把它吸收到 0。</li>
+<li><strong>0 / 满 / 负数</strong>：法力不够的法术灰掉，显示要几点；法力不超过上限；伤害可以是 0（虚弱的人打 1 点，1 × 0.75 取整是 0），意图上照实显示 0。</li>
 <li><strong>敌人在出手前被打倒</strong>：他的意图作废，不用打断。</li>
-<li><strong>打断没有蓄力或召唤的敌人</strong>：不允许选，目标灰掉。</li>
-<li><strong>凯「挡在前面」和护身在同一回合</strong>：攻击改打凯以后，原来那个人身上的护身用不上，凯身上的护身照常吸收。选的时候提示「护身会落空」。</li>
-<li><strong>两个人都要替同一个人挡</strong>：只有凯会「挡在前面」，不会出现两个人。</li>
+<li><strong>目标在这回合中途倒下</strong>：我方改打下一个还站着的敌人；敌方改打血最少的人。界面上记一行「改打了谁」。</li>
+<li><strong>打断没有蓄力、召唤、长嚎的敌人</strong>：不允许选，目标灰掉。</li>
+<li><strong>凯「挡在前面」和护身在同一回合</strong>：攻击改打凯以后，原来那个人身上的护身用不上，凯身上的格挡照常扣。选的时候提示「护身会落空」。</li>
 <li><strong>偏转没有第二个敌人</strong>：只剩一个敌人时偏转灰掉。</li>
 <li><strong>群攻</strong>：「挡在前面」和偏转只对打一个人的攻击有用，对群攻无效，选的时候提示。</li>
-<li><strong>召唤时敌方已满</strong>：敌方最多 5 个，超出的不出现。</li>
-<li><strong>看了第二回合以后局面变了</strong>（比如你打倒了一个敌人）：第二回合的预览自动重算，不再扣法力。</li>
-<li><strong>剧情规定的结果</strong>：有的仗剧情上必须输或中途停下（第 3 章亚瑟的剑断在佩利诺手里），写成「撑过 N 回合」，到回合数由剧情接管，不算玩家输。</li>
-<li><strong>存档中途</strong>：战斗中不存档；关掉网页再打开，回到碰上敌人之前。</li>
-<li><strong>玩家反着来</strong>：一直凝神、只让同伴攻击。按「怎么设计每一场」第 1 条，至少有一回合会有人倒下；白盒里验证「不用学徒的法术」很难赢。</li>
+<li><strong>召唤时敌方已满</strong>：敌方同时最多 4 个站着，超出的不出现，记一行「没有狼回应」。</li>
+<li><strong>看了下一回合以后局面变了</strong>（比如你打倒了一个敌人）：下一回合的预览自动重算，不再扣法力。</li>
+<li><strong>用药</strong>：血满的人不能喂，药用完了灰掉。三个人同一回合都可以用药，各占自己的招。</li>
+<li><strong>逃跑</strong>：剧情战没有这个按钮。逃跑后那群敌人血回满、留在原地。</li>
+<li><strong>剧情规定的结果</strong>：有的仗剧情上必须输或中途停下（第 3 章亚瑟的剑断在佩利诺手里），写成「撑过 N 回合」，到回合数由剧情接管，不算玩家输，也照常给经验。</li>
+<li><strong>存档中途</strong>：战斗中不存档；关掉网页再打开，回到碰上敌人之前，血量是开打时的。</li>
+<li><strong>玩家反着来</strong>：一直凝神、只让同伴砍。按「怎么设计每一场」第 1、6 条，至少有一回合有人倒下；白盒里验证「不用学徒的法术」很难赢。</li>
 </ul>
+<p><strong>退化打法和对策</strong>：
+- <em>一招打天下</em>：三个人永远砍第一只。原型自动测试里这样打第三场会输，留着这条当检验（验收第 8 条）。
+- <em>刷经验</em>：让瘦狼一直叫狼、打召唤出来的狼刷经验。召唤出来的不给经验、不掉东西；地图上打死的敌人不回来（大地图页），没有能刷的地方。
+- <em>无聊的僵局</em>：一直举盾、凝神攒法力。每场任务战有越拖越强的敌人（第 6 条），拖着打更难。
+- <em>逃跑回满再打</em>：逃跑后敌人也回满，你还要从圣龛走回来，不占便宜；这正是原作的节奏，留着。
+- <em>堆药硬打</em>：药要花钱买，背包里带药有上限（装备页），任务战按不喝药能赢来调。</p>
 <h3>5. 依赖</h3>
 <ul>
-<li>用到：同伴（谁能上场、每人的血量、武器、自己的招）；叙事进展（学徒会哪些法术、法力上限）；大地图（在哪碰到敌人）；任务（这一仗是哪个任务的一步、赢了以后发生什么）。</li>
-<li>被谁用：任务（「打赢某场」是任务的一步）；界面（意图、法力、行动菜单、出战选择）。</li>
+<li>用到：同伴（谁能上场、每人的血、砍的点数、自己的招）；叙事进展（学徒会哪些法术）；成长（技能树改招的数、加新招）；装备（学徒的血、法力上限、星火和护身的数）；大地图（在哪碰到敌人、逃跑回哪个圣龛）；任务（这一仗是哪个任务的一步、赢了以后发生什么）。</li>
+<li>被谁用：成长（打赢给经验）；装备（打赢掉东西）；任务（「打赢某场」是任务的一步）；界面（意图、法力、行动菜单、出战选择、结算）。</li>
 </ul>
 <h3>6. 可调参数（登记进 content/data/combat.json）</h3>
 <div class="table-wrap"><table>
@@ -2181,95 +2600,143 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <th>参数</th>
 <th>当前值</th>
 <th>范围</th>
+<th>类别</th>
 <th>调它会改变什么</th>
 </tr>
 </thead>
 <tbody>
 <tr>
+<td>rules.weak_mult / vulnerable_mult</td>
+<td>0.75 / 1.5</td>
+<td>—</td>
+<td>曲线</td>
+<td>虚弱、易伤的分量；照原作，不建议动</td>
+</tr>
+<tr>
+<td>rules.min_damage</td>
+<td>0</td>
+<td>0–1</td>
+<td>曲线</td>
+<td>打满格挡、虚弱时还掉不掉血</td>
+</tr>
+<tr>
+<td>rules.execution</td>
+<td>party_first</td>
+<td>—</td>
+<td>节奏</td>
+<td>你们先动、敌人后动</td>
+</tr>
+<tr>
+<td>rules.party_order</td>
+<td>slot</td>
+<td>—</td>
+<td>手感</td>
+<td>按学徒、同伴一、同伴二的顺序出手</td>
+</tr>
+<tr>
+<td>rules.party_retarget / enemy_retarget</td>
+<td>next_enemy / lowest_hp</td>
+<td>—</td>
+<td>手感</td>
+<td>目标中途倒下改打谁</td>
+</tr>
+<tr>
 <td>party_max_companions</td>
 <td>2</td>
 <td>1–3</td>
+<td>节奏</td>
 <td>一回合能处理几个威胁，直接影响取舍</td>
 </tr>
 <tr>
-<td>mana_start / mana_max</td>
-<td>6 / 6（拿到手杖后 8 / 8）</td>
-<td>4–10</td>
-<td>一场开头能做几件大事</td>
-</tr>
-<tr>
-<td>mana_regen / focus_bonus</td>
-<td>1 / 1</td>
-<td>1–3 / 0–2</td>
-<td>大事之间要等几回合</td>
+<td>mana_start / mana_max / mana_regen</td>
+<td>6 / 6 / 1</td>
+<td>4–10 / 4–10 / 1–2</td>
+<td>曲线</td>
+<td>一场开头能做几件大事，大事之间等几回合</td>
 </tr>
 <tr>
 <td>spells{}</td>
-<td>星火 1 法力 2 点；护身 2 法力 吸收 4；凝神 0；打断 3；静水 2；偏转 3；揭开 1</td>
+<td>星火 1 法力 2 点 + 易伤 1；护身 2 法力挡 4；凝神回 2；打断 3；静水 2；偏转 3；揭开 1</td>
 <td>—</td>
-<td>学徒每个行动的分量</td>
+<td>曲线</td>
+<td>学徒每招的分量</td>
 </tr>
 <tr>
-<td>min_damage</td>
-<td>1</td>
-<td>0–2</td>
-<td>高护甲能不能完全挡住</td>
-</tr>
-<tr>
-<td>defend_factor</td>
-<td>0.5</td>
-<td>0.3–0.7</td>
-<td>防御值不值得选</td>
+<td>guard_block</td>
+<td>3</td>
+<td>2–5</td>
+<td>曲线</td>
+<td>举盾值不值得选</td>
 </tr>
 <tr>
 <td>enemy_cap</td>
-<td>5</td>
-<td>4–6</td>
+<td>4</td>
+<td>3–6</td>
+<td>节奏</td>
 <td>召唤的上限</td>
 </tr>
 <tr>
-<td>apprentice{}</td>
-<td>血量 10，护甲 0</td>
+<td>apprentice.hp</td>
+<td>14</td>
 <td>—</td>
-<td>学徒多脆</td>
+<td>曲线</td>
+<td>学徒多脆（原型调过）</td>
 </tr>
 <tr>
 <td>companions{}</td>
-<td>凯：血 12、武器 3。亚瑟：第 1 章血 8、武器 2；第 2 章血 12、武器 4；第 3 章起武器 6。高文：血 14、武器 4、正午 +3。兰斯洛特：血 16、武器 5、连斩每下 3。加雷斯：血 12、武器 4。贝狄威尔：血 12、武器 3、包扎 4 × 2</td>
+<td>凯：血 16、砍 3。亚瑟：第 1 章血 13、砍 2；第 2 章 16 / 3；第 3 章 16 / 4；第 4 章起 18 / 4。高文 18 / 3，正午力量 +3 三回合。兰斯洛特 20 / 4，连斩每下 3。加雷斯 16 / 3。贝狄威尔 16 / 3，包扎 4 × 2</td>
 <td>—</td>
-<td>同伴强度，按章变</td>
+<td>曲线</td>
+<td>同伴强度，按章变；第 1 章是原型的数，其他先按比例定</td>
 </tr>
 <tr>
-<td>kay_cover_reduce</td>
-<td>2</td>
-<td>0–3</td>
+<td>kay_cover_block</td>
+<td>4</td>
+<td>2–6</td>
+<td>曲线</td>
 <td>凯的招值不值得选</td>
 </tr>
 <tr>
 <td>enemies{}</td>
-<td>狼：血 4、咬 3。头狼：血 8、扑咬 5。瘦狼：血 4、嚎叫叫来 2 只狼。梅林的影子：血 6、蓄力后重劈 12。其他章节的敌人第 10 步写遭遇时补</td>
+<td>狼：血 6，咬 3 → 血最少的人。灰狼：血 7，咬 3 → 凯、亚瑟轮着。瘦狼：血 5，咬 2 → 学徒，嚎叫叫来 1 只狼。头狼：血 18，扑 4 → 亚瑟，长嚎力量 +1，连扑 3×2 → 凯。强盗：血 10，砍 4 → 凯，撒沙虚弱 2 → 凯，砍 5 → 血最少的人。弓手：血 7，射 2×2 → 学徒，躲挡 4。梅林的影子：血 6，蓄力后重劈 12 → 学徒</td>
 <td>—</td>
-<td>遭遇难度</td>
+<td>节奏</td>
+<td>遭遇难度；其他章节的敌人第 10 步写遭遇时补</td>
+</tr>
+<tr>
+<td>flee_allowed</td>
+<td>true（剧情战 false）</td>
+<td>—</td>
+<td>节奏</td>
+<td>能不能逃</td>
 </tr>
 <tr>
 <td>target_turns</td>
-<td>[3, 5]</td>
+<td>任务战 [3, 5]；小仗 [2, 3]</td>
 <td>—</td>
+<td>节奏</td>
 <td>模拟验收的回合区间</td>
 </tr>
 </tbody>
 </table></div>
 <h3>7. 验收条件（进 TASKS.md）</h3>
-<ul>
-<li>[ ] <code>--playtest</code> 每回合开始打印敌人意图：顺序、敌人、招、目标、点数；学过静水并施放时，多打印下一回合。</li>
-<li>[ ] 同一场输了重来，按同样的操作走，两次打印的每回合意图逐字相同。</li>
-<li>[ ] 第 1 章狼群战第 2 回合同时打印「头狼 扑咬 → 亚瑟 5」「灰狼 咬 → 凯 3」「瘦狼 召唤 2」。</li>
-<li>[ ] 在那一回合，凯和亚瑟打瘦狼、学徒护身亚瑟：打印瘦狼倒下、召唤作废、亚瑟挨 1 点。</li>
-<li>[ ] 梅林的影子那一仗：第 1 回合打断，打印「蓄力作废」；不打断，第 2 回合打印学徒挨 12 点、倒下、出现「再来一次」。</li>
-<li>[ ] 凯「挡在前面」只在 D1c 且第 4 章起出现在凯的菜单里；其他路线菜单里没有这一项。</li>
-<li>[ ] 模拟（balancing）：每章每场的最优打法 3–5 回合赢；只用必得能力的打法也能赢；完全不用学徒法术的打法胜率低于 30%。</li>
-<li>[ ] 截图：三个意图的目标箭头、点数、顺序编号互不遮挡；手机宽度下行动菜单的每个按钮都能点到。</li>
-</ul>
+<p>功能：
+- [ ] <code>--playtest</code> 每回合开始打印敌人意图：顺序、敌人、招、目标、点数（点数已算进力量、虚弱、易伤）；学过静水并施放时，多打印下一回合。
+- [ ] 同一场输了选「再来一次」，按同样的操作走，两次打印的每回合意图逐字相同。
+- [ ] 第 1 章头狼群第 2 回合同时打印「头狼 长嚎 力量 +1」「灰狼 咬 → 亚瑟 3」「瘦狼 嚎叫 叫来 1 只狼」。
+- [ ] 在那一回合，学徒星火瘦狼、凯砍瘦狼、亚瑟举盾：打印「星火 2，瘦狼 易伤 1」「凯 砍 4，瘦狼 倒下」「召唤作废」「亚瑟 挡掉 3，掉 0」。
+- [ ] 强盗撒沙以后，凯砍打印 2（3 × 0.75 向下取整）。
+- [ ] 梅林的影子那一仗：第 1 回合打断，打印「蓄力作废」；不打断，第 2 回合打印学徒挨 12 点、倒下，同伴为 0 时出现「再来一次 / 回圣龛」。
+- [ ] 打赢后打印「经验 +N」「掉落：……」；三个人的血和开打前一样多或更少，不回满；倒下的人打印「站起来，1 血」。
+- [ ] 按逃跑打印「回到：〈圣龛名〉」；那群敌人血满、还在原地。剧情战打印「这一仗不能逃」。
+- [ ] 凯「挡在前面」只在 D1c 且第 4 章起出现在凯的菜单里；其他路线菜单里没有这一项。
+- [ ] 模拟（balancing）：三个人永远砍第一只，头狼群输；每章任务战按「只打必须打的」等级和普通装备，最优打法 3–5 回合赢；地图小仗 2–3 回合；完全不用学徒法术的打法胜率低于 30%。</p>
+<p>体验（白盒和停靠点 C 按这几句问）：
+- [ ] 头狼群第 2 回合，玩家出手前停下来比较两种打法（原型复盘第 1 题成立，白盒再看一次）。
+- [ ] 打完一场小仗，玩家看一眼三个人的血，再决定接着打下一只还是先回石龛。
+- [ ] 打完头狼群，玩家说得出自己为什么赢。</p>
+<p>截图：
+- [ ] 三个意图的目标箭头、点数、顺序编号互不遮挡；格挡、力量、虚弱、易伤的标记分得清；手机宽度下行动菜单的每个按钮和「逃跑」都能点到。</p>
 <h3>8. 需要的素材</h3>
 <div class="table-wrap"><table>
 <thead>
@@ -2291,31 +2758,43 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <td>我方战斗形象</td>
 <td>战斗画面</td>
 <td>必需</td>
-<td>学徒、凯、亚瑟（少年 / 王）、高文、兰斯洛特、加雷斯、贝狄威尔；待机、出手、挨打、倒下</td>
+<td>学徒（换装后样子跟着变）、凯、亚瑟（少年 / 王）、高文、兰斯洛特、加雷斯、贝狄威尔；待机、出手、挨打、倒下</td>
 </tr>
 <tr>
 <td>敌人形象</td>
 <td>战斗画面</td>
 <td>必需</td>
-<td>狼、头狼、瘦狼、梅林的影子、叛军步兵、叛军骑兵、盾兵、佩利诺、野人、摩根的骑士和护卫队长、红骑士、强盗、比武骑士、欢乐堡守军、多佛的弓箭手（箭雨）、莫德雷德和他的兵；待机、出手、倒下</td>
+<td>狼、灰狼、瘦狼、头狼、强盗、弓手、梅林的影子、叛军步兵、叛军骑兵、盾兵、佩利诺、野人、摩根的骑士和护卫队长、红骑士、比武骑士、欢乐堡守军、多佛的弓箭手（箭雨）、莫德雷德和他的兵；待机、出手、倒下</td>
 </tr>
 <tr>
 <td>意图图标</td>
 <td>敌人头上</td>
 <td>必需</td>
-<td>攻击、群攻、蓄力、召唤、防御、「？」；出手顺序数字</td>
+<td>攻击、多段、群攻、蓄力、召唤、长嚎、撒沙、躲、「？」；出手顺序数字</td>
 </tr>
 <tr>
 <td>行动图标</td>
 <td>行动菜单</td>
 <td>必需</td>
-<td>星火、护身、凝神、打断、静水、偏转、揭开；攻击、防御；六个同伴各自的招</td>
+<td>星火、护身、凝神、打断、静水、偏转、揭开、用药；砍、举盾；六个同伴各自的招；技能树给的四招（成长页）</td>
 </tr>
 <tr>
 <td>状态标记</td>
 <td>角色身上</td>
 <td>必需</td>
-<td>防御、护身、剑鞘、正午之力、倒下</td>
+<td>格挡、力量、虚弱、易伤、剑鞘、正午之力、倒下</td>
+</tr>
+<tr>
+<td>逃跑按钮</td>
+<td>战斗画面</td>
+<td>必需</td>
+<td>能按、灰掉（剧情战）</td>
+</tr>
+<tr>
+<td>结算框</td>
+<td>打赢后</td>
+<td>必需（和装备页共用）</td>
+<td>经验、掉落、升级提示</td>
 </tr>
 <tr>
 <td>出手特效</td>
@@ -2349,25 +2828,68 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <td>「多看一回合」</td>
 <td>旧草稿里人人花 2 法力就能看 → 只有学会「静水」的人能看</td>
 <td>故事圣经写定「静水」是告诉了梅林才得到的新法术（D2b）；人人都能看，这个选择就没有分量</td>
-<td>验收第 1、7 条</td>
+<td>验收第 1 条</td>
 </tr>
 <tr>
 <td>2026-11-05</td>
 <td>「守护」</td>
 <td>人人会 → 只有凯在 D1c 时第 4 章起会（「挡在前面」）</td>
 <td>故事圣经写定这是凯的新招</td>
+<td>验收第 9 条</td>
+</tr>
+<tr>
+<td>2026-11-06</td>
+<td>伤害公式</td>
+<td>点数 − 护甲、最少 1、防御减半、护身吸收 4 → 《杀戮尖塔》：先加力量，再乘虚弱 0.75、易伤 1.5，向下取整，先扣格挡</td>
+<td>白盒玩不起来后用户定了战斗照《杀戮尖塔》；原型两版共用这套规则</td>
+<td>验收第 4、5 条</td>
+</tr>
+<tr>
+<td>2026-11-06</td>
+<td>一回合怎么选</td>
+<td>选完点「结束回合」→ 三个人选满自动开打，出手按学徒、同伴一、同伴二</td>
+<td>原型行动版，用户选的</td>
+<td>验收第 4 条</td>
+</tr>
+<tr>
+<td>2026-11-06</td>
+<td>学徒和同伴的招</td>
+<td>防御减半 → 举盾挡 3；护身吸收 4 → 挡 4；星火加易伤 1；凝神回 1 → 回 2</td>
+<td>原型行动版的数</td>
+<td>验收第 4 条</td>
+</tr>
+<tr>
+<td>2026-11-06</td>
+<td>我方血量和第 1 章敌人</td>
+<td>学徒 10、凯 12、亚瑟 8；狼 4、头狼 8 → 学徒 14、凯 16、亚瑟 13；狼 6、灰狼 7、瘦狼 5、头狼 18，加强盗、弓手</td>
+<td>原型调过：用户说最后一场「招招致死」</td>
+<td>验收第 3、10 条</td>
+</tr>
+<tr>
+<td>2026-11-06</td>
+<td>输的条件</td>
+<td>学徒倒下就输 → 三个人都倒下才输</td>
+<td>原型的规矩，用户玩过</td>
 <td>验收第 6 条</td>
+</tr>
+<tr>
+<td>2026-11-06</td>
+<td>打完以后</td>
+<td>回满血、没有经验和战利品 → 血不回满，拿经验和掉落；加用药、逃跑</td>
+<td>成长和大地图改成照《Vampire's Fall 2》</td>
+<td>验收第 7、8 条</td>
 </tr>
 </tbody>
 </table></div></section>
 <section id="story-unlocks" class="doc doc-story-unlocks"><h2 class="sec-title">叙事进展设计页</h2>
 <p>系统 id：story-unlocks · 层：mvp · 负责 skill：progression-system · 参数文件：<code>content/data/story-unlocks.json</code>
-上游：<code>design/CONCEPT.md</code> 的「一页页拼出预言」和 A1 确认的「不做经验和等级」；故事圣经各选项的「解锁」一栏</p>
+照：自创（剧情给新法术和新同伴，有几样看你之前把话说给了谁）· 规则核对来源：无，这是本作自己的规则，白盒验证 · 参考代码：<code>xp-progression</code> 的 narrative 段（照本页旧版写的）
+上游：<code>design/CONCEPT.md</code> 的「一页页拼出预言」；故事圣经各选项的「解锁」一栏。A1 时的「不做经验和等级」2026-11-06 作废，经验、技能点、装备见成长页和装备页</p>
 <blockquote>
 <p>这页分两层。上半页给人看，下半页给实现看。</p>
 </blockquote>
 <h3>一句话</h3>
-<p>不刷经验、不升级：新法术、法力上限、新同伴、新地方，全部由剧情里的某件事给你，有的还要看你之前把话说给了谁。</p>
+<p>关键的新法术、新同伴、新地方，全部由剧情里的某件事给你，有的还要看你之前把话说给了谁。升级和装备让已有的招更狠（成长页、装备页），这几样只有故事给得了。</p>
 <h3>一个例子</h3>
 <p>第 1 章，梅林在阁楼里告诉你亚瑟是尤瑟王的儿子，要你在他走后看着亚瑟。</p>
 <ol>
@@ -2377,7 +2899,7 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <li>从这以后，每场战斗你的菜单里都多了这一项。</li>
 </ol>
 <h3>1. 玩家感受</h3>
-<p>变强的感觉来自故事。每个新能力都有一个人、一件事做来历，玩家记得「这是梅林在院子里教的」「这是他留下的手杖」。</p>
+<p>新的一招来自故事。每个新能力都有一个人、一件事做来历，玩家记得「这是梅林在院子里教的」「这是他留下的手杖」。</p>
 <p>有几样能力要看你之前的选择：第 2 章末把酒杯里看见的事告诉梅林，第 3 章他才开始正式教你「静水」。玩家在这里第一次感觉到，说给谁听不只改变别人，也改变自己。</p>
 <p>也会失去：第 4 章剑鞘被偷，亚瑟从此会倒下；同伴离开，他的招也跟着走了。</p>
 <h3>2. 规则</h3>
@@ -2419,7 +2941,7 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <tr>
 <td>第 4 章开头</td>
 <td>梅林走了，他的白蜡木杖留在你手里</td>
-<td>法力上限 6 → 8</td>
+<td>梅林的白蜡木杖：一根杖，法力上限 +2、星火 +1、凝神多回 1，不能卖（装备页）</td>
 </tr>
 <tr>
 <td>第 4 章剑鞘</td>
@@ -2506,9 +3028,13 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <li>失去时也弹一张，写清是哪件事让它没了（「剑鞘沉进了湖里。亚瑟从此会流血。」）。</li>
 <li>新法术第一次出现的那一仗，菜单里这一项会闪一下；之后不再提示。</li>
 </ul>
+<h4>和升级、装备分开</h4>
+<ul>
+<li>剧情给的招（打断、静水、偏转、揭开、同伴自己的招）不进技能树；技能树里的新招（双星、火雨、迷眼、乱影）也不由剧情给（成长页）。</li>
+<li>同伴变强一半靠这页（加冕、王者之剑），一半靠升级时的随机奖励（成长页）。</li>
+</ul>
 <h4>不做的</h4>
 <ul>
-<li>不做经验、等级、技能点、装备、商店。打赢一仗只让剧情往前走。</li>
 <li>不做「可以错过的强力法术」：看选择才有的能力只让打法更多，没有它们也能打赢（战斗页「怎么设计每一场」第 4 条）。</li>
 </ul>
 <hr />
@@ -2529,9 +3055,9 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <td>第 1 章就要能演示「剧情给法术」（概念页白盒清单）；一开始三个刚好覆盖打、护、回法力</td>
 </tr>
 <tr>
-<td>法力上限</td>
-<td>6；第 4 章手杖后 8</td>
-<td>第 4 章起有偏转、揭开，开销变多；+2 刚好多一件中等大事</td>
+<td>梅林的杖</td>
+<td>法力上限 +2、星火 +1、凝神多回 1</td>
+<td>第 4 章起有偏转、揭开，开销变多；+2 刚好多一件中等大事。数和装备页一致</td>
 </tr>
 <tr>
 <td>选择给的能力</td>
@@ -2578,12 +3104,6 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <td>什么时候得到什么；节点用剧情谱里的数字编号</td>
 </tr>
 <tr>
-<td>mana_max_after_staff</td>
-<td>8</td>
-<td>7–10</td>
-<td>第 4 章起的法力宽裕程度</td>
-</tr>
-<tr>
 <td>show_unlock_popup</td>
 <td>true</td>
 <td>—</td>
@@ -2597,7 +3117,7 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <li>[ ] 路线 D2b：1303 打印「学会：静水」。路线 D2a、D2c：全程不打印静水。</li>
 <li>[ ] 路线 D2b + D3a：1305 打印「学会：偏转」，第 4 章第一场起菜单里有偏转。D2c + D3a、D2b + D3b：都没有。</li>
 <li>[ ] 路线 D1c：第 4 章第一场起凯的菜单里有「挡在前面」；D1a、D1b 没有。</li>
-<li>[ ] 所有路线：1401 打印「法力上限 8」；1402 打印「失去：剑鞘」，之后亚瑟的血能掉到 0。</li>
+<li>[ ] 所有路线：1401 打印「得到：梅林的白蜡木杖」，装上后法力上限 +2；1402 打印「失去：剑鞘」，之后亚瑟的血能掉到 0。</li>
 <li>[ ] 读档后重走同一事件，不重复打印、不重复弹提示。</li>
 <li>[ ] 截图：新能力提示一屏内显示名字、效果、来历三行。</li>
 </ul>
@@ -2651,19 +3171,1072 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <td>用户选了叙事进展，A1 确认不做经验和等级</td>
 <td>旧草稿在 design/_draft_v1/systems/progression.md</td>
 </tr>
+<tr>
+<td>2026-11-06</td>
+<td>和经验、装备的关系</td>
+<td>「不做经验、等级、技能点、装备、商店」→ 只管剧情给的招和同伴；梅林的杖变成一件装备</td>
+<td>用户把成长和装备定为照《Vampire's Fall 2》</td>
+<td>验收第 5 条</td>
+</tr>
+</tbody>
+</table></div></section>
+<section id="progression" class="doc doc-progression"><h2 class="sec-title">经验和技能点设计页</h2>
+<p>系统 id：progression · 层：mvp · 负责 skill：progression-system · 参数文件：<code>content/data/progression.json</code>
+照：《Vampire's Fall 2》的升级（升一级给几个技能点，加进四棵技能树；每级另给随机奖励）；经验曲线照宝可梦「较快」，投点规矩照暗黑破坏神 2 · 规则核对来源：Pocket Gamer 评测（升级给几个技能点；四棵树 Vitality、Control、Anger、Deceit 各管什么）、Steam 商店页（四棵树；每升一级给随机奖励）、用户玩过原作（技能点和随机奖励两样都有，2026-11-06）；宝可梦曲线和暗黑 2 投点规矩在 mechanics-library <code>xp-progression</code> 里核对过 · 参考代码：<code>xp-progression</code>
+上游：<code>design/CONCEPT.md</code> 三层循环 5–15 分钟那一层、「打明雷、升级、换装备」；定调题「成长照 Vampire's Fall 2：技能点加进几棵树」「升一级给什么：两样都有」</p>
+<blockquote>
+<p>这页分两层。上半页给人看，下半页给实现看。</p>
+</blockquote>
+<h3>一句话</h3>
+<p>打赢一仗，学徒拿经验；升一级得 2 个技能点，加进四棵树里的一棵，再从三个随机奖励里挑一个，奖励多半是给同伴或给物资的。</p>
+<h3>一个例子</h3>
+<p>第 1 章，林子里打完「林子边的狼」，又打完「路上的强盗」。</p>
+<ol>
+<li>结算框里写着：经验 +4，累计 8，升到 2 级。三个人的血都满了。</li>
+<li>先弹出三张奖励卡：「凯磨了剑：凯砍 +1」「盾牌包铁：同伴举盾多挡 2」「药囊：2 瓶血药」。刚才凯挨得最多，你挑了盾牌包铁。</li>
+<li>再打开技能树，有 2 个点。四棵树：星火、水面、护身、把戏。你在星火树第一格「星火加热」点了两下，星火从 2 点变成 4 点。想点第三下，格子上写「要 3 级」。</li>
+<li>林子深处的头狼群，星火打瘦狼 4 点，它这回合易伤；凯一刀下去，瘦狼倒下。</li>
+</ol>
+<h3>1. 玩家感受</h3>
+<p>变强有三条路，各管一样（2026-11-06 起）：
+- 剧情给新的一招、新的人：打断、静水、高文、兰斯洛特……（叙事进展页，不变）。
+- 升级让已有的招更狠，也给几招技能树里的新招（这页）。
+- 换装备让学徒血厚一点、法力多一点、星火痛一点，样子也变（装备页）。</p>
+<p>升一级马上感觉得到：三个人血回满；挑一张奖励；点数加下去，下一仗星火、护身的数就变了。</p>
+<p>点数不够全点：到 10 级大约能点满四分之三，要挑方向（照原作：「偏防守、偏伤害，还是两边都要」）。</p>
+<p>每只敌人只能打一次（大地图页），全程的经验是定的：地图上的敌人都打，最后一仗前到 10 级；只打必须打的，大约 8 级。多打的人更强，少打的人也打得过。</p>
+<p>落在三层循环的 5–15 分钟那一层：打一仗 → 拿经验 → 升级、挑奖励、加点 → 下一仗看得见变化。</p>
+<h3>2. 规则</h3>
+<h4>经验和等级</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>规则</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>打赢一仗，学徒拿这群敌人的经验总和；同伴不拿经验、不升级</td>
+<td>改了：原作只有一个人。同伴变强靠剧情和随机奖励</td>
+</tr>
+<tr>
+<td>一只普通敌人的经验是 3 × 它所在的章（第 1 章 2）；首领 × 3；召唤出来的 0</td>
+<td>自定，按下半页的反推表定</td>
+</tr>
+<tr>
+<td>每章主线做完，另给一笔经验</td>
+<td>任务给奖励照原作；数自定</td>
+</tr>
+<tr>
+<td>一次经验够升好几级就连升</td>
+<td>照宝可梦</td>
+</tr>
+<tr>
+<td>升到 N 级要的累计经验是 N³（宝可梦「较快」）</td>
+<td>照宝可梦；原作的曲线查不到</td>
+</tr>
+<tr>
+<td>最高 10 级，满级以后经验不再涨</td>
+<td>改了：宝可梦 100 级；本作 6 章 3 小时出头</td>
+</tr>
+<tr>
+<td>升一级，三个人的血回满</td>
+<td>自创：原作未核实。升级是一个小小的庆祝，也少跑一趟圣龛</td>
+</tr>
+</tbody>
+</table></div>
+<h4>技能点和四棵树</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>规则</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>升一级得 2 个技能点</td>
+<td>「几个」照原作；具体给 2 个是自定，原作每级几个未核实</td>
+</tr>
+<tr>
+<td>四棵树，每棵管一样事</td>
+<td>照原作（Vitality 生存、Control 法术、Anger 伤害、Deceit 诡计），名字和内容按学徒改</td>
+</tr>
+<tr>
+<td>每棵树 4 格，从上往下：下一格要上一格至少点了 1 点</td>
+<td>照暗黑 2（前置技能至少 1 点）</td>
+</tr>
+<tr>
+<td>每格要到几级才能点：1 / 3 / 5 / 7</td>
+<td>照暗黑 2 的需求等级（1 / 6 / 12 / 18 / 24 / 30），按 10 级上限缩</td>
+</tr>
+<tr>
+<td>每超过这一格要的等级 1 级，这一格才能多点 1 点（1 级要求的格，2 级时最多 2 点）</td>
+<td>照暗黑 2</td>
+</tr>
+<tr>
+<td>树里的新招（双星、火雨、迷眼、乱影）用技能点换；剧情给的招（打断、静水、偏转、揭开）不进树</td>
+<td>改了：原作树里的新招都靠点数。我们留着「剧情给法术」，两边不重叠</td>
+</tr>
+<tr>
+<td>在圣龛跟前可以把点数全拿回来重点，不限次数</td>
+<td>自创：原作能不能洗点未核实。故事游戏不让人为加错点后悔，只能在圣龛跟前洗，不能打到一半改</td>
+</tr>
+</tbody>
+</table></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>树</th>
+<th>照原作哪棵</th>
+<th>管什么</th>
+<th>第 1 格（1 级）</th>
+<th>第 2 格（3 级）</th>
+<th>第 3 格（5 级）</th>
+<th>第 4 格（7 级）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>星火</td>
+<td>Anger（伤害）</td>
+<td>打得更痛</td>
+<td>星火加热：星火 +1，最多 3 点</td>
+<td>余烬：星火给的易伤 1 回合 → 2 回合</td>
+<td>新招「双星」：2 法力，打两个敌人，各打星火的点数</td>
+<td>新招「火雨」：3 法力，打所有敌人各 2 点</td>
+</tr>
+<tr>
+<td>水面</td>
+<td>Control（法术）</td>
+<td>法力</td>
+<td>深水：法力上限 +1，最多 3 点</td>
+<td>涟漪：凝神多回 1</td>
+<td>定神：打断少花 1 法力</td>
+<td>潮信：每回合多回 1 法力</td>
+</tr>
+<tr>
+<td>护身</td>
+<td>Vitality（生存）</td>
+<td>让大家站着</td>
+<td>结实：学徒血 +3，最多 3 点</td>
+<td>护身加厚：护身多挡 2，最多 2 点</td>
+<td>同护：护身同时给两个人</td>
+<td>不倒：每场第一次有人血掉到 0，留 1 点</td>
+</tr>
+<tr>
+<td>把戏</td>
+<td>Deceit（诡计）</td>
+<td>让敌人难受</td>
+<td>新招「迷眼」：1 法力，一个敌人虚弱 2</td>
+<td>看穿：每场开打，所有敌人易伤 1</td>
+<td>借势：打断成功，那个敌人易伤 2</td>
+<td>新招「乱影」：3 法力，所有敌人虚弱 1</td>
+</tr>
+</tbody>
+</table></div>
+<p>四棵树一共 23 点；到 10 级有 18 个技能点。</p>
+<h4>随机奖励（每升一级挑一个）</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>规则</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>每升一级，从奖励池里抽三张不重样的，挑一张</td>
+<td>每级随机奖励照原作；三选一是原型里的做法（用户玩过），原作几选几未核实</td>
+</tr>
+<tr>
+<td>池子里多半是给同伴和物资的；学徒自己的成长放在技能树</td>
+<td>自创：原作只有一个人。本作三个人上场，同伴的成长放在这里</td>
+</tr>
+<tr>
+<td>只给眼下在队里的同伴抽他的那几张</td>
+<td>自创</td>
+</tr>
+<tr>
+<td>奖励记在这个同伴身上；他离开或离世，奖励跟着没了；剧情让他回来时还在</td>
+<td>自创：和叙事进展页「同伴离开，他的招也跟着走了」一致</td>
+</tr>
+</tbody>
+</table></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>奖励</th>
+<th>效果</th>
+<th>最多拿几次</th>
+<th>什么时候进池子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>〈同伴〉磨了剑</td>
+<td>这个同伴砍 +1</td>
+<td>每人 3 次</td>
+<td>这个同伴在队里</td>
+</tr>
+<tr>
+<td>〈同伴〉吃得饱</td>
+<td>这个同伴血 +3</td>
+<td>每人 2 次</td>
+<td>这个同伴在队里</td>
+</tr>
+<tr>
+<td>盾牌包铁</td>
+<td>所有同伴举盾多挡 2</td>
+<td>2 次</td>
+<td>一直</td>
+</tr>
+<tr>
+<td>药囊</td>
+<td>2 瓶血药</td>
+<td>不限</td>
+<td>一直</td>
+</tr>
+<tr>
+<td>钱袋</td>
+<td>银币 20 × 章</td>
+<td>不限</td>
+<td>一直</td>
+</tr>
+<tr>
+<td>多想了一夜</td>
+<td>多 1 个技能点</td>
+<td>2 次</td>
+<td>3 级起</td>
+</tr>
+</tbody>
+</table></div>
+<h4>同伴怎么变强</h4>
+<ul>
+<li>剧情：亚瑟加冕、拿到王者之剑；新同伴加入（叙事进展页）。</li>
+<li>随机奖励：上表。</li>
+<li>同伴不穿装备（装备页）。</li>
+</ul>
+<hr />
+<h2 class="split">给实现看</h2>
+<h3>3. 公式</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>名字</th>
+<th>公式</th>
+<th>为什么是这个数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>到 N 级的累计经验</td>
+<td>N³（1 级为 0）：2 级 8、3 级 27、4 级 64、5 级 125、6 级 216、7 级 343、8 级 512、9 级 729、10 级 1000</td>
+<td>原作：宝可梦「较快」，mechanics-library <code>xp-progression</code> 核对过</td>
+</tr>
+<tr>
+<td>一只普通敌人的经验</td>
+<td>3 × 章（第 1 章 2）</td>
+<td>自定：按下表两条线反推</td>
+</tr>
+<tr>
+<td>首领</td>
+<td>普通 × 3</td>
+<td>自定</td>
+</tr>
+<tr>
+<td>召唤出来的敌人</td>
+<td>0</td>
+<td>堵「打召唤出来的刷经验」</td>
+</tr>
+<tr>
+<td>主线做完给的经验</td>
+<td>第 1–6 章：0 / 20 / 30 / 40 / 60 / 0</td>
+<td>把只打必须打的人拉到全打的人身后一两级以内</td>
+</tr>
+<tr>
+<td>技能点</td>
+<td>每级 2；到 10 级共 18（「多想了一夜」最多再 +2）</td>
+<td>四棵树 23 点，10 级点满约四分之三；只打必须打的到 8 级，14 点，约五分之三</td>
+</tr>
+<tr>
+<td>随机奖励</td>
+<td>每级抽 3 挑 1</td>
+<td>原型</td>
+</tr>
+</tbody>
+</table></div>
+<p>反推表：「只打必须打的」只打任务战；「全打」把地图上能绕开的敌人和支线都打了。每章敌人数是估的（必须打的：第 1 章 4 只，第 2 章 4 只，第 3 章 3 只，第 4 章 4 只，第 5 章 4 只，第 6 章 8 只；地图上能绕开的每章 6–8 只），第 10 步写遭遇时按实际数重算。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>章</th>
+<th>一只普通敌人</th>
+<th>只打必须打的：累计 / 章末等级</th>
+<th>全打：累计 / 章末等级</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>12 / 2 级</td>
+<td>28 / 3 级</td>
+</tr>
+<tr>
+<td>2</td>
+<td>6</td>
+<td>56 / 3 级</td>
+<td>120 / 4 级</td>
+</tr>
+<tr>
+<td>3</td>
+<td>9</td>
+<td>131 / 5 级</td>
+<td>294 / 6 级</td>
+</tr>
+<tr>
+<td>4</td>
+<td>12</td>
+<td>243 / 6 级</td>
+<td>538 / 8 级</td>
+</tr>
+<tr>
+<td>5</td>
+<td>15</td>
+<td>363 / 7 级</td>
+<td>793 / 9 级</td>
+</tr>
+<tr>
+<td>6</td>
+<td>18</td>
+<td>543 / 8 级</td>
+<td>1081 / 10 级（打莫德雷德之前就到了）</td>
+</tr>
+</tbody>
+</table></div>
+<p>任务战按左边那一列的等级调（战斗页「怎么设计每一场」第 4 条）。</p>
+<h3>4. 边界情况</h3>
+<ul>
+<li><strong>满级</strong>：10 级以后经验不涨，结算写「已满级」；不再有随机奖励。</li>
+<li><strong>一次升两级</strong>：奖励一张一张挑完，点数一起加。</li>
+<li><strong>剧情战赢了直接接对话</strong>：升级、奖励、加点等剧情演完再弹。</li>
+<li><strong>奖励池不够三张</strong>（同伴都拿满了）：用「钱袋」补齐。</li>
+<li><strong>同伴离开</strong>：池子里没了他的两张；他身上的奖励不再生效，存档里留着记录。</li>
+<li><strong>洗点</strong>：只在圣龛跟前；点数全回来，奖励不回来。战斗里不能加点。</li>
+<li><strong>存档中途</strong>：弹奖励时关掉网页，再打开时补弹；没点完的技能点存着，不过期。</li>
+<li><strong>玩家反着来</strong>：一点都不加。任务战按「只打必须打的等级、普通装备、点数四棵树平均点」来调，一点不加的人会难一些。每次升级都弹出技能树，白盒看有没有人一直关掉不点。</li>
+</ul>
+<p><strong>退化打法和对策</strong>：
+- <em>全点星火</em>：每回合只按星火。星火加热最多 3 点，任务战里有要打断、要护人的回合（战斗页第 1、2 条）。这是练出来的打法，留着；白盒看到有人每回合只按星火也能赢任务战，就把星火加热改成最多 2 点。
+- <em>刷经验</em>：打死的敌人不回来，召唤出来的给 0，没有能刷的地方。
+- <em>洗点刷最优</em>：每场仗前回圣龛换一套点法。来回要走路，只为了一场小仗不划算；留着。</p>
+<h3>5. 依赖</h3>
+<ul>
+<li>用到：战斗（打赢给经验；技能树改招的数）；大地图（敌人总数定了经验总数；圣龛跟前洗点）；任务（主线做完给经验）；同伴（谁在队决定奖励池）；叙事进展（剧情给的招不进树）；装备（药囊、钱袋发的东西进背包）。</li>
+<li>被谁用：战斗（学徒的招、法力上限、血；同伴的砍和血）；界面（经验条、升级弹窗、奖励三选一、技能树）；存档（等级、经验、点了哪些格、每个同伴拿过哪些奖励）。</li>
+</ul>
+<h3>6. 可调参数（登记进 content/data/progression.json）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>当前值</th>
+<th>范围</th>
+<th>类别</th>
+<th>调它会改变什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>progression.curve</td>
+<td>medium_fast（N³）</td>
+<td>—</td>
+<td>曲线</td>
+<td>升级越往后越慢</td>
+</tr>
+<tr>
+<td>progression.max_level</td>
+<td>10</td>
+<td>8–12</td>
+<td>节奏</td>
+<td>全程升几级</td>
+</tr>
+<tr>
+<td>progression.points_per_level</td>
+<td>2</td>
+<td>1–3</td>
+<td>节奏</td>
+<td>点得满多少</td>
+</tr>
+<tr>
+<td>xp.per_enemy_by_chapter</td>
+<td>[2, 6, 9, 12, 15, 18]</td>
+<td>—</td>
+<td>曲线</td>
+<td>每章打一只给多少</td>
+</tr>
+<tr>
+<td>xp.boss_mult / xp.summoned</td>
+<td>3 / 0</td>
+<td>—</td>
+<td>曲线</td>
+<td>首领、召唤出来的给多少</td>
+</tr>
+<tr>
+<td>xp.quest_by_chapter</td>
+<td>[0, 20, 30, 40, 60, 0]</td>
+<td>—</td>
+<td>曲线</td>
+<td>只打必须打的人落后多少</td>
+</tr>
+<tr>
+<td>heal_on_level_up</td>
+<td>true</td>
+<td>—</td>
+<td>节奏</td>
+<td>升级回不回满血</td>
+</tr>
+<tr>
+<td>skill_tree.nodes{}</td>
+<td>16 格：level_req 1 / 3 / 5 / 7，max_rank、requires、效果</td>
+<td>—</td>
+<td>曲线</td>
+<td>每格的分量和开放时间</td>
+</tr>
+<tr>
+<td>skill_tree.respec</td>
+<td>shrine（不限次数）</td>
+<td>—</td>
+<td>节奏</td>
+<td>在哪洗点、能洗几次</td>
+</tr>
+<tr>
+<td>boons.choices</td>
+<td>3</td>
+<td>2–4</td>
+<td>节奏</td>
+<td>一次给几张挑</td>
+</tr>
+<tr>
+<td>boons.pool[]</td>
+<td>6 种，见上半页</td>
+<td>—</td>
+<td>曲线</td>
+<td>奖励的分量和次数上限</td>
+</tr>
+</tbody>
+</table></div>
+<h3>7. 验收条件（进 TASKS.md）</h3>
+<p>功能：
+- [ ] <code>--playtest</code> 第 1 章打完「林子边的狼」「路上的强盗」，打印「经验 8，2 级，技能点 2」。
+- [ ] 升级打印三张奖励，三张不重样；挑完打印效果和三个人回满后的血。
+- [ ] 点「星火加热」两下，下一场星火打印 4；2 级时第三下点不了，打印「要 3 级」。
+- [ ] 打倒瘦狼叫来的狼，打印「经验 0」。
+- [ ] 跑「只打必须打的」和「全打」两条路线到第 6 章，打印每章末等级：只打必须的 2 / 3 / 5 / 6 / 7 / 8，全打 3 / 4 / 6 / 8 / 9 / 10（差一级以内算过）。
+- [ ] 凯离开的路线：之后的奖励池里没有凯的两张，凯身上拿过的「磨了剑」不再生效。
+- [ ] 10 级以后打印「已满级」，不再弹奖励。
+- [ ] 在圣龛洗点：点数全部回来，奖励不变；战斗里打开技能树打印「不能加点」。</p>
+<p>体验（白盒和停靠点 C 按这几句问）：
+- [ ] 升级时，玩家在三张奖励前停下来比，不是每次都挑同一种。
+- [ ] 第 2 章结束时，玩家说得出自己在点哪棵树、为什么。</p>
+<p>截图：
+- [ ] 技能树一屏看全四棵，能点的、点不了的、点过的分得清；手机宽度下每一格都点得到。</p>
+<h3>8. 需要的素材</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>素材</th>
+<th>用在哪</th>
+<th>必需 / 可降级</th>
+<th>数量、动作或状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>经验条</td>
+<td>结算框、菜单</td>
+<td>必需</td>
+<td>1</td>
+</tr>
+<tr>
+<td>升级弹窗</td>
+<td>打赢后</td>
+<td>必需</td>
+<td>1</td>
+</tr>
+<tr>
+<td>奖励卡</td>
+<td>升级时</td>
+<td>必需</td>
+<td>6 种，同伴的两种带头像</td>
+</tr>
+<tr>
+<td>技能树面板</td>
+<td>菜单、圣龛</td>
+<td>必需</td>
+<td>四棵，每棵 4 格；能点、点不了、点过三种状态</td>
+</tr>
+<tr>
+<td>技能图标</td>
+<td>技能树、行动菜单</td>
+<td>必需（16 个，四招新招和战斗页共用）</td>
+<td>16</td>
+</tr>
+</tbody>
+</table></div>
+<h3>改动记录（quick-design）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>日期</th>
+<th>改什么</th>
+<th>从 → 到</th>
+<th>为什么</th>
+<th>怎么验</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-11-06</td>
+<td>新写</td>
+<td>「不做经验和等级」→ 照《Vampire's Fall 2》：经验、等级、四棵技能树、每级随机奖励</td>
+<td>白盒玩不起来以后，用户把成长定为照《Vampire's Fall 2》；升一级「两样都有」是用户玩过原作确认的</td>
+<td>验收第 1、5 条</td>
+</tr>
+</tbody>
+</table></div></section>
+<section id="items" class="doc doc-items"><h2 class="sec-title">装备与掉落设计页</h2>
+<p>系统 id：items · 层：mvp（白盒切片只做第 1 章那几件，见第 7 节）· 负责 skill：progression-system · 参数文件：<code>content/data/items.json</code>
+照：《Vampire's Fall 2》的掉落（打怪、做任务、野外宝物都能拿到东西；换上的装备改变人物外观、加属性；血药和法力药）；品质分档和词缀照暗黑破坏神 2；卖价照宝可梦（买价一半） · 规则核对来源：Vampire's Fall 2 的 Steam 商店页；暗黑 2 和宝可梦的规则在 mechanics-library <code>random-affix-loot</code>、<code>shop-economy</code> 里核对过。Vampire's Fall 2 有没有品质分档、商店怎么进货，公开资料查不到，标「未核实」 · 参考代码：<code>random-affix-loot</code>、<code>stats-modifiers</code>、<code>shop-economy</code>
+上游：<code>design/CONCEPT.md</code> 三层循环 5–15 分钟那一层、想要的感受「发现（掉了什么）」；定调题「装备照 Vampire's Fall 2：打怪随机掉」</p>
+<blockquote>
+<p>这页分两层。上半页给人看，下半页给实现看。</p>
+</blockquote>
+<h3>一句话</h3>
+<p>打赢一仗、打开野外的包袱，会掉银币、药和装备；装备分普通、精良、稀有三档，越好的带越多词缀；学徒换上就加血、加法力、加星火，样子也跟着变；用不上的拿到城里卖掉，换钱买药。</p>
+<h3>一个例子</h3>
+<p>第 1 章，林子里。</p>
+<ol>
+<li>打完「路上的强盗」，结算框里写着：银币 4，一件「粗布斗篷」（普通，白字，血 +2）。</li>
+<li>林子深处一棵空心老橡树里塞着个包袱。打开，是一根「灼热的橡木杖」（精良，蓝字）：橡木杖本身星火 +1，「灼热的」再 +1。</li>
+<li>打开背包，学徒手上空着。换上杖：星火 2 → 4，地图上学徒手里多了一根杖。粗布斗篷也穿上，血 14 → 16。</li>
+<li>第 2 章到了伦敦，桥头的铺子里卖血药。后来又捡到一件羊皮袄，换下来的粗布斗篷卖了 15 枚银币。</li>
+</ol>
+<h3>1. 玩家感受</h3>
+<p>打完一仗看一眼掉了什么：多半是银币和白字，偶尔一件蓝字，更少是一件金字（颜色在画风文档里定）。对应 CONCEPT 想要的感受「发现」。</p>
+<p>换上就看得见：数字变，样子也变（照原作：装备改变人物外观）。</p>
+<p>背包不复杂：学徒三个格子，杖、衣服、护符；同伴不穿装备。</p>
+<p>落在三层循环的 5–15 分钟那一层：打 → 看掉落 → 换装 → 下一仗。</p>
+<h3>2. 规则</h3>
+<h4>哪里掉东西</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>来源</th>
+<th>掉什么</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>打赢一群敌人</td>
+<td>一定掉银币；三成掉一瓶药；四分之一掉一件装备</td>
+<td>打怪掉东西照原作；几率自定</td>
+</tr>
+<tr>
+<td>首领</td>
+<td>一定掉一件装备，至少精良</td>
+<td>自定</td>
+</tr>
+<tr>
+<td>野外的宝物（每片地方 1–2 处，大地图页）</td>
+<td>一件装备，至少精良；开过就没了</td>
+<td>野外宝物照原作</td>
+</tr>
+<tr>
+<td>任务奖励</td>
+<td>任务表里写的固定东西</td>
+<td>任务给东西照原作</td>
+</tr>
+<tr>
+<td>召唤出来的敌人</td>
+<td>不掉</td>
+<td>自定：堵刷</td>
+</tr>
+</tbody>
+</table></div>
+<h4>学徒的三个格子</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>格子</th>
+<th>加什么</th>
+<th>换了样子变不变</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>杖</td>
+<td>星火，有的加法力上限</td>
+<td>变：手里的杖</td>
+</tr>
+<tr>
+<td>衣服</td>
+<td>血</td>
+<td>变：身上的衣服、斗篷</td>
+</tr>
+<tr>
+<td>护符</td>
+<td>法力上限、护身、凝神</td>
+<td>不变，太小看不出来</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>格子有几个、各叫什么是自定，原作有几个格子未核实。</li>
+<li>同伴不穿装备。改了原作：原作只有一个人；三个人都穿，背包、比较、换装的界面要做三份。同伴变强靠剧情和随机奖励（成长页）。</li>
+<li>梅林的白蜡木杖：第 4 章开头梅林走了，杖留在你手里（叙事进展页）。它是一根杖，法力上限 +2、星火 +1、凝神多回 1；不能卖、不能扔，换下来放在背包里。后面的章节可能掉出数更好的杖，换不换由你。改了叙事进展页：原来写「法力上限 6 → 8」，现在是一件装备。</li>
+</ul>
+<h4>品质</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>品质</th>
+<th>词缀几条</th>
+<th>多常见</th>
+<th>名字</th>
+<th>出处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>普通</td>
+<td>0</td>
+<td>七成</td>
+<td>底材名：「橡木杖」</td>
+<td>照暗黑 2 的普通 / 魔法 / 稀有；七成、四分之一、二十分之一是参考代码里的自定数</td>
+</tr>
+<tr>
+<td>精良</td>
+<td>1–2：前缀、后缀各最多一条</td>
+<td>四分之一</td>
+<td>前缀 + 底材 + 后缀：「灼热的橡木杖·守夜」</td>
+<td>照暗黑 2 魔法装备：前后都有 25%，只有前缀 25%，只有后缀 50%</td>
+</tr>
+<tr>
+<td>稀有</td>
+<td>3：前缀、后缀各最多 2 条</td>
+<td>二十件里一件</td>
+<td>两个字随机拼 + 格子名：「鸦语杖」</td>
+<td>改了：暗黑 2 是 3–6 条；本作能加的属性少，3 条</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>同一组词缀只出一条（不会有两条「加血」）。照暗黑 2。</li>
+<li>越往后的章，掉的底材越好、词缀的数越大：物品等级就是章数。照暗黑 2 的词缀等级，按 6 章缩。</li>
+</ul>
+<h4>底材</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>格子</th>
+<th>第 1 章起</th>
+<th>第 3 章起</th>
+<th>第 5 章起</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>杖</td>
+<td>橡木杖：星火 +1</td>
+<td>紫杉杖：星火 +1，法力上限 +1</td>
+<td>冬青杖：星火 +2</td>
+</tr>
+<tr>
+<td>衣服</td>
+<td>粗布斗篷：血 +2</td>
+<td>羊皮袄：血 +4</td>
+<td>镶边斗篷：血 +6</td>
+</tr>
+<tr>
+<td>护符</td>
+<td>河石护符：法力上限 +1</td>
+<td>银十字：护身多挡 1</td>
+<td>鹿角坠：凝神多回 1</td>
+</tr>
+</tbody>
+</table></div>
+<h4>词缀</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>词缀</th>
+<th>前 / 后</th>
+<th>能出在</th>
+<th>第几章起</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>结实的 / 厚重的</td>
+<td>前缀</td>
+<td>衣服、护符</td>
+<td>1 / 4</td>
+<td>血 +2~3 / +4~5</td>
+</tr>
+<tr>
+<td>灼热的 / 炽烈的</td>
+<td>前缀</td>
+<td>杖</td>
+<td>1 / 4</td>
+<td>星火 +1 / +2</td>
+</tr>
+<tr>
+<td>深水的</td>
+<td>前缀</td>
+<td>杖、护符</td>
+<td>2</td>
+<td>法力上限 +1</td>
+</tr>
+<tr>
+<td>厚实的</td>
+<td>前缀</td>
+<td>衣服、护符</td>
+<td>2</td>
+<td>护身多挡 1~2</td>
+</tr>
+<tr>
+<td>·守夜</td>
+<td>后缀</td>
+<td>衣服</td>
+<td>1</td>
+<td>第 1 回合学徒挡 3~4</td>
+</tr>
+<tr>
+<td>·静息</td>
+<td>后缀</td>
+<td>护符</td>
+<td>2</td>
+<td>凝神多回 1</td>
+</tr>
+<tr>
+<td>·明眼</td>
+<td>后缀</td>
+<td>杖、护符</td>
+<td>3</td>
+<td>开打时血最多的敌人易伤 2</td>
+</tr>
+<tr>
+<td>·回春</td>
+<td>后缀</td>
+<td>衣服、护符</td>
+<td>3</td>
+<td>打赢后三个人各回 2 血</td>
+</tr>
+</tbody>
+</table></div>
+<h4>背包和药</h4>
+<ul>
+<li>背包 20 格。药叠在一格里：血药最多带 5 瓶，法力药最多 3 瓶（自定）。</li>
+<li>血药：一个人回 6 血（第 4 章起有大瓶，回 12）；法力药：回 3 法力。有血药、法力药照原作；数自定。</li>
+<li>战斗里喝药占这个人这回合的招，也可以喂给身边的人（战斗页）。喝药占一个行动照原作。</li>
+</ul>
+<h4>商店</h4>
+<ul>
+<li>第 2 章起每章一家：伦敦桥头的铺子、卡美洛的军需官、第 6 章营地里的随军商人。第 1 章没有。</li>
+<li>药不限量；装备架上摆 3 件普通或精良，每章换一次货。照 graveholme 的做法（Vampire's Fall 2 的商店怎么进货查不到）。</li>
+<li>卖东西按买价一半，向下取整。照宝可梦。</li>
+<li>梅林的杖和任务物品不能卖。照宝可梦（关键道具不能卖）。</li>
+</ul>
+<hr />
+<h2 class="split">给实现看</h2>
+<h3>3. 公式</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>名字</th>
+<th>公式</th>
+<th>为什么是这个数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>一群敌人掉什么</td>
+<td>银币：每只 2 × 章；药 30%（血药七成、法力药三成）；装备 25%</td>
+<td>自定；第 10 步按「每章见到几件」反推再调</td>
+</tr>
+<tr>
+<td>首领、宝物</td>
+<td>装备 100%，至少精良</td>
+<td>自定</td>
+</tr>
+<tr>
+<td>品质占比</td>
+<td>普通 70、精良 25、稀有 5</td>
+<td><code>random-affix-loot</code> 的默认数，自定</td>
+</tr>
+<tr>
+<td>精良的词缀几条</td>
+<td>1 条 75%、2 条 25%；前缀和后缀的权重 1 : 2</td>
+<td>原作：暗黑 2，算下来正好前后都有 25%、只有前缀 25%、只有后缀 50%</td>
+</tr>
+<tr>
+<td>掉哪种底材</td>
+<td>从「第几章起」不晚于这一章的底材里抽，最新那一档的机会是其他的两倍</td>
+<td>自定：越往后越常见新底材</td>
+</tr>
+<tr>
+<td>每章能见到几件装备</td>
+<td>能绕开的 5 群 × 25% ≈ 1.3，加首领 1、宝物 1–2、任务 0–1，约 4 件</td>
+<td>一章换一两次装备，不至于背包里堆满</td>
+</tr>
+<tr>
+<td>价钱</td>
+<td>血药 15、大瓶 30、法力药 20；装备 = 底材价 × 品质倍数（普通 1、精良 2、稀有 4），底材价 30 / 60 / 90（第 1 / 3 / 5 章起）</td>
+<td>自定</td>
+</tr>
+<tr>
+<td>卖价</td>
+<td>买价 × 50%，向下取整</td>
+<td>原作：宝可梦</td>
+</tr>
+</tbody>
+</table></div>
+<p>银币粗算：第 2 章全打约 12 只 × 4 = 48 枚，加卖掉一两件，大约够买三四瓶药。第 10 步用 <code>shop-economy</code> 的按章对账脚本逐章算。</p>
+<h3>4. 边界情况</h3>
+<ul>
+<li><strong>背包满了</strong>：新掉的装备直接按卖价换成银币，结算框写清「背包满了，粗布斗篷换成 15 银币」。药超过上限同样处理。</li>
+<li><strong>换装改了法力上限</strong>：当前法力比新上限多时削到上限。</li>
+<li><strong>脱掉衣服，血上限变低</strong>：当前血跟着降，最少剩 1。</li>
+<li><strong>战斗里</strong>：不能换装。</li>
+<li><strong>梅林的杖</strong>：不能卖、不能扔；脱下来放在背包里，占一格。</li>
+<li><strong>存档中途</strong>：每件装备存配方（底材、品质、每条词缀和它的数）；读档先查一遍，配方不合规则的（词缀出在不该出的格子上）降成普通并记一行。</li>
+<li><strong>读档重打</strong>：掉落由存档里的种子定，读档后打同一场、开同一个宝物，掉的一模一样。</li>
+<li><strong>玩家反着来</strong>：一件都不换。任务战按「普通装备」调（战斗页第 4 条），不换装也打得过。</li>
+</ul>
+<p><strong>退化打法和对策</strong>：
+- <em>存读档刷掉落</em>：掉落由种子定，读档重打一样，刷不出来。
+- <em>买了再卖刷钱</em>：卖价是买价一半，没得赚。
+- <em>全堆血和护身</em>：练出来的打法，留着。</p>
+<h3>5. 依赖</h3>
+<ul>
+<li>用到：战斗（打赢掉东西；用药）；大地图（宝物放在哪）；任务（任务奖励）；叙事进展（第 4 章给梅林的杖）；成长（「药囊」「钱袋」奖励发的东西）。</li>
+<li>被谁用：战斗（学徒的血、法力上限、星火、护身、凝神；药）；界面（背包、换装、商店、结算框）；存档（背包、身上的装备、银币、商店货架）。</li>
+</ul>
+<h3>6. 可调参数（登记进 content/data/items.json）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>当前值</th>
+<th>范围</th>
+<th>类别</th>
+<th>调它会改变什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>slots</td>
+<td>杖、衣服、护符</td>
+<td>—</td>
+<td>—</td>
+<td>学徒有几个格子</td>
+</tr>
+<tr>
+<td>drops.group</td>
+<td>银币每只 2 × 章；药 0.3；装备 0.25</td>
+<td>—</td>
+<td>曲线</td>
+<td>打一群拿多少</td>
+</tr>
+<tr>
+<td>drops.boss / drops.chest</td>
+<td>装备 1.0，至少精良</td>
+<td>—</td>
+<td>曲线</td>
+<td>首领、宝物多值钱</td>
+</tr>
+<tr>
+<td>loot.rarities</td>
+<td>普通 70 / 精良 25 / 稀有 5；词缀条数和前后权重见公式</td>
+<td>—</td>
+<td>曲线</td>
+<td>多久见一次蓝字、金字</td>
+</tr>
+<tr>
+<td>loot.bases[]</td>
+<td>9 种，见上半页</td>
+<td>—</td>
+<td>曲线</td>
+<td>每格的底子</td>
+</tr>
+<tr>
+<td>loot.affixes[]</td>
+<td>8 组，见上半页</td>
+<td>—</td>
+<td>曲线</td>
+<td>词缀的分量和出现的章</td>
+</tr>
+<tr>
+<td>loot.rare_names</td>
+<td>两张词表</td>
+<td>—</td>
+<td>—</td>
+<td>稀有装备叫什么</td>
+</tr>
+<tr>
+<td>unique.merlin_staff</td>
+<td>法力上限 +2、星火 +1、凝神多回 1</td>
+<td>—</td>
+<td>曲线</td>
+<td>梅林的杖能撑到第几章</td>
+</tr>
+<tr>
+<td>bag_size / potion_cap</td>
+<td>20 / 血药 5、法力药 3</td>
+<td>—</td>
+<td>节奏</td>
+<td>能带多少药进任务战</td>
+</tr>
+<tr>
+<td>potions</td>
+<td>血药 6、大瓶 12、法力药 3</td>
+<td>—</td>
+<td>曲线</td>
+<td>一瓶药顶多少</td>
+</tr>
+<tr>
+<td>shop</td>
+<td>第 2 章起每章一家；药不限量；货架 3 件、每章换货；卖价 50%</td>
+<td>—</td>
+<td>节奏</td>
+<td>银币花在哪</td>
+</tr>
+<tr>
+<td>prices</td>
+<td>见公式</td>
+<td>—</td>
+<td>曲线</td>
+<td>银币够不够</td>
+</tr>
+</tbody>
+</table></div>
+<h3>7. 验收条件（进 TASKS.md）</h3>
+<p>白盒切片只做第 1 章：三种底材、「结实的」「灼热的」「·守夜」三条词缀、普通和精良两档、一处宝物、没有商店。其余在停靠点 C 之前做。</p>
+<p>功能：
+- [ ] <code>--playtest</code> 第 1 章打完「路上的强盗」，打印掉落清单：银币几枚、有没有药、装备的名字、品质、每条词缀。
+- [ ] 换上「灼热的橡木杖」打印「星火 2 → 4」；截图里地图上的学徒手里有杖。
+- [ ] 读档后重打同一场，掉落逐字相同。
+- [ ] 抽 4000 件精良装备，前后都有 / 只有前缀 / 只有后缀约 25 / 25 / 50（<code>random-affix-loot</code> 自带测试）。
+- [ ] 背包满时打印「背包满了，〈名字〉换成 N 银币」。
+- [ ] 商店卖掉一件 30 银币的装备打印 +15；卖梅林的杖打印「这根杖不能卖」。</p>
+<p>体验（白盒和停靠点 C 按这几句问）：
+- [ ] 打完一仗，玩家会看一眼掉了什么，不是直接关掉结算框（CONCEPT 最大风险的否决观察：「打完不看掉了什么」）。
+- [ ] 第一次掉精良时，玩家去背包里换上。</p>
+<p>截图：
+- [ ] 背包一屏看全三个格子和 20 格；三种品质的名字颜色分得清；手机宽度下能点到每一格。</p>
+<h3>8. 需要的素材</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>素材</th>
+<th>用在哪</th>
+<th>必需 / 可降级</th>
+<th>数量、动作或状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>物品图标</td>
+<td>背包、结算框、商店</td>
+<td>必需</td>
+<td>9 种底材、梅林的杖、血药、大瓶血药、法力药、银币</td>
+</tr>
+<tr>
+<td>品质颜色</td>
+<td>名字、图标边框</td>
+<td>必需</td>
+<td>普通、精良、稀有、梅林的杖</td>
+</tr>
+<tr>
+<td>学徒换装图层</td>
+<td>地图和战斗里的学徒</td>
+<td>衣服必需；杖可降级（LPC 里找不到合适的杖就先不画）</td>
+<td>3 种衣服、4 根杖</td>
+</tr>
+<tr>
+<td>背包界面</td>
+<td>菜单</td>
+<td>必需</td>
+<td>1</td>
+</tr>
+<tr>
+<td>商店界面</td>
+<td>第 2 章起</td>
+<td>必需</td>
+<td>1</td>
+</tr>
+<tr>
+<td>结算框</td>
+<td>打赢后</td>
+<td>必需（和战斗页共用）</td>
+<td>1</td>
+</tr>
+</tbody>
+</table></div>
+<h3>改动记录（quick-design）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>日期</th>
+<th>改什么</th>
+<th>从 → 到</th>
+<th>为什么</th>
+<th>怎么验</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-11-06</td>
+<td>新写</td>
+<td>不做装备 → 照《Vampire's Fall 2》打怪随机掉，品质和词缀照暗黑 2</td>
+<td>白盒玩不起来以后，用户把装备定为照《Vampire's Fall 2》</td>
+<td>验收第 1、4 条</td>
+</tr>
+<tr>
+<td>2026-11-06</td>
+<td>梅林的杖</td>
+<td>叙事进展：法力上限 6 → 8 → 一件装备：法力上限 +2、星火 +1、凝神多回 1，不能卖</td>
+<td>有了杖这个格子，梅林留下的杖放进格子里，换不换由玩家</td>
+<td>验收第 6 条</td>
+</tr>
+<tr>
+<td>2026-11-06</td>
+<td>层</td>
+<td>playable → mvp（白盒只做第 1 章那几件）</td>
+<td>5–15 分钟那一层要验证「打完看不看掉了什么」，白盒里得有东西掉</td>
+<td>验收「白盒切片只做第 1 章」那一句</td>
+</tr>
 </tbody>
 </table></div></section>
 <section id="screens" class="doc doc-screens"><h2 class="sec-title">界面清单 · 梅林的学徒（暂定名）</h2>
-<p>第 5 步写出有哪些屏幕、从哪进、怎么跳；布局和样式之后由 ui-layout 按画风文档补（第 7 步之后）。一屏 = 玩家能看到的一个完整画面，或盖在上面的一个面板、一个弹窗。</p>
+<p>第 5 步写出有哪些屏幕、从哪进、怎么跳，第 7 步重做时（2026-11-06）按成长和装备照《Vampire's Fall 2》加了圣龛、战斗结算、挑奖励、技能树、背包、商店；布局和样式之后由 ui-layout 按画风文档补。一屏 = 玩家能看到的一个完整画面，或盖在上面的一个面板、一个弹窗。</p>
 <h3>怎么跳</h3>
 <div class="diagram"><figure class="fig flows">
 <div class="flow-start"><span class="chip">标题</span><span class="arr">→</span><span class="chip">选外观、起名字</span><span class="arr">→</span><span class="chip hub">大地图</span></div>
 <ul class="flowrows">
 <li><span class="trig">走到人跟前</span><span class="chip">对话</span><span class="arr">→</span><span class="chip key">说出口确认</span><span class="note">关键选择时</span></li>
 <li><span class="trig">发光的水面</span><span class="chip">看水面</span></li>
-<li><span class="trig">碰到敌人</span><span class="chip">出战选择</span><span class="note">人多于 2 个时</span><span class="arr">→</span><span class="chip">战斗</span><span class="arr">→</span><span class="chip">再来一次 / 回地图</span><span class="note">输了时</span></li>
+<li><span class="trig">碰到敌人</span><span class="chip">出战选择</span><span class="note">人多于 2 个时</span><span class="arr">→</span><span class="chip">战斗</span><span class="arr">→</span><span class="chip">战斗结算</span><span class="arr">→</span><span class="chip">挑奖励</span><span class="note">升级时</span></li>
+<li><span class="trig">输了或逃跑</span><span class="chip">再来一次 / 回圣龛</span></li>
+<li><span class="trig">面对圣龛</span><span class="chip">圣龛</span><span class="arr">→</span><span class="chip">祈祷</span><span class="chip">传送</span><span class="chip">重新加点</span></li>
+<li><span class="trig">铺子的老板</span><span class="chip">商店</span><span class="note">第 2 章起</span></li>
 <li><span class="trig">剧情给了能力</span><span class="chip">新能力提示</span></li>
-<li><span class="trig">按菜单键</span><span class="chip">菜单</span><span class="arr">→</span><span class="chip">预言簿</span><span class="chip">同伴面板</span><span class="chip">任务记录</span><span class="chip">设置</span></li>
+<li><span class="trig">按菜单键</span><span class="chip">菜单</span><span class="arr">→</span><span class="chip">预言簿</span><span class="chip">背包</span><span class="chip">技能树</span><span class="chip">同伴面板</span><span class="chip">任务记录</span><span class="chip">设置</span></li>
 <li><span class="trig">往前走会关支线</span><span class="chip">支线关门提醒</span></li>
 <li><span class="trig">章末</span><span class="chip">章节过渡</span></li>
 <li><span class="trig">第 6 章湖边</span><span class="chip">结局回顾</span><span class="arr">→</span><span class="chip">标题</span></li>
@@ -2688,9 +4261,9 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <tr>
 <td>大地图</td>
 <td>开场、对话 / 战斗 / 菜单结束后</td>
-<td>地图和人物；屏幕上方「下一步：……」；主线标记；人物头上的「…」；发光的水面；手机上的方向键、确认键、菜单键</td>
-<td>去哪、先找谁说话、要不要现在碰那群敌人</td>
-<td>大地图、任务</td>
+<td>地图和人物；屏幕上方「下一步：……」；主线标记；人物头上的「…」；走动的敌人和走近时的名字牌（「狼 ×2」）；圣龛（祈祷过 / 没祈祷过）；宝物（开过 / 没开）；发光的水面；角落里三个人的血；手机上的方向键、确认键、菜单键</td>
+<td>去哪、先找谁说话、打哪群敌人、绕开哪群、什么时候回圣龛</td>
+<td>大地图、任务、战斗</td>
 <td>mvp</td>
 </tr>
 <tr>
@@ -2719,19 +4292,67 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 </tr>
 <tr>
 <td>战斗</td>
-<td>在地图上碰到敌人，或剧情战 / 赢了回大地图</td>
-<td>敌人和他们头上的意图（目标箭头、点数、出手顺序、「？」）；我方每人的血量；学徒的法力；当前选人的行动菜单（法力不够的灰掉）；「结束回合」；学过静水时，多看一回合的预览</td>
-<td>每回合先管哪个威胁：打谁、护谁、打断谁、要不要花法力多看一回合或揭开「？」</td>
-<td>战斗、同伴、叙事进展</td>
+<td>在地图上碰到敌人，或剧情战 / 赢了到战斗结算</td>
+<td>敌人和他们头上的意图（目标箭头、点数、出手顺序、「？」）；我方每人的血、格挡和状态（力量、虚弱、易伤）；学徒的法力；当前选人的行动菜单（法力不够的灰掉；用药一项显示还剩几瓶）；三个人都选好就自动开打，不用按「结束回合」；「逃跑」（剧情战灰掉）；学过静水时，多看一回合的预览</td>
+<td>每回合先管哪个威胁：打谁、护谁、打断谁、要不要喝药、要不要花法力多看一回合或揭开「？」；打不过时逃不逃</td>
+<td>战斗、同伴、叙事进展、成长、装备</td>
 <td>mvp</td>
 </tr>
 <tr>
-<td>再来一次 / 回地图</td>
-<td>战斗输了 / 回到这场开头，或回到碰到敌人之前</td>
-<td>一句「你们倒下了」；两个按钮</td>
-<td>原样再打，还是回去换上场的人</td>
-<td>战斗</td>
+<td>战斗结算</td>
+<td>打赢 / 升级时到挑奖励，否则回到大地图</td>
+<td>经验条和这一仗拿了多少；掉落清单（银币、药、装备的名字和品质颜色）；背包满时换成银币的那一行；三个人现在的血</td>
+<td>看掉了什么；要不要马上打开背包换上</td>
+<td>成长、装备</td>
 <td>mvp</td>
+</tr>
+<tr>
+<td>挑奖励</td>
+<td>战斗结算里升了级 / 挑完回到大地图，或去技能树</td>
+<td>「升到 N 级」；三个人回满血；三张奖励卡（名字、一句效果，给同伴的带头像）；「去加点」按钮</td>
+<td>三张里挑哪一张</td>
+<td>成长</td>
+<td>mvp</td>
+</tr>
+<tr>
+<td>再来一次 / 回圣龛</td>
+<td>战斗输了 / 回到这场开头，或回到上次祈祷的圣龛</td>
+<td>一句「你们倒下了」；两个按钮；回圣龛那一个写上圣龛的名字</td>
+<td>原样再打，还是回去补满血、换上场的人</td>
+<td>战斗、大地图</td>
+<td>mvp</td>
+</tr>
+<tr>
+<td>圣龛</td>
+<td>在地图上面对圣龛按确认 / 回到大地图</td>
+<td>圣龛的名字；「祈祷」（三个人回满、存档）；「传到别的圣龛」（这一章祈祷过的列表）；「重新加点」</td>
+<td>补满血，传到哪，要不要换一套点法</td>
+<td>大地图、成长、存档</td>
+<td>mvp（祈祷）/ playable（传送、重新加点）</td>
+</tr>
+<tr>
+<td>技能树</td>
+<td>菜单；挑奖励之后；圣龛的「重新加点」/ 回到来的地方</td>
+<td>四棵树（星火、水面、护身、把戏），每棵 4 格；每格的名字、一句效果、点了几点、要几级；剩几个技能点</td>
+<td>点数加在哪</td>
+<td>成长</td>
+<td>mvp</td>
+</tr>
+<tr>
+<td>背包</td>
+<td>菜单；战斗结算 / 回到来的地方</td>
+<td>学徒的三个格子（杖、衣服、护符）和身上的数（血、法力上限、星火、护身）；20 格背包；选中一件时和身上那件并排比，数变多少标出来</td>
+<td>换不换、扔不扔</td>
+<td>装备</td>
+<td>mvp（白盒只有第 1 章那几件）</td>
+</tr>
+<tr>
+<td>商店</td>
+<td>和铺子的老板说话 / 回到对话或大地图</td>
+<td>药（不限量）；货架上 3 件装备；你的银币；卖东西的一栏（显示能卖多少）</td>
+<td>买药还是买装备，卖掉哪件</td>
+<td>装备</td>
+<td>playable</td>
 </tr>
 <tr>
 <td>新能力提示</td>
@@ -2744,7 +4365,7 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <tr>
 <td>菜单</td>
 <td>大地图按菜单键 / 回到大地图</td>
-<td>预言簿、同伴、任务记录、设置</td>
+<td>预言簿、背包、技能树、同伴、任务记录、设置；学徒的等级和经验条</td>
 <td>打开哪一个</td>
 <td>界面</td>
 <td>mvp</td>
@@ -2850,7 +4471,7 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <p>这张表一章一行，告诉你每一章发生什么、第一次出现什么、难到什么程度。</p>
 <ul>
 <li><strong>左边两列是故事</strong>：第 3 步填好，第 5 步按剧情谱补全了每章的几件事。</li>
-<li><strong>中间玩法几列</strong>：第 5 步按每章的故事填。</li>
+<li><strong>中间玩法几列</strong>：第 5 步按每章的故事填；第 7 步重做时（2026-11-06）按成长和装备照《Vampire's Fall 2》改了第 1 章，加了「成长和装备」一列。</li>
 <li><strong>「遭遇」一列</strong>：第 10 步写任务时填。</li>
 </ul>
 <div class="table-wrap"><table>
@@ -2864,6 +4485,7 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <th>玩法：新敌人 / 新敌人行为</th>
 <th>玩法：目标难度（1–5）</th>
 <th>玩法：这章战斗里最难的一个取舍</th>
+<th>成长和装备：章末等级（只打必须打的 / 全打）、新底材、新词缀、商店</th>
 <th>遭遇：主要几场战斗</th>
 <th>预计时长</th>
 </tr>
@@ -2873,61 +4495,66 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <td>1</td>
 <td>庄园：凯带你和亚瑟进林子赶狼；你在石圈的积水里第一次看清一整幕将来；梅林告诉你亚瑟是尤瑟王的儿子，要你在他走后看着亚瑟；出发去伦敦的前一晚</td>
 <td>主线：提醒凯：到了伦敦，不管发生什么，别对父亲说谎 / 告诉亚瑟：凯会说剑是他拔的 / 谁都不说</td>
-<td>在地图上走、找人说话；回合制战斗和意图预告（狼群）；打断蓄力（梅林的影子）；看水面、预言簿；关键选择。第 1 章就是整套核心循环，一场只教一样：狼群教看意图，影子教打断，石圈教看水面，马厩教说给谁听</td>
-<td>一开始会：星火、护身、凝神。梅林说出秘密之后教：打断</td>
-<td>狼（咬）、头狼（扑咬）、瘦狼（嚎叫：下回合叫来 2 只狼）；梅林的影子（蓄力：下回合重劈 12 点）</td>
+<td>在地图上走、找人说话；看得见、会追的敌人（林子边的狼）；回合制战斗和意图预告；圣龛祈祷；经验、升级、挑奖励、技能树（打完两场小仗升到 2 级）；掉落和换装（老橡树里的包袱）；血带出战斗、喝药；打断蓄力（梅林的影子）；看水面、预言簿；关键选择。第 1 章就是整套核心循环，一场只教一样：林子边的狼教看意图和碰敌人，路上的强盗教虚弱，升级教加点，包袱教换装，头狼群教「先管哪个」，影子教打断，石圈教看水面，马厩教说给谁听</td>
+<td>一开始会：星火、护身、凝神。梅林说出秘密之后教：打断。技能树第 1 格（星火加热、深水、结实、迷眼）</td>
+<td>狼（咬血最少的人）、灰狼（凯、亚瑟轮着咬）、瘦狼（嚎叫：叫来 1 只狼）、头狼（首领：扑、长嚎给狼群力量 +1、连扑两下）；强盗（撒沙：凯虚弱 2）、弓手（射两下、隔回合躲到树后挡 4）；梅林的影子（蓄力：下回合重劈 12 点）</td>
 <td>1</td>
-<td>狼群第 2 回合：护住要被头狼扑的亚瑟，还是先打倒要嚎叫的瘦狼</td>
+<td>头狼群第 2 回合：先打倒要叫狼的瘦狼，还是趁头狼长嚎全力砍它</td>
 <td>第 10 步填（设计页已定两场：狼群、梅林的影子）</td>
-<td>约 15 分钟</td>
+<td>2 / 3 级；第 1 格底材（橡木杖、粗布斗篷、河石护符），词缀「结实的」「灼热的」「·守夜」；没有商店</td>
+<td>约 20 分钟</td>
 </tr>
 <tr>
 <td>2</td>
 <td>石中剑：伦敦教堂墓地的石中剑没有贵族拔得动；新年比武，凯忘了剑，亚瑟回去取，拔出石中剑；「是我拔的」，你第 1 章看见的那一幕发生；亚瑟加冕，十一王起兵，贝德格兰之战；庆功宴上你在酒杯里看见亚瑟的剑断成两截</td>
 <td>主线：告诉亚瑟：他的剑会在一场决斗里断掉 / 告诉梅林 / 谁都不说</td>
-<td>应验（预言簿多一行「后来」）；回读（有人提起你那晚的话）；群攻（一下打你们所有人）</td>
+<td>应验（预言簿多一行「后来」）；回读（有人提起你那晚的话）；群攻（一下打你们所有人）；商店（伦敦桥头的铺子）；圣龛之间传送</td>
 <td>亚瑟成了王，佩上石中剑：血量和武器变强</td>
 <td>叛军步兵（攻击）、叛军骑兵（蓄力冲锋：下回合打你们全部）、盾兵（轮流防御）</td>
 <td>2</td>
 <td>骑兵蓄力冲锋时：花 3 点法力打断，还是让亚瑟和凯先把他砍倒、自己硬吃步兵一刀</td>
 <td>第 10 步填（设计页已定：贝德格兰之战）</td>
-<td>约 20 分钟</td>
+<td>3 / 4 级；词缀加「深水的」「厚实的」「·静息」；商店：伦敦桥头的铺子</td>
+<td>约 28 分钟</td>
 </tr>
 <tr>
 <td>3</td>
 <td>湖中剑与圆桌：梅林告诉亚瑟，他和摩高斯的孩子将来会毁掉他；亚瑟和佩利诺决斗，剑断，梅林让佩利诺睡着；湖中仙女给亚瑟王者之剑和剑鞘；亚瑟娶王后，圆桌来到卡美洛；你在湖面上看见梅林的灰兜帽夹在海边巨石的石缝里，梅林说要跟妮妙出远门</td>
 <td>主线：告诉梅林你看见了什么 / 告诉亚瑟 / 谁都不说<br>支线「高文与绿衣骑士」：劝他说出来 / 劝他别说，这件事只有你们两个知道</td>
-<td>「撑过几回合」的仗（和佩利诺，剑断后剧情接管）；出战选择（第一次有 3 个同伴可选）；同伴面板变成圆桌；只靠口头指路的支线；看选择才有的能力</td>
+<td>「撑过几回合」的仗（和佩利诺，剑断后剧情接管）；出战选择（第一次有 3 个同伴可选）；同伴面板变成圆桌；只靠口头指路的支线；看选择才有的能力；技能树第 3 格（5 级）</td>
 <td>亚瑟：王者之剑；剑鞘（血不会掉到 1 以下）。高文加入：「正午之力」。D2b：静水（湖边）。D2b 且 D3a：「最后一课」偏转（第 4 章起用）</td>
 <td>佩利诺（首领：轮流攻击和蓄力重劈）；支线路上的野人（成群，两个一起扑同一个人）</td>
 <td>3</td>
 <td>佩利诺蓄力重劈亚瑟：这回合就花 3 点法力打断，还是等它落下时让亚瑟防御、你再给他护身</td>
 <td>第 10 步填（设计页已定：佩利诺；支线：野人）</td>
-<td>约 25 分钟，支线另 8 分钟</td>
+<td>5 / 6 级；第 3 章底材（紫杉杖、羊皮袄、银十字），词缀加「·明眼」「·回春」；商店：卡美洛的军需官</td>
+<td>约 33 分钟，支线另 10 分钟</td>
 </tr>
 <tr>
 <td>4</td>
 <td>梅林离开：梅林被封在康沃尔的巨石下，你接替他；摩根偷走剑鞘扔进湖里；十几年后，兰斯洛特已是最强的骑士，厨房来了个不肯说名字的年轻人；莫德雷德来到宫廷，亚瑟话到嘴边只说了「好好当差」；圆桌宴席上你在酒杯里看见王后和兰斯洛特，门外站着阿格规文和莫德雷德</td>
 <td>主线：告诉兰斯洛特：有一天门外会站着人 / 告诉亚瑟 / 谁都不说<br>支线「厨房里的『美手』」：告诉加雷斯：别在兰斯洛特面前不带剑 / 告诉凯 / 谁都不说</td>
-<td>首领藏招「？」和揭开；失去能力（剑鞘被偷，亚瑟会倒下了）；地图上第一处看得出你选择的地方（湖边芦苇上的灰兜帽，D3c）</td>
-<td>梅林的手杖：法力上限 6 → 8。兰斯洛特加入：「连斩」。D1c：凯「挡在前面」。做了「美手」支线：加雷斯加入，「后发」。揭开</td>
+<td>首领藏招「？」和揭开；失去能力（剑鞘被偷，亚瑟会倒下了）；地图上第一处看得出你选择的地方（湖边芦苇上的灰兜帽，D3c）；梅林的杖放进杖的格子，换不换由你；大瓶血药</td>
+<td>梅林的白蜡木杖：一根杖，法力上限 +2、星火 +1、凝神多回 1。兰斯洛特加入：「连斩」。D1c：凯「挡在前面」。做了「美手」支线：加雷斯加入，「后发」。揭开</td>
 <td>摩根的骑士（召唤增援、轮流防御）；摩根的护卫队长（第一个有「？」的首领）；红骑士（支线首领：越打越强，前 3 回合每回合多 2 点）</td>
 <td>2</td>
 <td>首领头上一个「？」：花 1 点法力揭开再决定，还是攒着法力留给打断</td>
 <td>第 10 步填（设计页已定：追摩根；支线：红骑士）</td>
-<td>约 25 分钟，支线另 10 分钟</td>
+<td>6 / 8 级；梅林的白蜡木杖；词缀加「厚重的」「炽烈的」；大瓶血药</td>
+<td>约 33 分钟，支线另 12 分钟</td>
 </tr>
 <tr>
 <td>5</td>
 <td>圣杯与裂痕：圣杯显现，骑士们出发去找；你和凯、贝狄威尔留守空了一半的卡美洛；阿格规文、莫德雷德揭发兰斯洛特和王后；法场上兰斯洛特劫走王后，误杀加赫里斯；高文发誓复仇，你在圣水盆里看见那条蛇</td>
 <td>主线：告诉亚瑟：谈判的时候会有一条蛇 / 告诉凯（凯已经离开，或者不信你时，改成告诉贝狄威尔） / 谁都不说<br>支线「毒苹果」：告诉高文 / 告诉王后 / 谁都不说<br>支线「阿斯托拉特的伊莲恩」：告诉伊莲恩：他心里的人不是你 / 告诉兰斯洛特 / 谁都不说<br>高文发誓时的附加选项：什么也不说 / 提醒他也失过信（需 S1b）/ 请他先写信（需 S3a）</td>
-<td>同伴离开和离世（法场之后，圆桌上第一次出现空椅子和盖布的椅子）；做过支线才出现的附加选项；地图上两处看得出选择的地方（圆桌大厅、城下河边）</td>
+<td>同伴离开和离世（法场之后，圆桌上第一次出现空椅子和盖布的椅子；离开的人身上的随机奖励跟着没了）；做过支线才出现的附加选项；地图上两处看得出选择的地方（圆桌大厅、城下河边）</td>
 <td>贝狄威尔加入：「包扎」</td>
 <td>强盗（盯人：总扑向血最少的人）；比武骑士（支线：打倒一个，下回合补上一个）</td>
 <td>4</td>
 <td>强盗盯着血最少的人：让贝狄威尔包扎（一场只有两次），还是给那个人护身、让贝狄威尔出手</td>
 <td>第 10 步填（设计页已定：守城；支线：比武）</td>
-<td>约 25 分钟，两条支线另 14 分钟</td>
+<td>7 / 9 级；第 5 章底材（冬青杖、镶边斗篷、鹿角坠）</td>
+<td>约 33 分钟，两条支线另 16 分钟</td>
 </tr>
 <tr>
 <td>6</td>
@@ -2939,11 +4566,12 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <td>5</td>
 <td>卡姆兰：莫德雷德蓄力重击亚瑟和召唤增援在同一回合，只能打断一个</td>
 <td>第 10 步填（设计页已定：欢乐堡、多佛、卡姆兰）</td>
-<td>约 30 分钟</td>
+<td>8 / 10 级；不加新东西；商店：随军商人</td>
+<td>约 36 分钟</td>
 </tr>
 </tbody>
 </table></div>
-<p>全程：主线约 2 小时 20 分钟，四条支线约 30 分钟，合计约 2 小时 50 分钟（GAME_BRIEF 估的 2.5–3 小时以内）。</p>
+<p>全程：主线约 3 小时，四条支线约 38 分钟，合计约 3 小时 40 分钟。比第 5 步多出来的那部分是地图上能绕开的小仗（每章 4–6 群，每群 1–2 分钟），超出 GAME_BRIEF 估的 2.5–3 小时，第 11 步范围复盘定砍不砍。</p>
 <h3>规则（默认做法，可以改）</h3>
 <ul>
 <li>一章最多引入一到两样新东西。新东西先在一场简单的战斗或事件里单独出现，下一场再和旧的混在一起。第 1 章是例外：它要把整套核心循环演一遍，所以按「一场只教一样」排开。</li>
@@ -2951,6 +4579,8 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <li>设计页里的每个机制、新招、敌人类型，都要在这张表里有「第几章第一次出现」。表里没有的，就是还没决定什么时候教给玩家。</li>
 <li>故事列和玩法列对不上时（比如这章故事里没有打仗，玩法列却要教新敌人），回来改其中一边，不要硬塞。</li>
 <li>看选择才有的能力（静水、偏转、凯的「挡在前面」、加雷斯）只让打法更多：每场仗只靠必得的能力也要能赢（战斗页「怎么设计每一场」第 4 条）。</li>
+<li>任务战按「只打必须打的」那一列等级、普通装备来调；地图上的小仗都打了的人会轻松一些。</li>
+<li>每章能绕开的敌人 4–6 群，放在支路、空地、宝物旁边，两次碰上之间走路 1–3 分钟（大地图页）。</li>
 </ul></section>
 </main>
 <footer class="wrap">这一页由项目里的 .md 文件生成；改设计以那些文件为准。</footer>

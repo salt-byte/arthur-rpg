@@ -76,8 +76,8 @@
     {
       "id": "overworld",
       "name": "大地图与探索",
-      "what": "按章节线性开放的区域、碰撞、物件交互、看水面的地点；明雷敌人站在任务路上、不追人、打完不再出现；四处地图看得出玩家的选择（湖边、圆桌大厅、城下河边、卡姆兰营地）",
-      "ref": "照《Vampire's Fall 2》：明雷敌人看得见、靠近会追、逃跑回神龛、祷告回血",
+      "what": "按章节线性开放的区域、碰撞、物件交互、看水面的地点；明雷敌人看得见、自己走动、4 格内会追、可以绕开，打死就没了；圣龛祈祷回满血、互相传送、逃跑回这里；野外宝物；四处地图看得出玩家的选择（湖边、圆桌大厅、城下河边、卡姆兰营地）",
+      "ref": "照《Vampire's Fall 2》：明雷敌人看得见、自己走动；逃跑回上一个圣龛；圣龛祈祷回满血、互相传送；打死的敌人不回来",
       "mechanics": [
         "overworld-grid"
       ],
@@ -93,7 +93,7 @@
     {
       "id": "combat",
       "name": "回合制战斗",
-      "what": "JRPG 式菜单回合制，不讲站位；敌人意图预告；学徒用法术（护身、打断等），同伴攻击、防御、各有一样自己的招；一场 3–5 回合；输了从这场开头重来",
+      "what": "三个人每回合各选一招、选满自动开打，敌人意图预告；学徒用法术，同伴砍、举盾、各有一样自己的招；喝药占一招，随时能逃回圣龛；任务战 3–5 回合，小仗 2–3 回合；血带出战斗",
       "ref": "照《杀戮尖塔》的意图预告：伤害算进虚弱易伤、格挡回合初清零",
       "mechanics": [
         "intent-battle",
@@ -105,7 +105,9 @@
       "tier": "mvp",
       "depends": [
         "companions",
-        "story-unlocks"
+        "story-unlocks",
+        "progression",
+        "items"
       ],
       "skill": "combat-system",
       "design": "design/systems/combat.md"
@@ -113,7 +115,7 @@
     {
       "id": "story-unlocks",
       "name": "叙事进展",
-      "what": "不做经验和等级：剧情事件给新法术、法力上限、新同伴和他们的招；有几样看玩家之前的选择（静水、偏转、凯的「挡在前面」、加雷斯）；也会失去（剑鞘）",
+      "what": "剧情事件给新法术、新同伴和他们的招、梅林的杖；有几样看玩家之前的选择（静水、偏转、凯的「挡在前面」、加雷斯）；也会失去（剑鞘）。经验、技能点、装备另见 progression、items",
       "ref": "自创（剧情给法术和地点）",
       "mechanics": [],
       "verbs": [
@@ -128,9 +130,9 @@
     },
     {
       "id": "progression",
-      "name": "经验和技能点",
-      "what": "打仗拿经验，升级给技能点，加进几棵技能树（2026-11-06 加）",
-      "ref": "照《Vampire's Fall 2》：升级给技能点、加进几棵技能树",
+      "name": "经验、技能点和随机奖励",
+      "what": "打仗拿经验（学徒一人），10 级封顶；升一级给 2 个技能点，加进四棵树；再从三个随机奖励里挑一个，多半给同伴和物资",
+      "ref": "照《Vampire's Fall 2》：升级给几个技能点、四棵技能树、每级随机奖励；曲线照宝可梦「较快」，投点照暗黑 2",
       "mechanics": [
         "xp-progression"
       ],
@@ -139,7 +141,10 @@
         "combat"
       ],
       "skill": "progression-system",
-      "design": null
+      "design": "design/systems/progression.md",
+      "verbs": [
+        "打明雷、升级、换装备"
+      ]
     },
     {
       "id": "ending",
@@ -169,10 +174,12 @@
       "verbs": [],
       "tier": "playable",
       "depends": [
-        "quests",
-        "overworld",
-        "prophecy",
         "companions",
+        "items",
+        "overworld",
+        "progression",
+        "prophecy",
+        "quests",
         "story-unlocks"
       ],
       "skill": "save-load",
@@ -217,18 +224,23 @@
     },
     {
       "id": "items",
-      "name": "道具",
-      "what": "装备槽、稀有度、词缀、掉落（2026-11-06 从 full 提到 playable）",
-      "ref": "照《Vampire's Fall 2》的装备稀有度和词缀",
+      "name": "装备、掉落和商店",
+      "what": "学徒三个装备格（杖、衣服、护符）；普通 / 精良 / 稀有三档和词缀；打怪、首领、宝物、任务掉东西；血药和法力药；第 2 章起每章一家商店。白盒只做第 1 章那几件",
+      "ref": "照《Vampire's Fall 2》的掉落和换装改外观；品质分档和词缀照暗黑 2；卖价照宝可梦",
       "mechanics": [
         "random-affix-loot",
-        "stats-modifiers"
+        "stats-modifiers",
+        "shop-economy"
       ],
-      "verbs": [],
-      "tier": "playable",
-      "depends": [],
+      "verbs": [
+        "打明雷、升级、换装备"
+      ],
+      "tier": "mvp",
+      "depends": [
+        "combat"
+      ],
       "skill": "progression-system",
-      "design": null
+      "design": "design/systems/items.md"
     },
     {
       "id": "npc-life",

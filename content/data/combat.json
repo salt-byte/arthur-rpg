@@ -1,42 +1,65 @@
 {
-  "_说明": "参数登记，来自 design/systems/combat.md 第 6 节；代码只读这里的数，改数先改设计页。",
+  "_说明": "参数登记，来自 design/systems/combat.md 第 6 节；代码只读这里的数，改数先改设计页。规则照《杀戮尖塔》的意图（mechanics-library intent-battle），第 1 章的数来自原型 prototypes/how-to-fight（行动版，2026-11-06 用户试玩后调过）。",
+  "rules": {
+    "weak_mult": 0.75,
+    "vulnerable_mult": 1.5,
+    "min_damage": 0,
+    "execution": "party_first",
+    "party_order": "slot",
+    "party_retarget": "next_enemy",
+    "enemy_retarget": "lowest_hp",
+    "enemy_debuff_grace": true,
+    "_说明": "伤害 = floor((点数 + 力量) × 虚弱 × 易伤)，先扣格挡；格挡在自己回合开始清零；虚弱、易伤每回合减 1 层（各在自己一方出完手时减）。"
+  },
   "party_max_companions": 2,
   "mana_start": 6,
   "mana_max": 6,
   "mana_regen": 1,
-  "focus_bonus": 1,
-  "min_damage": 1,
-  "defend_factor": 0.5,
-  "enemy_cap": 5,
-  "kay_cover_reduce": 2,
-  "target_turns": [
-    3,
-    5
-  ],
+  "mana_regen_from_turn": 2,
+  "guard_block": 3,
+  "enemy_cap": 4,
+  "kay_cover_block": 4,
+  "flee_allowed": true,
+  "summoned_give_rewards": false,
+  "downed_revive_hp": 1,
+  "target_turns": {
+    "quest": [
+      3,
+      5
+    ],
+    "map": [
+      2,
+      3
+    ]
+  },
   "spells": {
     "spark": {
       "name": "星火",
       "mana": 1,
-      "damage": 2
+      "damage": 2,
+      "vulnerable": 1,
+      "target": "enemy"
     },
     "ward": {
       "name": "护身",
       "mana": 2,
-      "absorb": 4,
+      "block": 4,
       "target": "ally_or_self"
     },
     "focus": {
       "name": "凝神",
       "mana": 0,
-      "bonus_regen": 1
+      "restore_mana": 2
     },
     "interrupt": {
       "name": "打断",
       "mana": 3,
       "cancels": [
         "charge",
-        "summon"
-      ]
+        "summon",
+        "buff"
+      ],
+      "target": "enemy"
     },
     "still_water": {
       "name": "静水",
@@ -53,82 +76,98 @@
       "name": "揭开",
       "mana": 1,
       "free_action": true
+    },
+    "use_item": {
+      "name": "用药",
+      "mana": 0,
+      "target": "ally_or_self"
+    }
+  },
+  "companion_actions": {
+    "attack": {
+      "name": "砍",
+      "use_power": true,
+      "target": "enemy"
+    },
+    "guard": {
+      "name": "举盾",
+      "block": 3
+    },
+    "use_item": {
+      "name": "用药",
+      "target": "ally_or_self"
     }
   },
   "apprentice": {
-    "hp": 10,
-    "armor": 0
+    "hp": 14
   },
   "companions": {
     "kay": {
       "name": "凯",
-      "hp": 12,
-      "armor": 0,
-      "weapon": 3,
+      "hp": 16,
+      "power": 3,
       "move": "kay_cover"
     },
     "arthur": {
       "name": "亚瑟",
       "by_chapter": {
         "1": {
-          "hp": 8,
-          "weapon": 2
+          "hp": 13,
+          "power": 2
         },
         "2": {
-          "hp": 12,
-          "weapon": 4
+          "hp": 16,
+          "power": 3
         },
         "3": {
-          "hp": 12,
-          "weapon": 6
+          "hp": 16,
+          "power": 4
         },
         "4": {
-          "hp": 14,
-          "weapon": 6
+          "hp": 18,
+          "power": 4
         }
       },
-      "armor": 0,
       "move": "scabbard"
     },
     "gawain": {
       "name": "高文",
-      "hp": 14,
-      "armor": 0,
-      "weapon": 4,
+      "hp": 18,
+      "power": 3,
       "move": "noon_strength",
-      "noon_bonus": 3,
+      "noon_strength": 3,
       "noon_turns": 3
     },
     "lancelot": {
       "name": "兰斯洛特",
-      "hp": 16,
-      "armor": 0,
-      "weapon": 5,
+      "hp": 20,
+      "power": 4,
       "move": "double_strike",
       "double_strike_damage": 3
     },
     "gareth": {
       "name": "加雷斯",
-      "hp": 12,
-      "armor": 0,
-      "weapon": 4,
+      "hp": 16,
+      "power": 3,
       "move": "riposte",
       "riposte_mult": 2
     },
     "bedivere": {
       "name": "贝狄威尔",
-      "hp": 12,
-      "armor": 0,
-      "weapon": 3,
+      "hp": 16,
+      "power": 3,
       "move": "bandage",
       "bandage_heal": 4,
       "bandage_uses": 2
-    }
+    },
+    "_说明": "第 1 章（凯、亚瑟）是原型调过的数；其他人先按第 1 章的比例定，第 10 步写遭遇时跑模拟再调。"
   },
   "enemies": {
     "wolf": {
       "name": "enemy_wolf",
-      "hp": 4,
+      "hp": 6,
+      "kind": "wolf",
+      "chapter": 1,
       "pattern": [
         {
           "act": "attack",
@@ -138,63 +177,125 @@
         }
       ]
     },
-    "wolf_leader": {
-      "name": "enemy_wolf_leader",
-      "hp": 8,
-      "pattern": [
-        {
-          "act": "attack",
-          "power": 5,
-          "target": "kay",
-          "move": "move_pounce"
-        },
-        {
-          "act": "attack",
-          "power": 5,
-          "target": "arthur",
-          "move": "move_pounce"
-        }
-      ]
-    },
     "wolf_grey": {
       "name": "enemy_wolf_grey",
-      "hp": 4,
+      "hp": 7,
+      "kind": "wolf",
+      "chapter": 1,
       "pattern": [
         {
           "act": "attack",
           "power": 3,
-          "target": "arthur",
+          "target": "kay",
           "move": "move_bite"
         },
         {
           "act": "attack",
           "power": 3,
-          "target": "kay",
+          "target": "arthur",
           "move": "move_bite"
         }
       ]
     },
     "wolf_howler": {
       "name": "enemy_wolf_howler",
-      "hp": 4,
+      "hp": 5,
+      "kind": "wolf",
+      "chapter": 1,
       "pattern": [
         {
           "act": "attack",
-          "power": 3,
+          "power": 2,
           "target": "apprentice",
           "move": "move_bite"
         },
         {
           "act": "summon",
           "what": "wolf",
-          "count": 2,
+          "count": 1,
           "move": "move_howl"
+        }
+      ]
+    },
+    "wolf_leader": {
+      "name": "enemy_wolf_leader",
+      "hp": 18,
+      "kind": "wolf",
+      "chapter": 1,
+      "boss": true,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 4,
+          "target": "arthur",
+          "move": "move_pounce"
+        },
+        {
+          "act": "buff",
+          "strength": 1,
+          "who": "same_kind",
+          "move": "move_long_howl"
+        },
+        {
+          "act": "attack",
+          "power": 3,
+          "hits": 2,
+          "target": "kay",
+          "move": "move_double_pounce"
+        }
+      ]
+    },
+    "bandit": {
+      "name": "enemy_bandit",
+      "hp": 10,
+      "kind": "man",
+      "chapter": 1,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 4,
+          "target": "kay",
+          "move": "move_slash"
+        },
+        {
+          "act": "weak",
+          "stacks": 2,
+          "target": "kay",
+          "move": "move_sand"
+        },
+        {
+          "act": "attack",
+          "power": 5,
+          "target": "lowest_hp",
+          "move": "move_slash"
+        }
+      ]
+    },
+    "archer": {
+      "name": "enemy_archer",
+      "hp": 7,
+      "kind": "man",
+      "chapter": 1,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 2,
+          "hits": 2,
+          "target": "apprentice",
+          "move": "move_shoot"
+        },
+        {
+          "act": "block",
+          "block": 4,
+          "move": "move_hide"
         }
       ]
     },
     "merlin_shadow": {
       "name": "enemy_merlin_shadow",
       "hp": 6,
+      "kind": "shadow",
+      "chapter": 1,
       "pattern": [
         {
           "act": "charge",
@@ -216,11 +317,46 @@
     },
     "_其他": "第 2–6 章的敌人第 10 步写遭遇时补"
   },
-  "_敌人招式说明": "pattern 按回合轮着用（第 1 回合用第 1 条，用完从头再来）。target：某个同伴 id、apprentice（学徒）、lowest_hp（血最少的人）、all（群攻）。charge 是蓄力，then 是下回合放出的招；summon 的 what 是敌人 id。 move 是招式名的文本键（game_text.csv）。",
+  "_敌人招式说明": "pattern 按回合轮着用（第 1 回合用第 1 条，用完从头再来）。act：attack（hits 是几下）、charge（蓄力，then 是下回合放出的招）、summon（what 是敌人 id）、buff（strength 加力量，who: same_kind 同一类都加）、weak（给目标上虚弱）、block（自己加格挡）。target：某个同伴 id、apprentice（学徒）、lowest_hp（血最少的人）、all（群攻）。boss：首领，经验 × 3、必掉装备。move 是招式名的文本键（game_text.csv）。chapter 决定经验和掉落（progression.json、items.json）。",
   "encounters": {
-    "_说明": "一场仗：上场的敌人（按出手顺序）、我方规则、怎么算赢。party.fixed 是剧情规定一定上场的同伴，party.max 是最多带几个（默认 party_max_companions）。win：all_down 敌人全倒；survive 撑过 turns 回合，到了由剧情接管（剧情战）。",
+    "_说明": "一场仗：上场的敌人（按出手顺序）、我方规则、怎么算赢。kind：quest 任务战（地图上站着不动，3–5 回合）；map 地图上能绕开的小仗（会走动、会追，2–3 回合）；story 剧情战（不能逃）。party.fixed 是剧情规定一定上场的同伴，party.max 是最多带几个（默认 party_max_companions）。win：all_down 敌人全倒；survive 撑过 turns 回合，到了由剧情接管。",
+    "forest_wolves": {
+      "name": "enc_forest_wolves",
+      "kind": "map",
+      "enemies": [
+        "wolf",
+        "wolf_grey"
+      ],
+      "party": {
+        "fixed": [
+          "kay",
+          "arthur"
+        ]
+      },
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "road_bandits": {
+      "name": "enc_road_bandits",
+      "kind": "map",
+      "enemies": [
+        "bandit",
+        "archer"
+      ],
+      "party": {
+        "fixed": [
+          "kay",
+          "arthur"
+        ]
+      },
+      "win": {
+        "type": "all_down"
+      }
+    },
     "wolves": {
       "name": "enc_wolves",
+      "kind": "quest",
       "enemies": [
         "wolf_leader",
         "wolf_grey",
@@ -238,6 +374,8 @@
     },
     "merlin_shadow": {
       "name": "enc_merlin_shadow",
+      "kind": "story",
+      "flee": false,
       "enemies": [
         "merlin_shadow"
       ],
@@ -257,7 +395,9 @@
       "win": {
         "type": "survive",
         "turns": 3
-      }
+      },
+      "kind": "story",
+      "flee": false
     },
     "morgan_chase": {
       "_待写": "第 10 步写遭遇时补"
@@ -273,7 +413,9 @@
       "win": {
         "type": "survive",
         "turns": 4
-      }
+      },
+      "kind": "story",
+      "flee": false
     },
     "camlann": {
       "_待写": "第 10 步写遭遇时补"

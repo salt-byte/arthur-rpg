@@ -101,7 +101,7 @@ npc_merlin,梅林
 npc_miller,磨坊主
 bark_miller_1,两只羊，一只都没剩下。
 bark_miller_2,狼是从北边林子下来的。
-enemy_wolf,灰狼
+enemy_wolf,狼
 enemy_wolf_leader,头狼
 enemy_wolf_grey,灰狼
 enemy_wolf_howler,瘦狼
@@ -117,8 +117,8 @@ unlock_u_still_water_origin,你把酒杯里的事告诉了梅林，他开始正�
 unlock_u_deflect_name,偏转
 unlock_u_deflect_effect,让一个敌人打向你们的一下，打到另一个敌人身上。
 unlock_u_deflect_origin,梅林临走前的最后一课。
-unlock_u_staff_name,梅林的手杖
-unlock_u_staff_effect,法力上限 6 → 8。
+unlock_u_staff_name,梅林的白蜡木杖
+unlock_u_staff_effect,一根杖：法力上限 +2，星火 +1，凝神多回 1。
 unlock_u_staff_origin,梅林走了，他的白蜡木杖留在你手里。
 unlock_u_scabbard_lost_name,失去：剑鞘
 unlock_u_scabbard_lost_effect,亚瑟的血会掉到 0 了。
@@ -231,3 +231,10 @@ ui_phase_ally_hint,你们按 ①②③ 的顺序出手。
 ui_phase_enemy_hint,敌人按牌子上的顺序出手。
 ui_next_hit,下回合 {who} {n}
 st_down,倒下
+enemy_bandit,强盗
+enemy_archer,弓手
+enc_forest_wolves,林子边的狼
+enc_road_bandits,路上的强盗
+shrine_forest,林边石龛
+shrine_manor,庄园小礼拜堂
+shrine_stone_circle,石圈边的石十字

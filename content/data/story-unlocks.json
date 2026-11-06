@@ -1,11 +1,10 @@
 {
-  "_说明": "参数登记，来自 design/systems/story-unlocks.md 第 6 节；代码只读这里的数，改数先改设计页。 节点用剧情谱 outline.json 的数字编号。",
+  "_说明": "参数登记，来自 design/systems/story-unlocks.md 第 6 节；代码只读这里的数，改数先改设计页。 节点用剧情谱 outline.json 的数字编号。 2026-11-06：梅林的杖从「法力上限 8」改成一件装备（kind: item，数在 items.json 的 unique.merlin_staff）。",
   "starting_spells": [
     "spark",
     "ward",
     "focus"
   ],
-  "mana_max_after_staff": 8,
   "show_unlock_popup": true,
   "unlocks": [
     {
@@ -87,8 +86,8 @@
     },
     {
       "id": "u_staff",
-      "kind": "stat",
-      "what": "mana_max_after_staff",
+      "kind": "item",
+      "what": "merlin_staff",
       "at": "1401",
       "requires": [],
       "popup": {

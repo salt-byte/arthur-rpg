@@ -1,6 +1,29 @@
 {
-  "_说明": "敌人刷新点（game-data-schema 格式）。本作敌人站在任务路上、不游荡、不追人（overworld.md），所以 zones 留空。enemy 一栏填遭遇 id（combat.json 的 encounters），不是单个敌人。condition 为真时出现；on_defeat 是打赢后运行的对话节点。现在只有第 1 章，其余第 10 步补。",
-  "zones": {},
+  "_说明": "敌人放在哪（game-data-schema 格式）。2026-11-06 起照《Vampire's Fall 2》：zones 是能绕开的敌人在哪块地方转（会走动、4 格内会追）；spawns 是任务敌人，站着不动（stay: true）。enemy 一栏填遭遇 id（combat.json 的 encounters），不是单个敌人。condition 为真时出现；on_defeat 是打赢后运行的对话节点。打死的都不回来。现在只有第 1 章，其余第 10 步补。",
+  "zones": {
+    "forest_east": {
+      "area": "forest",
+      "rect": null,
+      "groups": [
+        {
+          "enemy": "forest_wolves",
+          "count": 1
+        }
+      ],
+      "_说明": "小路右边的蕨丛"
+    },
+    "forest_road": {
+      "area": "forest",
+      "rect": null,
+      "groups": [
+        {
+          "enemy": "road_bandits",
+          "count": 1
+        }
+      ],
+      "_说明": "路中间横着死羊，弓手蹲在树后"
+    }
+  },
   "spawns": [
     {
       "id": "ch1_wolves",
@@ -10,6 +33,7 @@
         19,
         12
       ],
+      "stay": true,
       "condition": "quest_part(1001) == 1101",
       "on_defeat": "Ch1_WolvesDone"
     }

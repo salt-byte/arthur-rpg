@@ -1,9 +1,25 @@
 {
-  "_说明": "参数登记，来自 design/systems/overworld.md 第 6 节；代码只读这里的数，改数先改设计页。 areas 列出每章的地方（名字是文本键）；大小、出口第 9 步做地图时补。",
+  "_说明": "参数登记，来自 design/systems/overworld.md 第 6 节；代码只读这里的数，改数先改设计页。参数名照 mechanics-library overworld-grid。 areas 列出每章的地方（名字是文本键）；大小、出口第 9 步做地图时补。shrines、chests 先写第 1 章，其余第 10 步补。",
   "tile_px": 32,
   "move_speed_tiles": 4,
-  "enemies_chase": false,
-  "enemy_respawn": false,
+  "contact": "adjacent",
+  "contact_diagonal": false,
+  "chase_radius": 4,
+  "chase_chance": 0.65,
+  "_chase_说明": "追人距离和概率照 graveholme 实例，原作未核实",
+  "idle": "wander",
+  "wander_radius": 3,
+  "enemy_move_every": 1,
+  "respawn": false,
+  "shrine_respawn": false,
+  "_respawn_说明": "打死的敌人不回来，祈祷也不会让它回来（用户玩过原作确认，2026-11-06）",
+  "flee_to_shrine": true,
+  "flee_grace_steps": 3,
+  "first_shrine_auto": true,
+  "shrine_heals": true,
+  "shrine_saves": true,
+  "shrine_respec": true,
+  "shrine_travel": "same_chapter",
   "areas": [
     {
       "id": "manor",
@@ -109,6 +125,37 @@
       "id": "lake_last",
       "chapter": 6,
       "name": "area_lake_last"
+    }
+  ],
+  "shrines": [
+    {
+      "id": "manor_chapel",
+      "area": "manor",
+      "cell": null,
+      "name": "shrine_manor",
+      "first_of_chapter": true
+    },
+    {
+      "id": "forest_shrine",
+      "area": "forest",
+      "cell": null,
+      "name": "shrine_forest",
+      "_说明": "放在头狼群前，走路 30 秒内"
+    },
+    {
+      "id": "stone_circle_cross",
+      "area": "stone_circle",
+      "cell": null,
+      "name": "shrine_stone_circle"
+    }
+  ],
+  "chests": [
+    {
+      "id": "forest_oak",
+      "area": "forest",
+      "cell": null,
+      "drop": "chest",
+      "_说明": "空心老橡树里的包袱"
     }
   ],
   "water_spots": [
