@@ -1,6 +1,6 @@
 # GDD · 梅林的学徒（暂定名）
 
-更新于 2026-11-05。这是整个设计的入口：上半页一页看懂这个游戏，下半页是所有设计文档的目录。任何一份文档改了，回来更新目录里那一行。
+更新于 2026-11-06。这是整个设计的入口：上半页一页看懂这个游戏，下半页是所有设计文档的目录。任何一份文档改了，回来更新目录里那一行。
 
 ## 一页看懂
 
@@ -73,5 +73,7 @@ flowchart TD
 | design/design_overview.html | 「设计总览」页面：上面几份设计文档合成的一页 | game-design | 2026-11-05 | 跟着各 .md 重新生成 | 「设计总览」页面；[GitHub](https://github.com/salt-byte/arthur-rpg/blob/main/design/design_overview.html) |
 | content/README.md | 内容数据格式：变量、指令、任务表、遭遇表 | game-data-schema | 2026-11-05 | 草稿（第 6 步） | [GitHub](https://github.com/salt-byte/arthur-rpg/blob/main/content/README.md) |
 | project.godot、scripts/ | Godot 4.3 工程骨架：读数据、跑对白、存读档 | godot-project-structure | 2026-11-05 | 第 1 章样例三条路线跑通 | [GitHub](https://github.com/salt-byte/arthur-rpg/tree/main/scripts) |
-| design/ART_DIRECTION.md | 画风 | art-direction | — | 未开始（第 7 步） | — |
+| design/ART_DIRECTION.md | 画风：视觉原则、怎么一眼认出、颜色随章节褪色、界面风格、两张目标图 | art-direction → ui-layout | 2026-11-06 | 待你确认（B） | 「梅林的学徒画风」页面（claude.ai/artifact/Fh2FBAffejyrP7fRG3eHpb，tools/render_art.py 生成 design/art_direction.html）；[GitHub](https://github.com/salt-byte/arthur-rpg/blob/main/design/ART_DIRECTION.md)；项目 |
+| design/targets/ | 目标图：庆功宴的酒杯、教堂里凯改口 | art-direction | 2026-11-06 | 待你确认（B） | [GitHub](https://github.com/salt-byte/arthur-rpg/tree/main/design/targets) |
+| CREDITS.md | 用到的美术和字体署名 | asset-sourcing | 2026-11-06 | 每加一个素材加一行 | [GitHub](https://github.com/salt-byte/arthur-rpg/blob/main/CREDITS.md) |
 | design/_draft_v1/ | 换流程之前的旧草稿 | — | 2026-11-05 | 只作参考，不再更新 | [GitHub](https://github.com/salt-byte/arthur-rpg/tree/main/design/_draft_v1)；项目 |

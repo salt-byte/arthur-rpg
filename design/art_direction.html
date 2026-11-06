@@ -1,0 +1,349 @@
+<title>梅林的学徒画风</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;900&family=Silkscreen&display=swap">
+<style>
+/* 版式：游戏自己的界面契约当页面皮肤，深蓝底、金色像素边、奶油色字；单栏阅读，目标图压在关键时刻下面 */
+:root {
+  --navy: #181E34;      /* 游戏面板底色 */
+  --navy-2: #222A46;
+  --ink: #0B0E1A;       /* 像素描边的墨黑 */
+  --gold: #C9A24A;      /* 边框、强调 */
+  --cream: #F3EAD8;     /* 正文 */
+  --cream-dim: #B9B2A3;
+  --drop: #7EC4EC;      /* 水滴蓝：只给看水面 */
+  --f-display: "Noto Serif SC", "Songti SC", "STSong", serif;
+  --f-body: -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --f-pixel: "Silkscreen", ui-monospace, monospace;
+  color-scheme: dark;
+}
+body { background: var(--navy); color: var(--cream); font: 16px/1.75 var(--f-body); }
+.wrap { max-width: 860px; margin: 0 auto; padding-block: 40px 72px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header { display: grid; gap: 14px; margin-bottom: 28px; }
+.eyebrow { font: 12px/1 var(--f-pixel); letter-spacing: .14em; color: var(--gold); text-transform: uppercase; }
+h1 { font: 900 clamp(30px, 6vw, 46px)/1.15 var(--f-display); margin: 0; text-wrap: balance; }
+.hero { margin: 0; }
+.frame { border: 4px solid var(--ink); outline: 4px solid var(--gold); outline-offset: 0; box-shadow: 0 0 0 8px var(--ink); margin: 12px; }
+.frame img { display: block; width: 100%; height: auto; image-rendering: pixelated; }
+figcaption { font-size: 13px; color: var(--cream-dim); margin-top: 18px; }
+h2 { font: 600 24px/1.3 var(--f-display); color: var(--gold); margin: 48px 0 12px; padding-bottom: 8px;
+  border-bottom: 4px solid var(--ink); box-shadow: 0 4px 0 var(--navy-2); text-wrap: balance; }
+h3 { font: 600 19px/1.4 var(--f-display); margin: 32px 0 8px; text-wrap: balance; }
+p, li { max-width: 68ch; }
+strong { color: var(--gold); font-weight: 600; }
+code { font-family: ui-monospace, monospace; font-size: .9em; background: var(--navy-2); padding: 1px 6px; }
+ul { padding-left: 1.2em; display: grid; gap: 6px; }
+.tablewrap { overflow-x: auto; margin: 14px 0; border: 4px solid var(--ink); background: var(--navy-2); }
+table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 14.5px; }
+th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 2px solid var(--navy); }
+th { font-weight: 600; color: var(--gold); background: var(--ink); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.chip { display: inline-block; width: 14px; height: 14px; background: var(--c); border: 2px solid var(--ink);
+  outline: 1px solid var(--cream-dim); vertical-align: -2px; margin-right: 6px; }
+.shot { margin: 18px 0 8px; }
+.shot .frame img { image-rendering: pixelated; }
+.ask { margin-top: 56px; padding: 20px 22px; background: var(--ink); border-left: 4px solid var(--drop); display: grid; gap: 8px; }
+.ask h2 { margin: 0; border: 0; box-shadow: none; padding: 0; color: var(--drop); font-size: 20px; }
+.ask p { margin: 0; color: var(--cream); }
+a { color: var(--drop); }
+a:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+</style>
+<div class="wrap">
+<header>
+  <div class="eyebrow">Art direction · step 7 / 18</div>
+  <h1>梅林的学徒（暂定名） · 画风</h1>
+</header>
+<figure class="hero"><div class="frame"><img src="targets/01_feast_cup.png" alt="目标图一：庆功宴的酒杯，酒面里亚瑟的剑断成两截，对话框里三个关键选择" width="1280" height="720"></div>
+<figcaption>目标图一 · 第 2 章庆功宴：低头看酒杯，酒面里亚瑟的剑砍在铁盾上断成两截。用 LPC 开源素材和 Fusion Pixel 字体拼出来的，不是游戏截图。</figcaption></figure>
+<p>上游：GAME_BRIEF（美术路线：LPC 开源像素素材，2026-11-06 用户确认「先走像素」；成色：可玩原型）· design/CONCEPT.md（招牌画面、最大风险）</p>
+<p>参考作品只借构图、材质、色光、信息原则，不复制角色、地图、界面、资产。</p>
+<p>定调题（2026-11-06）：用户说「先走像素，继续」，没有逐题选，按推荐项定：视觉基调 = 随章节褪色的像素；最先看清 = 战斗里的敌人意图。想改随时说。</p>
+<h2>1. 视觉原则（每条能判对错）</h2>
+<ul>
+<li><strong>颜色跟着这一生走。</strong> 第 1–3 章亮、暖、饱和；第 4 章梅林走后一章比一章冷、灰；第 6 章卡姆兰最暗。一张图里出现比这一章更亮、更暖的颜色，就是错的。看水面的画面例外。</li>
+<li><strong>全游戏最亮的是水面里的将来。</strong> 金白色的光，水纹一圈圈往外走。地图上会发光的只有能看将来的水面，火把、窗户、法术都不许比它亮。</li>
+<li><strong>人靠衣服颜色认。</strong> 每个同伴一种固定的衣色，从第 1 章穿到最后，两个同伴不撞色。灰兜帽只给梅林。</li>
+</ul>
+<h2>2. 语法：一眼认出</h2>
+<p>屏幕上人物放大 2 倍：LPC 一帧 64 像素，在 1280×720 的画面里是 128 像素高，大约 6 格宽的视野里站得下三四个人。</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>对象</th>
+<th>轮廓 / 尺度</th>
+<th>密度</th>
+<th>怎么和别的区分</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>玩家（学徒）</td>
+<td>一格人物，外观开场自选</td>
+<td>屏幕中间，周围留两格空地</td>
+<td>不戴兜帽；腰上挂一只浅木碗（素材里没有，先不画，见第 6 节）</td>
+</tr>
+<tr>
+<td>同伴</td>
+<td>和玩家同尺寸，跟在身后</td>
+<td>最多两人跟着</td>
+<td>固定衣色：凯深红、亚瑟紫（第 2 章起是王）、高文金黄、兰斯洛特银白盔甲、加雷斯土黄、贝狄威尔棕色皮甲；梅林灰兜帽、白发</td>
+</tr>
+<tr>
+<td>路人</td>
+<td>同尺寸</td>
+<td>一片地方不超过五六个</td>
+<td>只穿灰、棕、米这些土色，不用同伴的颜色</td>
+</tr>
+<tr>
+<td>地图上的敌人</td>
+<td>同尺寸，原地站着</td>
+<td>一群二到四个，挤在路上</td>
+<td>脚下暗红色的圈，头顶交叉的两把剑和名字（不只靠颜色）</td>
+</tr>
+<tr>
+<td>战斗里的敌人意图</td>
+<td>每个敌人头顶一块牌</td>
+<td>牌比血条大，压在所有东西上面</td>
+<td>招式图标、指向目标的箭头、点数、角上的出手顺序数字（见第 4 节）</td>
+</tr>
+<tr>
+<td>能看将来的水面</td>
+<td>一小片水，一到两格</td>
+<td>一片地方最多一处</td>
+<td>金白色的光点慢慢闪，水纹一圈圈扩开；不能看时就是普通的水</td>
+</tr>
+<tr>
+<td>有话要说的人</td>
+<td>头顶「…」气泡</td>
+<td>—</td>
+<td>气泡是白底黑字，和敌人的双剑标记形状完全不同</td>
+</tr>
+<tr>
+<td>关键选择</td>
+<td>选项前一个水滴</td>
+<td>一次三个选项</td>
+<td>水滴图标 + 确认框；普通选项没有图标</td>
+</tr>
+</tbody>
+</table></div>
+<h2>3. 颜色和光编码状态</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>状态</th>
+<th>色调 / 光</th>
+<th>不依赖颜色的提示</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第 1 章 庄园</td>
+<td>冬天的白和蓝，屋里是暖黄的灯</td>
+<td>雪、炉火</td>
+</tr>
+<tr>
+<td>第 2 章 石中剑</td>
+<td>伦敦的金和红，加冕的旗子</td>
+<td>旗帜、人多</td>
+</tr>
+<tr>
+<td>第 3 章 湖中剑与圆桌</td>
+<td>湖的蓝绿，婚礼的白和金；本章最饱满</td>
+<td>湖、圆桌</td>
+</tr>
+<tr>
+<td>第 4 章 梅林离开</td>
+<td>饱和度降 15%，偏冷</td>
+<td>梅林住过的屋子空了，桌上积灰，白蜡木杖留给了你</td>
+</tr>
+<tr>
+<td>第 5 章 圣杯与裂痕</td>
+<td>降 30%，偏青灰</td>
+<td>城里人少一半，空椅子</td>
+</tr>
+<tr>
+<td>第 6 章 最后一战</td>
+<td>降 50%，傍晚的暗红和灰；卡姆兰最暗</td>
+<td>营火、旗子破了</td>
+</tr>
+<tr>
+<td>看水面</td>
+<td>全游戏最亮，金白光，四周压暗</td>
+<td>圆形画框、杯沿或水边一圈、画面静止不动</td>
+</tr>
+<tr>
+<td>战斗里快倒下的人</td>
+<td>血条变红</td>
+<td>血条下面写数字；意图箭头指向他时箭头加粗</td>
+</tr>
+<tr>
+<td>离开、离世的人</td>
+<td>圆桌上他的椅子变灰</td>
+<td>空椅子留着他的东西；离世的椅子盖着布</td>
+</tr>
+</tbody>
+</table></div>
+<h2>4. HUD 信息层级</h2>
+<ul>
+<li><strong>常驻（地图）</strong>：左上「下一步：……」一行；右上菜单键。手机上左下方向键，右下确认键。</li>
+<li><strong>常驻（战斗）</strong>：敌人头顶的意图牌，在最上层；我方每人一条血条和数字；学徒的法力是一排水滴；「结束回合」按钮在右下。</li>
+<li><strong>按需</strong>：预言簿、同伴面板（第 3 章起是圆桌）、任务记录、设置，从菜单打开。</li>
+<li><strong>瞬时</strong>：伤害数字、新能力提示、预言簿多了一行「后来」的提示条（右上，停 4 秒）、自动存档的小图标。</li>
+</ul>
+<h3>界面风格契约（ui-layout 照这张做，所有屏一样）</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>项</th>
+<th>做法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>底色</td>
+<td>深蓝 <span class="chip" style="--c:#181E34"></span>#181E34，九成不透明</td>
+</tr>
+<tr>
+<td>边框</td>
+<td>像素描边：外圈 4 像素墨黑，内圈 4 像素金 <span class="chip" style="--c:#C9A24A"></span>#C9A24A；直角，不用圆角</td>
+</tr>
+<tr>
+<td>强调色</td>
+<td>金 <span class="chip" style="--c:#C9A24A"></span>#C9A24A（选中、按钮）；水滴蓝 <span class="chip" style="--c:#7EC4EC"></span>#7EC4EC 只给看水面、预言簿和关键选择</td>
+</tr>
+<tr>
+<td>名字牌</td>
+<td>说话人名字放在对话框左上一块小牌上，底色用这个人的衣色</td>
+</tr>
+<tr>
+<td>字体</td>
+<td>Fusion Pixel 12 像素简体（OFL），放大到 24 像素用，不开抗锯齿；正文 24，小字 12</td>
+</tr>
+<tr>
+<td>图标</td>
+<td>像素画，16×16 放大 2 倍；能用图标就不写字（意图、行动、水滴）</td>
+</tr>
+<tr>
+<td>动效</td>
+<td>对话打字机，点一下出全句；提示条从右边滑进来；不做弹跳和缩放</td>
+</tr>
+</tbody>
+</table></div>
+<p>没有指定玩法参考（GAME_BRIEF「玩法参考」写的是「不指定」），所以 ui-layout 的「观察原作」这一轮跳过。借的只有信息原则：敌人意图写在头顶（《杀戮尖塔》），选择之后提示「有人记住了」（Telltale《行尸走肉》），用我们自己的样子画。</p>
+<h2>5. 关键游戏时刻（目标图就拼这两幕）</h2>
+<h3>时刻一：庆功宴的酒杯（第 2 章 1205，招牌画面）</h3>
+<p>长桌两头的烛台把大厅烤得发烫，凯在讲比武场上的事，讲到一半自己先笑了。你低头。酒面晃了一下，停住，变成一片金白的光：林子边的空地上，亚瑟的剑砍在一面铁盾上，断成两截，前半截打着转飞出去。你抬头。亚瑟隔着桌子朝你举杯，杯沿上沾着一点酒沫。</p>
+<ul>
+<li>玩家在做什么：决定把这一幕说给谁听，三个带水滴的选项。</li>
+<li>焦点：右边那一圈酒面，占屏幕三分之一，是整张图最亮的地方，大厅其余部分压暗。</li>
+<li>压力：画面里的人就坐在对面，满屋子的人在笑。</li>
+<li>前一帧：大厅全景，人声，烛火。后一帧：选完，酒面变回暗红色的酒，亚瑟喝了一口。</li>
+</ul>
+<h3>时刻二：教堂里凯改了口（第 2 章 1203，第 1 章选「提醒凯」的应验）</h3>
+<figure class="shot"><div class="frame"><img src="targets/02_church_kay.png" alt="目标图二：教堂里凯改了口" width="1280" height="720"></div><figcaption>目标图二：教堂里凯改了口</figcaption></figure>
+<p>教堂的石地凉，凉气透过鞋底往上爬。凯双手平端着那把剑，剑刃上还沾着石屑。他对埃克托开口：「父亲，这把剑……」他看见你站在柱子边上，停住了。烛火在剑身上跳。「……是亚瑟拔出来的。」</p>
+<ul>
+<li>玩家在做什么：看着自己第 1 章那句话应验。</li>
+<li>焦点：凯和他手里的剑；右上角滑进来一条「预言簿 · 后来：凯在教堂里改了口」。</li>
+<li>压力：这一幕直接回答最大风险「反正改不了，选什么都一样」。选了别的，这里的台词和站位都不一样。</li>
+<li>前一帧：和第 1 章石圈里看见的那一幕同一个构图（剑、凯、埃克托），只有你站在旁边这一点不同。后一帧：埃克托松开了眉头，把剑接过去。</li>
+</ul>
+<h2>6. 必需 vs 可降级</h2>
+<p>由各设计页「需要的素材」和 design/ui/SCREENS.md 汇总。</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>资产</th>
+<th>必需 / 可降级</th>
+<th>没有时怎么办</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>人物行走图：学徒（可换装）、6 个同伴、梅林、埃克托、王后、莫德雷德、摩根、妮妙、佩利诺、路人</td>
+<td>必需</td>
+<td>LPC 纸娃娃拼；王冠、长裙从 LPC 人物生成器仓库补</td>
+</tr>
+<tr>
+<td>战斗动作：出手、挨打、倒下</td>
+<td>必需</td>
+<td>LPC 自带 slash / hurt</td>
+</tr>
+<tr>
+<td>狼、头狼</td>
+<td>必需（第 1 章就要）</td>
+<td>LPC 四足狼在 OpenGameArt，这里的网络连不上；请用户下载，或第 1 章改成别的野兽</td>
+</tr>
+<tr>
+<td>意图图标、行动图标、水滴、双剑标记、「…」气泡</td>
+<td>必需</td>
+<td>自己画 16×16 像素图标</td>
+</tr>
+<tr>
+<td>对话框、名字牌、选项、确认框、提示条</td>
+<td>必需</td>
+<td>照第 4 节风格契约用代码画</td>
+</tr>
+<tr>
+<td>地图图块：庄园和雪地、森林、石圈、伦敦、卡美洛城内城外、湖和泉、海边、营地</td>
+<td>必需</td>
+<td>LPC 图块；雪地要从 LPC 地形里挑或调色</td>
+</tr>
+<tr>
+<td>中文字体</td>
+<td>必需</td>
+<td>Fusion Pixel 12px（OFL），只截游戏用到的字</td>
+</tr>
+<tr>
+<td>看水面的画面（9 幕）</td>
+<td>必需，可降级</td>
+<td>先用地图上的人物拼成小画面，放进圆形水面框（目标图一就是这样做的）</td>
+</tr>
+<tr>
+<td>预言簿、圆桌面板</td>
+<td>必需</td>
+<td>代码画框，人物头像从纸娃娃截</td>
+</tr>
+<tr>
+<td>战斗背景</td>
+<td>可降级</td>
+<td>同一章共用一张</td>
+</tr>
+<tr>
+<td>出手特效</td>
+<td>可降级</td>
+<td>先用闪白</td>
+</tr>
+<tr>
+<td>浅木碗、白蜡木杖、剑鞘、王者之剑</td>
+<td>可降级</td>
+<td>在提示框里写字，不画</td>
+</tr>
+<tr>
+<td>梅林的胡子、王冠</td>
+<td>可降级</td>
+<td>先不画，用衣色和兜帽认人</td>
+</tr>
+<tr>
+<td>椅子上留下的东西（钥匙、披风）</td>
+<td>可降级</td>
+<td>文字</td>
+</tr>
+</tbody>
+</table></div>
+<h2>7. 目标图</h2>
+<ul>
+<li><code>design/targets/01_feast_cup.png</code>：庆功宴的酒杯，1280×720，含对话框和三个关键选择。</li>
+<li><code>design/targets/02_church_kay.png</code>：教堂里凯改口，1280×720，含「下一步」、预言簿提示条、对话框。</li>
+<li>生成脚本：<code>tools/make_targets.py</code>（拼图块和人物、按章调色、画界面）。</li>
+</ul>
+<p>用了哪些素材、许可、来源（进 CREDITS.md）：
+- LPC 人物图层（身体、头、眼睛、头发、衣服、裤子、鞋、斗篷、兜帽、板甲、头盔、皮甲）和 LPC 室内图块，取自 salt-byte/graveholme 仓库 source/assets，许可 CC-BY-SA 3.0 / GPL 3.0 / OGA-BY 3.0，作者名单在那里的 credits/ 目录。
+- Fusion Pixel Font 12px 简体中文，TakWolf，SIL OFL 1.1。</p>
+<section class="ask">
+  <h2>停靠点 B：等你看</h2>
+  <p>画风：可以，按它批量找素材；再贴近某部参考作品；还是换方向？</p>
+  <p>界面：照目标图里的样式继续；还是换方向？</p>
+</section>
+</div>
