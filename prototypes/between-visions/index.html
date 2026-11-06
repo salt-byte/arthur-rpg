@@ -160,9 +160,9 @@ const SOLID = '#T~';
 const NAMES = { ap: '你', kay: '凯', ar: '亚瑟' };
 const ENEMY = {
   wolf:   { name: '狼',   hp: 6,  kind: 'wolf', xp: 10, pattern: [{ t: 'atk', d: 3, to: 'low' }] },
-  grey:   { name: '灰狼', hp: 6,  kind: 'wolf', xp: 10, pattern: [{ t: 'atk', d: 3, to: 'ar' }, { t: 'atk', d: 3, to: 'kay' }] },
+  grey:   { name: '灰狼', hp: 7,  kind: 'wolf', xp: 10, pattern: [{ t: 'atk', d: 3, to: 'kay' }, { t: 'atk', d: 3, to: 'ar' }] },
   howler: { name: '瘦狼', hp: 5,  kind: 'wolf', xp: 12, pattern: [{ t: 'atk', d: 2, to: 'ap' }, { t: 'summon', what: 'wolf' }] },
-  leader: { name: '头狼', hp: 14, kind: 'wolf', xp: 30, pattern: [{ t: 'atk', d: 5, to: 'ar' }, { t: 'buff', str: 2 }, { t: 'atk', d: 4, hits: 2, to: 'kay' }] },
+  leader: { name: '头狼', hp: 18, kind: 'wolf', xp: 30, pattern: [{ t: 'atk', d: 4, to: 'ar' }, { t: 'buff', str: 1 }, { t: 'atk', d: 3, hits: 2, to: 'kay' }] },
   bandit: { name: '强盗', hp: 9,  kind: 'man',  xp: 15, pattern: [{ t: 'atk', d: 4, to: 'kay' }, { t: 'weak', n: 2, to: 'kay' }, { t: 'atk', d: 4, to: 'low' }] },
   archer: { name: '弓手', hp: 6,  kind: 'man',  xp: 15, pattern: [{ t: 'atk', d: 2, hits: 2, to: 'ap' }, { t: 'def', b: 4 }] },
 };
@@ -209,7 +209,7 @@ function fresh() {
   MAP_ROWS.forEach((r, y) => { const x = r.indexOf('P'); if (x >= 0) start = [x, y]; });
   S = {
     pos: start, level: 1, xp: 0, sp: 0, nodes: {}, gear: { kay: null, ar: null, ap: null }, bag: [], uidItem: 0,
-    hp: { ap: 10, kay: 12, ar: 8 }, grace: 0, mode: 'map', path: [],
+    hp: { ap: 14, kay: 16, ar: 13 }, grace: 0, mode: 'map', path: [],
     spots: SPOTS0.map((s, i) => ({ i, enc: s.enc, home: s.cell.slice(), cell: s.cell.slice(), alive: true, elite: !!s.elite, label: s.label, chasing: false })),
     shrine: findTile('S'), lastShrine: findTile('S'),
     m: { start: Date.now(), firstFight: null, active: 0, caught: 0, wins: 0, flees: 0, losses: 0, levels: 0, treeMs: 0, lootMs: 0, equips: 0, prays: 0, steps: 0, eliteWin: false, choice: null, end: null },
@@ -226,7 +226,8 @@ const DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 // ---- 派生数值：界面和战斗都只调这几个函数 ----
 function affixCount(id, k) { const it = S.gear[id]; return it ? it.aff.filter(a => a === k).length : 0; }
 function affixAll(k) { return ['ap', 'kay', 'ar'].reduce((a, id) => a + affixCount(id, k), 0); }
-function maxHp(id) { return { ap: 10, kay: 12, ar: 8 }[id] + 2 * (S.level - 1) + (has('v1') ? 3 : 0) + 3 * affixCount(id, 'tough'); }
+function maxHp(id) { return { ap: 14, kay: 16, ar: 13 }[id] +   // 2026-11-06 和「怎么打」一起调：最后一场「招招致死」
+   2 * (S.level - 1) + (has('v1') ? 3 : 0) + 3 * affixCount(id, 'tough'); }
 function weaponBonus(id) { const it = S.gear[id]; return it ? it.base : 0; }
 function atk(id) { return { kay: 3, ar: 2 }[id] + weaponBonus(id) + affixCount(id, 'sharp'); }
 function sparkDmg() { return 2 + (has('c1') ? 1 : 0) + weaponBonus('ap') + affixCount('ap', 'sharp'); }

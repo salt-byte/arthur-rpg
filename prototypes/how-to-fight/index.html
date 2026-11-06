@@ -109,12 +109,12 @@ details.obs summary { cursor: pointer; }
 // ================= 共用：规则照《杀戮尖塔》 =================
 const RULES = { weak: 0.75, vuln: 1.5 };
 const NAMES = { ap: '你', kay: '凯', ar: '亚瑟' };
-const BASE_HP = { ap: 10, kay: 12, ar: 9 };
+const BASE_HP = { ap: 14, kay: 16, ar: 13 };   // 2026-11-06 用户试玩：最后一场「招招致死」，我方血加厚
 const ENEMY = {
   wolf:   { name: '狼',   hp: 6,  kind: 'wolf', pattern: [{ t: 'atk', d: 3, to: 'low' }] },
-  grey:   { name: '灰狼', hp: 7,  kind: 'wolf', pattern: [{ t: 'atk', d: 3, to: 'ar' }, { t: 'atk', d: 3, to: 'kay' }] },
+  grey:   { name: '灰狼', hp: 7,  kind: 'wolf', pattern: [{ t: 'atk', d: 3, to: 'kay' }, { t: 'atk', d: 3, to: 'ar' }] },
   howler: { name: '瘦狼', hp: 5,  kind: 'wolf', pattern: [{ t: 'atk', d: 2, to: 'ap' }, { t: 'summon', what: 'wolf' }] },
-  leader: { name: '头狼', hp: 16, kind: 'wolf', pattern: [{ t: 'atk', d: 5, to: 'ar' }, { t: 'buff', str: 2 }, { t: 'atk', d: 4, hits: 2, to: 'kay' }] },
+  leader: { name: '头狼', hp: 18, kind: 'wolf', pattern: [{ t: 'atk', d: 4, to: 'ar' }, { t: 'buff', str: 1 }, { t: 'atk', d: 3, hits: 2, to: 'kay' }] },   // 2026-11-06 调：单下不再一口咬死人
   // 卡牌版每回合能挡能打的量和行动版不一样，头狼单独调：两版都调到「只会砍会输、想过再打能赢」（自动测试里试出来的）
   leaderB: { name: '头狼', hp: 16, kind: 'wolf', pattern: [{ t: 'atk', d: 6, to: 'ar' }, { t: 'buff', str: 2 }, { t: 'atk', d: 5, hits: 2, to: 'kay' }] },
   bandit: { name: '强盗', hp: 10, kind: 'man',  pattern: [{ t: 'atk', d: 4, to: 'kay' }, { t: 'weak', n: 2, to: 'kay' }, { t: 'atk', d: 5, to: 'low' }] },
@@ -351,7 +351,7 @@ function previewEnemies(b) { const c = clone(b); resolveEnemies(c, () => {}); re
 // ================= 打赢、输了、奖励 =================
 function win() {
   closeTurnStat(B);
-  G.m.fights.push({ fight: G.fight, turns: B.turn, result: '赢', retry: G.retry || 0 });
+  G.m.fights.push({ fight: G.fight, turns: B.turn, result: '赢', retry: G.retry || 0, hp: B.party.map(p => p.hp).join('/') });
   const last = G.fight === FIGHTS.length - 1; B = null;
   if (last) return finish();
   rewardModal();
@@ -558,7 +558,7 @@ function start() {
   document.querySelectorAll('[data-m]').forEach(el => el.onclick = () => { closeModal(); begin(el.dataset.m); });
 }
 start();
-window.__proto = { get G() { return G; }, get B() { return B; }, begin, clickCard, targetB, chooseA, targetA, endTurnBtn, hit, CARDS, FIGHTS, ENEMY };
+window.__proto = { get G() { return G; }, get B() { return B; }, begin, clickCard, targetB, chooseA, targetA, endTurnBtn, hit, CARDS, FIGHTS, ENEMY, BASE_HP };
 </script>
 </body>
 </html>
