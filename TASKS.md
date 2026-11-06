@@ -5,7 +5,7 @@
 ## 当前状态（每轮结束更新；对话压缩后先读这里）
 - 做到哪：2026-11-06 按插件 0.7.0 迁移成 20 步。玩法参考改成战斗照杀戮尖塔、地图和成长照 Vampire's Fall 2，CONCEPT 已改；第 7 步设计、第 10 步白盒退回
 - 下一步：第 4 步玩法原型（prototypes/between-visions/），用户玩过判结论 → A1 → 第 7 步按新参考改设计页 → 第 10 步重做白盒
-- 项目主页：<第 1 步补发后填链接>
+- 项目主页：https://claude.ai/artifact/7GrrutxtorkDnBVH2DNaTN （每步重跑 render_site.py，更新同一个页面）
 - 仓库：https://github.com/salt-byte/arthur-rpg ，每步交接前提交并推送。旧白盒网页版在 docs/，GitHub Pages 打开后在 https://salt-byte.github.io/arthur-rpg/ 玩
 - 卡在哪：无
 - 最近一次 verify：2026-11-06 整体 PASS（旧白盒，qa/verification.json）；重做白盒后重跑
