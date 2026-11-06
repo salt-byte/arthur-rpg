@@ -130,3 +130,93 @@ chapter_3,湖中剑与圆桌
 chapter_4,梅林离开
 chapter_5,圣杯与裂痕
 chapter_6,最后一战
+after_D1a,凯在教堂里自己改了口，说剑是亚瑟拔的。埃克托没让他起誓。
+after_D1b,凯还是说了剑是他拔的。亚瑟当着父亲说「我知道他会这么说」，凯听见了。
+after_D1c,凯说剑是他拔的。埃克托让他按着经书起誓，他当着神父和贵族认了错。
+book_told_D1a,你提醒了凯：到了伦敦，不管发生什么，别对父亲说谎。
+book_told_D1b,你告诉了亚瑟：凯会说剑是他拔的。
+book_told_D1c,你谁都没说。
+ui_title,梅林的学徒
+ui_subtitle,白盒切片：第 1 章，接第 2 章教堂那一幕
+ui_new_game,新游戏
+ui_continue,继续
+ui_controls,方向键或 WASD 走 · Z、空格或回车 确认 · Esc 打开预言簿
+ui_next,下一步：{t}
+ui_book,预言簿
+ui_book_btn,预言簿（Esc）
+ui_book_empty,还没有看见什么。
+ui_book_page,第 {ch} 章 · {surface}
+ui_book_seen,看见：{t}
+ui_book_told,说给谁：{t}
+ui_book_undecided,还没决定告诉谁。
+ui_book_after,后来：{t}
+ui_book_new,预言簿多了一页：{t}
+ui_book_toast,预言簿 · 第 {ch} 章那一页
+ui_close,按确认或 Esc 合上
+ui_press,按确认继续
+ui_confirm_key,说出口就不能收回。确定吗？
+ui_yes,确定
+ui_no,再想想
+ui_new_ability,新能力
+ui_chapter,第 {n} 章
+ui_saved,已自动存档
+ui_slice_end,白盒切片到这里结束
+ui_slice_d1,出发前一晚，{t}
+ui_restart,重新开始
+ui_turn,第 {n} 回合
+ui_mana,法力 {n}/{max}
+ui_end_turn,结束回合
+ui_clear,清空
+ui_queue_empty,给每个人选一个行动，再点「结束回合」。没选的人这回合不动。
+ui_pick_target,选一个目标（Esc 取消）
+ui_no_mana,法力不够：要 {need} 点，还剩 {left} 点
+ui_no_interrupt,这回合没有敌人在蓄力或召唤
+ui_win,赢了
+ui_lose,你们倒下了
+ui_retry,再来一次
+ui_back_map,回地图
+ui_you,你
+act_attack,攻击
+act_defend,防御
+act_kay_cover,挡在前面
+act_charge,蓄力
+act_summon,召唤
+hint_attack,打一个敌人，{n} 点
+hint_defend,这回合挨的伤害减半
+hint_kay_cover,这回合打向另一个同伴的一下改打凯，凯少挨 {n} 点
+hint_spark,打一个敌人，{n} 点
+hint_ward,一个人这回合挨的伤害少 {n} 点
+hint_focus,不出手，这回合多回 {n} 点法力
+hint_interrupt,让一个敌人的蓄力或召唤作废
+intent_attack,{who} {move} → {target} {n}
+intent_all,{who} {move} → 你们全体 {n}
+intent_charge,{who} 蓄力 → 下回合{move} → {target} {n}
+intent_summon,{who} 召唤 {n}
+intent_defend,{who} 防御
+plate_all,全体
+plate_summon,叫来 {n} 只
+plate_charge,下回合{move} {n}
+ev_hit,{who} {move} → {target}：{n} 点
+ev_ward,（护身挡掉 {n}）
+ev_defend,（防御减半）
+ev_cover,凯挡在{target}前面
+ev_down,{who}倒下了
+ev_void,{who}倒下，{act}作废
+ev_cancel,{who}的{act}被打断，作废
+ev_attack,{who}·攻击 → {target}：{n} 点
+ev_spark,你·星火 → {target}：{n} 点
+ev_defend_act,{who}举起盾，防御
+ev_focus,你凝神，这回合多回 {n} 点法力
+ev_ward_cast,你给{target}施了护身
+ev_charge,{who}在蓄力
+ev_summon,{who}叫来了 {n} 只{what}
+ev_nothing,{who}这回合没动
+ev_mana,法力回到 {n}
+move_bite,咬
+move_pounce,扑咬
+move_howl,嚎叫
+move_charge,蓄力
+move_heavy_slash,重劈
+move_slash,劈
+st_ward,护身 {n}
+st_charging,蓄力中

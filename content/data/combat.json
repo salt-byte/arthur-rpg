@@ -133,7 +133,8 @@
         {
           "act": "attack",
           "power": 3,
-          "target": "lowest_hp"
+          "target": "lowest_hp",
+          "move": "move_bite"
         }
       ]
     },
@@ -144,12 +145,14 @@
         {
           "act": "attack",
           "power": 5,
-          "target": "kay"
+          "target": "kay",
+          "move": "move_pounce"
         },
         {
           "act": "attack",
           "power": 5,
-          "target": "arthur"
+          "target": "arthur",
+          "move": "move_pounce"
         }
       ]
     },
@@ -160,12 +163,14 @@
         {
           "act": "attack",
           "power": 3,
-          "target": "arthur"
+          "target": "arthur",
+          "move": "move_bite"
         },
         {
           "act": "attack",
           "power": 3,
-          "target": "kay"
+          "target": "kay",
+          "move": "move_bite"
         }
       ]
     },
@@ -176,12 +181,14 @@
         {
           "act": "attack",
           "power": 3,
-          "target": "apprentice"
+          "target": "apprentice",
+          "move": "move_bite"
         },
         {
           "act": "summon",
           "what": "wolf",
-          "count": 2
+          "count": 2,
+          "move": "move_howl"
         }
       ]
     },
@@ -194,19 +201,22 @@
           "then": {
             "act": "attack",
             "power": 12,
-            "target": "apprentice"
-          }
+            "target": "apprentice",
+            "move": "move_heavy_slash"
+          },
+          "move": "move_charge"
         },
         {
           "act": "attack",
           "power": 2,
-          "target": "apprentice"
+          "target": "apprentice",
+          "move": "move_slash"
         }
       ]
     },
     "_其他": "第 2–6 章的敌人第 10 步写遭遇时补"
   },
-  "_敌人招式说明": "pattern 按回合轮着用（第 1 回合用第 1 条，用完从头再来）。target：某个同伴 id、apprentice（学徒）、lowest_hp（血最少的人）、all（群攻）。charge 是蓄力，then 是下回合放出的招；summon 的 what 是敌人 id。",
+  "_敌人招式说明": "pattern 按回合轮着用（第 1 回合用第 1 条，用完从头再来）。target：某个同伴 id、apprentice（学徒）、lowest_hp（血最少的人）、all（群攻）。charge 是蓄力，then 是下回合放出的招；summon 的 what 是敌人 id。 move 是招式名的文本键（game_text.csv）。",
   "encounters": {
     "_说明": "一场仗：上场的敌人（按出手顺序）、我方规则、怎么算赢。party.fixed 是剧情规定一定上场的同伴，party.max 是最多带几个（默认 party_max_companions）。win：all_down 敌人全倒；survive 撑过 turns 回合，到了由剧情接管（剧情战）。",
     "wolves": {

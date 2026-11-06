@@ -85,6 +85,12 @@ func _step() -> void:
 					waiting = true
 					return
 
+## 中途停下（战斗输了选「回地图」）：这段对话不再往下走
+func abort() -> void:
+	if not running: return
+	stack.clear()
+	_finish()
+
 func _finish() -> void:
 	running = false
 	waiting = false

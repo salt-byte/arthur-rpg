@@ -7,6 +7,7 @@ extends Node
 ##   unlocks    学会的能力 id；失去的能力从这里拿掉
 ##   book       预言簿：[{decision, after: [文本键]}]
 ##   area, cell 站在哪
+##   defeated   打赢过的刷新点 id（spawns.json），不再出现
 ##   version    存档格式版本，格式变了要写迁移（save-load）
 
 const SAVE_PATH := "user://save.json"
@@ -19,7 +20,7 @@ func _ready() -> void:
 
 func new_game() -> void:
 	S = {"version": VERSION, "vars": {}, "visited": {}, "quests": {}, "unlocks": [], "book": [],
-		"area": "manor", "cell": null}
+		"area": "manor", "cell": null, "defeated": []}
 	for sp in Data.param("story-unlocks", "starting_spells", []):
 		S.unlocks.append("spell_" + sp)
 

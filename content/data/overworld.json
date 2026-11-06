@@ -114,7 +114,12 @@
   "water_spots": [
     {
       "area": "stone_circle",
-      "glows_at": "1102"
+      "glows_at": "1102",
+      "cell": [
+        9,
+        5
+      ],
+      "node": "Ch1_StoneCircle"
     }
   ],
   "world_states": [

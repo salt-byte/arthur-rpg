@@ -6,7 +6,10 @@
       "id": "ch1_wolves",
       "enemy": "wolves",
       "area": "forest",
-      "cell": null,
+      "cell": [
+        19,
+        12
+      ],
       "condition": "quest_part(1001) == 1101",
       "on_defeat": "Ch1_WolvesDone"
     }

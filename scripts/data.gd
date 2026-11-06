@@ -1,7 +1,7 @@
 extends Node
 ## 静态数据：启动时把 content/data/*.json 全部读进来。代码里用到的数都从这里取（设计页第 6 节登记过的参数）。
 
-const FILES := ["combat", "story-unlocks", "prophecy", "companions", "dialogue", "quests", "overworld", "npcs", "spawns"]
+const FILES := ["combat", "story-unlocks", "prophecy", "companions", "dialogue", "quests", "overworld", "npcs", "spawns", "maps"]
 
 var tables := {}      # 文件名 -> 解析后的字典
 var errors := []      # 读不出来的文件
