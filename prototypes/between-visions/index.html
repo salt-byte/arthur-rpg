@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>两次看水面之间 · 原型</title>
+<!--
+  原型，不进正式代码。要回答的问题：两次看水面之间，照《Vampire's Fall 2》在地图上打明雷、升级、换装备，
+  玩家会不会自己找事做（计划见 PLAN.md）。战斗照《杀戮尖塔》的意图规则：显示的伤害已算进力量、虚弱、易伤；
+  虚弱 ×0.75、易伤 ×1.5，乘完才向下取整；格挡在自己回合开始时清零（照 mechanics-library intent-battle）。
+  地图照 overworld-grid：敌人看得见，4 格内 65% 概率追一步，碰上开战，逃跑回神龛，神龛祷告回满血、普通敌人回来。
+  数随手定，美术是色块。
+-->
+<style>
+:root {
+  --bg: #0f1612; --panel: #17211b; --panel2: #1f2c24; --line: #31443a;
+  --fg: #e7ede5; --dim: #97a89b; --gold: #dcb75c; --gold-soft: #3a3220;
+  --red: #e0705f; --red-soft: #3b2220; --blue: #79aee0; --blue-soft: #1e3040;
+  --green: #74c48f; --purple: #b294e6;
+  --grass: #223420; --grass2: #263a23; --tree: #0a110b; --water: #1c3a55;
+  --font: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.6 var(--font); }
+body { padding-left: max(12px, env(safe-area-inset-left, 0px)); padding-right: max(12px, env(safe-area-inset-right, 0px)); padding-block: 10px 24px; }
+button { font: inherit; color: inherit; cursor: pointer; border: 1px solid var(--line); background: var(--panel2); border-radius: 6px; padding: .45rem .8rem; }
+button:hover:not(:disabled) { border-color: var(--gold); }
+button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+button:disabled { opacity: .4; cursor: default; }
+button.primary { background: var(--gold); color: #1a1408; border-color: var(--gold); font-weight: 600; }
+#app { max-width: 760px; margin: 0 auto; display: grid; gap: 10px; }
+.tag { font-size: .72rem; letter-spacing: .06em; color: var(--dim); }
+
+/* 顶栏 */
+#hud { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+#hud .lv { font-weight: 700; color: var(--gold); }
+.xpbar { width: 110px; height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+.xpbar i { display: block; height: 100%; background: var(--gold); }
+.mini { display: flex; gap: 8px; flex-wrap: wrap; }
+.mini span { font-size: .82rem; color: var(--dim); font-variant-numeric: tabular-nums; }
+.mini b { color: var(--fg); font-weight: 500; }
+.sp { background: var(--gold); color: #1a1408; border-radius: 999px; padding: 0 .5rem; font-size: .78rem; font-weight: 700; }
+#hud .grow { flex: 1; }
+
+/* 地图 */
+#map { display: grid; grid-template-columns: repeat(16, 1fr); gap: 1px; background: #0a0f0c; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; touch-action: manipulation; user-select: none; }
+.c { aspect-ratio: 1; position: relative; display: grid; place-items: center; font-size: clamp(9px, 2.4vw, 14px); font-weight: 700; }
+.c.g { background: var(--grass); } .c.g.alt { background: var(--grass2); }
+.c.t { background: var(--tree); } .c.w { background: var(--water); }
+.c.s { background: var(--blue-soft); color: var(--blue); }
+.c.o { background: #2a2140; color: var(--purple); }
+.c.path::after { content: ""; position: absolute; inset: 38%; border-radius: 50%; background: rgba(220,183,92,.35); }
+.c .pc { width: 78%; height: 78%; border-radius: 50%; background: var(--gold); color: #1a1408; display: grid; place-items: center; }
+.c .en { width: 80%; height: 80%; border-radius: 4px; background: var(--red); color: #210c08; display: grid; place-items: center; }
+.c .en.elite { background: #f08a3a; box-shadow: 0 0 0 2px #f6c37a inset; }
+.c .en.chase::before { content: "!"; position: absolute; top: -2px; right: 2px; color: var(--gold); font-size: 1.1em; }
+#hint { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: .9rem; color: var(--dim); }
+#hint b { color: var(--fg); font-weight: 500; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 4px; font-size: .78rem; }
+.legend i { display: inline-block; width: .8em; height: .8em; border-radius: 2px; vertical-align: -.05em; margin-right: 4px; }
+
+/* 战斗 */
+.battle { display: grid; gap: 10px; }
+.row { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; display: grid; gap: 4px; min-width: 0; }
+.card.dead { opacity: .35; }
+.card.pick { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold-soft); cursor: pointer; }
+.card.cur { border-color: var(--gold); }
+.card .nm { font-weight: 600; display: flex; justify-content: space-between; gap: 6px; }
+.hp { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; position: relative; }
+.hp i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--green); }
+.hp i.loss { background: var(--red); opacity: .7; }
+.enemy .hp i:not(.loss) { background: var(--red); }
+.enemy .hp i.loss { background: var(--gold); }
+.nums { font-size: .8rem; color: var(--dim); font-variant-numeric: tabular-nums; display: flex; gap: 8px; flex-wrap: wrap; }
+.nums b { color: var(--fg); font-weight: 500; }
+.chips { display: flex; gap: 4px; flex-wrap: wrap; }
+.chip { font-size: .72rem; padding: 0 .4rem; border-radius: 999px; background: var(--panel2); color: var(--dim); border: 1px solid var(--line); }
+.chip.blk { color: var(--blue); border-color: var(--blue); }
+.chip.bad { color: var(--red); border-color: var(--red); }
+.chip.str { color: var(--gold); border-color: var(--gold); }
+.intent { font-size: .86rem; padding: 3px 6px; border-radius: 6px; background: var(--red-soft); color: #f3c0b6; }
+.intent.calm { background: var(--panel2); color: var(--dim); }
+.intent .n { font-weight: 700; color: #fff; }
+.next { font-size: .74rem; color: var(--dim); }
+.pv { font-size: .8rem; color: var(--gold); min-height: 1.2em; }
+.plan { font-size: .82rem; color: var(--gold); min-height: 1.2em; }
+.steps { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: .8rem; color: var(--dim); }
+.steps .on { color: var(--gold); }
+.log { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; min-height: 2.4em; font-size: .9rem; }
+.acts { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; display: grid; gap: 6px; }
+.acts .btns { display: flex; flex-wrap: wrap; gap: 6px; }
+.acts .btns button { display: grid; text-align: left; line-height: 1.3; }
+.acts .btns button small { color: var(--dim); font-size: .74rem; }
+.acts .bottom { display: flex; gap: 6px; flex-wrap: wrap; justify-content: space-between; }
+.mana { color: var(--blue); font-variant-numeric: tabular-nums; }
+
+/* 弹窗 */
+#modal { position: fixed; inset: 0; background: rgba(5,8,6,.78); display: grid; place-items: center; z-index: 20; padding: 16px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+#modal[hidden] { display: none; }
+.box { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; width: min(560px, 100%); max-height: 90vh; overflow: auto; display: grid; gap: 10px; }
+.box h2 { margin: 0; font-size: 1.15rem; }
+.box p { margin: 0; }
+.box .story p + p { margin-top: .6rem; }
+.box .story { font-family: "Songti SC", "STSong", "Noto Serif SC", serif; font-size: 1.02rem; line-height: 1.9; }
+.box .btns { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+.box .choices { display: grid; gap: 8px; }
+.box .choices button { text-align: left; }
+.item { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; display: grid; gap: 2px; }
+.item .r0 { color: var(--fg); } .item .r1 { color: var(--blue); } .item .r2 { color: var(--gold); }
+.item small { color: var(--dim); }
+.delta { font-size: .82rem; } .delta .up { color: var(--green); } .delta .down { color: var(--red); }
+.tabs { display: flex; gap: 6px; }
+.tabs button.on { border-color: var(--gold); color: var(--gold); }
+.tree { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.tree .col { display: grid; gap: 6px; align-content: start; }
+.tree .col h3 { margin: 0; font-size: .9rem; color: var(--dim); font-weight: 500; }
+.node { text-align: left; display: grid; gap: 2px; padding: 6px 8px; font-size: .82rem; line-height: 1.35; }
+.node b { font-size: .88rem; }
+.node.own { border-color: var(--gold); background: var(--gold-soft); }
+.node.can { border-color: var(--green); }
+@media (max-width: 480px) { .tree { grid-template-columns: 1fr; } }
+table.m { border-collapse: collapse; width: 100%; font-size: .88rem; }
+table.m td { padding: 3px 4px; border-bottom: 1px solid var(--line); }
+table.m td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+details.obs { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; font-size: .82rem; color: var(--dim); }
+details.obs summary { cursor: pointer; }
+@media (prefers-reduced-motion: no-preference) { .flash { animation: fl .45s ease-out; } @keyframes fl { from { background: var(--gold-soft); } } }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="hud"></div>
+  <div id="view"></div>
+  <details class="obs" id="obs"><summary>试玩记录（玩完把这里的数告诉我）</summary><div id="obsBody"></div></details>
+</div>
+<div id="modal" hidden></div>
+<script>
+'use strict';
+// ================= 数据：规则照原作，数随手定 =================
+const RULES = { weak: 0.75, vuln: 1.5 };          // 杀戮尖塔：虚弱 ×0.75（出手的人），易伤 ×1.5（挨打的人）
+const CHASE = { radius: 4, chance: 0.65, wander: 2, grace: 3 };  // overworld-grid 的默认数（Vampire's Fall 2，追击概率未核实）
+const XP_NEED = L => 30 + 20 * L;                 // 原型自定：1→2 要 50，2→3 要 70，3→4 要 90
+const MAP_ROWS = [
+  '################',
+  '#P..#......T...#',
+  '#...#..TT..T.~~#',
+  '#.......T.....O#',
+  '#.TT..S....TT..#',
+  '#..T......T....#',
+  '#......TT...T..#',
+  '#.T..T.....T...#',
+  '#....T..TT....~#',
+  '#..............#',
+  '################',
+];
+const W = 16, H = 11;
+const SOLID = '#T~';
+const NAMES = { ap: '你', kay: '凯', ar: '亚瑟' };
+const ENEMY = {
+  wolf:   { name: '狼',   hp: 6,  kind: 'wolf', xp: 10, pattern: [{ t: 'atk', d: 3, to: 'low' }] },
+  grey:   { name: '灰狼', hp: 6,  kind: 'wolf', xp: 10, pattern: [{ t: 'atk', d: 3, to: 'ar' }, { t: 'atk', d: 3, to: 'kay' }] },
+  howler: { name: '瘦狼', hp: 5,  kind: 'wolf', xp: 12, pattern: [{ t: 'atk', d: 2, to: 'ap' }, { t: 'summon', what: 'wolf' }] },
+  leader: { name: '头狼', hp: 14, kind: 'wolf', xp: 30, pattern: [{ t: 'atk', d: 5, to: 'ar' }, { t: 'buff', str: 2 }, { t: 'atk', d: 4, hits: 2, to: 'kay' }] },
+  bandit: { name: '强盗', hp: 9,  kind: 'man',  xp: 15, pattern: [{ t: 'atk', d: 4, to: 'kay' }, { t: 'weak', n: 2, to: 'kay' }, { t: 'atk', d: 4, to: 'low' }] },
+  archer: { name: '弓手', hp: 6,  kind: 'man',  xp: 15, pattern: [{ t: 'atk', d: 2, hits: 2, to: 'ap' }, { t: 'def', b: 4 }] },
+};
+const SPOTS0 = [
+  { enc: ['wolf'], cell: [8, 1], label: '狼' },
+  { enc: ['wolf', 'grey'], cell: [3, 7], label: '狼' },
+  { enc: ['howler', 'wolf'], cell: [9, 5], label: '狼' },
+  { enc: ['bandit', 'archer'], cell: [12, 8], label: '盗' },
+  { enc: ['leader', 'grey', 'howler'], cell: [12, 3], label: '头', elite: true },
+];
+const TREE = [
+  { name: '体魄', nodes: [
+    { k: 'v1', name: '结实', text: '全队最大生命 +3' },
+    { k: 'v2', name: '护身加厚', text: '护身多挡 2' },
+    { k: 'v3', name: '喘口气', text: '打赢后全队回 3 血' } ] },
+  { name: '法术', nodes: [
+    { k: 'c1', name: '星火加热', text: '星火伤害 +1' },
+    { k: 'c2', name: '深水', text: '法力上限 +2' },
+    { k: 'c3', name: '打断', text: '学会打断：取消召唤和嚎叫（3 法力）' } ] },
+  { name: '预见', nodes: [
+    { k: 'f1', name: '多看一步', text: '敌人头上多显示下回合要做什么' },
+    { k: 'f2', name: '看穿', text: '开战时所有敌人带易伤 1' },
+    { k: 'f3', name: '星火压制', text: '星火让目标虚弱 1' } ] },
+];
+const SLOT = { kay: '凯的剑', ar: '亚瑟的剑', ap: '你的护符' };
+const RAR = [{ name: '普通', w: 60, bonus: 0, aff: 0 }, { name: '精良', w: 30, bonus: 1, aff: 1 }, { name: '稀有', w: 10, bonus: 2, aff: 2 }];
+const AFFIX = [
+  { k: 'tough', text: '持有者最大生命 +3' },
+  { k: 'sharp', text: '持有者伤害 +1' },
+  { k: 'first', text: '每场第一回合格挡 +3' },
+  { k: 'spring', text: '你的法力上限 +1' },
+  { k: 'hunter', text: '打狼类伤害 +2' },
+];
+
+// ================= 随机数：带种子 =================
+let seed = (Date.now() ^ 0x9e3779b9) >>> 0;
+function rnd() { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }
+const pickW = list => { let s = list.reduce((a, x) => a + x.w, 0), r = rnd() * s; for (const x of list) { if ((r -= x.w) < 0) return x; } return list[list.length - 1]; };
+
+// ================= 状态 =================
+let S, B = null;
+function fresh() {
+  let start = [1, 1];
+  MAP_ROWS.forEach((r, y) => { const x = r.indexOf('P'); if (x >= 0) start = [x, y]; });
+  S = {
+    pos: start, level: 1, xp: 0, sp: 0, nodes: {}, gear: { kay: null, ar: null, ap: null }, bag: [], uidItem: 0,
+    hp: { ap: 10, kay: 12, ar: 8 }, grace: 0, mode: 'map', path: [],
+    spots: SPOTS0.map((s, i) => ({ i, enc: s.enc, home: s.cell.slice(), cell: s.cell.slice(), alive: true, elite: !!s.elite, label: s.label, chasing: false })),
+    shrine: findTile('S'), lastShrine: findTile('S'),
+    m: { start: Date.now(), firstFight: null, active: 0, caught: 0, wins: 0, flees: 0, losses: 0, levels: 0, treeMs: 0, lootMs: 0, equips: 0, prays: 0, steps: 0, eliteWin: false, choice: null, end: null },
+  };
+}
+function findTile(ch) { for (let y = 0; y < H; y++) { const x = MAP_ROWS[y].indexOf(ch); if (x >= 0) return [x, y]; } return null; }
+const tile = (x, y) => (x < 0 || y < 0 || x >= W || y >= H) ? '#' : MAP_ROWS[y][x];
+const solid = (x, y) => SOLID.includes(tile(x, y));
+const has = k => !!S.nodes[k];
+const man = (a, b) => Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]);
+const eq = (a, b) => a[0] === b[0] && a[1] === b[1];
+const DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+
+// ---- 派生数值：界面和战斗都只调这几个函数 ----
+function affixCount(id, k) { const it = S.gear[id]; return it ? it.aff.filter(a => a === k).length : 0; }
+function affixAll(k) { return ['ap', 'kay', 'ar'].reduce((a, id) => a + affixCount(id, k), 0); }
+function maxHp(id) { return { ap: 10, kay: 12, ar: 8 }[id] + 2 * (S.level - 1) + (has('v1') ? 3 : 0) + 3 * affixCount(id, 'tough'); }
+function weaponBonus(id) { const it = S.gear[id]; return it ? it.base : 0; }
+function atk(id) { return { kay: 3, ar: 2 }[id] + weaponBonus(id) + affixCount(id, 'sharp'); }
+function sparkDmg() { return 2 + (has('c1') ? 1 : 0) + weaponBonus('ap') + affixCount('ap', 'sharp'); }
+function wardAmt() { return 4 + (has('v2') ? 2 : 0); }
+function manaMax() { return 6 + (has('c2') ? 2 : 0) + affixAll('spring'); }
+
+// ================= 战斗（照杀戮尖塔的意图规则） =================
+function hit(base, src, tgt) {
+  let d = base + (src.str || 0);
+  if (src.weak > 0) d *= RULES.weak;
+  if (tgt.vuln > 0) d *= RULES.vuln;
+  return Math.max(0, Math.floor(d + 1e-6));   // 乘完才取整
+}
+function absorb(t, d) { const bl = Math.min(t.block, d); t.block -= bl; const lost = d - bl; t.hp = Math.max(0, t.hp - lost); return [bl, lost]; }
+function mkEnemy(b, k) { const d = ENEMY[k]; return { uid: ++b.uid, key: k, name: d.name, kind: d.kind, xp: d.xp, hp: d.hp, max: d.hp, block: 0, str: 0, weak: 0, vuln: 0, pi: 0, intent: null, next: null }; }
+const clone = o => JSON.parse(JSON.stringify(o));
+function alivePartyLow(b) { const a = b.party.filter(p => p.hp > 0); return a.length ? a.reduce((x, c) => c.hp < x.hp ? c : x) : null; }
+function pickTarget(b, to) {
+  if (to === 'low') { const p = alivePartyLow(b); return p ? p.id : null; }
+  const p = b.party.find(x => x.id === to);
+  if (p && p.hp > 0) return to;
+  const l = alivePartyLow(b); return l ? l.id : null;
+}
+function rollIntent(b, e) {
+  const pat = ENEMY[e.key].pattern;
+  const it = Object.assign({}, pat[e.pi % pat.length]); e.pi++;
+  if (it.to) it.to = pickTarget(b, it.to);
+  e.intent = it;
+  e.next = Object.assign({}, pat[e.pi % pat.length]);
+}
+function newBattle(spotIdx) {
+  const spot = S.spots[spotIdx];
+  const b = { spot: spotIdx, elite: spot.elite, turn: 0, enemies: [], party: [], mana: manaMax(), manaMax: manaMax(), plans: {}, uid: 0, over: null, log: '' };
+  spot.enc.forEach(k => b.enemies.push(mkEnemy(b, k)));
+  ['ap', 'kay', 'ar'].forEach(id => b.party.push({ id, name: NAMES[id], hp: Math.min(S.hp[id], maxHp(id)), max: maxHp(id), block: 0, weak: 0, vuln: 0, str: 0 }));
+  if (has('f2')) b.enemies.forEach(e => e.vuln = 1);
+  startPlayerTurn(b);
+  b.party.forEach(p => { const f = 3 * affixCount(p.id, 'first'); if (f && p.hp > 0) p.block += f; });
+  return b;
+}
+function startPlayerTurn(b) {
+  b.turn++;
+  b.party.forEach(p => p.block = 0);                 // 格挡在自己回合开始时清零
+  if (b.turn > 1) b.mana = Math.min(b.manaMax, b.mana + 1);
+  b.enemies.forEach(e => { if (e.hp > 0) rollIntent(b, e); });
+  b.plans = {};
+}
+function partyActs(id) {
+  if (id === 'ap') {
+    const a = [
+      { k: 'spark', name: '星火', cost: 1, target: 'enemy', desc: () => `${sparkDmg()} 伤害，易伤 1${has('f3') ? '、虚弱 1' : ''}` },
+      { k: 'ward', name: '护身', cost: 2, target: 'ally', desc: () => `给一个人挡 ${wardAmt()}` },
+      { k: 'focus', name: '凝神', cost: 0, target: null, desc: () => '回 2 法力' },
+    ];
+    if (has('c3')) a.push({ k: 'interrupt', name: '打断', cost: 3, target: 'enemy', desc: () => '取消召唤、嚎叫' });
+    return a;
+  }
+  return [
+    { k: 'attack', name: '砍', cost: 0, target: 'enemy', desc: () => `${atk(id)} 伤害` },
+    { k: 'defend', name: '举盾', cost: 0, target: null, desc: () => '挡 3' },
+  ];
+}
+function attackBase(b, p, tgt) {
+  const base = p.id === 'ap' ? sparkDmg() : atk(p.id);
+  return base + (tgt.kind === 'wolf' ? 2 * affixCount(p.id, 'hunter') : 0);
+}
+function resolveParty(b, step) {
+  for (const id of ['ap', 'kay', 'ar']) {
+    const p = b.party.find(x => x.id === id), pl = b.plans[id];
+    if (!p || p.hp <= 0 || !pl) continue;
+    let tgt = null;
+    if (pl.k === 'spark' || pl.k === 'attack' || pl.k === 'interrupt') {
+      tgt = b.enemies.find(e => e.uid === pl.target && e.hp > 0) || b.enemies.find(e => e.hp > 0);
+      if (!tgt) break;
+    }
+    if (pl.k === 'spark') {
+      b.mana -= 1;
+      const d = hit(attackBase(b, p, tgt), p, tgt); const [bl, lost] = absorb(tgt, d);
+      tgt.vuln += 1; if (has('f3')) tgt.weak += 1;
+      step(`你的星火打中${tgt.name}：${lost}${bl ? `（挡掉 ${bl}）` : ''}，${tgt.name}易伤${has('f3') ? '、虚弱' : ''}`, tgt.uid);
+    } else if (pl.k === 'attack') {
+      const d = hit(attackBase(b, p, tgt), p, tgt); const [bl, lost] = absorb(tgt, d);
+      step(`${p.name}砍${tgt.name}：${lost}${bl ? `（挡掉 ${bl}）` : ''}${tgt.hp <= 0 ? `，${tgt.name}倒下` : ''}`, tgt.uid);
+    } else if (pl.k === 'defend') {
+      p.block += 3; step(`${p.name}举盾，挡 3`, p.id);
+    } else if (pl.k === 'ward') {
+      b.mana -= 2; const a = b.party.find(x => x.id === pl.target && x.hp > 0) || p; a.block += wardAmt(); step(`你给${a.name}护身，挡 ${wardAmt()}`, a.id);
+    } else if (pl.k === 'focus') {
+      b.mana = Math.min(b.manaMax, b.mana + 2); step('你凝神，法力回 2', p.id);
+    } else if (pl.k === 'interrupt') {
+      b.mana -= 3;
+      if (tgt.intent && (tgt.intent.t === 'summon' || tgt.intent.t === 'buff')) { tgt.intent = { t: 'stunned' }; step(`你打断了${tgt.name}`, tgt.uid); }
+      else step(`你想打断${tgt.name}，它这回合没在蓄什么`, tgt.uid);
+    }
+    if (b.enemies.every(e => e.hp <= 0)) { b.over = 'win'; step('敌人都倒下了'); return; }
+  }
+  b.party.forEach(p => { p.weak = Math.max(0, p.weak - 1); p.vuln = Math.max(0, p.vuln - 1); });   // 我方回合结束：减益各减 1
+}
+function resolveEnemies(b, step) {
+  b.enemies.forEach(e => { if (e.hp > 0) e.block = 0; });   // 敌人格挡在它们回合开始时清零
+  for (const e of b.enemies.slice()) {
+    if (e.hp <= 0 || !e.intent) continue;
+    const it = e.intent;
+    if (it.t === 'atk') {
+      for (let h = 0; h < (it.hits || 1); h++) {
+        let t = b.party.find(p => p.id === it.to && p.hp > 0);
+        if (!t) { const l = alivePartyLow(b); if (!l) break; t = l; }
+        const d = hit(it.d, e, t); const [bl, lost] = absorb(t, d);
+        step(`${e.name}扑向${t.name}：${lost}${bl ? `（挡掉 ${bl}）` : ''}${t.hp <= 0 ? `，${t.name}倒下` : ''}`, t.id);
+      }
+    } else if (it.t === 'summon') {
+      if (b.enemies.filter(x => x.hp > 0).length < 4) { b.enemies.push(mkEnemy(b, it.what)); step(`${e.name}嚎了一声，林子里又钻出一只${ENEMY[it.what].name}`, e.uid); }
+      else step(`${e.name}嚎了一声，没有狼回应`, e.uid);
+    } else if (it.t === 'buff') {
+      b.enemies.filter(x => x.hp > 0 && x.kind === e.kind).forEach(x => x.str += it.str); step(`${e.name}仰头长嚎：狼群力量 +${it.str}`, e.uid);
+    } else if (it.t === 'weak') {
+      const t = b.party.find(p => p.id === it.to && p.hp > 0) || alivePartyLow(b); if (t) { t.weak += it.n; step(`${e.name}往${t.name}眼里撒了一把沙：虚弱 ${it.n}`, t.id); }
+    } else if (it.t === 'def') {
+      e.block += it.b; step(`${e.name}躲到树后：挡 ${it.b}`, e.uid);
+    } else if (it.t === 'stunned') {
+      step(`${e.name}被打断，这回合没动`, e.uid);
+    }
+    if (b.party.every(p => p.hp <= 0)) { b.over = 'lose'; step('三个人都倒下了'); return; }
+  }
+  b.enemies.forEach(e => { e.weak = Math.max(0, e.weak - 1); e.vuln = Math.max(0, e.vuln - 1); });   // 敌方回合结束
+}
+// 预览和真正结算走同一个函数，只是跑在副本上
+function preview(b) {
+  const c = clone(b); const noop = () => {};
+  resolveParty(c, noop); if (!c.over) resolveEnemies(c, noop);
+  return c;
+}
+function intentText(b, e, it, short) {
+  if (!it) return '';
+  if (it.t === 'atk') {
+    const t = b.party.find(p => p.id === it.to) || { vuln: 0, name: '?' };
+    const n = hit(it.d, e, t);
+    return short ? `攻 ${n}${it.hits > 1 ? '×' + it.hits : ''}` : `攻 <span class="n">${n}${it.hits > 1 ? '×' + it.hits : ''}</span> → ${t.name}`;
+  }
+  if (it.t === 'summon') return '嚎叫：叫来一只' + ENEMY[it.what].name;
+  if (it.t === 'buff') return `长嚎：狼群力量 +${it.str}`;
+  if (it.t === 'weak') return `撒沙 → ${NAMES[it.to] || '?'}：虚弱 ${it.n}`;
+  if (it.t === 'def') return `躲闪：挡 ${it.b}`;
+  if (it.t === 'stunned') return '被打断';
+  return '';
+}
+
+// ================= 地图 =================
+function enemyAt(c) { return S.spots.find(s => s.alive && eq(s.cell, c)); }
+function passable(c) { return !solid(c[0], c[1]); }
+function bfs(from, to) {
+  const key = c => c[0] + ',' + c[1]; const prev = { [key(from)]: null }; const q = [from];
+  while (q.length) {
+    const c = q.shift(); if (eq(c, to)) break;
+    for (const [dx, dy] of DIRS) {
+      const n = [c[0] + dx, c[1] + dy]; const k = key(n);
+      if (k in prev || !passable(n)) continue;
+      if (enemyAt(n) && !eq(n, to)) continue;
+      prev[k] = c; q.push(n);
+    }
+  }
+  if (!(key(to) in prev)) return null;
+  const path = []; let c = to; while (c && !eq(c, from)) { path.unshift(c); c = prev[key(c)]; } return path;
+}
+function tryMove(dx, dy) {
+  if (S.mode !== 'map') return;
+  const n = [S.pos[0] + dx, S.pos[1] + dy];
+  if (!passable(n)) return;
+  const e = enemyAt(n);
+  if (e) { startFight(e.i, 'active'); return; }
+  S.pos = n; S.m.steps++;
+  if (tile(n[0], n[1]) === 'O') { S.path = []; vision(); return; }
+  if (tile(n[0], n[1]) === 'S') { S.path = []; S.lastShrine = n.slice(); shrinePrompt(); return; }
+  const near = S.spots.find(s => s.alive && man(s.cell, S.pos) === 1);
+  if (near) { startFight(near.i, 'active'); return; }
+  enemiesStep();
+  renderMap();
+}
+function enemiesStep() {
+  if (S.grace > 0) { S.grace--; S.spots.forEach(s => s.chasing = false); return; }
+  for (const s of S.spots) {
+    if (!s.alive || s.elite) { s.chasing = false; continue; }
+    const d = man(s.cell, S.pos);
+    s.chasing = d <= CHASE.radius;
+    let moved = null;
+    if (s.chasing && rnd() < CHASE.chance) {
+      const opts = DIRS.map(([dx, dy]) => [s.cell[0] + dx, s.cell[1] + dy]).filter(c => passable(c) && !enemyAt(c) && !eq(c, S.pos) && tile(c[0], c[1]) !== 'S' && tile(c[0], c[1]) !== 'O');
+      opts.sort((a, b) => man(a, S.pos) - man(b, S.pos));
+      if (opts.length && man(opts[0], S.pos) < d) moved = opts[0];
+    } else if (!s.chasing && rnd() < 0.4) {
+      const opts = DIRS.map(([dx, dy]) => [s.cell[0] + dx, s.cell[1] + dy]).filter(c => passable(c) && !enemyAt(c) && !eq(c, S.pos) && man(c, s.home) <= CHASE.wander && tile(c[0], c[1]) === '.' );
+      if (opts.length) moved = opts[Math.floor(rnd() * opts.length)];
+    }
+    if (moved) s.cell = moved;
+    if (man(s.cell, S.pos) === 1) { startFight(s.i, 'caught'); return; }
+  }
+}
+let walkTimer = null;
+function walkTo(c) {
+  if (S.mode !== 'map') return;
+  const e = enemyAt(c);
+  let path = bfs(S.pos, c);
+  if (!path) return;
+  if (e) { path = path.slice(0, -1); }
+  S.path = path.slice();
+  clearInterval(walkTimer);
+  const go = () => {
+    if (S.mode !== 'map') { clearInterval(walkTimer); S.path = []; return; }
+    if (!S.path.length) { clearInterval(walkTimer); if (e && e.alive && man(e.cell, S.pos) === 1) startFight(e.i, 'active'); renderMap(); return; }
+    const n = S.path.shift();
+    tryMove(n[0] - S.pos[0], n[1] - S.pos[1]);
+    if (S.mode === 'map' && S.path.length && !eq(S.pos, [n[0], n[1]])) { S.path = []; }
+  };
+  walkTimer = setInterval(go, 120); go();
+}
+
+// ================= 流程 =================
+function startFight(i, how) {
+  clearInterval(walkTimer); S.path = [];
+  if (S.m.firstFight === null) S.m.firstFight = Math.round((Date.now() - S.m.start) / 1000);
+  if (how === 'active') S.m.active++; else S.m.caught++;
+  S.mode = 'battle'; B = newBattle(i); B.how = how;
+  B.log = how === 'active' ? '你们先动的手。' : `${S.spots[i].label === '盗' ? '强盗' : '狼'}追上来了。`;
+  renderBattle();
+}
+function nextMember(b) { return ['ap', 'kay', 'ar'].find(id => { const p = b.party.find(x => x.id === id); return p.hp > 0 && !b.plans[id]; }); }
+let picking = null;   // { id, act }
+function choose(id, act) {
+  const a = partyActs(id).find(x => x.k === act);
+  if (a.cost > B.mana) return;
+  if (a.target) { picking = { id, act }; renderBattle(); return; }
+  B.plans[id] = { k: act }; picking = null; afterPlan();
+}
+function pickTarget2(kind, tid) {
+  if (!picking) return;
+  const a = partyActs(picking.id).find(x => x.k === picking.act);
+  if ((a.target === 'enemy') !== (kind === 'enemy')) return;
+  B.plans[picking.id] = { k: picking.act, target: tid }; picking = null; afterPlan();
+}
+let resolving = false;
+function afterPlan() {
+  renderBattle();
+  if (!nextMember(B)) { setTimeout(() => { if (B && !nextMember(B) && !resolving) runRound(); }, window.__fast ? 0 : 700); }
+}
+const sleep = ms => new Promise(r => setTimeout(r, window.__fast ? 0 : ms));   // 测试时 window.__fast = true 跳过动画
+async function runRound() {
+  resolving = true;
+  const frames = [];
+  const rec = (who) => (text, focus) => frames.push({ snap: clone(B), text, focus, who });
+  resolveParty(B, rec('p'));
+  if (!B.over) resolveEnemies(B, rec('e'));
+  const final = B;
+  for (let k = 0; k < frames.length; k++) {
+    if (k === 0 || frames[k].who !== frames[k - 1].who) { renderBattle(frames[k].snap, frames[k].who === 'p' ? '你们出手' : '敌人出手'); await sleep(450); }
+    renderBattle(frames[k].snap, frames[k].text, frames[k].focus); await sleep(650);
+  }
+  B = final; resolving = false;
+  if (B.over === 'win') return win();
+  if (B.over === 'lose') return lose();
+  startPlayerTurn(B); B.log = `第 ${B.turn} 回合：看敌人头上的牌子。`;
+  renderBattle();
+}
+function savePartyHp(b) { b.party.forEach(p => S.hp[p.id] = p.hp); }
+function win() {
+  const b = B; savePartyHp(b);
+  const spot = S.spots[b.spot]; spot.alive = false;
+  S.m.wins++; if (b.elite) S.m.eliteWin = true;
+  if (has('v3')) ['ap', 'kay', 'ar'].forEach(id => S.hp[id] = Math.min(maxHp(id), S.hp[id] + 3));
+  ['ap', 'kay', 'ar'].forEach(id => { if (S.hp[id] <= 0) S.hp[id] = 1; });   // 倒下的人打赢后爬起来，剩 1 血
+  const xp = b.enemies.reduce((a, e) => a + e.xp, 0);
+  S.xp += xp;
+  let ups = 0;
+  while (S.xp >= XP_NEED(S.level)) { S.xp -= XP_NEED(S.level); S.level++; S.sp++; ups++; }
+  if (ups) { S.m.levels += ups; ['ap', 'kay', 'ar'].forEach(id => S.hp[id] = maxHp(id)); }
+  let item = null;
+  if (b.elite || rnd() < 0.7) item = makeItem(b.elite);
+  if (item) S.bag.push(item);
+  S.mode = 'loot'; B = null; S.grace = CHASE.grace;
+  lootModal(xp, ups, item);
+}
+function lose() {
+  S.m.losses++; B = null;
+  S.pos = S.lastShrine.slice(); S.grace = CHASE.grace;
+  ['ap', 'kay', 'ar'].forEach(id => S.hp[id] = maxHp(id));
+  respawn();
+  modal(`<h2>退回神龛</h2><div class="story"><p>三个人都倒下了。等你们缓过气，已经躺在神龛的石台边，蜡烛又短了一截。</p></div><p class="tag">回满血。打倒过的普通敌人回来了。</p>`, [{ label: '起来', primary: true, fn: closeModal }]);
+}
+function flee() {
+  if (!B || resolving) return;
+  savePartyHp(B); S.m.flees++; B = null;
+  S.pos = S.lastShrine.slice(); S.grace = CHASE.grace; S.mode = 'map';
+  renderMap();
+  setHint('你们退回了神龛。在神龛上踩一下可以祷告回血。');
+}
+function respawn() { S.spots.forEach(s => { if (!s.elite) { s.alive = true; s.cell = s.home.slice(); } }); }
+function makeItem(elite) {
+  let r = pickW(RAR); if (elite && r === RAR[0]) r = RAR[1];
+  const ri = RAR.indexOf(r);
+  const slot = ['kay', 'ar', 'ap'][Math.floor(rnd() * 3)];
+  const pool = AFFIX.slice(); const aff = [];
+  for (let k = 0; k < r.aff && pool.length; k++) aff.push(pool.splice(Math.floor(rnd() * pool.length), 1)[0].k);   // 同一种词缀不出两次
+  return { id: ++S.uidItem, slot, r: ri, base: 1 + r.bonus, aff };
+}
+function itemName(it) { return `${RAR[it.r].name}·${SLOT[it.slot]}`; }
+function itemLines(it) {
+  const base = it.slot === 'ap' ? `星火 +${it.base}` : `伤害 +${it.base}`;
+  return [base].concat(it.aff.map(k => AFFIX.find(a => a.k === k).text));
+}
+function itemScore(it) { if (!it) return 0; return it.base * 2 + it.aff.length * 1.5; }
+
+// ================= 弹窗 =================
+let modalOpen = null;
+function modal(html, buttons, kind) {
+  const m = document.getElementById('modal');
+  m.innerHTML = `<div class="box" role="dialog" aria-modal="true">${html}<div class="btns"></div></div>`;
+  const bb = m.querySelector('.btns');
+  (buttons || []).forEach(b => { const el = document.createElement('button'); el.textContent = b.label; if (b.primary) el.className = 'primary'; el.onclick = b.fn; bb.appendChild(el); });
+  m.hidden = false;
+  if (kind && (!modalOpen || modalOpen.kind !== kind)) { stopTimer(); modalOpen = { kind, t: Date.now() }; }
+  const f = m.querySelector('button.primary') || m.querySelector('button'); if (f) f.focus();
+}
+function stopTimer() {
+  if (!modalOpen) return;
+  const ms = Date.now() - modalOpen.t;
+  if (modalOpen.kind === 'tree') S.m.treeMs += ms; if (modalOpen.kind === 'loot') S.m.lootMs += ms;
+  modalOpen = null;
+}
+function closeModal() { stopTimer(); document.getElementById('modal').hidden = true; if (S.mode !== 'battle' && S.mode !== 'end') S.mode = 'map'; renderMap(); }
+
+function lootModal(xp, ups, item) {
+  let h = `<h2>打赢了</h2><p>经验 +${xp}${ups ? `　<b style="color:var(--gold)">升到 ${S.level} 级！全队回满血，技能点 +${ups}</b>` : `　（离 ${S.level + 1} 级还差 ${XP_NEED(S.level) - S.xp}）`}</p>`;
+  if (item) {
+    const cur = S.gear[item.slot];
+    const better = itemScore(item) - itemScore(cur);
+    h += `<p class="tag">掉了一件</p>${itemCard(item)}<p class="tag">现在装着</p>${cur ? itemCard(cur) : '<div class="item"><small>（空）</small></div>'}`;
+    h += `<p class="delta">${better > 0 ? '<span class="up">比现在的好</span>' : better < 0 ? '<span class="down">不如现在的</span>' : '差不多'}</p>`;
+  } else h += '<p class="tag">这次什么也没掉。</p>';
+  const btns = [];
+  if (item) btns.push({ label: '装上', primary: !ups, fn: () => { equip(item.id); if (ups) openParty('tree'); else closeModal(); } });
+  if (item) btns.push({ label: '放进行囊', fn: () => { if (ups) openParty('tree'); else closeModal(); } });
+  if (ups) btns.push({ label: '去加点', primary: true, fn: () => openParty('tree') });
+  if (!item && !ups) btns.push({ label: '继续走', primary: true, fn: closeModal });
+  modal(h, btns, 'loot');
+}
+function itemCard(it) { return `<div class="item"><b class="r${it.r}">${itemName(it)}</b>${itemLines(it).map(l => `<small>${l}</small>`).join('')}</div>`; }
+function equip(id) {
+  const k = S.bag.findIndex(x => x.id === id); if (k < 0) return;
+  const it = S.bag[k]; const old = S.gear[it.slot];
+  S.bag.splice(k, 1); if (old) S.bag.push(old);
+  S.gear[it.slot] = it; S.m.equips++;
+  ['ap', 'kay', 'ar'].forEach(i => S.hp[i] = Math.min(S.hp[i], maxHp(i)));
+}
+function openParty(tab) {
+  S.mode = 'menu';
+  const t = tab || 'tree';
+  let h = `<div class="tabs"><button class="${t === 'tree' ? 'on' : ''}" data-tab="tree">技能（${S.sp} 点）</button><button class="${t === 'gear' ? 'on' : ''}" data-tab="gear">装备和行囊</button></div>`;
+  if (t === 'tree') {
+    h += `<p class="tag">每升一级给 1 个技能点。每棵树从上往下学。</p><div class="tree">` + TREE.map(col => `<div class="col"><h3>${col.name}</h3>` + col.nodes.map((n, idx) => {
+      const own = has(n.k), pre = idx === 0 || has(col.nodes[idx - 1].k), can = !own && pre && S.sp > 0;
+      return `<button class="node ${own ? 'own' : can ? 'can' : ''}" data-node="${n.k}" ${can ? '' : 'disabled'}><b>${n.name}${own ? ' ✓' : ''}</b>${n.text}</button>`;
+    }).join('') + '</div>').join('') + '</div>';
+  } else {
+    h += '<p class="tag">装着的</p>' + ['kay', 'ar', 'ap'].map(s => S.gear[s] ? itemCard(S.gear[s]) : `<div class="item"><small>${SLOT[s]}：空</small></div>`).join('');
+    h += `<p class="tag">行囊（${S.bag.length}）</p>` + (S.bag.length ? S.bag.map(it => `<div class="item">${itemCard(it).replace(/^<div class="item">|<\/div>$/g, '')}<button data-eq="${it.id}" style="justify-self:start;margin-top:4px">装上（换下${S.gear[it.slot] ? itemName(S.gear[it.slot]) : '空位'}）</button></div>`).join('') : '<p class="tag">空</p>');
+    h += `<p class="tag">现在：你 星火 ${sparkDmg()}、法力 ${manaMax()}；凯 伤害 ${atk('kay')}；亚瑟 伤害 ${atk('ar')}</p>`;
+  }
+  modal(h, [{ label: '回地图', primary: true, fn: closeModal }], t === 'tree' ? 'tree' : 'gear');
+  const m = document.getElementById('modal');
+  m.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => openParty(b.dataset.tab));
+  m.querySelectorAll('[data-node]').forEach(b => b.onclick = () => { if (S.sp > 0) { S.nodes[b.dataset.node] = true; S.sp--; ['ap', 'kay', 'ar'].forEach(i => S.hp[i] = Math.min(S.hp[i] + (b.dataset.node === 'v1' ? 3 : 0), maxHp(i))); openParty('tree'); } });
+  m.querySelectorAll('[data-eq]').forEach(b => b.onclick = () => { equip(+b.dataset.eq); openParty('gear'); });
+}
+function shrinePrompt() {
+  S.mode = 'menu';
+  modal(`<h2>神龛</h2><div class="story"><p>石台上立着半截蜡烛，烛泪冻成一串，被风吹得斜向一边。</p></div><p class="tag">祷告：全队回满血。打倒过的狼和强盗会回到原处，头狼不会。</p>`,
+    [{ label: '走开', fn: closeModal }, { label: '祷告', primary: true, fn: () => { ['ap', 'kay', 'ar'].forEach(id => S.hp[id] = maxHp(id)); respawn(); S.m.prays++; S.grace = CHASE.grace; closeModal(); setHint('蜡烛跳了一下。全队回满血，林子里又有了动静。'); } }]);
+}
+function vision() {
+  S.mode = 'end'; clearInterval(walkTimer);
+  modal(`<h2>石圈</h2><div class="story">
+    <p>石圈中间那块平石凹下去一个浅坑，攒着前两天的雨水，漂着两片橡树叶。你蹲下去，膝盖压进湿苔藓，凉气顺着裤腿往上爬。</p>
+    <p>水面先是你自己的脸。眨一下眼，脸没了。</p>
+    <p>雪。伦敦教堂的院子，人挤着人。一块石头上插着一把剑，亚瑟握上去，剑出来得很轻，轻得他自己愣了一下。</p>
+    <p>换了一幕。凯跪在埃克托爵士面前，剑横在膝上，嗓子发紧：「是我拔的。」</p>
+    <p>橡树叶转了半圈。水里只剩灰白的天。</p></div>
+    <p><b>这件事，说给谁听？</b></p>
+    <div class="choices">
+      <button data-c="凯">去找凯：「到了那天，那句话别说。」</button>
+      <button data-c="亚瑟">去找亚瑟：「你会拔出一把剑。」</button>
+      <button data-c="谁都不说">谁都不说。</button>
+    </div>`, []);
+  document.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { S.m.choice = b.dataset.c; endCard(); });
+}
+function endCard() {
+  S.m.end = Math.round((Date.now() - S.m.start) / 1000);
+  const left = S.spots.filter(s => s.alive).length;
+  modal(`<h2>原型到这里结束</h2>
+    <p>第 2 章，这一幕会照着发生。你选的是：${S.m.choice}。</p>
+    ${metricsTable(left)}
+    <p class="tag">玩完回聊天里告诉我：哪一刻让你想去打下一只，哪一刻觉得没意思。</p>`,
+    [{ label: '再来一次', primary: true, fn: () => { fresh(); document.getElementById('modal').hidden = true; S.mode = 'map'; renderMap(); intro(); } }]);
+}
+function metricsTable(left) {
+  const m = S.m, sec = s => s >= 60 ? `${Math.floor(s / 60)} 分 ${s % 60} 秒` : `${s} 秒`;
+  const rows = [
+    ['用时', sec(m.end ?? Math.round((Date.now() - m.start) / 1000))],
+    ['第一次开打在第几秒', m.firstFight === null ? '没打' : sec(m.firstFight)],
+    ['自己撞上去开打', m.active], ['被追上开打', m.caught], ['打赢', m.wins], ['逃跑', m.flees], ['输了', m.losses],
+    ['打了头狼', m.eliteWin ? '打了' : '没打'], ['升级', m.levels], ['加点那一屏停了', sec(Math.round(m.treeMs / 1000))],
+    ['看掉落那一屏停了', sec(Math.round(m.lootMs / 1000))], ['换装备', m.equips], ['神龛祷告', m.prays],
+  ];
+  if (left !== undefined) rows.push(['走到石圈时还没打的敌人', left]);
+  return `<table class="m">${rows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table>`;
+}
+function intro() {
+  S.mode = 'menu';
+  modal(`<p class="tag">原型 · 色块 · 不进正式游戏</p><h2>第 1 章 · 庄园北边的林子</h2>
+    <div class="story"><p>黄昏。凯在篱笆边数羊，数到第十一只停住了。地上一串泥脚印，往林子里去。</p>
+    <p>「狼。」他把剑往腰上一插，「天黑前找回来。」亚瑟已经蹲在地上系鞋带。</p></div>
+    <p><b>走到东边的石圈去。</b>林子里的东西你都看得见，靠近了会追你。蓝色的是神龛，能歇脚。</p>
+    <p class="tag">方向键或 WASD 走一格；也可以直接点地面。</p>`, [{ label: '出发', primary: true, fn: () => { S.m.start = Date.now(); closeModal(); } }]);
+}
+
+// ================= 画面 =================
+function setHint(t) { const h = document.getElementById('hintText'); if (h) h.innerHTML = t; }
+function renderHud() {
+  const need = XP_NEED(S.level);
+  document.getElementById('hud').innerHTML = `<span class="lv">${S.level} 级</span><span class="xpbar" title="经验 ${S.xp}/${need}"><i style="width:${Math.min(100, S.xp / need * 100)}%"></i></span>
+    <span class="mini">${['ap', 'kay', 'ar'].map(id => `<span>${NAMES[id]} <b>${S.hp[id]}/${maxHp(id)}</b></span>`).join('')}</span>
+    <span class="grow"></span>${S.sp ? `<span class="sp">${S.sp} 技能点</span>` : ''}<button id="partyBtn">队伍</button>`;
+  document.getElementById('partyBtn').onclick = () => { if (S.mode === 'map') openParty(S.sp ? 'tree' : 'gear'); };
+  document.getElementById('obsBody').innerHTML = metricsTable();
+}
+function renderMap() {
+  renderHud();
+  if (S.mode === 'battle') return;
+  const v = document.getElementById('view');
+  let g = '<div id="map" role="grid" aria-label="森林地图">';
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const ch = tile(x, y);
+    const cls = ch === 'T' || ch === '#' ? 't' : ch === '~' ? 'w' : ch === 'S' ? 's' : ch === 'O' ? 'o' : 'g' + ((x + y) % 2 ? ' alt' : '');
+    const onPath = S.path.some(c => c[0] === x && c[1] === y);
+    let inner = ch === 'S' ? '龛' : ch === 'O' ? '石' : '';
+    if (eq(S.pos, [x, y])) inner = '<span class="pc">你</span>';
+    const e = enemyAt([x, y]);
+    if (e) inner = `<span class="en ${e.elite ? 'elite' : ''} ${e.chasing ? 'chase' : ''}" title="${e.enc.map(k => ENEMY[k].name).join('、')}">${e.label}</span>`;
+    g += `<div class="c ${cls}${onPath ? ' path' : ''}" data-x="${x}" data-y="${y}"></div>`.replace('></div>', `>${inner}</div>`);
+  }
+  g += '</div>';
+  v.innerHTML = g + `<div id="hint"><span id="hintText">走到东边的<b>石圈</b>去看水面。</span>
+    <div class="legend"><span><i style="background:var(--gold)"></i>你们</span><span><i style="background:var(--red)"></i>狼、强盗（! = 在追你）</span><span><i style="background:#f08a3a"></i>头狼，不动</span><span><i style="background:var(--blue-soft);border:1px solid var(--blue)"></i>神龛</span><span><i style="background:#2a2140;border:1px solid var(--purple)"></i>石圈</span></div></div>`;
+  document.getElementById('map').onclick = ev => { const c = ev.target.closest('.c'); if (c) walkTo([+c.dataset.x, +c.dataset.y]); };
+}
+function hpBar(cur, max, after) {
+  const w = v => Math.max(0, Math.min(100, v / max * 100));
+  return `<div class="hp">${after !== undefined && after < cur ? `<i class="loss" style="width:${w(cur)}%"></i><i style="width:${w(after)}%"></i>` : `<i style="width:${w(cur)}%"></i>`}</div>`;
+}
+function statusChips(u) {
+  const c = [];
+  if (u.block) c.push(`<span class="chip blk">挡 ${u.block}</span>`);
+  if (u.vuln) c.push(`<span class="chip bad">易伤 ${u.vuln}</span>`);
+  if (u.weak) c.push(`<span class="chip bad">虚弱 ${u.weak}</span>`);
+  if (u.str) c.push(`<span class="chip str">力量 +${u.str}</span>`);
+  return `<div class="chips">${c.join('')}</div>`;
+}
+function renderBattle(view, text, focus) {
+  renderHud();
+  const b = view || B; const live = !view;
+  const pv = live && Object.keys(b.plans).length ? preview(b) : null;
+  const cur = live && !picking ? nextMember(b) : null;
+  const pickKind = picking ? partyActs(picking.id).find(a => a.k === picking.act).target : null;
+  const step = live ? (picking || cur ? 2 : 3) : 3;
+  let h = `<div class="battle"><div class="steps"><span class="${step === 1 ? 'on' : ''}">① 看敌人头上的牌子</span><span class="${step === 2 ? 'on' : ''}">② 给每人选一个行动</span><span class="${step === 3 ? 'on' : ''}">③ 选完自动开打：你们先动，敌人后动</span></div>`;
+  h += '<div class="row">' + b.enemies.map(e => {
+    const after = pv ? (pv.enemies.find(x => x.uid === e.uid) || {}).hp : undefined;
+    const sel = pickKind === 'enemy' && e.hp > 0;
+    return `<div class="card enemy ${e.hp <= 0 ? 'dead' : ''} ${sel ? 'pick' : ''} ${focus === e.uid ? 'flash' : ''}" data-enemy="${e.uid}">
+      <div class="nm"><span>${e.name}</span><span class="nums"><b>${e.hp}</b>/${e.max}</span></div>${hpBar(e.hp, e.max, after)}${statusChips(e)}
+      ${e.hp > 0 ? `<div class="intent ${e.intent && e.intent.t !== 'atk' ? 'calm' : ''}">${intentText(b, e, e.intent)}</div>${has('f1') && e.next ? `<div class="next">下回合：${intentText(b, e, e.next, true)}</div>` : ''}` : '<div class="intent calm">倒下</div>'}
+      <div class="pv">${after !== undefined && after < e.hp ? (after <= 0 ? '这回合会倒下' : `${e.hp} → ${after}`) : ''}</div></div>`;
+  }).join('') + '</div>';
+  h += `<div class="log">${text || b.log || ''}</div>`;
+  h += '<div class="row">' + b.party.map(p => {
+    const after = pv ? pv.party.find(x => x.id === p.id).hp : undefined;
+    const pl = b.plans[p.id];
+    const plText = pl ? partyActs(p.id).find(a => a.k === pl.k).name + (pl.target !== undefined ? ' → ' + (typeof pl.target === 'number' ? (b.enemies.find(e => e.uid === pl.target) || {}).name : NAMES[pl.target]) : '') : '';
+    const sel = pickKind === 'ally' && p.hp > 0;
+    return `<div class="card ally ${p.hp <= 0 ? 'dead' : ''} ${sel ? 'pick' : ''} ${cur === p.id ? 'cur' : ''} ${focus === p.id ? 'flash' : ''}" data-ally="${p.id}">
+      <div class="nm"><span>${p.name}</span><span class="nums"><b>${p.hp}</b>/${p.max}</span></div>${hpBar(p.hp, p.max, after)}${statusChips(p)}
+      <div class="plan">${plText}</div><div class="pv">${after !== undefined && after < p.hp ? `会挨 ${p.hp - after}：${p.hp} → ${after}` : ''}</div></div>`;
+  }).join('') + '</div>';
+  if (live) {
+    const who = picking ? picking.id : cur;
+    h += '<div class="acts">';
+    if (who) {
+      const acts = partyActs(who);
+      h += `<div><b>${NAMES[who]}</b>${who === 'ap' ? `　<span class="mana">法力 ${b.mana}/${b.manaMax}</span>` : ''}　${picking ? (pickKind === 'enemy' ? '点一个闪着金边的敌人' : '点一个闪着金边的队友') : '选一个行动'}</div>`;
+      h += '<div class="btns">' + acts.map(a => `<button data-act="${a.k}" ${a.cost > b.mana ? 'disabled' : ''} class="${picking && picking.act === a.k ? 'primary' : ''}">${a.name}${a.cost ? `（${a.cost} 法力）` : ''}<small>${a.desc()}</small></button>`).join('') + '</div>';
+    } else h += '<div>出手……</div>';
+    h += `<div class="bottom"><button id="redo" ${Object.keys(b.plans).length || picking ? '' : 'disabled'}>重选</button><button id="flee">逃回神龛</button></div></div>`;
+  }
+  h += '</div>';
+  const v = document.getElementById('view'); v.innerHTML = h;
+  if (!live) return;
+  v.querySelectorAll('[data-act]').forEach(el => el.onclick = () => choose(picking ? picking.id : cur, el.dataset.act));
+  v.querySelectorAll('[data-enemy]').forEach(el => el.onclick = () => pickTarget2('enemy', +el.dataset.enemy));
+  v.querySelectorAll('[data-ally]').forEach(el => el.onclick = () => {
+    if (picking) return pickTarget2('ally', el.dataset.ally);
+    const id = el.dataset.ally; const p = b.party.find(x => x.id === id);
+    if (p.hp > 0 && b.plans[id]) { delete b.plans[id]; renderBattle(); }   // 点已经排好的人：重排他
+  });
+  const r = document.getElementById('redo'); if (r) r.onclick = () => { b.plans = {}; picking = null; renderBattle(); };
+  const f = document.getElementById('flee'); if (f) f.onclick = flee;
+}
+
+// ================= 启动 =================
+document.addEventListener('keydown', ev => {
+  if (!document.getElementById('modal').hidden) return;
+  const k = ev.key.toLowerCase();
+  const d = { arrowup: [0, -1], w: [0, -1], arrowdown: [0, 1], s: [0, 1], arrowleft: [-1, 0], a: [-1, 0], arrowright: [1, 0], d: [1, 0] }[k];
+  if (d && S.mode === 'map') { ev.preventDefault(); clearInterval(walkTimer); S.path = []; tryMove(d[0], d[1]); }
+});
+fresh(); renderMap(); intro();
+window.__proto = { get S() { return S; }, get B() { return B; }, tryMove, walkTo, choose, pickTarget2, hit, preview, startFight, flee, openParty, equip, makeItem, bfs, setSeed: s => { seed = s >>> 0; } };
+</script>
+</body>
+</html>

@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>怎么打 · 原型</title>
+<!--
+  原型，不进正式代码。要回答的问题：哪种打法让玩家每回合停下来算、打完想打下一场（计划见 PLAN.md）。
+  两版共用《杀戮尖塔》的意图规则：显示的伤害已算进力量、虚弱、易伤；虚弱 ×0.75、易伤 ×1.5，乘完才向下取整；
+  格挡在自己回合开始清零（mechanics-library intent-battle）。卡牌版另照《杀戮尖塔》的牌堆：3 能量、抽 5、
+  回合末弃手牌、抽牌堆空了洗回弃牌堆、手牌上限 10（deck-piles）。数随手定，美术是色块。
+-->
+<style>
+:root {
+  --bg: #12141a; --panel: #1a1d26; --panel2: #232735; --line: #343a4d;
+  --fg: #e9ebf1; --dim: #9aa1b5; --gold: #e0b95e; --gold-soft: #3b3322;
+  --red: #e2715f; --red-soft: #3c2421; --blue: #7fb0e6; --blue-soft: #1f2d42;
+  --green: #79c792; --green-soft: #1d3326; --purple: #b79af0; --purple-soft: #2c2443;
+  --font: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.6 var(--font); }
+body { padding-left: max(12px, env(safe-area-inset-left, 0px)); padding-right: max(12px, env(safe-area-inset-right, 0px)); padding-block: 10px 24px; }
+button { font: inherit; color: inherit; cursor: pointer; border: 1px solid var(--line); background: var(--panel2); border-radius: 6px; padding: .45rem .8rem; }
+button:hover:not(:disabled) { border-color: var(--gold); }
+button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+button:disabled { opacity: .4; cursor: default; }
+button.primary { background: var(--gold); color: #1a1408; border-color: var(--gold); font-weight: 600; }
+#app { max-width: 820px; margin: 0 auto; display: grid; gap: 10px; }
+.tag { font-size: .74rem; letter-spacing: .05em; color: var(--dim); }
+#top { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+#top b { color: var(--gold); }
+#top .grow { flex: 1; }
+.battle { display: grid; gap: 10px; }
+.row { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; display: grid; gap: 4px; min-width: 0; }
+.card.dead { opacity: .35; }
+.card.pick { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold-soft); cursor: pointer; }
+.card.cur { border-color: var(--gold); }
+.nm { font-weight: 600; display: flex; justify-content: space-between; gap: 6px; }
+.hp { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; position: relative; }
+.hp i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--green); }
+.hp i.loss { background: var(--red); opacity: .7; }
+.enemy .hp i:not(.loss) { background: var(--red); }
+.enemy .hp i.loss { background: var(--gold); }
+.nums { font-size: .8rem; color: var(--dim); font-variant-numeric: tabular-nums; }
+.nums b { color: var(--fg); font-weight: 500; }
+.chips { display: flex; gap: 4px; flex-wrap: wrap; min-height: 1.1em; }
+.chip { font-size: .72rem; padding: 0 .4rem; border-radius: 999px; background: var(--panel2); color: var(--dim); border: 1px solid var(--line); }
+.chip.blk { color: var(--blue); border-color: var(--blue); }
+.chip.bad { color: var(--red); border-color: var(--red); }
+.chip.str { color: var(--gold); border-color: var(--gold); }
+.intent { font-size: .86rem; padding: 3px 6px; border-radius: 6px; background: var(--red-soft); color: #f3c0b6; }
+.intent.calm { background: var(--panel2); color: var(--dim); }
+.intent .n { font-weight: 700; color: #fff; }
+.pv { font-size: .8rem; color: var(--gold); min-height: 1.2em; }
+.plan { font-size: .82rem; color: var(--gold); min-height: 1.2em; }
+.steps { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: .8rem; color: var(--dim); }
+.log { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; min-height: 2.4em; font-size: .9rem; }
+.dock { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; display: grid; gap: 8px; }
+.dock .meta { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; font-size: .85rem; color: var(--dim); }
+.energy { display: inline-grid; place-items: center; width: 2.6rem; height: 2.6rem; border-radius: 50%; background: var(--gold); color: #1a1408; font-weight: 800; font-variant-numeric: tabular-nums; }
+.energy.mana { background: var(--blue); }
+.hand { display: flex; flex-wrap: wrap; gap: 8px; }
+.cardui { width: 112px; min-height: 132px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel2); padding: 6px 8px 8px; display: grid; grid-template-rows: auto auto 1fr; gap: 4px; text-align: left; position: relative; }
+.cardui .cost { position: absolute; top: -8px; left: -8px; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: var(--gold); color: #1a1408; display: grid; place-items: center; font-weight: 800; font-size: .85rem; }
+.cardui .who { font-size: .7rem; letter-spacing: .05em; padding-left: 1rem; }
+.cardui b { font-size: .95rem; }
+.cardui small { font-size: .76rem; color: var(--dim); line-height: 1.4; }
+.cardui.kay { border-top: 4px solid var(--blue); } .cardui.kay .who { color: var(--blue); }
+.cardui.ar { border-top: 4px solid var(--green); } .cardui.ar .who { color: var(--green); }
+.cardui.ap { border-top: 4px solid var(--purple); } .cardui.ap .who { color: var(--purple); }
+.cardui.sel { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold-soft); }
+.acts { display: flex; flex-wrap: wrap; gap: 6px; }
+.acts button { display: grid; text-align: left; line-height: 1.3; }
+.acts button small { color: var(--dim); font-size: .74rem; }
+.bottom { display: flex; gap: 6px; flex-wrap: wrap; justify-content: space-between; }
+#modal { position: fixed; inset: 0; background: rgba(6,7,10,.8); display: grid; place-items: center; z-index: 20; padding: 16px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+#modal[hidden] { display: none; }
+.box { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; width: min(600px, 100%); max-height: 90vh; overflow: auto; display: grid; gap: 10px; }
+.box h2 { margin: 0; font-size: 1.15rem; }
+.box p { margin: 0; }
+.box .btns { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+.box .story { font-family: "Songti SC", "STSong", "Noto Serif SC", serif; font-size: 1.02rem; line-height: 1.9; }
+.pick3 { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.pick3 .cardui { cursor: pointer; }
+.choice { display: grid; gap: 8px; }
+.choice button { text-align: left; display: grid; gap: 2px; }
+.choice button small { color: var(--dim); }
+table.m { border-collapse: collapse; width: 100%; font-size: .88rem; }
+table.m th, table.m td { padding: 3px 6px; border-bottom: 1px solid var(--line); text-align: left; }
+table.m td.n { text-align: right; font-variant-numeric: tabular-nums; }
+details.obs { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; font-size: .82rem; color: var(--dim); }
+details.obs summary { cursor: pointer; }
+@media (prefers-reduced-motion: no-preference) { .flash { animation: fl .45s ease-out; } @keyframes fl { from { background: var(--gold-soft); } } }
+@media (max-width: 480px) { .cardui { width: calc(50% - 4px); } }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="top"></div>
+  <div id="view"></div>
+  <details class="obs"><summary>试玩记录（玩完把这里的数告诉我）</summary><div id="obsBody"></div></details>
+</div>
+<div id="modal" hidden></div>
+<script>
+'use strict';
+// ================= 共用：规则照《杀戮尖塔》 =================
+const RULES = { weak: 0.75, vuln: 1.5 };
+const NAMES = { ap: '你', kay: '凯', ar: '亚瑟' };
+const BASE_HP = { ap: 10, kay: 12, ar: 9 };
+const ENEMY = {
+  wolf:   { name: '狼',   hp: 6,  kind: 'wolf', pattern: [{ t: 'atk', d: 3, to: 'low' }] },
+  grey:   { name: '灰狼', hp: 7,  kind: 'wolf', pattern: [{ t: 'atk', d: 3, to: 'ar' }, { t: 'atk', d: 3, to: 'kay' }] },
+  howler: { name: '瘦狼', hp: 5,  kind: 'wolf', pattern: [{ t: 'atk', d: 2, to: 'ap' }, { t: 'summon', what: 'wolf' }] },
+  leader: { name: '头狼', hp: 16, kind: 'wolf', pattern: [{ t: 'atk', d: 5, to: 'ar' }, { t: 'buff', str: 2 }, { t: 'atk', d: 4, hits: 2, to: 'kay' }] },
+  // 卡牌版每回合能挡能打的量和行动版不一样，头狼单独调：两版都调到「只会砍会输、想过再打能赢」（自动测试里试出来的）
+  leaderB: { name: '头狼', hp: 16, kind: 'wolf', pattern: [{ t: 'atk', d: 6, to: 'ar' }, { t: 'buff', str: 2 }, { t: 'atk', d: 5, hits: 2, to: 'kay' }] },
+  bandit: { name: '强盗', hp: 10, kind: 'man',  pattern: [{ t: 'atk', d: 4, to: 'kay' }, { t: 'weak', n: 2, to: 'kay' }, { t: 'atk', d: 5, to: 'low' }] },
+  archer: { name: '弓手', hp: 7,  kind: 'man',  pattern: [{ t: 'atk', d: 2, hits: 2, to: 'ap' }, { t: 'def', b: 4 }] },
+};
+const FIGHTS = [
+  { title: '林子边的狼', list: ['wolf', 'grey'], line: '羊圈后面的泥地上有两串爪印。灰狼先从蕨丛里探出头。' },
+  { title: '路上的强盗', list: ['bandit', 'archer'], line: '强盗把一只死羊横在路中间，弓手蹲在树后，弦已经拉开了。' },
+  { title: '头狼群', list: ['leader', 'grey', 'howler'], listB: ['leaderB', 'grey', 'howler'], line: '头狼比别的狼高出一头，左耳缺了一块。瘦狼在它身后来回踱，喉咙里咕噜作响。' },
+];
+let seed = 1;
+function rnd() { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+const clone = o => JSON.parse(JSON.stringify(o));
+const sleep = ms => new Promise(r => setTimeout(r, window.__fast ? 0 : ms));   // 测试时 window.__fast = true 跳过动画
+function hit(base, src, tgt) {
+  let d = base + (src.str || 0);
+  if (src.weak > 0) d *= RULES.weak;
+  if (tgt.vuln > 0) d *= RULES.vuln;
+  return Math.max(0, Math.floor(d + 1e-6));
+}
+function absorb(t, d) { const bl = Math.min(t.block, d); t.block -= bl; const lost = d - bl; t.hp = Math.max(0, t.hp - lost); return [bl, lost]; }
+
+// ================= 进度和记录 =================
+let G = null, B = null, busy = false;
+const RUNS = { A: null, B: null };   // 两版的成绩，最后对比
+function newRun(mode) {
+  return { mode, fight: 0, up: {}, deck: mode === 'B' ? STARTER.slice() : [], baseSeed: 1000 + (mode === 'A' ? 1 : 2), m: { fights: [], turns: [], start: Date.now() } };
+}
+function turnStat() { return B && B.turnStat; }
+function markAction() { const t = turnStat(); if (t && t.first === null) t.first = Date.now() - t.t0; }
+
+// ================= 敌人 =================
+function mkEnemy(b, k) { const d = ENEMY[k]; return { uid: ++b.uid, key: k, name: d.name, kind: d.kind, hp: d.hp, max: d.hp, block: 0, str: 0, weak: 0, vuln: 0, pi: 0, intent: null }; }
+function lowParty(b) { const a = b.party.filter(p => p.hp > 0); return a.length ? a.reduce((x, c) => c.hp < x.hp ? c : x) : null; }
+function pickTarget(b, to) {
+  if (to === 'low') { const p = lowParty(b); return p ? p.id : null; }
+  const p = b.party.find(x => x.id === to); if (p && p.hp > 0) return to;
+  const l = lowParty(b); return l ? l.id : null;
+}
+function rollIntent(b, e) { const pat = ENEMY[e.key].pattern; const it = Object.assign({}, pat[e.pi % pat.length]); e.pi++; if (it.to) it.to = pickTarget(b, it.to); e.intent = it; }
+function intentTarget(b, it) { if (b.taunt && it.t === 'atk') { const t = b.party.find(p => p.id === b.taunt && p.hp > 0); if (t) return t.id; } return it.to; }
+function intentText(b, e) {
+  const it = e.intent; if (!it) return '';
+  if (it.t === 'atk') { const to = intentTarget(b, it); const t = b.party.find(p => p.id === to) || { vuln: 0 }; const n = hit(it.d, e, t); return `攻 <span class="n">${n}${it.hits > 1 ? '×' + it.hits : ''}</span> → ${NAMES[to] || '?'}`; }
+  if (it.t === 'summon') return '嚎叫：叫来一只' + ENEMY[it.what].name;
+  if (it.t === 'buff') return `长嚎：狼群力量 +${it.str}`;
+  if (it.t === 'weak') return `撒沙 → ${NAMES[it.to] || '?'}：虚弱 ${it.n}`;
+  if (it.t === 'def') return `躲到树后：挡 ${it.b}`;
+  if (it.t === 'stunned') return '被打断';
+  return '';
+}
+function resolveEnemies(b, step) {
+  b.enemies.forEach(e => { if (e.hp > 0) e.block = 0; });
+  for (const e of b.enemies.slice()) {
+    if (e.hp <= 0 || !e.intent) continue;
+    const it = e.intent;
+    if (it.t === 'atk') {
+      for (let h = 0; h < (it.hits || 1); h++) {
+        let t = b.party.find(p => p.id === intentTarget(b, it) && p.hp > 0) || lowParty(b); if (!t) break;
+        const d = hit(it.d, e, t); const [bl, lost] = absorb(t, d);
+        step(`${e.name}扑向${t.name}：${lost}${bl ? `（挡掉 ${bl}）` : ''}${t.hp <= 0 ? `，${t.name}倒下` : ''}`, t.id);
+      }
+    } else if (it.t === 'summon') {
+      if (b.enemies.filter(x => x.hp > 0).length < 4) { b.enemies.push(mkEnemy(b, it.what)); step(`${e.name}嚎了一声，蕨丛里又钻出一只${ENEMY[it.what].name}`, e.uid); }
+      else step(`${e.name}嚎了一声，没有狼回应`, e.uid);
+    } else if (it.t === 'buff') { b.enemies.filter(x => x.hp > 0 && x.kind === e.kind).forEach(x => x.str += it.str); step(`${e.name}仰头长嚎：狼群力量 +${it.str}`, e.uid); }
+    else if (it.t === 'weak') { const t = b.party.find(p => p.id === it.to && p.hp > 0) || lowParty(b); if (t) { t.weak += it.n; step(`${e.name}往${t.name}眼里撒了一把沙：虚弱 ${it.n}`, t.id); } }
+    else if (it.t === 'def') { e.block += it.b; step(`${e.name}躲到树后：挡 ${it.b}`, e.uid); }
+    else if (it.t === 'stunned') step(`${e.name}被打断，这回合没动`, e.uid);
+    if (b.party.every(p => p.hp <= 0)) { b.over = 'lose'; step('三个人都倒下了'); return; }
+  }
+  b.enemies.forEach(e => { e.weak = Math.max(0, e.weak - 1); e.vuln = Math.max(0, e.vuln - 1); });
+}
+function dealHit(b, src, tgt, base, label, step) {
+  if (!tgt || tgt.hp <= 0) { tgt = b.enemies.find(e => e.hp > 0); if (!tgt) return; }
+  const d = hit(base, src, tgt); const [bl, lost] = absorb(tgt, d);
+  step(`${label}${tgt.name}：${lost}${bl ? `（挡掉 ${bl}）` : ''}${tgt.hp <= 0 ? `，${tgt.name}倒下` : ''}`, tgt.uid);
+  return tgt;
+}
+const P = (b, id) => b.party.find(p => p.id === id);
+const alive = (b, id) => { const p = P(b, id); return p && p.hp > 0; };
+function checkWin(b, step) { if (!b.over && b.enemies.every(e => e.hp <= 0)) { b.over = 'win'; step('敌人都倒下了'); } }
+
+// ================= 行动版：三个人各排一个行动 =================
+const UPS_A = [
+  { k: 'spark', name: '星火加热', text: '星火伤害 +1' }, { k: 'kay', name: '凯磨了剑', text: '凯的砍 +1' },
+  { k: 'ar', name: '亚瑟练了剑', text: '亚瑟的砍 +1' }, { k: 'ward', name: '护身加厚', text: '护身多挡 2' },
+  { k: 'mana', name: '深水', text: '法力上限 +2' }, { k: 'shield', name: '盾牌包铁', text: '举盾多挡 2' },
+  { k: 'interrupt', name: '学会打断', text: '你多一招：打断（3 法力），取消召唤和长嚎', once: true },
+  { k: 'see', name: '看穿', text: '每场开打，所有敌人易伤 1', once: true },
+];
+const upA = k => (G.up[k] || 0);
+function actsA(id) {
+  if (id === 'ap') {
+    const a = [
+      { k: 'spark', name: '星火', cost: 1, target: 'enemy', desc: () => `${2 + upA('spark')} 伤害，易伤 1` },
+      { k: 'ward', name: '护身', cost: 2, target: 'ally', desc: () => `给一个人挡 ${4 + 2 * upA('ward')}` },
+      { k: 'focus', name: '凝神', cost: 0, target: null, desc: () => '回 2 法力' },
+    ];
+    if (upA('interrupt')) a.push({ k: 'interrupt', name: '打断', cost: 3, target: 'enemy', desc: () => '取消召唤、长嚎' });
+    return a;
+  }
+  const atk = (id === 'kay' ? 3 : 2) + upA(id);
+  return [{ k: 'attack', name: '砍', cost: 0, target: 'enemy', desc: () => `${atk} 伤害` }, { k: 'defend', name: '举盾', cost: 0, target: null, desc: () => `挡 ${3 + 2 * upA('shield')}` }];
+}
+function resolveA(b, step) {
+  for (const id of ['ap', 'kay', 'ar']) {
+    const p = P(b, id), pl = b.plans[id]; if (!p || p.hp <= 0 || !pl) continue;
+    const tgt = pl.target !== undefined ? b.enemies.find(e => e.uid === pl.target) : null;
+    if (pl.k === 'spark') { b.mana -= 1; const t = dealHit(b, p, tgt, 2 + upA('spark'), '你的星火打中', step); if (t) t.vuln += 1; }
+    else if (pl.k === 'attack') dealHit(b, p, tgt, (id === 'kay' ? 3 : 2) + upA(id), `${p.name}砍`, step);
+    else if (pl.k === 'defend') { p.block += 3 + 2 * upA('shield'); step(`${p.name}举盾，挡 ${3 + 2 * upA('shield')}`, id); }
+    else if (pl.k === 'ward') { b.mana -= 2; const a = (alive(b, pl.target) ? P(b, pl.target) : p); a.block += 4 + 2 * upA('ward'); step(`你给${a.name}护身，挡 ${4 + 2 * upA('ward')}`, a.id); }
+    else if (pl.k === 'focus') { b.mana = Math.min(b.manaMax, b.mana + 2); step('你凝神，法力回 2', id); }
+    else if (pl.k === 'interrupt') { b.mana -= 3; const t = tgt && tgt.hp > 0 ? tgt : null; if (t && t.intent && (t.intent.t === 'summon' || t.intent.t === 'buff')) { t.intent = { t: 'stunned' }; step(`你打断了${t.name}`, t.uid); } else step('打断落了空', id); }
+    checkWin(b, step); if (b.over) return;
+  }
+  b.party.forEach(p => { p.weak = Math.max(0, p.weak - 1); p.vuln = Math.max(0, p.vuln - 1); });
+}
+function nextMemberA(b) { return ['ap', 'kay', 'ar'].find(id => alive(b, id) && !b.plans[id]); }
+
+// ================= 卡牌版：整套照《杀戮尖塔》 =================
+const CARDS = {
+  k_slash:  { who: 'kay', name: '砍', cost: 1, tgt: 'enemy', v: 4, text: b => `${dmgOf(b, 'kay', CARDS.k_slash.v)} 伤害` },
+  k_guard:  { who: 'kay', name: '举盾', cost: 1, tgt: null, v: 5, text: () => `凯挡 ${CARDS.k_guard.v}` },
+  a_slash:  { who: 'ar', name: '砍', cost: 1, tgt: 'enemy', v: 4, text: b => `${dmgOf(b, 'ar', CARDS.a_slash.v)} 伤害` },
+  a_guard:  { who: 'ar', name: '举盾', cost: 1, tgt: null, v: 5, text: () => `亚瑟挡 ${CARDS.a_guard.v}` },
+  spark:    { who: 'ap', name: '星火', cost: 1, tgt: 'enemy', v: 3, text: b => `${dmgOf(b, 'ap', CARDS.spark.v)} 伤害，易伤 2` },
+  ward:     { who: 'ap', name: '护身', cost: 1, tgt: 'ally', v: 5, text: () => `给一个人挡 ${CARDS.ward.v}` },
+  // 奖励牌
+  k_sweep:  { who: 'kay', name: '横扫', cost: 2, tgt: null, text: b => `所有敌人 ${dmgOf(b, 'kay', 4)} 伤害` },
+  k_cover:  { who: 'kay', name: '挡在前面', cost: 1, tgt: null, text: () => '凯挡 4；这回合打向别人的攻击都改打凯' },
+  k_bash:   { who: 'kay', name: '盾击', cost: 1, tgt: 'enemy', text: b => `伤害等于凯的格挡（现在 ${b ? (P(b, 'kay') || {}).block || 0 : 0}）` },
+  a_charge: { who: 'ar', name: '冲锋', cost: 1, tgt: 'enemy', text: b => `${dmgOf(b, 'ar', 4)} 伤害；目标易伤时再 +4` },
+  a_steady: { who: 'ar', name: '稳住', cost: 0, tgt: null, text: () => '亚瑟挡 3，抽 1 张' },
+  interrupt:{ who: 'ap', name: '打断', cost: 1, tgt: 'enemy', text: () => '取消目标的召唤或长嚎。消耗', exhaust: true },
+  still:    { who: 'ap', name: '静水', cost: 0, tgt: null, text: () => '抽 2 张' },
+  pierce:   { who: 'ap', name: '看穿', cost: 1, tgt: null, text: () => '所有敌人易伤 1' },
+  stars:    { who: 'ap', name: '星雨', cost: 2, tgt: null, text: b => `随机打 3 下，每下 ${dmgOf(b, 'ap', 2)}` },
+};
+const STARTER = ['k_slash', 'k_slash', 'k_guard', 'a_slash', 'a_slash', 'a_guard', 'spark', 'spark', 'ward', 'ward'];
+const REWARD_POOL = ['k_sweep', 'k_cover', 'k_bash', 'a_charge', 'a_steady', 'interrupt', 'still', 'pierce', 'stars'];
+function dmgOf(b, who, base) { if (!b) return base; const p = P(b, who); return p ? hit(base, p, { vuln: 0 }) : base; }
+function drawCards(b, n) {
+  for (let i = 0; i < n; i++) {
+    if (b.hand.length >= 10) break;                         // 手牌上限 10：多抽的留在抽牌堆
+    if (!b.draw.length) { if (!b.discard.length) break; b.draw = shuffle(b.discard.splice(0)); }   // 抽牌堆空了才把弃牌堆洗回
+    b.hand.push(b.draw.pop());
+  }
+}
+function playable(b, c) { const d = CARDS[c.k]; return d.cost <= b.energy && alive(b, d.who); }
+function playCard(b, idx, target, step) {
+  const c = b.hand[idx], d = CARDS[c.k], src = P(b, d.who);
+  b.hand.splice(idx, 1); b.energy -= d.cost;
+  const tgt = typeof target === 'number' ? b.enemies.find(e => e.uid === target) : null;
+  switch (c.k) {
+    case 'k_slash': dealHit(b, src, tgt, d.v, '凯砍', step); break;
+    case 'a_slash': dealHit(b, src, tgt, d.v, '亚瑟砍', step); break;
+    case 'k_guard': src.block += d.v; step(`凯举盾，挡 ${d.v}`, 'kay'); break;
+    case 'a_guard': src.block += d.v; step(`亚瑟举盾，挡 ${d.v}`, 'ar'); break;
+    case 'spark': { const t = dealHit(b, src, tgt, d.v, '你的星火打中', step); if (t) t.vuln += 2; break; }
+    case 'ward': { const a = alive(b, target) ? P(b, target) : src; a.block += d.v; step(`你给${a.name}护身，挡 ${d.v}`, a.id); break; }
+    case 'k_sweep': b.enemies.filter(e => e.hp > 0).forEach(e => dealHit(b, src, e, 4, '凯横扫，砍中', step)); break;
+    case 'k_cover': src.block += 4; b.taunt = 'kay'; step('凯挡在前面：挡 4，这回合的攻击都冲他来', 'kay'); break;
+    case 'k_bash': dealHit(b, src, tgt, src.block, '凯用盾砸', step); break;
+    case 'a_charge': { const t = tgt && tgt.hp > 0 ? tgt : b.enemies.find(e => e.hp > 0); dealHit(b, src, t, 4 + (t && t.vuln > 0 ? 4 : 0), '亚瑟冲上去砍', step); break; }
+    case 'a_steady': src.block += 3; drawCards(b, 1); step('亚瑟稳住脚：挡 3，抽 1 张', 'ar'); break;
+    case 'interrupt': { const t = tgt && tgt.hp > 0 ? tgt : null; if (t && t.intent && (t.intent.t === 'summon' || t.intent.t === 'buff')) { t.intent = { t: 'stunned' }; step(`你打断了${t.name}`, t.uid); } else step('打断落了空', 'ap'); break; }
+    case 'still': drawCards(b, 2); step('你盯着地上的水洼，抽 2 张', 'ap'); break;
+    case 'pierce': b.enemies.filter(e => e.hp > 0).forEach(e => e.vuln += 1); step('你看穿了它们的破绽：所有敌人易伤 1', 'ap'); break;
+    case 'stars': for (let i = 0; i < 3; i++) { const al = b.enemies.filter(e => e.hp > 0); if (!al.length) break; dealHit(b, src, al[Math.floor(rnd() * al.length)], 2, '星雨落在', step); } break;
+  }
+  (d.exhaust ? b.exhaust : b.discard).push(c);   // 效果结算完才进弃牌堆
+  checkWin(b, step);
+}
+function endTurnB(b) { b.discard.push(...b.hand.splice(0)); b.party.forEach(p => { p.weak = Math.max(0, p.weak - 1); p.vuln = Math.max(0, p.vuln - 1); }); }
+
+// ================= 一场仗 =================
+function newBattle() {
+  const f = FIGHTS[G.fight];
+  seed = G.baseSeed + G.fight * 17 + (G.retry || 0) * 0;   // 重来这一场：同一个种子，敌人的招式不变
+  const b = { mode: G.mode, turn: 0, enemies: [], party: [], uid: 0, over: null, log: f.line, plans: {}, taunt: null };
+  ((G.mode === 'B' && f.listB) || f.list).forEach(k => b.enemies.push(mkEnemy(b, k)));
+  ['ap', 'kay', 'ar'].forEach(id => b.party.push({ id, name: NAMES[id], hp: BASE_HP[id], max: BASE_HP[id], block: 0, weak: 0, vuln: 0, str: 0 }));
+  if (G.mode === 'A') { b.manaMax = 6 + 2 * upA('mana'); b.mana = b.manaMax; if (upA('see')) b.enemies.forEach(e => e.vuln = 1); }
+  else { let n = 0; b.draw = shuffle(G.deck.map(k => ({ k, id: ++n }))); b.hand = []; b.discard = []; b.exhaust = []; }
+  b.stats = { turns: 0 };
+  startTurn(b);
+  return b;
+}
+function startTurn(b) {
+  b.turn++; b.stats.turns = b.turn;
+  b.party.forEach(p => p.block = 0);
+  b.enemies.forEach(e => { if (e.hp > 0) rollIntent(b, e); });
+  b.taunt = null; b.plans = {};
+  if (b.mode === 'A') { if (b.turn > 1) b.mana = Math.min(b.manaMax, b.mana + 1); }
+  else { b.energy = 3; drawCards(b, 5); }
+  b.turnStat = { t0: Date.now(), first: null };
+}
+function closeTurnStat(b) { const t = b.turnStat; if (!t) return; G.m.turns.push({ fight: G.fight, first: t.first ?? (Date.now() - t.t0), total: Date.now() - t.t0 }); b.turnStat = null; }
+
+// 敌人出手，一步一步演
+async function enemyPhase(frames) {
+  const rec = who => (text, focus) => frames.push({ snap: clone(B), text, focus, who });
+  resolveEnemies(B, rec('e'));
+  await play(frames);
+  if (B.over === 'lose') return lose();
+  startTurn(B); B.log = `第 ${B.turn} 回合：先看敌人头上的牌子。`;
+  render();
+}
+async function play(frames) {
+  busy = true; const final = B;
+  for (let k = 0; k < frames.length; k++) {
+    if (k === 0 || frames[k].who !== frames[k - 1].who) { render(frames[k].snap, frames[k].who === 'p' ? '你们出手' : '敌人出手'); await sleep(420); }
+    render(frames[k].snap, frames[k].text, frames[k].focus); await sleep(600);
+  }
+  B = final; busy = false;
+}
+async function runRoundA() {
+  closeTurnStat(B);
+  const frames = []; resolveA(B, (text, focus) => frames.push({ snap: clone(B), text, focus, who: 'p' }));
+  if (B.over === 'win') { await play(frames); return win(); }
+  await enemyPhase(frames);
+}
+async function endTurnBtn() {
+  if (busy || !B || B.mode !== 'B') return;
+  closeTurnStat(B); endTurnB(B);
+  await enemyPhase([]);
+}
+function previewA(b) { const c = clone(b), noop = () => {}; resolveA(c, noop); if (!c.over) resolveEnemies(c, noop); return c; }
+function previewEnemies(b) { const c = clone(b); resolveEnemies(c, () => {}); return c; }
+
+// ================= 打赢、输了、奖励 =================
+function win() {
+  closeTurnStat(B);
+  G.m.fights.push({ fight: G.fight, turns: B.turn, result: '赢', retry: G.retry || 0 });
+  const last = G.fight === FIGHTS.length - 1; B = null;
+  if (last) return finish();
+  rewardModal();
+}
+function lose() {
+  closeTurnStat(B);
+  G.m.fights.push({ fight: G.fight, turns: B.turn, result: '输', retry: G.retry || 0 });
+  B = null; G.retry = (G.retry || 0) + 1;
+  modal(`<h2>三个人都倒下了</h2><p>重来这一场。敌人的招式和上次一样，换个打法试试。</p>`, [{ label: '重来这一场', primary: true, fn: () => { closeModal(); B = newBattle(); render(); } }]);
+}
+function rewardModal() {
+  const pool = G.mode === 'A' ? UPS_A.filter(u => !(u.once && G.up[u.k])) : REWARD_POOL.map(k => ({ k }));
+  const three = shuffle(pool.slice()).slice(0, 3);
+  const t0 = Date.now();
+  const html = `<h2>打赢了</h2><p>${G.mode === 'A' ? '挑一个强化：' : '挑一张新牌加进牌组（牌组现在 ' + G.deck.length + ' 张）：'}</p>
+    <div class="pick3">${three.map((x, i) => G.mode === 'A'
+      ? `<button class="cardui ap" data-i="${i}" style="border-top-color:var(--gold)"><span class="who" style="color:var(--gold)">强化</span><b>${x.name}</b><small>${x.text}</small></button>`
+      : cardHtml({ k: x.k }, null, `data-i="${i}"`, true)).join('')}</div>`;
+  modal(html, [{ label: '都不要', fn: () => next() }]);
+  document.querySelectorAll('.pick3 [data-i]').forEach(el => el.onclick = () => {
+    const x = three[+el.dataset.i];
+    if (G.mode === 'A') G.up[x.k] = (G.up[x.k] || 0) + 1; else G.deck.push(x.k);
+    next();
+  });
+  function next() { G.m.rewardMs = (G.m.rewardMs || 0) + (Date.now() - t0); G.fight++; G.retry = 0; closeModal(); fightIntro(); }
+}
+function fightIntro() {
+  const f = FIGHTS[G.fight];
+  modal(`<p class="tag">${G.mode === 'A' ? '行动版' : '卡牌版'} · 第 ${G.fight + 1} / 3 场</p><h2>${f.title}</h2><div class="story"><p>${f.line}</p></div>`,
+    [{ label: '开打', primary: true, fn: () => { closeModal(); B = newBattle(); render(); } }]);
+}
+function finish() {
+  G.m.end = Date.now(); RUNS[G.mode] = G;
+  const other = G.mode === 'A' ? 'B' : 'A';
+  modal(`<h2>三场打完了</h2>${summaryTable()}<p class="tag">玩完回聊天里告诉我：哪一版让你更想停下来算、更想打下一场，哪一刻觉得对了，哪一刻没意思。</p>`,
+    [{ label: '回到开头', fn: () => { closeModal(); start(); } }, ...(RUNS[other] ? [] : [{ label: `换${other === 'A' ? '行动版' : '卡牌版'}再打一遍`, primary: true, fn: () => { closeModal(); begin(other); } }])]);
+}
+function runStats(r) {
+  if (!r) return null;
+  const ts = r.m.turns; const n = ts.length || 1;
+  const avg = a => Math.round(a.reduce((s, x) => s + x, 0) / n / 100) / 10;
+  return {
+    turns: ts.length, think: avg(ts.map(t => t.first)), total: avg(ts.map(t => t.total)),
+    long: ts.filter(t => t.first >= 5000).length,
+    fights: r.m.fights.filter(f => f.result === '赢').map(f => f.turns).join(' / ') || '—',
+    losses: r.m.fights.filter(f => f.result === '输').length,
+    mins: Math.round(((r.m.end || Date.now()) - r.m.start) / 6000) / 10,
+  };
+}
+function summaryTable() {
+  const a = runStats(RUNS.A || (G && G.mode === 'A' ? G : null)), b = runStats(RUNS.B || (G && G.mode === 'B' ? G : null));
+  const rows = [['一共几个回合', 'turns'], ['每回合出第一招前平均想了几秒', 'think'], ['每回合平均用了几秒', 'total'], ['想了 5 秒以上的回合', 'long'], ['三场各打了几回合', 'fights'], ['输了几次', 'losses'], ['一共几分钟', 'mins']];
+  const cell = (s, k) => s ? s[k] : '没玩';
+  return `<table class="m"><tr><th></th><th>行动版</th><th>卡牌版</th></tr>${rows.map(r => `<tr><td>${r[0]}</td><td class="n">${cell(a, r[1])}</td><td class="n">${cell(b, r[1])}</td></tr>`).join('')}</table>`;
+}
+
+// ================= 弹窗 =================
+function modal(html, buttons) {
+  const m = document.getElementById('modal');
+  m.innerHTML = `<div class="box" role="dialog" aria-modal="true">${html}<div class="btns"></div></div>`;
+  const bb = m.querySelector('.btns');
+  (buttons || []).forEach(b => { const el = document.createElement('button'); el.textContent = b.label; if (b.primary) el.className = 'primary'; el.onclick = b.fn; bb.appendChild(el); });
+  m.hidden = false; const f = m.querySelector('button.primary'); if (f) f.focus();
+}
+function closeModal() { document.getElementById('modal').hidden = true; }
+
+// ================= 画面 =================
+function hpBar(cur, max, after) {
+  const w = v => Math.max(0, Math.min(100, v / max * 100));
+  return `<div class="hp">${after !== undefined && after < cur ? `<i class="loss" style="width:${w(cur)}%"></i><i style="width:${w(after)}%"></i>` : `<i style="width:${w(cur)}%"></i>`}</div>`;
+}
+function chips(u) {
+  const c = [];
+  if (u.block) c.push(`<span class="chip blk">挡 ${u.block}</span>`);
+  if (u.vuln) c.push(`<span class="chip bad">易伤 ${u.vuln}</span>`);
+  if (u.weak) c.push(`<span class="chip bad">虚弱 ${u.weak}</span>`);
+  if (u.str) c.push(`<span class="chip str">力量 +${u.str}</span>`);
+  return `<div class="chips">${c.join('')}</div>`;
+}
+function cardHtml(c, b, attrs, big) {
+  const d = CARDS[c.k];
+  const can = !b || playable(b, c);
+  return `<button class="cardui ${d.who}" ${attrs || ''} ${can ? '' : 'disabled'}><span class="cost">${d.cost}</span><span class="who">${NAMES[d.who] === '你' ? '你' : NAMES[d.who]}</span><b>${d.name}</b><small>${d.text(b)}${b && !alive(b, d.who) ? `<br>（${NAMES[d.who]}倒下了）` : ''}</small></button>`;
+}
+let sel = null;   // A: {id, act} ; B: {idx}
+function render(view, text, focus) {
+  const b = view || B; const live = !view && !busy;
+  if (!b) return;
+  renderTop();
+  let pv = null;
+  if (live && b.mode === 'A' && Object.keys(b.plans).length) pv = previewA(b);
+  if (live && b.mode === 'B') pv = previewEnemies(b);
+  const selDef = sel && b.mode === 'B' ? CARDS[b.hand[sel.idx].k] : null;
+  const pickKind = !live ? null : b.mode === 'A' ? (sel ? actsA(sel.id).find(a => a.k === sel.act).target : null) : (selDef ? selDef.tgt : null);
+  const curA = live && b.mode === 'A' && !sel ? nextMemberA(b) : null;
+  let h = `<div class="battle"><div class="steps">${b.mode === 'A'
+    ? '<span>① 看敌人头上的牌子</span><span>② 给每人选一个行动</span><span>③ 选完自动开打：你们先动，敌人后动</span>'
+    : '<span>① 看敌人头上的牌子</span><span>② 花能量出牌：点一张牌，要目标的再点目标</span><span>③ 出完点「结束回合」，敌人出手</span>'}</div>`;
+  h += '<div class="row">' + b.enemies.map(e => {
+    const after = pv && b.mode === 'A' ? (pv.enemies.find(x => x.uid === e.uid) || {}).hp : undefined;
+    return `<div class="card enemy ${e.hp <= 0 ? 'dead' : ''} ${pickKind === 'enemy' && e.hp > 0 ? 'pick' : ''} ${focus === e.uid ? 'flash' : ''}" data-enemy="${e.uid}">
+      <div class="nm"><span>${e.name}</span><span class="nums"><b>${e.hp}</b>/${e.max}</span></div>${hpBar(e.hp, e.max, after)}${chips(e)}
+      ${e.hp > 0 ? `<div class="intent ${e.intent && e.intent.t !== 'atk' ? 'calm' : ''}">${intentText(b, e)}</div>` : '<div class="intent calm">倒下</div>'}
+      <div class="pv">${after !== undefined && after < e.hp ? (after <= 0 ? '这回合会倒下' : `${e.hp} → ${after}`) : ''}</div></div>`;
+  }).join('') + '</div>';
+  h += `<div class="log">${text || b.log || ''}</div>`;
+  h += '<div class="row">' + b.party.map(p => {
+    const after = pv ? pv.party.find(x => x.id === p.id).hp : undefined;
+    let plan = '';
+    if (b.mode === 'A' && b.plans[p.id]) { const pl = b.plans[p.id]; plan = actsA(p.id).find(a => a.k === pl.k).name + (pl.target !== undefined ? ' → ' + (typeof pl.target === 'number' ? (b.enemies.find(e => e.uid === pl.target) || {}).name : NAMES[pl.target]) : ''); }
+    if (b.mode === 'B' && b.taunt === p.id) plan = '挡在前面';
+    return `<div class="card ally ${p.hp <= 0 ? 'dead' : ''} ${pickKind === 'ally' && p.hp > 0 ? 'pick' : ''} ${curA === p.id ? 'cur' : ''} ${focus === p.id ? 'flash' : ''}" data-ally="${p.id}">
+      <div class="nm"><span>${p.name}</span><span class="nums"><b>${p.hp}</b>/${p.max}</span></div>${hpBar(p.hp, p.max, after)}${chips(p)}
+      <div class="plan">${plan}</div><div class="pv">${after !== undefined && after < p.hp ? `${b.mode === 'A' ? '会挨' : '不挡的话会挨'} ${p.hp - after}：${p.hp} → ${after}` : ''}</div></div>`;
+  }).join('') + '</div>';
+  if (live) {
+    h += '<div class="dock">';
+    if (b.mode === 'A') {
+      const who = sel ? sel.id : curA;
+      if (who) {
+        h += `<div class="meta"><span class="energy mana">${b.mana}</span><span>法力（你用）</span><b style="color:var(--fg)">${NAMES[who]}</b><span>${sel ? (pickKind === 'enemy' ? '点一个闪着金边的敌人' : '点一个闪着金边的队友') : '选一个行动'}</span></div>`;
+        h += '<div class="acts">' + actsA(who).map(a => `<button data-act="${a.k}" ${a.cost > b.mana ? 'disabled' : ''} class="${sel && sel.act === a.k ? 'primary' : ''}">${a.name}${a.cost ? `（${a.cost} 法力）` : ''}<small>${a.desc()}</small></button>`).join('') + '</div>';
+      } else h += '<div>出手……</div>';
+      h += `<div class="bottom"><button id="redo" ${Object.keys(b.plans).length || sel ? '' : 'disabled'}>重选</button></div>`;
+    } else {
+      h += `<div class="meta"><span class="energy">${b.energy}</span><span>能量 / 3</span><span>抽牌堆 ${b.draw.length}</span><span>弃牌堆 ${b.discard.length}</span>${b.exhaust.length ? `<span>消耗 ${b.exhaust.length}</span>` : ''}<span>${sel ? (pickKind === 'enemy' ? '点一个闪着金边的敌人' : '点一个闪着金边的队友') : ''}</span></div>`;
+      h += '<div class="hand">' + b.hand.map((c, i) => cardHtml(c, b, `data-card="${i}"${sel && sel.idx === i ? ' style="outline:2px solid var(--gold)"' : ''}`)).join('') + '</div>';
+      h += `<div class="bottom"><button id="cancel" ${sel ? '' : 'disabled'}>不出这张</button><button id="endturn" class="primary">结束回合</button></div>`;
+    }
+    h += '</div>';
+  }
+  h += '</div>';
+  const v = document.getElementById('view'); v.innerHTML = h;
+  if (!live) return;
+  if (b.mode === 'A') {
+    v.querySelectorAll('[data-act]').forEach(el => el.onclick = () => chooseA(sel ? sel.id : curA, el.dataset.act));
+    const r = document.getElementById('redo'); if (r) r.onclick = () => { b.plans = {}; sel = null; render(); };
+    v.querySelectorAll('[data-ally]').forEach(el => el.onclick = () => { if (sel) return targetA('ally', el.dataset.ally); const id = el.dataset.ally; if (b.plans[id]) { delete b.plans[id]; render(); } });
+    v.querySelectorAll('[data-enemy]').forEach(el => el.onclick = () => targetA('enemy', +el.dataset.enemy));
+  } else {
+    v.querySelectorAll('[data-card]').forEach(el => el.onclick = () => clickCard(+el.dataset.card));
+    v.querySelectorAll('[data-enemy]').forEach(el => el.onclick = () => targetB('enemy', +el.dataset.enemy));
+    v.querySelectorAll('[data-ally]').forEach(el => el.onclick = () => targetB('ally', el.dataset.ally));
+    document.getElementById('cancel').onclick = () => { sel = null; render(); };
+    document.getElementById('endturn').onclick = () => { sel = null; endTurnBtn(); };
+  }
+}
+function renderTop() {
+  if (!G) { document.getElementById('top').innerHTML = '<b>怎么打</b><span class="tag">原型 · 色块 · 不进正式游戏</span>'; return; }
+  document.getElementById('top').innerHTML = `<b>${G.mode === 'A' ? '行动版' : '卡牌版'}</b><span>第 ${G.fight + 1} / 3 场 · ${FIGHTS[G.fight].title}</span>${B ? `<span>第 ${B.turn} 回合</span>` : ''}<span class="grow"></span>${G.mode === 'B' ? `<button id="deckBtn">牌组 ${G.deck.length}</button>` : `<span class="tag">${Object.keys(G.up).length ? '强化：' + Object.keys(G.up).map(k => UPS_A.find(u => u.k === k).name).join('、') : ''}</span>`}`;
+  const d = document.getElementById('deckBtn'); if (d) d.onclick = () => modal(`<h2>牌组</h2><div class="hand">${G.deck.map(k => cardHtml({ k }, null)).join('')}</div>`, [{ label: '关上', primary: true, fn: closeModal }]);
+  document.getElementById('obsBody').innerHTML = summaryTable();
+}
+function chooseA(id, act) {
+  const a = actsA(id).find(x => x.k === act); if (a.cost > B.mana) return;
+  markAction();
+  if (a.target) { sel = { id, act }; render(); return; }
+  B.plans[id] = { k: act }; sel = null; afterPlanA();
+}
+function targetA(kind, tid) {
+  if (!sel) return; const a = actsA(sel.id).find(x => x.k === sel.act);
+  if ((a.target === 'enemy') !== (kind === 'enemy')) return;
+  if (kind === 'enemy' && !(B.enemies.find(e => e.uid === tid) || {}).hp) return;
+  B.plans[sel.id] = { k: sel.act, target: tid }; sel = null; afterPlanA();
+}
+function afterPlanA() { render(); if (!nextMemberA(B)) setTimeout(() => { if (B && !busy && !nextMemberA(B)) runRoundA(); }, window.__fast ? 0 : 700); }
+function clickCard(i) {
+  const c = B.hand[i]; if (!c || !playable(B, c)) return;
+  markAction();
+  const d = CARDS[c.k];
+  if (d.tgt) { sel = { idx: i }; render(); return; }
+  doPlay(i, null);
+}
+function targetB(kind, tid) {
+  if (!sel) return; const d = CARDS[B.hand[sel.idx].k];
+  if ((d.tgt === 'enemy') !== (kind === 'enemy')) return;
+  if (kind === 'enemy' && !(B.enemies.find(e => e.uid === tid) || {}).hp) return;
+  if (kind === 'ally' && !alive(B, tid)) return;
+  const i = sel.idx; sel = null; doPlay(i, tid);
+}
+async function doPlay(i, target) {
+  const frames = [];
+  playCard(B, i, target, (text, focus) => frames.push({ snap: clone(B), text, focus, who: 'p' }));
+  const last = frames[frames.length - 1];
+  for (const f of frames) { render(f.snap, f.text, f.focus); await sleep(frames.length > 1 ? 380 : 10); }
+  if (B.over === 'win') { await sleep(400); return win(); }
+  B.log = last ? last.text : B.log;
+  render();
+  if (!B.hand.some(c => playable(B, c))) { await sleep(500); if (B && !B.over && !busy) endTurnBtn(); }   // 没有能出的牌，自动结束回合
+}
+
+// ================= 开头 =================
+function begin(mode) { G = newRun(mode); G.retry = 0; B = null; sel = null; fightIntro(); }
+function start() {
+  G = null; B = null; renderTop(); document.getElementById('view').innerHTML = '';
+  const done = m => RUNS[m] ? '（玩过了）' : '';
+  modal(`<p class="tag">原型 · 色块 · 不进正式游戏</p><h2>怎么打</h2>
+    <p>同样三场仗，两种打法各打一遍：林子边的狼、路上的强盗、头狼群。每场打完回满血，挑一样奖励。输了重来这一场，敌人的招式不变。</p>
+    <p>敌人头上的牌子写着它下一步要干什么、打谁、打多少，数已经算好了。</p>
+    <div class="choice">
+      <button data-m="B"><b>卡牌版 ${done('B')}</b><small>照《杀戮尖塔》：每回合 3 点能量、抽 5 张牌，你、凯、亚瑟的招都是牌，出一张花 1 点。打赢挑一张新牌加进牌组。</small></button>
+      <button data-m="A"><b>行动版 ${done('A')}</b><small>你、凯、亚瑟每回合各选一招，选完自动开打。你的法术花法力。打赢挑一个强化。</small></button>
+    </div>${RUNS.A || RUNS.B ? summaryTable() : ''}`, []);
+  document.querySelectorAll('[data-m]').forEach(el => el.onclick = () => { closeModal(); begin(el.dataset.m); });
+}
+start();
+window.__proto = { get G() { return G; }, get B() { return B; }, begin, clickCard, targetB, chooseA, targetA, endTurnBtn, hit, CARDS, FIGHTS, ENEMY };
+</script>
+</body>
+</html>

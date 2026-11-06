@@ -1,11 +1,13 @@
 {
-  "_说明": "系统清单。按核心循环需要什么列，不按参考作品有什么列。tier：mvp = 白盒切片就要有（没有它核心循环闭不上）；playable = 确认点 C 之前要有；full = 之后。depends 写系统 id；skill 写负责的 skill 名；design 写设计页路径（game-design 产出）。",
+  "_说明": "系统清单。按核心循环需要什么列，不按参考作品有什么列。tier：mvp = 白盒切片就要有（没有它核心循环闭不上）；playable = 确认点 C 之前要有；full = 之后。depends 写系统 id；skill 写负责的 skill 名；design 写设计页路径（game-design 产出）。 ref：这个系统照哪个游戏的哪套规则，没有参照写「自创」；mechanics：mechanics-library 里能照着写的参考代码（2026-11-06 按插件 0.7.0 加）。",
   "concept": "design/CONCEPT.md",
   "systems": [
     {
       "id": "dialogue",
       "name": "对话与剧情变量",
       "what": "对白、纯选择（不掷骰）、变量；NPC 按你告诉过他什么说不同的话；两章内回读",
+      "ref": "自创（纯选择对话）；回读照 Telltale《行尸走肉》",
+      "mechanics": [],
       "verbs": [
         "找人说话",
         "说给谁听"
@@ -19,6 +21,8 @@
       "id": "prophecy",
       "name": "看水面与预言簿",
       "what": "在有水面的地点看见一幕将来，记进预言簿；决定说给谁听，选完自动存档、不可撤回",
+      "ref": "自创（看水面、预言簿）",
+      "mechanics": [],
       "verbs": [
         "看水面",
         "说给谁听",
@@ -35,6 +39,10 @@
       "id": "companions",
       "name": "同伴",
       "what": "同伴加入 / 在队 / 离开 / 离世四种状态，只由关键选择和剧情改变；决定谁能出战；第 3 章起面板画成圆桌",
+      "ref": "自创（同伴去留由说给谁听决定）",
+      "mechanics": [
+        "affinity-companions"
+      ],
       "verbs": [
         "说给谁听"
       ],
@@ -50,6 +58,10 @@
       "id": "quests",
       "name": "任务",
       "what": "主线每章一条、支线 2–4 条（每条围绕一位骑士的将来）；接、进度、完成；任务表驱动 NPC 和敌人出现",
+      "ref": "照《Vampire's Fall 2》的任务链",
+      "mechanics": [
+        "quest-state"
+      ],
       "verbs": [
         "找人说话"
       ],
@@ -65,6 +77,10 @@
       "id": "overworld",
       "name": "大地图与探索",
       "what": "按章节线性开放的区域、碰撞、物件交互、看水面的地点；明雷敌人站在任务路上、不追人、打完不再出现；四处地图看得出玩家的选择（湖边、圆桌大厅、城下河边、卡姆兰营地）",
+      "ref": "照《Vampire's Fall 2》：明雷敌人看得见、靠近会追、逃跑回神龛、祷告回血",
+      "mechanics": [
+        "overworld-grid"
+      ],
       "verbs": [
         "找人说话",
         "看水面"
@@ -78,6 +94,11 @@
       "id": "combat",
       "name": "回合制战斗",
       "what": "JRPG 式菜单回合制，不讲站位；敌人意图预告；学徒用法术（护身、打断等），同伴攻击、防御、各有一样自己的招；一场 3–5 回合；输了从这场开头重来",
+      "ref": "照《杀戮尖塔》的意图预告：伤害算进虚弱易伤、格挡回合初清零",
+      "mechanics": [
+        "intent-battle",
+        "stats-modifiers"
+      ],
       "verbs": [
         "打仗时看敌人下一步"
       ],
@@ -93,6 +114,8 @@
       "id": "story-unlocks",
       "name": "叙事进展",
       "what": "不做经验和等级：剧情事件给新法术、法力上限、新同伴和他们的招；有几样看玩家之前的选择（静水、偏转、凯的「挡在前面」、加雷斯）；也会失去（剑鞘）",
+      "ref": "自创（剧情给法术和地点）",
+      "mechanics": [],
       "verbs": [
         "拼出预言"
       ],
@@ -104,9 +127,26 @@
       "design": "design/systems/story-unlocks.md"
     },
     {
+      "id": "progression",
+      "name": "经验和技能点",
+      "what": "打仗拿经验，升级给技能点，加进几棵技能树（2026-11-06 加）",
+      "ref": "照《Vampire's Fall 2》：升级给技能点、加进几棵技能树",
+      "mechanics": [
+        "xp-progression"
+      ],
+      "tier": "mvp",
+      "depends": [
+        "combat"
+      ],
+      "skill": "progression-system",
+      "design": null
+    },
+    {
       "id": "ending",
       "name": "结局回顾",
       "what": "最后一战后按说给谁听的记录和同伴状态逐人念出下场",
+      "ref": "自创",
+      "mechanics": [],
       "verbs": [
         "说给谁听"
       ],
@@ -122,6 +162,10 @@
       "id": "save",
       "name": "存档",
       "what": "一个 JSON；说给谁听之后自动存档；兼容旧版",
+      "ref": "通用做法",
+      "mechanics": [
+        "save-migration"
+      ],
       "verbs": [],
       "tier": "playable",
       "depends": [
@@ -174,9 +218,14 @@
     {
       "id": "items",
       "name": "道具",
-      "what": "药草等少量消耗品；不在核心动作路径上，原型先不做",
+      "what": "装备槽、稀有度、词缀、掉落（2026-11-06 从 full 提到 playable）",
+      "ref": "照《Vampire's Fall 2》的装备稀有度和词缀",
+      "mechanics": [
+        "random-affix-loot",
+        "stats-modifiers"
+      ],
       "verbs": [],
-      "tier": "full",
+      "tier": "playable",
       "depends": [],
       "skill": "progression-system",
       "design": null
