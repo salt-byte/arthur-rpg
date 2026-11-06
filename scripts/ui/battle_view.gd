@@ -148,6 +148,7 @@ func _rebuild() -> void:
 			if q != null and q.act == a:
 				_style_selected(bt)
 			bt.set_meta("hint", _act_hint(u.uid, a))
+			bt.set_meta("who", u.uid)
 			bt.focus_entered.connect(_set_hint.bind(bt))
 			bt.mouse_entered.connect(_set_hint.bind(bt))
 			act_btns.append(bt)
@@ -165,7 +166,7 @@ func _rebuild() -> void:
 		var focus: Button = _end_btn if _all_planned() else null
 		if focus == null:
 			for bt in act_btns:
-				if not bt.disabled:
+				if not bt.disabled and b.planned(bt.get_meta("who", "")) == null:
 					focus = bt
 					break
 		if focus: focus.grab_focus.call_deferred()
@@ -189,11 +190,18 @@ func _style_selected(bt: Button) -> void:
 	sb.content_margin_right = 12
 	bt.add_theme_stylebox_override("normal", sb)
 
+## 点选区域：敌人从头顶的牌子到血条整列都能点；我方从头顶到血条
+func _hit_rect(uid: String, p: Vector2) -> Rect2:
+	if b.unit(uid).side == "enemy":
+		return Rect2(p + Vector2(-68, -200), Vector2(136, 284))
+	return Rect2(p + Vector2(-80, -170), Vector2(160, 254))
+
 func _unit_button(uid: String, p: Vector2) -> void:
 	var bt := Button.new()
 	bt.flat = true
-	bt.position = p + Vector2(-52, -128)
-	bt.size = Vector2(104, 132)
+	var hr := _hit_rect(uid, p)
+	bt.position = hr.position
+	bt.size = hr.size
 	bt.focus_mode = Control.FOCUS_ALL
 	var empty := StyleBoxEmpty.new()
 	var ring := StyleBoxFlat.new()
@@ -241,13 +249,15 @@ func _on_act(uid: String, a: String) -> void:
 	if kind == "":
 		b.plan(uid, a)
 		_rebuild()
+		_maybe_auto_end()
 		return
 	targeting = {"who": uid, "act": a}
 	var valid := b.valid_targets(a)
 	for k in unit_btn:
 		unit_btn[k].disabled = not (k in valid)
 	for bt in act_btns: bt.disabled = true
-	hint = UIKit.t("ui_pick_target")
+	_end_btn.disabled = true
+	hint = "%s · %s：%s" % [b.unit(uid).name, _act_label(a).split("  ")[0], UIKit.t("ui_pick_target")]
 	_refresh_hint()
 	if not valid.is_empty(): unit_btn[valid[0]].grab_focus()
 	stage.queue_redraw()
@@ -257,6 +267,18 @@ func _on_target(uid: String) -> void:
 	b.plan(targeting.who, targeting.act, uid)
 	targeting = {}
 	_rebuild()
+	_maybe_auto_end()
+
+## 活着的人都排好了，就自动开打（用户：「结束回合这些不是应该它自己结束吗」）。
+## 「结束回合」按钮留着，给只想让一部分人动的时候用。
+func _maybe_auto_end() -> void:
+	if mode != "plan" or not _all_planned(): return
+	if auto:
+		_on_end_turn()
+		return
+	await _wait(0.5)
+	if mode == "plan" and _all_planned():
+		_on_end_turn()
 
 func cancel_target() -> void:
 	if targeting.is_empty(): return
@@ -418,6 +440,12 @@ func _draw_stage() -> void:
 	for it in intents:
 		if b.unit(it.uid) == null: continue
 		_intent_plate(it, _pos_of(it.uid))
+	if not targeting.is_empty():
+		var pulse := 0.5 + 0.5 * sin(_t * 7.0)
+		for uid in b.valid_targets(targeting.act):
+			var r := _hit_rect(uid, _pos_of(uid))
+			ci.draw_rect(r, Color(UIKit.GOLD, 0.12 + 0.12 * pulse))
+			ci.draw_rect(r, Color(UIKit.GOLD, 0.6 + 0.4 * pulse), false, 4.0)
 	for f in _floats:
 		if f.t < 0.0: continue
 		var p := _pos_of(f.uid) + Vector2(0, -40 - f.t * 50.0)

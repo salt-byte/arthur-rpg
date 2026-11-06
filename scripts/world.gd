@@ -29,6 +29,8 @@ var cam: Camera2D
 var player: Node2D
 var _t := 0.0
 var _last_trigger := Vector2i(-1, -1)
+var hover_cell := Vector2i(-1, -1)   # 鼠标停在哪一格
+var _walk_id := 0                    # 点地面走路：新的一下点击取消上一条路
 
 func _ready() -> void:
 	M = Data.t("maps")
@@ -142,6 +144,7 @@ func _process(delta: float) -> void:
 
 func _has_glow() -> bool:
 	if area == "": return false
+	if hover_cell.x >= 0: return true
 	for w in Data.t("overworld").get("water_spots", []):
 		if w.area == area and water_glows(w): return true
 	return not markers().is_empty()
@@ -173,6 +176,86 @@ func step(d: Vector2i) -> bool:
 		moving = false
 		_arrive(n))
 	return true
+
+## 屏幕上的一点是地图上的哪一格
+func cell_at_screen(pos: Vector2) -> Vector2i:
+	var wp := get_canvas_transform().affine_inverse() * pos
+	return Vector2i(floori(wp.x / cs), floori(wp.y / cs))
+
+## 能不能点：人、发光或不发光的水面、敌人，算「点了有事」
+func clickable(c: Vector2i) -> bool:
+	return npc_at(c) != null or water_at(c) != null or spawn_at(c) != null
+
+## 鼠标或手指点了地图上的一格：空地就走过去；人和水面走到旁边再说话 / 看；敌人走到旁边就开打
+func click_cell(c: Vector2i) -> void:
+	if c.x < 0 or c.y < 0 or c.x >= W or c.y >= H: return
+	_walk_id += 1
+	var my := _walk_id
+	var kind := ""
+	if npc_at(c) != null or water_at(c) != null: kind = "talk"
+	elif spawn_at(c) != null: kind = "fight"
+	elif blocked(c): return
+	var path := path_to(c, kind != "")
+	for n in path:
+		while moving: await get_tree().process_frame
+		if my != _walk_id or not main.can_move(): return
+		if not step(n - player_cell): return
+	while moving: await get_tree().process_frame
+	if my != _walk_id or not main.can_move() or kind == "": return
+	var d := c - player_cell
+	if absi(d.x) + absi(d.y) != 1: return
+	if kind == "fight":
+		step(d)
+	else:
+		facing = d
+		player.queue_redraw()
+		interact()
+
+## 寻路：只走空地；出口、敌人、触发格只在它就是终点时才踩（触发格挡住唯一的路时也踩，比如阁楼门口）
+func path_to(t: Vector2i, adjacent: bool) -> Array:
+	var p := _bfs(t, adjacent, true)
+	if p.is_empty() and not _at_goal(t, adjacent): p = _bfs(t, adjacent, false)
+	return p
+
+func _at_goal(t: Vector2i, adjacent: bool) -> bool:
+	var d := t - player_cell
+	return (absi(d.x) + absi(d.y) == 1) if adjacent else (d == Vector2i.ZERO)
+
+func _bfs(t: Vector2i, adjacent: bool, avoid_triggers: bool) -> Array:
+	var start := player_cell
+	var avoid := {}
+	for e in A.get("exits", []): avoid[Vector2i(int(e.cell[0]), int(e.cell[1]))] = true
+	if avoid_triggers:
+		for tr_ in A.get("triggers", []):
+			if main.cond(tr_.get("cond", "")): avoid[Vector2i(int(tr_.cell[0]), int(tr_.cell[1]))] = true
+	for s in spawns_here(): avoid[Vector2i(int(s.cell[0]), int(s.cell[1]))] = true
+	var goal := {}
+	if adjacent:
+		for d in DIRS.values(): goal[t + d] = true
+	else:
+		goal[t] = true
+	if goal.has(start): return []
+	var prev := {start: start}
+	var q := [start]
+	var found = null
+	while not q.is_empty():
+		var c: Vector2i = q.pop_front()
+		if goal.has(c):
+			found = c
+			break
+		for d in DIRS.values():
+			var n: Vector2i = c + d
+			if prev.has(n) or n.x < 0 or n.y < 0 or n.x >= W or n.y >= H or blocked(n): continue
+			if avoid.has(n) and not goal.has(n): continue
+			prev[n] = c
+			q.append(n)
+	if found == null: return []
+	var path := []
+	var c: Vector2i = found
+	while c != start:
+		path.push_front(c)
+		c = prev[c]
+	return path
 
 ## 测试和传送用：直接站到某一格
 func place(c: Vector2i, face := Vector2i(0, 1)) -> void:
@@ -317,6 +400,12 @@ func _draw() -> void:
 			_name_tag(nm, c + Vector2(0, -cs * 0.72), UIKit.CREAM)
 		if n.get("node", "") != "" and not main.runner.visited(n.node):
 			_bubble(c + Vector2(cs * 0.34, -cs * 0.5))
+	if hover_cell.x >= 0 and main != null and main.mode == "map":
+		var hr := Rect2(hover_cell.x * cs, hover_cell.y * cs, cs, cs)
+		if clickable(hover_cell):
+			draw_rect(hr.grow(-2), UIKit.GOLD, false, 4.0)
+		elif not blocked(hover_cell):
+			draw_rect(hr.grow(-4), Color(1, 1, 1, 0.35), false, 2.0)
 	# 任务标记：金色的倒三角，上下浮动
 	for m in markers():
 		var c := _px(m) + Vector2(0, -cs * 0.9 + sin(_t * 4.0) * 5.0)

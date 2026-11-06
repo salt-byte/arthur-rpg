@@ -188,7 +188,12 @@ func _unhandled_input(e: InputEvent) -> void:
 		"dialog":
 			if dbox.visible: dbox.handle(e)
 		"map":
-			if e.is_action_pressed("confirm"):
+			if e is InputEventMouseMotion:
+				world.hover_cell = world.cell_at_screen(e.position)
+			elif e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT:
+				hud.show_controls = false
+				world.click_cell(world.cell_at_screen(e.position))
+			elif e.is_action_pressed("confirm"):
 				hud.show_controls = false
 				world.interact()
 			elif e.is_action_pressed("cancel"):
@@ -371,9 +376,11 @@ func _playtest() -> void:
 	await _hold("move_down")
 	verify("input", world.player_cell != before, "按「下」以后学徒从 %s 走到 %s" % [before, world.player_cell])
 
-	# 找凯说话（按确认）
-	await _talk_npc("kay")
-	_expect(runner.visited("Kay"), "按确认和凯说话，跑了 Kay 节点")
+	# 找凯说话：鼠标点凯，学徒自己走过去开口
+	world.click_cell(_npc_cell("kay"))
+	await _until(func(): return runner.running, 20.0)
+	await _until(func(): return mode == "map" and not runner.running)
+	_expect(runner.visited("Kay"), "鼠标点凯：学徒走到他旁边，跑了 Kay 节点")
 	await _shot("map_manor")
 
 	# 进林子，碰上狼
@@ -469,7 +476,6 @@ func _battle_demo() -> void:
 	battle_view._on_act("apprentice", "ward")
 	battle_view._on_target("kay")
 	await _shot("demo_3_all_planned")
-	battle_view._on_end_turn()
 	for i in 6:
 		await get_tree().create_timer(0.55).timeout
 		await _shot("demo_4_anim_%d" % i)
@@ -496,7 +502,7 @@ func _fight_wolves() -> void:
 	_plan("kay", "attack", "wolf_leader")
 	_plan("arthur", "attack", "wolf_leader")
 	_plan("apprentice", "ward", "kay")
-	battle_view._on_end_turn()
+	_expect(b.turn == 2, "三个人都排好就自动开打，进第 2 回合")
 	var texts := b.intents.map(func(it): return b.intent_text(it))
 	_expect("头狼 扑咬 → 亚瑟 5" in texts and "灰狼 咬 → 凯 3" in texts and "瘦狼 召唤 2" in texts,
 		"第 2 回合同时亮出「头狼 扑咬 → 亚瑟 5」「灰狼 咬 → 凯 3」「瘦狼 召唤 2」")
@@ -505,9 +511,8 @@ func _fight_wolves() -> void:
 	var arthur_hp: int = b.unit("arthur").hp
 	_plan("kay", "attack", "wolf_howler")
 	_plan("arthur", "attack", "wolf_howler")
-	_plan("apprentice", "ward", "arthur")
 	await _shot("battle_planned")
-	battle_view._on_end_turn()
+	_plan("apprentice", "ward", "arthur")
 	var log_t := "\n".join(PackedStringArray(_last_report()))
 	_expect("瘦狼倒下，召唤作废" in log_t, "瘦狼在叫之前倒下，打印「瘦狼倒下，召唤作废」")
 	_expect(arthur_hp - b.unit("arthur").hp == 1, "亚瑟有护身，头狼那一口只挨 1 点")
@@ -515,7 +520,6 @@ func _fight_wolves() -> void:
 	_plan("kay", "attack", "wolf_leader")
 	_plan("arthur", "attack", "wolf_grey")
 	_plan("apprentice", "spark", "wolf_grey")
-	battle_view._on_end_turn()
 	_expect(b.result == "win" and b.turn == 3, "狼群 3 回合打赢（设计页 3–5 回合）")
 	await _shot("battle_win")
 	battle_view.end_btns[0].pressed.emit()
@@ -524,9 +528,8 @@ func _fight_shadow() -> void:
 	var b := battle_view.b
 	_expect(b.allies().size() == 1, "影子那一仗只有学徒一个人")
 	var first := b.intents.map(func(it): return b.intent_text(it))
-	# 第一次：不打断，第 2 回合挨 12 点倒下
+	# 第一次：不打断，第 2 回合挨 12 点倒下（只有一个人，排好就自动开打；第 2 回合什么都不排，点「结束回合」）
 	_plan("apprentice", "spark", "merlin_shadow")
-	battle_view._on_end_turn()
 	battle_view._on_end_turn()
 	var log_t := "\n".join(PackedStringArray(_last_report()))
 	_expect(b.result == "lose" and "梅林的影子 重劈 → 你：12 点" in log_t, "不打断：第 2 回合学徒挨 12 点、倒下")
@@ -537,24 +540,22 @@ func _fight_shadow() -> void:
 	_expect(first == again and b.turn == 1, "再来一次：第 1 回合的意图逐字一样（%s）" % ", ".join(PackedStringArray(again)))
 	# 第二次：第 1 回合打断
 	_plan("apprentice", "interrupt", "merlin_shadow")
-	battle_view._on_end_turn()
 	_expect("蓄力被打断，作废" in "\n".join(PackedStringArray(_last_report())), "第 1 回合打断：打印「蓄力……作废」")
 	_plan("apprentice", "spark", "merlin_shadow")
-	battle_view._on_end_turn()
 	_plan("apprentice", "interrupt", "merlin_shadow")
-	battle_view._on_end_turn()
 	_plan("apprentice", "spark", "merlin_shadow")
-	battle_view._on_end_turn()
 	_plan("apprentice", "spark", "merlin_shadow")
-	battle_view._on_end_turn()
 	_expect(b.result == "win", "打断两次、星火三次，5 回合打赢影子（第 %d 回合）" % b.turn)
 	battle_view.end_btns[0].pressed.emit()
 
 var _report_seen := []
 func _plan(who: String, act: String, target := "") -> void:
+	var b := battle_view.b
+	var turn0 := b.turn
 	battle_view._on_act(who, act)
 	if target != "": battle_view._on_target(target)
-	if battle_view.b.planned(who) == null:
+	# 排进去了，或者这一下排满了、已经自动开打（回合往前走了 / 分出胜负）
+	if b.planned(who) == null and b.turn == turn0 and b.result == "":
 		_expect(false, "排不进去：%s %s → %s" % [who, act, target])
 
 func _last_report() -> Array:
@@ -623,40 +624,10 @@ func _follow(path: Array) -> void:
 
 ## 白盒用的寻路：只走空地，不踩出口、触发格和敌人，除非那就是终点
 func _path(t: Vector2i, adjacent: bool) -> Array:
-	var start := world.player_cell
-	var avoid := {}
-	for e in world.A.get("exits", []): avoid[Vector2i(int(e.cell[0]), int(e.cell[1]))] = true
-	for tr_ in world.A.get("triggers", []):
-		if cond(tr_.get("cond", "")): avoid[Vector2i(int(tr_.cell[0]), int(tr_.cell[1]))] = true
-	for s in world.spawns_here(): avoid[Vector2i(int(s.cell[0]), int(s.cell[1]))] = true
-	var goal := {}
-	if adjacent:
-		for d in World.DIRS.values(): goal[t + d] = true
-	else:
-		goal[t] = true
-	var prev := {start: start}
-	var q := [start]
-	var found = null
-	while not q.is_empty():
-		var c: Vector2i = q.pop_front()
-		if goal.has(c):
-			found = c
-			break
-		for d in World.DIRS.values():
-			var n: Vector2i = c + d
-			if prev.has(n) or world.blocked(n) or n.x < 0 or n.y < 0 or n.x >= world.W or n.y >= world.H: continue
-			if avoid.has(n) and not goal.has(n): continue
-			prev[n] = c
-			q.append(n)
-	if found == null:
-		_expect(false, "%s 里走不到 %s 旁边" % [world.area, t])
-		return []
-	var path := []
-	var c: Vector2i = found
-	while c != start:
-		path.push_front(c)
-		c = prev[c]
-	return path
+	var p := world.path_to(t, adjacent)
+	if p.is_empty() and not world._at_goal(t, adjacent):
+		_expect(false, "%s 里走不到 %s%s" % [world.area, t, " 旁边" if adjacent else ""])
+	return p
 
 func _press(action: String) -> void:
 	var ev := InputEventAction.new()

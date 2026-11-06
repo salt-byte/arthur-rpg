@@ -140,7 +140,7 @@ ui_title,梅林的学徒
 ui_subtitle,白盒切片：第 1 章，接第 2 章教堂那一幕
 ui_new_game,新游戏
 ui_continue,继续
-ui_controls,方向键或 WASD 走 · Z、空格或回车 确认 · Esc 打开预言簿
+ui_controls,点地面走过去，点人说话 · 也可以方向键 / WASD 走，Z 或空格确认 · Esc 预言簿
 ui_next,下一步：{t}
 ui_book,预言簿
 ui_book_btn,预言簿（Esc）
@@ -167,8 +167,8 @@ ui_turn,第 {n} 回合
 ui_mana,法力 {n}/{max}
 ui_end_turn,结束回合
 ui_clear,清空
-ui_queue_empty,给每个人选一个行动。选完血条上会显示打完剩多少；点「结束回合」才真的打出去。
-ui_pick_target,选一个目标（Esc 取消）
+ui_queue_empty,给每个人选一个行动，都选好就自动开打。选完血条上会先显示打完剩多少。
+ui_pick_target,点一个闪着金边的目标（Esc 取消）
 ui_no_mana,法力不够：要 {need} 点，还剩 {left} 点
 ui_no_interrupt,这回合没有敌人在蓄力或召唤
 ui_win,赢了
@@ -222,8 +222,8 @@ st_ward,护身 {n}
 st_charging,蓄力中
 ui_step1,① 看敌人头上的牌子
 ui_step2,② 给每人选一个行动
-ui_step3,③ 点「结束回合」
-ui_all_set,都排好了。点「结束回合」：你们按 ①②③ 先出手，然后敌人按牌子上的顺序出手。
+ui_step3,③ 你们先动，敌人后动
+ui_all_set,都选好了，马上开打：你们按 ①②③ 先出手，敌人再按牌子上的顺序出手。
 ui_plan_none,还没选
 ui_phase_ally,你们出手
 ui_phase_enemy,敌人出手
