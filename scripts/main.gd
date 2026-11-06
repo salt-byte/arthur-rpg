@@ -75,6 +75,9 @@ func _ready() -> void:
 	if FileAccess.file_exists(RESTART_MARK):
 		await _restart_check()
 		return
+	if "--battle-demo" in args:
+		await _battle_demo()
+		return
 	if playtest:
 		dbox.auto = true
 		battle_view.auto = true
@@ -447,6 +450,32 @@ func _playtest() -> void:
 	# 重新开始：点结尾的「重新开始」，场景重载后由新的一轮补 [verify] restart
 	screens.data["choice"] = "restart"
 	screens.close()
+
+## 截战斗画面用（不进 verify）：直接开狼群那一仗，按第 1 回合排好、结束回合，边播边截图
+func _battle_demo() -> void:
+	shot_dir = OS.get_environment("SHOT_DIR")
+	GS.new_game()
+	runner.init_vars()
+	world.load_area("forest", Vector2i(19, 11))
+	start_battle("wolves", {"spawn": {"id": "demo", "enemy": "wolves"}})
+	await get_tree().create_timer(1.3).timeout
+	await _shot("demo_0_start")
+	battle_view._on_act("kay", "attack")
+	await _shot("demo_1_targeting")
+	battle_view._on_target("wolf_leader")
+	battle_view._on_act("arthur", "attack")
+	battle_view._on_target("wolf_leader")
+	await _shot("demo_2_two_planned")
+	battle_view._on_act("apprentice", "ward")
+	battle_view._on_target("kay")
+	await _shot("demo_3_all_planned")
+	battle_view._on_end_turn()
+	for i in 6:
+		await get_tree().create_timer(0.55).timeout
+		await _shot("demo_4_anim_%d" % i)
+	await get_tree().create_timer(2.5).timeout
+	await _shot("demo_5_turn2")
+	get_tree().quit()
 
 func _restart_check() -> void:
 	var m = JSON.parse_string(FileAccess.get_file_as_string(RESTART_MARK))

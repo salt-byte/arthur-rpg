@@ -167,7 +167,7 @@ ui_turn,第 {n} 回合
 ui_mana,法力 {n}/{max}
 ui_end_turn,结束回合
 ui_clear,清空
-ui_queue_empty,给每个人选一个行动，再点「结束回合」。没选的人这回合不动。
+ui_queue_empty,给每个人选一个行动。选完血条上会显示打完剩多少；点「结束回合」才真的打出去。
 ui_pick_target,选一个目标（Esc 取消）
 ui_no_mana,法力不够：要 {need} 点，还剩 {left} 点
 ui_no_interrupt,这回合没有敌人在蓄力或召唤
@@ -220,3 +220,14 @@ move_heavy_slash,重劈
 move_slash,劈
 st_ward,护身 {n}
 st_charging,蓄力中
+ui_step1,① 看敌人头上的牌子
+ui_step2,② 给每人选一个行动
+ui_step3,③ 点「结束回合」
+ui_all_set,都排好了。点「结束回合」：你们按 ①②③ 先出手，然后敌人按牌子上的顺序出手。
+ui_plan_none,还没选
+ui_phase_ally,你们出手
+ui_phase_enemy,敌人出手
+ui_phase_ally_hint,你们按 ①②③ 的顺序出手。
+ui_phase_enemy_hint,敌人按牌子上的顺序出手。
+ui_next_hit,下回合 {who} {n}
+st_down,倒下

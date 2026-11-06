@@ -266,22 +266,61 @@ func _name(uid: String) -> String:
 	return u.name if u != null else uid
 
 # ---------------- 结算 ----------------
+## 一步一步记下这回合发生了什么，界面照着一来一回地播：
+## {side: "ally"/"enemy"/"end", who, target, lines, hp: {uid: [hp, alive]}, order}
+var steps: Array = []
+
 func end_turn() -> void:
 	if result != "": return
 	var q := queue.duplicate()
 	queue = []
+	steps = []
 	_focus_bonus = 0
-	# 先把这回合的护身、防御、挡在前面挂上：它们管的是敌人出手那一段
-	for a in q:
+	for i in q.size():
 		if result != "": break
-		_do(a)
+		var mark := out.size()
+		_do(q[i])
+		_step("ally", q[i].who, q[i].target, mark, i + 1)
 	for it in intents:
 		if result != "": break
+		var mark := out.size()
 		_enemy_act(it)
+		_step("enemy", it.uid, it.get("target", ""), mark, it.order)
 	if result != "": return
+	var mark := out.size()
 	mana = mini(mana_max, mana + int(P.mana_regen) + _focus_bonus)
 	out.append(UIKit.f("ev_mana", {"n": mana}))
 	begin_turn()
+	_step("end", "", "", mark, 0)
+
+func _step(side: String, who: String, target: String, mark: int, order: int) -> void:
+	var lines := out.slice(mark)
+	if lines.is_empty() and side != "end": return
+	var hp := {}
+	for u in units: hp[u.uid] = [u.hp, u.alive]
+	steps.append({"side": side, "who": who, "target": target, "lines": lines, "hp": hp, "order": order})
+
+## 照现在排的行动试算一遍这回合，不改真的战斗：返回 {uid: 打完以后的血}
+func preview() -> Dictionary:
+	var c := Battle.new()
+	c.P = P
+	c.enc_id = enc_id
+	c.enc = enc
+	c.chapter = chapter
+	c.vars = vars
+	c.unlocks = unlocks
+	c.units = units.duplicate(true)
+	c.turn = turn
+	c.mana = mana
+	c.mana_max = mana_max
+	c.intents = intents.duplicate(true)
+	c.queue = queue.duplicate(true)
+	c.end_turn()
+	var r := {}
+	for u in units:
+		var cu = c.unit(u.uid)
+		r[u.uid] = cu.hp if cu != null else u.hp
+	return r
 
 func _do(a: Dictionary) -> void:
 	var u = unit(a.who)
