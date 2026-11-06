@@ -3,12 +3,12 @@
 故事来源：亚瑟王与梅林传说（公版，完整一生） · 玩家身份：梅林的学徒（原创） · 玩法参考：不指定 · 引擎：Godot 4 · 故事体量：一包 6 章 + 2–4 条支线 · 成色：可玩原型 · 交付：网页链接 + 新建 GitHub 仓库
 
 ## 当前状态（每轮结束更新；对话压缩后先读这里）
-- 做到哪：第 6 步完成，等用户答第 7 步的定调题
-- 下一步：第 7 步 · 美术方向 + 目标图；界面观察（art-direction、ui-layout）——先问定调题（视觉基调、最先看清什么）
-- 仓库：https://github.com/salt-byte/arthur-rpg （2026-11-05 建好，到第 5 步为止的产物已推上去）。插件 0.5 起建仓库是第 1 步；本项目已做到第 5 步，行号不改，仓库算在第 6 步之前补做。之后每步交接前提交并推送
-- 卡在哪：无
-- 最近一次 verify：NOT_RUN（verify.py 第 8 步白盒时接上）；--playtest 第 1 章样例三条路线 PASS（2026-11-05）
-- 停靠点：A0 ✓ · A1 ✓ · A2 ✓ · B 未到 · 白盒 未到 · C 未到 · D 未到
+- 做到哪：第 8 步白盒切片做完，等用户自己玩（白盒试玩停靠点）
+- 下一步：用户玩完回答白盒试玩的问题 → 第 9 步范围复盘 ①
+- 仓库：https://github.com/salt-byte/arthur-rpg ，每步交接前提交并推送。网页版在 docs/，用户在仓库设置里打开 GitHub Pages（main /docs）后在 https://salt-byte.github.io/arthur-rpg/ 玩
+- 卡在哪：GitHub Pages 要用户打开（这里的代理不让调 Pages 接口）
+- 最近一次 verify：2026-11-06 整体 PASS（六项全 PASS，qa/verification.json）；--playtest 三条路线 PASS
+- 停靠点：A0 ✓ · A1 ✓ · A2 ✓ · B ✓ · 白盒 等用户试玩 · C 未到 · D 未到
 
 状态：[ ] 待做 · [~] 进行中 · [x] 完成 · [!] 被退回
 行号就是「第 N 步」：按做的顺序从 1 编到底；每做完一行，按 producer 第 6 节交接，等用户点头再做下一行。
@@ -22,7 +22,7 @@
 | 5 | [x] | mvp 层每系统一页设计页，参数登记进 content/data/ | game-design | 2,4 | mvp | 每页上下两层齐全（一句话、例子、感受、规则 / 公式、边界、依赖、参数、验收、素材）；GDD.md、ui/SCREENS.md、CONTENT_SCHEDULE.md 玩法列按已定章节填好；代码里的数都能在设计页和 data/ 找到 | 定调：目标优先级、你操作所有人、混合指引、只做关键几处。7 页设计页 + 7 个参数文件 + GDD（两张图）+ SCREENS（19 屏）+ 章节内容表玩法列；「设计总览」页面已发布。脚本核对：每个法术、同伴的招、敌人在章节内容表里都有第几章出现；每个面板在界面清单里有一行；三张流程图能渲染。CONCEPT 改两处（地图敌人、第一章例子）并记了改动 |
 | 6 | [x] | 定数据格式、搭工程 | game-data-schema, godot-project-structure | 5 | mvp | 空项目能 headless 运行、能导出网页；对白/变量/任务/NPC/刷新/文本表各有样例 | 定好本作的数据格式（content/README.md）：变量由 bible.json 生成 54 个；任务表 10 条（主线步骤 = 剧情谱节点）；新加 6 个指令；遭遇表；第 1 章样例对白 65 行和 NPC、刷新点、文本表 131 条。check_content 0 错误（6 条提醒是新指令）、tools/check_project_data.py 0 错误。Godot 4.3 工程骨架：--playtest 跑完第 1 章样例三条路线全过（变量、任务、能力、预言簿、存读档）；网页导出 35MB，无头浏览器里打开 0 报错。证据 qa/evidence/step6/ |
 | 7 | [x] | 美术方向 + 目标图；界面观察 | art-direction, ui-layout | 2,5 | — | ART_DIRECTION 一页 + 1–2 张目标图；用户在 B 同意 | design/ART_DIRECTION.md、design/targets/ 两张、CREDITS.md 已交；没有玩法参考，界面观察跳过，风格契约写在 ART_DIRECTION 第 4 节；B 通过 |
-| 8 | [ ] | 白盒切片：色块地图 + 占位 NPC，围着最大风险做第 1 章：狼群和梅林的影子两场小仗、一次看水面、一次说给谁听、一次剧情给法术，接到第 2 章教堂那一幕应验 | world-map, combat-system, dialogue-authoring, quest-design | 5,6 | mvp | verify.py 六项 PASS；盲玩子 agent 记录出来；用户在白盒试玩停靠点同意 |  |
+| 8 | [~] | 白盒切片：色块地图 + 占位 NPC，围着最大风险做第 1 章：狼群和梅林的影子两场小仗、一次看水面、一次说给谁听、一次剧情给法术，接到第 2 章教堂那一幕应验 | world-map, combat-system, dialogue-authoring, quest-design | 5,6 | mvp | verify.py 六项 PASS；盲玩子 agent 记录出来；用户在白盒试玩停靠点同意 | 色块地图 4 块、两场仗、看水面、关键选择、第 2 章教堂三条路线；verify.py 六项 PASS（20261106-114916）；--playtest 三条路线 PASS。用户说「我直接来玩吧」，盲玩子 agent 这轮没跑，改由用户试玩；网页版在 docs/，等用户打开 Pages |
 | 9 | [ ] | 范围复盘 ① | producer | 8 | — | GAME_BRIEF 范围复盘表填了一行 |  |
 | 10 | [ ] | 任务链 + 对白（每章过 knowledge_check 和 story-review） | quest-design, dialogue-authoring | 4,8 | playable | check_content.py 零错误；knowledge_check 候选逐条判过 |  |
 | 11 | [ ] | 地图、战斗、叙事进展、存档（照设计页） | world-map, combat-system, progression-system, save-load | 5,8 | playable | --playtest 打印和设计页验收条件一一对上；存读档一致 |  |

@@ -434,6 +434,7 @@
 - 截图（xvfb）：标题、庄园、战斗意图、排好行动、看水面、关键选择确认框、「后来」提示条、预言簿，在 qa/evidence/step8/。
 - 网页版：无头 Chromium 打开 docs/index.html，进标题、开新游戏、出对话、能走动；pck 里有三个 .yarn 和像素字体。
 - check_content.py 0 错误；check_project_data.py 0 错误；check_style.py 扫 Ch2.yarn 和文本表，禁用 0 条。
+- verify.py 20261106-114916 整体 PASS，六项全 PASS（qa/verification.json，截图在 production/qa/evidence/20261106-114916/）。knowledge_check 报 2 处「凯不在知情名单却说了『是我拔的』」：那条事实是「凯会这么说」这一预言，只有玩家知道；凯在教堂说出口就是事情本身，不算泄露，两处都留。
 
 插件问题（记给插件）：
 - localization-table 的 build_fonts.py 写死了 Noto CJK 的路径；选了像素字的项目要自己写（本项目 tools/build_font.py）。可以让它接受一个字体路径参数。
