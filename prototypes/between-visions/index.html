@@ -127,6 +127,9 @@ table.m td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
 details.obs { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; font-size: .82rem; color: var(--dim); }
 details.obs summary { cursor: pointer; }
 @media (prefers-reduced-motion: no-preference) { .flash { animation: fl .45s ease-out; } @keyframes fl { from { background: var(--gold-soft); } } }
+.box .story p.say { display: flex; gap: .55rem; align-items: baseline; }
+.nm { font-family: var(--font); font-size: .78rem; font-weight: 700; line-height: 1.7; padding: 0 .45rem; border-radius: 3px; color: #fff; flex: none; }
+.nm.kay { background: #8e2a2a; } .nm.ar { background: #5b3a8c; } .nm.mer { background: #5f6670; } .nm.ec { background: #3d5a45; }
 </style>
 </head>
 <body>
@@ -608,17 +611,21 @@ function shrinePrompt() {
 function vision() {
   S.mode = 'end'; clearInterval(walkTimer);
   modal(`<h2>石圈</h2><div class="story">
-    <p>梅林站在石圈外头，杖尖戳进冻硬的土里。「看水。」他说完这两个字，就不再开口。</p>
+    <p>梅林站在石圈外头，杖尖戳进冻硬的土里。</p>
+    <p class="say"><b class="nm mer">梅林</b><span>看水。</span></p>
+    <p>他说完这两个字，就不再开口。</p>
     <p>中间那块平石凹下去一个浅坑，积水上结了层薄冰，冰下压着两片橡树叶。你摸了摸怀里的木碗，没拿出来，跪在石边往冰里看。苔藓又冷又硬，硌着膝盖。</p>
     <p>冰面先映出你自己的脸。眨一下眼，脸没了。</p>
     <p>雪。伦敦教堂的院子，人挤着人。一块石头上插着一把剑，亚瑟握上去，剑出来得很轻，轻得他自己先愣了一下。</p>
-    <p>换了一幕。凯站在埃克托爵士面前，那把剑横在他手上，嗓子发紧：「是我拔的。」</p>
+    <p>换了一幕。凯站在埃克托爵士面前，那把剑横在他手上，嗓子发紧。</p>
+    <p class="say"><b class="nm kay">凯</b><span>是我拔的。</span></p>
     <p>冰下的橡树叶转了半圈。</p>
-    <p>「看见什么了？」梅林问。没等你张嘴，他已经转身往回走，杖尖在冻土上一下一下地敲。</p></div>
+    <p class="say"><b class="nm mer">梅林</b><span>看见什么了？</span></p>
+    <p>没等你张嘴，他已经转身往回走，杖尖在冻土上一下一下地敲。</p></div>
     <p><b>这件事，说给谁听？</b></p>
     <div class="choices">
-      <button data-c="凯">去找凯：「到了伦敦，不管发生什么，别对父亲说谎。」</button>
-      <button data-c="亚瑟">去找亚瑟：「凯会说那把剑是他拔的。」</button>
+      <button data-c="凯">提醒凯：“到了伦敦，不管发生什么，别对父亲说谎。”</button>
+      <button data-c="亚瑟">告诉亚瑟：“凯会说那把剑是他拔的。”</button>
       <button data-c="谁都不说">谁都不说。</button>
     </div>`, []);
   document.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { S.m.choice = b.dataset.c; endCard(); });
@@ -647,10 +654,12 @@ function metricsTable(left) {
 function intro() {
   S.mode = 'menu';
   modal(`<p class="tag">原型 · 色块 · 不进正式游戏</p><h2>第 1 章 · 庄园北边的林子</h2>
-    <div class="story"><p>冬天的黄昏，羊圈的栅栏上挂着白霜。凯数了两遍羊，脸拉了下来：「少一只。狼叼的。」</p>
-    <p>他往腰上一摸，剑不在。亚瑟从马厩那头跑过来，把剑塞进他手里，手背上还沾着马毛：「又落在草料堆上了。」</p>
-    <p>「我们的小侍从记性真好。」凯把剑挂上，抬下巴指了指林子，「天黑前找回来。谁拖后腿，谁今晚刷马。」</p>
-    <p>梅林早上叮嘱过你，天黑前去一趟东边的石圈。</p></div>
+    <div class="story"><p>冬天的黄昏，羊圈的栅栏上挂着白霜。凯数了两遍羊，脸拉了下来。</p>
+    <p class="say"><b class="nm kay">凯</b><span>少一只。狼叼的。</span></p>
+    <p>他往腰上一摸，剑不在。亚瑟从马厩那头跑过来，把剑塞进他手里，手背上还沾着马毛。</p>
+    <p class="say"><b class="nm ar">亚瑟</b><span>又落在草料堆上了。</span></p>
+    <p class="say"><b class="nm kay">凯</b><span>我们的小侍从记性真好。天黑前找回来。谁拖后腿，谁今晚刷马。</span></p>
+    <p>他把剑挂上，抬下巴指了指林子。梅林早上叮嘱过你，天黑前去一趟东边的石圈。</p></div>
     <p><b>走到东边的石圈去，梅林在那儿等你。</b>林子里的东西你都看得见，靠近了会追你。蓝色的是路边的圣龛，能歇脚。</p>
     <p class="tag">方向键或 WASD 走一格；也可以直接点地面。</p>`, [{ label: '出发', primary: true, fn: () => { S.m.start = Date.now(); closeModal(); } }]);
 }
