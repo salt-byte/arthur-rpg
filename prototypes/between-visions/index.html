@@ -513,14 +513,14 @@ function lose() {
   S.pos = S.lastShrine.slice(); S.grace = CHASE.grace;
   ['ap', 'kay', 'ar'].forEach(id => S.hp[id] = maxHp(id));
   respawn();
-  modal(`<h2>退回神龛</h2><div class="story"><p>三个人都倒下了。等你们缓过气，已经躺在神龛的石台边，蜡烛又短了一截。</p></div><p class="tag">回满血。打倒过的普通敌人回来了。</p>`, [{ label: '起来', primary: true, fn: closeModal }]);
+  modal(`<h2>退回圣龛</h2><div class="story"><p>三个人互相架着退回圣龛。凯一路骂骂咧咧，扯下自己的袖子，往亚瑟胳膊上缠。</p></div><p class="tag">回满血。打倒过的普通敌人回来了。</p>`, [{ label: '起来', primary: true, fn: closeModal }]);
 }
 function flee() {
   if (!B || resolving) return;
   savePartyHp(B); S.m.flees++; B = null;
   S.pos = S.lastShrine.slice(); S.grace = CHASE.grace; S.mode = 'map';
   renderMap();
-  setHint('你们退回了神龛。在神龛上踩一下可以祷告回血。');
+  setHint('你们退回了圣龛。踩上圣龛可以祷告回血。');
 }
 function respawn() { S.spots.forEach(s => { if (!s.elite) { s.alive = true; s.cell = s.home.slice(); } }); }
 function makeItem(elite) {
@@ -602,21 +602,23 @@ function openParty(tab) {
 }
 function shrinePrompt() {
   S.mode = 'menu';
-  modal(`<h2>神龛</h2><div class="story"><p>石台上立着半截蜡烛，烛泪冻成一串，被风吹得斜向一边。</p></div><p class="tag">祷告：全队回满血。打倒过的狼和强盗会回到原处，头狼不会。</p>`,
+  modal(`<h2>圣龛</h2><div class="story"><p>路边的圣龛里立着半截蜡烛，烛泪冻成一串，火苗被风压得斜向一边。</p></div><p class="tag">祷告：全队回满血。打倒过的狼和强盗会回到原处，头狼不会。</p>`,
     [{ label: '走开', fn: closeModal }, { label: '祷告', primary: true, fn: () => { ['ap', 'kay', 'ar'].forEach(id => S.hp[id] = maxHp(id)); respawn(); S.m.prays++; S.grace = CHASE.grace; closeModal(); setHint('蜡烛跳了一下。全队回满血，林子里又有了动静。'); } }]);
 }
 function vision() {
   S.mode = 'end'; clearInterval(walkTimer);
   modal(`<h2>石圈</h2><div class="story">
-    <p>石圈中间那块平石凹下去一个浅坑，攒着前两天的雨水，漂着两片橡树叶。你蹲下去，膝盖压进湿苔藓，凉气顺着裤腿往上爬。</p>
-    <p>水面先是你自己的脸。眨一下眼，脸没了。</p>
-    <p>雪。伦敦教堂的院子，人挤着人。一块石头上插着一把剑，亚瑟握上去，剑出来得很轻，轻得他自己愣了一下。</p>
-    <p>换了一幕。凯跪在埃克托爵士面前，剑横在膝上，嗓子发紧：「是我拔的。」</p>
-    <p>橡树叶转了半圈。水里只剩灰白的天。</p></div>
+    <p>梅林站在石圈外头，杖尖戳进冻硬的土里。「看水。」他说完这两个字，就不再开口。</p>
+    <p>中间那块平石凹下去一个浅坑，积水上结了层薄冰，冰下压着两片橡树叶。你摸了摸怀里的木碗，没拿出来，跪在石边往冰里看。苔藓又冷又硬，硌着膝盖。</p>
+    <p>冰面先映出你自己的脸。眨一下眼，脸没了。</p>
+    <p>雪。伦敦教堂的院子，人挤着人。一块石头上插着一把剑，亚瑟握上去，剑出来得很轻，轻得他自己先愣了一下。</p>
+    <p>换了一幕。凯站在埃克托爵士面前，那把剑横在他手上，嗓子发紧：「是我拔的。」</p>
+    <p>冰下的橡树叶转了半圈。</p>
+    <p>「看见什么了？」梅林问。没等你张嘴，他已经转身往回走，杖尖在冻土上一下一下地敲。</p></div>
     <p><b>这件事，说给谁听？</b></p>
     <div class="choices">
-      <button data-c="凯">去找凯：「到了那天，那句话别说。」</button>
-      <button data-c="亚瑟">去找亚瑟：「你会拔出一把剑。」</button>
+      <button data-c="凯">去找凯：「到了伦敦，不管发生什么，别对父亲说谎。」</button>
+      <button data-c="亚瑟">去找亚瑟：「凯会说那把剑是他拔的。」</button>
       <button data-c="谁都不说">谁都不说。</button>
     </div>`, []);
   document.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { S.m.choice = b.dataset.c; endCard(); });
@@ -637,7 +639,7 @@ function metricsTable(left) {
     ['第一次开打在第几秒', m.firstFight === null ? '没打' : sec(m.firstFight)],
     ['自己撞上去开打', m.active], ['被追上开打', m.caught], ['打赢', m.wins], ['逃跑', m.flees], ['输了', m.losses],
     ['打了头狼', m.eliteWin ? '打了' : '没打'], ['升级', m.levels], ['加点那一屏停了', sec(Math.round(m.treeMs / 1000))],
-    ['看掉落那一屏停了', sec(Math.round(m.lootMs / 1000))], ['换装备', m.equips], ['神龛祷告', m.prays],
+    ['看掉落那一屏停了', sec(Math.round(m.lootMs / 1000))], ['换装备', m.equips], ['圣龛祷告', m.prays],
   ];
   if (left !== undefined) rows.push(['走到石圈时还没打的敌人', left]);
   return `<table class="m">${rows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table>`;
@@ -645,9 +647,11 @@ function metricsTable(left) {
 function intro() {
   S.mode = 'menu';
   modal(`<p class="tag">原型 · 色块 · 不进正式游戏</p><h2>第 1 章 · 庄园北边的林子</h2>
-    <div class="story"><p>黄昏。凯在篱笆边数羊，数到第十一只停住了。地上一串泥脚印，往林子里去。</p>
-    <p>「狼。」他把剑往腰上一插，「天黑前找回来。」亚瑟已经蹲在地上系鞋带。</p></div>
-    <p><b>走到东边的石圈去。</b>林子里的东西你都看得见，靠近了会追你。蓝色的是神龛，能歇脚。</p>
+    <div class="story"><p>冬天的黄昏，羊圈的栅栏上挂着白霜。凯数了两遍羊，脸拉了下来：「少一只。狼叼的。」</p>
+    <p>他往腰上一摸，剑不在。亚瑟从马厩那头跑过来，把剑塞进他手里，手背上还沾着马毛：「又落在草料堆上了。」</p>
+    <p>「我们的小侍从记性真好。」凯把剑挂上，抬下巴指了指林子，「天黑前找回来。谁拖后腿，谁今晚刷马。」</p>
+    <p>梅林早上叮嘱过你，天黑前去一趟东边的石圈。</p></div>
+    <p><b>走到东边的石圈去，梅林在那儿等你。</b>林子里的东西你都看得见，靠近了会追你。蓝色的是路边的圣龛，能歇脚。</p>
     <p class="tag">方向键或 WASD 走一格；也可以直接点地面。</p>`, [{ label: '出发', primary: true, fn: () => { S.m.start = Date.now(); closeModal(); } }]);
 }
 
@@ -678,7 +682,7 @@ function renderMap() {
   }
   g += '</div>';
   v.innerHTML = g + `<div id="hint"><span id="hintText">走到东边的<b>石圈</b>去看水面。</span>
-    <div class="legend"><span><i style="background:var(--gold)"></i>你们</span><span><i style="background:var(--red)"></i>狼、强盗（! = 在追你）</span><span><i style="background:#f08a3a"></i>头狼，不动</span><span><i style="background:var(--blue-soft);border:1px solid var(--blue)"></i>神龛</span><span><i style="background:#2a2140;border:1px solid var(--purple)"></i>石圈</span></div></div>`;
+    <div class="legend"><span><i style="background:var(--gold)"></i>你们</span><span><i style="background:var(--red)"></i>狼、强盗（! = 在追你）</span><span><i style="background:#f08a3a"></i>头狼，不动</span><span><i style="background:var(--blue-soft);border:1px solid var(--blue)"></i>圣龛</span><span><i style="background:#2a2140;border:1px solid var(--purple)"></i>石圈</span></div></div>`;
   document.getElementById('map').onclick = ev => { const c = ev.target.closest('.c'); if (c) walkTo([+c.dataset.x, +c.dataset.y]); };
 }
 function hpBar(cur, max, after) {
@@ -727,7 +731,7 @@ function renderBattle(view, text, focus) {
       h += `<div><b>${NAMES[who]}</b>${who === 'ap' ? `　<span class="mana">法力 ${b.mana}/${b.manaMax}</span>` : ''}　${picking ? (pickKind === 'enemy' ? '点一个闪着金边的敌人' : '点一个闪着金边的队友') : '选一个行动'}</div>`;
       h += '<div class="btns">' + acts.map(a => `<button data-act="${a.k}" ${a.cost > b.mana ? 'disabled' : ''} class="${picking && picking.act === a.k ? 'primary' : ''}">${a.name}${a.cost ? `（${a.cost} 法力）` : ''}<small>${a.desc()}</small></button>`).join('') + '</div>';
     } else h += '<div>出手……</div>';
-    h += `<div class="bottom"><button id="redo" ${Object.keys(b.plans).length || picking ? '' : 'disabled'}>重选</button><button id="flee">逃回神龛</button></div></div>`;
+    h += `<div class="bottom"><button id="redo" ${Object.keys(b.plans).length || picking ? '' : 'disabled'}>重选</button><button id="flee">逃回圣龛</button></div></div>`;
   }
   h += '</div>';
   const v = document.getElementById('view'); v.innerHTML = h;
