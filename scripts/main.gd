@@ -811,9 +811,9 @@ func _playtest() -> void:
 	_expect("book" in _seen_screens, "地图上按 Esc 打开预言簿，看得到这一页和「后来」")
 	await _until(func(): return screens.kind == "end", 30.0)
 	for l in screens.data.get("metrics", []): print("  [试玩记录] ", l)
-	verify("outcome", screens.kind == "end" and after_key in GS.book_page("D1").after and runner.quest_part(1002) == 1203
-		and Quests.objective("1002") == tr("quest_1002_p1203b"),
-		"第 2 章教堂按 %s 演完：预言簿写上「%s」，下一步换成「%s」，出现白盒结尾" % [want, UIKit.t(after_key), tr("quest_1002_p1203b")])
+	verify("outcome", screens.kind == "end" and after_key in GS.book_page("D1").after and runner.quest_part(1002) == 1204
+		and Quests.objective("1002") == tr("quest_1002_p1204"),
+		"第 2 章教堂和加冕按 %s 演完：预言簿写上「%s」，下一步换成「%s」，出现白盒结尾" % [want, UIKit.t(after_key), tr("quest_1002_p1204")])
 	print("[playtest] %s（%d 条不过）" % ["PASS" if fails.is_empty() else "FAIL", fails.size()])
 	if screens.kind != "end":
 		get_tree().quit(1)
