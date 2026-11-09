@@ -303,6 +303,7 @@ tags: event
     <<companion gareth dead>>
 <<endif>>
 <<companion lancelot left>>
+<<companion guinevere left>>
 <<progress_quest 1005 1505>>
 <<autosave>>
 <<if $D1 == "D1b">>
