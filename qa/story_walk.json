@@ -12,7 +12,9 @@
     "d | D1b D2b D3a D4b D5b | E1 | V0 | S1a 不接 不接 不接 | 三条支线都不接（关门结算 S2c / S3c / S4c）；D2b+D3a 最后一课；D4b 没有 D3b（阿格规文去北边）；D1b 没有 S2b 凯请辞；D5b 只能告诉贝狄威尔",
     "e | D1a D2c D3b D4c D5b | E2（只有加雷斯在） | V1 | S1b S2a 接了没做 接了没做 | 2501、2502 接了不做完，到关门按 skip 结算；D5b 告诉凯、没有 S2b，凯死在卡姆兰；E2 只剩加雷斯",
     "",
-    "没覆盖：D5a 没有 D2a（亚瑟只说「我记住了」）、D5b 告诉贝狄威尔时凯在场笑「一条蛇？」。"
+    "没覆盖：D5a 没有 D2a（亚瑟只说「我记住了」）、D5b 告诉贝狄威尔时凯在场笑「一条蛇？」、D2a 撞 D1b、D5a 撞 D3b、E1 时凯还在。",
+    "挑不到的：picks 一个节点只能写一句，同一个节点里「先不走」的选项（Ch3_Merlin「等我忙完这阵子」、Ch5_Arthur「等一会儿」、Prop_campfire「再走走」）一挑就再也走不出去，所以没挑。",
+    "第 5 章 c 路线先看河边小船、再找王后：反过来走，王后会先为一封还没漂来的信关门（见走查报告）。"
   ],
   "chapters": {
     "1": [
@@ -152,8 +154,9 @@
       {"node": "S2502_Tournament", "if": "quest_part(2502) == 1", "route": ["a", "b", "c"]},
       {"node": "S2502_Astolat", "if": "quest_part(2502) == 2", "route": ["a", "b", "c"]},
       {"node": "Ch5_Lancelot", "if": "quest_part(1005) == 1502 and visited(\"Ch5_Return\") and quest_state(2502) != \"active\"", "route": ["a", "b", "c", "d"]},
-      {"node": "Ch5_Guinevere", "if": "quest_part(1005) == 1502"},
+      {"node": "Ch5_Gawain", "if": "quest_part(1005) == 1502 and visited(\"Ch5_Return\")", "route": ["a", "b", "c"]},
       {"node": "Prop_river", "if": "quest_part(1005) == 1502"},
+      {"node": "Ch5_Guinevere", "if": "quest_part(1005) == 1502"},
       {"node": "Ch5_Guinevere", "if": "quest_part(1005) == 1502", "route": ["c"]},
       {"node": "Ch5_Bedivere", "if": "quest_part(1005) == 1502 and visited(\"Ch5_Return\") and quest_state(2502) != \"none\"", "route": ["a", "b", "c", "e"]},
       {"node": "Ch5_Arthur", "if": "quest_part(1005) == 1502 and visited(\"Ch5_Return\")"},
@@ -163,6 +166,7 @@
       {"node": "Ch5_Mordred", "if": "quest_part(1005) >= 1504"},
       {"node": "Ch5_Kay", "if": "$c_kay != \"left\" and quest_part(1005) >= 1504"},
       {"node": "Prop_river", "if": "quest_part(1005) >= 1503"},
+      {"node": "Ch5_Arthur", "if": "quest_part(1005) == 1504"},
       {"node": "Ch5_Execution", "if": "quest_part(1005) == 1504"},
       {"node": "Ch5_Arthur", "if": "quest_part(1005) == 1505"},
       {"node": "Ch5_Bedivere", "if": "quest_part(1005) == 1505"},
@@ -209,8 +213,8 @@
           "Ch4_Brothers": "什么也不说", "S2401_Kitchen": "凯说你的手白", "S2301_Castle": "什么也不说", "S2301_Chapel": "看见了",
           "Ch5_Supper": "什么也不说", "Ch5_Exposure": "贴着墙", "S2501_Hall": "我帮你数座位",
           "Ch6_Arthur": "攻下来以后", "Ch6_1602_Harbor": "你把国家交给他", "Ch6_1605_Fall": "往前扑", "Ch6_1606_Lake": "阿瓦隆", "Ending_E3": "梅林，亚瑟走了"},
-    "c": {"Ch3_Kay": "不凑", "Ch3_Fountain": "说了也拦不住", "Ch4_Hall": "出一趟远门", "Ch5_Judgment": "站在原地", "Ch5_Exposure": "不说话"},
+    "c": {"Ch3_Kay": "不凑", "Ch3_Fountain": "说了也拦不住", "Ch4_Hall": "出一趟远门", "Ch5_Judgment": "站在原地", "Ch6_1606_Lake": "什么也不说"},
     "d": {"Ch3_Night": "我跟你去", "Ch4_LakeShore": "剑鞘还拿得回来", "Ch5_KayAfter": "我送你", "Ch4_Hall": "他什么都没说"},
-    "e": {"Ch5_Exposure": "不说话", "Ch3_Kay": "圣诞那天"}
+    "e": {"Ch2_Coronation": "做了个梦", "Ch5_Exposure": "不说话"}
   }
 }

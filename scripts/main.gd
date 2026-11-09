@@ -386,7 +386,7 @@ func yarn_command(cmd: String, args: Array) -> bool:
 			return true
 		"show_ending":
 			# 结局回顾那一屏第 16 步做；现在先打印，回到标题
-			print("  [结局] ", args[0], " ", UIKit.t("ending_" + args[0] + "_title"))
+			print("  [结局] ", args[0], " ", UIKit.t("ending_" + args[0] + "_name"))
 		_:
 			push_warning("没实现的指令 <<%s>>" % cmd)
 	return false
@@ -436,7 +436,8 @@ func _on_battle_finished(r: String) -> void:
 	_battle_ctx = {}
 	var b := battle_view.b
 	if r == "win":
-		Quests.on_battle_won(ctx.enc)
+		# 地图上的仗打赢就进下一步；对白里开的剧情战由对白里的 progress_quest 推进，免得过场没演完「下一步」就换了
+		if not ctx.has("yarn"): Quests.on_battle_won(ctx.enc)
 		if ctx.has("spawn"):
 			GS.S.defeated.append(ctx.spawn.id)
 			if ctx.spawn.get("roamer", false):
@@ -1258,7 +1259,8 @@ func verify(key: String, ok: bool, note: String) -> void:
 ## 关键选择按路线挑（--route=a|b|c|d，路线写在 story_walk.json 的 routes），普通选项第一次挑第一个，
 ## 同一组选项再来时挑下一个（菜单就这样问遍再离开）；仗直接判赢；看水面、得到能力、换章只打印不弹画面。
 ## 每段打印台词、指令、换了的「下一步」，最后核对：六条主线做完、六个决定都有值、结局记上了、支线都有结局。
-## 用法：godot --headless --path . -- --story --route=a [--quiet]
+## 用法：先 godot --headless --path . --import（改了 dialogue.csv / game_text.csv 不重新导入，台词还是旧字），
+##       再 godot --headless --path . -- --story --route=a [--quiet]
 var story_mode := false
 var _story_walk := {}
 var _story_route := {}
@@ -1335,9 +1337,16 @@ func _story_dialog(entries: Array, cb: Callable) -> void:
 		var n := int(_story_picks.get(key, 0))
 		_story_picks[key] = n + 1
 		if overrides.has(runner.current):
-			# 指定挑哪句：写选项里的几个字
+			# 指定挑哪句：写选项里的几个字；写成数组就按这个节点第几次出选项依次挑（先「等一会儿」再「这就去」）
+			var ov = overrides[runner.current]
+			var want_t := str(ov)
+			if ov is Array:
+				var k2 := "@" + runner.current
+				var m := int(_story_picks.get(k2, 0))
+				_story_picks[k2] = m + 1
+				want_t = str(ov[mini(m, ov.size() - 1)])
 			for i in choices.size():
-				if str(overrides[runner.current]) in choices[i].t: pick = i
+				if want_t in choices[i].t: pick = i
 			why = "指定"
 		if pick < 0:
 			pick = mini(n, choices.size() - 1)
@@ -1370,7 +1379,6 @@ func _story_command(cmd: String, args: Array) -> bool:
 			if Data.encounter(args[0]).is_empty(): _expect(false, "遭遇 %s 不在 combat.json" % args[0])
 			GS.S.vars["last_battle"] = args[0]
 			GS.S.vars["last_battle_won"] = true
-			Quests.on_battle_won(args[0])
 			return true
 		"autosave":
 			return true
