@@ -80,6 +80,9 @@ func _ready() -> void:
 	if FileAccess.file_exists(RESTART_MARK):
 		await _restart_check()
 		return
+	if "--sim" in args:
+		_sim()
+		return
 	if "--battle-demo" in args:
 		await _battle_demo()
 		return
@@ -796,6 +799,54 @@ func _battle_demo() -> void:
 	await get_tree().create_timer(2.5).timeout
 	await _shot("demo_5_turn2")
 	get_tree().quit()
+
+## 数值模拟（balancing，第 19 步调数值时用）：第 1 章五场仗，三种固定打法各打一遍，
+## 打印回合数、输赢、倒下几个人。满血、1 级、没装备。不进 verify。
+## 用法：godot --headless --path . -- --sim
+func _sim() -> void:
+	GS.new_game()
+	Party.new_game()
+	runner.init_vars()
+	for enc in ["forest_wolves", "road_bandits", "oak_wolves", "log_wolves", "wolves"]:
+		for strat in ["always_first", "smart", "no_magic"]:
+			Party.heal_all()
+			var b := Battle.new()
+			b.setup(enc, Party.battle_ctx(["kay", "arthur"], ["spell_spark", "spell_ward", "spell_focus"]), 1, {})
+			b.take_log()
+			var guard := 0
+			while b.result == "" and guard < 20:
+				guard += 1
+				_sim_plan(b, strat)
+				b.end_turn()
+				b.take_log()
+			var down := b.allies(false).filter(func(u): return not u.alive).size()
+			print("[sim] %s %s → %s 第 %d 回合，倒下 %d 人，剩血 %s" % [enc, strat, b.result, b.turn, down,
+				", ".join(PackedStringArray(b.allies(false).map(func(u): return "%s %d/%d" % [u.name, u.hp, u.max])))])
+	get_tree().quit()
+
+## always_first：三个人永远打第一只；smart：先打要叫狼、要长嚎的，这回合挨打会倒的人举盾；no_magic：学徒只凝神
+func _sim_plan(b: Battle, strat: String) -> void:
+	var es := b.enemies()
+	var low = es[0]
+	var threat = null
+	for e in es:
+		if e.hp < low.hp: low = e
+		var it = b.intent_of(e.uid)
+		if it != null and it.act in ["summon", "buff"] and threat == null: threat = e
+	var tgt = es[0] if strat == "always_first" else (threat if threat != null else low)
+	if strat != "no_magic" and b.why_not("apprentice", "spark") == "": b.plan("apprentice", "spark", tgt.uid)
+	else: b.plan("apprentice", "focus")
+	for c in ["kay", "arthur"]:
+		var u = b.unit(c)
+		if u == null or not u.alive: continue
+		if strat == "smart":
+			var incoming := 0
+			for it in b.intents:
+				if it.act == "attack" and it.target == c: incoming += b.intent_damage(it) * int(it.hits)
+			if incoming >= 4 and u.hp <= incoming + 3:
+				b.plan(c, "guard")
+				continue
+		b.plan(c, "attack", tgt.uid)
 
 func _restart_check() -> void:
 	var m = JSON.parse_string(FileAccess.get_file_as_string(RESTART_MARK))
