@@ -304,3 +304,4 @@ ui_prayed,你在{t}跟前祈祷：三个人的血都满了，已存档
 ui_back_at,回到{t}跟前，三个人的血都满了
 ui_xp_gain,经验 +{n}
 ui_level_up,升到 {n} 级
+bark_chest_empty,树洞里只剩一块摊平的空布。
