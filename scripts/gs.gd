@@ -8,10 +8,12 @@ extends Node
 ##   book       预言簿：[{decision, after: [文本键]}]
 ##   area, cell 站在哪
 ##   defeated   打赢过的刷新点 id（spawns.json），不再出现
-##   version    存档格式版本，格式变了要写迁移（save-load）
+##   version    存档格式版本，格式变了要写迁移（save-load）。2：加了成长、背包、圣龛、宝物（Party.restore() 补旧存档）
+##   prog, tree, boons, pending_levels, gear, bag, potions, silver, hp, seed, rng_n, uid_n, xp_total   Party 管（party.gd）
+##   shrines, last_shrine, opened, metrics   祈祷过的圣龛、上次祈祷的、开过的宝物、试玩记录（main.gd / world.gd 写）
 
 const SAVE_PATH := "user://save.json"
-const VERSION := 1
+const VERSION := 2
 
 var S := {}
 
@@ -20,7 +22,7 @@ func _ready() -> void:
 
 func new_game() -> void:
 	S = {"version": VERSION, "vars": {}, "visited": {}, "quests": {}, "unlocks": [], "book": [],
-		"area": "manor", "cell": null, "defeated": []}
+		"area": "manor", "cell": null, "defeated": [], "shrines": [], "last_shrine": "", "opened": [], "metrics": {}}
 	for sp in Data.param("story-unlocks", "starting_spells", []):
 		S.unlocks.append("spell_" + sp)
 
@@ -40,6 +42,11 @@ func load_save() -> bool:
 	var d = JSON.parse_string(FileAccess.get_file_as_string(SAVE_PATH))
 	if typeof(d) != TYPE_DICTIONARY: return false
 	S = d
+	for k in ["shrines", "opened", "defeated"]:
+		if not S.has(k): S[k] = []
+	if not S.has("last_shrine"): S["last_shrine"] = ""
+	if not S.has("metrics"): S["metrics"] = {}
+	S.version = VERSION
 	return true
 
 func has_save() -> bool: return FileAccess.file_exists(SAVE_PATH)

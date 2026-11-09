@@ -3,13 +3,13 @@
 故事来源：亚瑟王与梅林传说（公版，完整一生） · 玩家身份：梅林的学徒（原创） · 玩法参考：战斗照杀戮尖塔、地图和成长照 Vampire's Fall 2 · 引擎：Godot 4 · 故事体量：一包 6 章 + 2–4 条支线 · 成色：可玩原型 · 交付：网页链接 + 新建 GitHub 仓库
 
 ## 当前状态（每轮结束更新；对话压缩后先读这里）
-- 做到哪：第 7 步系统设计按新参考重做完（2026-11-06）：战斗照杀戮尖塔的意图 + 原型的数；大地图、成长、装备照 Vampire's Fall 2；等用户确认
-- 下一步：用户点头后第 10 步重做白盒（第 8、9 步已完成）
+- 做到哪：第 10 步白盒按新玩法重做完（2026-11-09），到白盒试玩停靠点
+- 下一步：用户试玩白盒，按四条硬门槛和复盘题判；判继续以后第 11 步范围复盘
 - 项目主页：https://claude.ai/artifact/7GrrutxtorkDnBVH2DNaTN （每步重跑 render_site.py，更新同一个页面）
 - 仓库：https://github.com/salt-byte/arthur-rpg ，每步交接前提交并推送。旧白盒网页版在 docs/，GitHub Pages 打开后在 https://salt-byte.github.io/arthur-rpg/ 玩
 - 卡在哪：无
-- 最近一次 verify：2026-11-06 整体 PASS（旧白盒，qa/verification.json）；重做白盒后重跑
-- 停靠点：A0 ✓ · A1 ✓（2026-11-06 重过） · A2 ✓ · B ✓ · 白盒 退回 · C 未到 · D 未到
+- 最近一次 verify：2026-11-09 20261109-112111 整体 PASS（qa/verification.json）；--playtest 路线 a、b、c 都 PASS
+- 停靠点：A0 ✓ · A1 ✓（2026-11-06 重过） · A2 ✓ · B ✓ · 白盒 等你试玩 · C 未到 · D 未到
 
 状态：[ ] 待做 · [~] 进行中 · [x] 完成 · [!] 被退回
 行号就是「第 N 步」：按做的顺序从 1 编到底；每做完一行，提交并推到仓库，按 producer 第 6 节交接，等用户点头再做下一行。2026-11-06 按插件 0.7.0 重排：加了第 1 步建仓库、第 4 步玩法原型，共 20 步。
@@ -25,7 +25,7 @@
 | 7 | [x] | mvp 层每系统一页设计页，参数登记进 content/data/ | game-design | 4,6 | mvp | 每页上下两层齐全（一句话、例子、感受、规则 / 公式、边界、依赖、参数、验收、素材）；GDD.md、ui/SCREENS.md、CONTENT_SCHEDULE.md 玩法列按已定章节填好；代码里的数都能在设计页和 data/ 找到；公式和可调参数的起始值取自原型报告；每页有「体验」验收条件和退化打法；每页开头写了照哪个游戏，照原作的规则和数字附维基或攻略链接，规则表每条标了照原作 / 改了 / 自创 | 定调：目标优先级、你操作所有人、混合指引、只做关键几处。7 页设计页 + 7 个参数文件 + GDD（两张图）+ SCREENS（19 屏）+ 章节内容表玩法列；「设计总览」页面已发布。脚本核对：每个法术、同伴的招、敌人在章节内容表里都有第几章出现；每个面板在界面清单里有一行；三张流程图能渲染。CONCEPT 改两处（地图敌人、第一章例子）并记了改动。2026-11-06 退回：玩法参考改了，原型之后按新参考改：combat.md 照杀戮尖塔核对规则和数字，overworld.md 照 Vampire's Fall 2，补成长和装备两页，每页开头写「照」那一行。2026-11-06 重做：定调题（成长：技能点加进几棵树；装备：打怪随机掉；敌人：打死就没了，用户纠正）。combat.md、overworld.md 重写，progression.md、items.md 新写，story-unlocks.md 改了和升级、装备的分工；每页开头有「照」那一行，规则表逐条标出处；第 1 章战斗数取自原型报告；经验曲线用脚本按「只打必须打的 / 全打」两条线反推。九页设计页 + 九个参数文件；GDD 四张图（新加「变强从哪来」）、SCREENS 加 6 屏、章节内容表加「成长和装备」一列；check_style 禁用 0 条，check_project_data 0 个错误 |
 | 8 | [x] | 定数据格式、搭工程 | game-data-schema, godot-project-structure | 7 | mvp | 空项目能 headless 运行、能导出网页；对白/变量/任务/NPC/刷新/文本表各有样例 | 定好本作的数据格式（content/README.md）：变量由 bible.json 生成 54 个；任务表 10 条（主线步骤 = 剧情谱节点）；新加 6 个指令；遭遇表；第 1 章样例对白 65 行和 NPC、刷新点、文本表 131 条。check_content 0 错误（6 条提醒是新指令）、tools/check_project_data.py 0 错误。Godot 4.3 工程骨架：--playtest 跑完第 1 章样例三条路线全过（变量、任务、能力、预言簿、存读档）；网页导出 35MB，无头浏览器里打开 0 报错。证据 qa/evidence/step6/ |
 | 9 | [x] | 美术方向 + 目标图；界面观察 | art-direction, ui-layout | 4,7 | — | ART_DIRECTION 一页 + 1–2 张目标图；用户在 B 同意 | design/ART_DIRECTION.md、design/targets/ 两张、CREDITS.md 已交；没有玩法参考，界面观察跳过，风格契约写在 ART_DIRECTION 第 4 节；B 通过 |
-| 10 | [!] | 白盒切片：色块地图 + 占位 NPC，围着最大风险做一章 + 一战 + 一次成长（升级，或剧情给的新招，照 CONCEPT）：第 1 章狼群和梅林的影子两场小仗、地图上的明雷、一次升级、一次看水面、一次说给谁听，接到第 2 章教堂那一幕应验 | world-map, combat-system, dialogue-authoring, quest-design, playtest-automation（白盒门槛和复盘）；写代码前先读 mechanics-library 对应的参考代码 | 7,8 | mvp | verify.py 六项 PASS；按垂直切片四条硬门槛判（没人指导走完一圈、前 2 分钟知道干什么、核心机制感觉好、没有致命 bug），复盘题逐题问过，结论是继续；用户在白盒试玩停靠点同意 | 色块地图 4 块、两场仗、看水面、关键选择、第 2 章教堂三条路线；verify.py 六项 PASS（20261106-114916）；--playtest 三条路线 PASS。用户说「我直接来玩吧」，盲玩子 agent 这轮没跑，改由用户试玩；网页版在 docs/，等用户打开 Pages。用户试玩反馈（DEVLOG 19.1、19.2）：战斗看不懂、点了没反应、「这个游戏根本不好玩」。2026-11-06 退回：按新玩法参考重做，先过第 4 步原型 |
+| 10 | [x] | 白盒切片：色块地图 + 占位 NPC，围着最大风险做一章 + 一战 + 一次成长（升级，或剧情给的新招，照 CONCEPT）：第 1 章狼群和梅林的影子两场小仗、地图上的明雷、一次升级、一次看水面、一次说给谁听，接到第 2 章教堂那一幕应验 | world-map, combat-system, dialogue-authoring, quest-design, playtest-automation（白盒门槛和复盘）；写代码前先读 mechanics-library 对应的参考代码 | 7,8 | mvp | verify.py 六项 PASS；按垂直切片四条硬门槛判（没人指导走完一圈、前 2 分钟知道干什么、核心机制感觉好、没有致命 bug），复盘题逐题问过，结论是继续；用户在白盒试玩停靠点同意 | 2026-11-09 按新玩法重做（DEVLOG 第 21 节）：参考代码 intent-battle、overworld-grid、xp-progression、random-affix-loot 带进 scripts/mechanics/，自带测试 62 个用例全过。森林 32×18，四群会走动、会追的敌人，头狼群堵在去石圈的路上，林边石龛、空心老橡树的包袱；战斗照杀戮尖塔，血带出战斗、喝药、逃跑；经验 N³、升级挑奖励加点、装备三格带词缀；结尾有试玩记录。verify.py 20261109-112111 六项 PASS；--playtest 三条路线 PASS（全打 28 经验 3 级、只打必须的 12 经验 2 级，和成长页对上）；网页版无头浏览器能进游戏。等用户试玩：四条硬门槛和复盘题、最大风险的留下 / 放弃信号都在白盒试玩时问 |
 | 11 | [ ] | 范围复盘 ① | producer | 10 | — | GAME_BRIEF 范围复盘表填了一行 |  |
 | 12 | [ ] | 任务链 + 对白（每章过 knowledge_check 和 story-review） | quest-design, dialogue-authoring | 6,10 | playable | check_content.py 零错误；knowledge_check 候选逐条判过 |  |
 | 13 | [ ] | 地图、战斗、成长、存档、检定（照设计页，用不到的划掉） | world-map, combat-system, progression-system, save-load, skill-checks（CRPG 检定时）；写代码前先读 mechanics-library 对应的参考代码 | 7,10 | playable | --playtest 打印和设计页验收条件一一对上；存读档一致；参考代码里列的坑逐条对照过 |  |

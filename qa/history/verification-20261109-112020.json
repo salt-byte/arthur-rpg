@@ -1,0 +1,75 @@
+{
+  "_说明": "唯一 QA 事实源。六项必需来自同一次 --playtest 运行；NOT_RUN 不是通过；趣味和平衡不在此判定。",
+  "run_id": "20261109-112020",
+  "started": "2026-11-09T11:20:21",
+  "project": "/home/claude/arthur-rpg",
+  "engine": "4.3.stable.official.77dcf97d8",
+  "target_runtime": "godot-desktop(xvfb)",
+  "tested_runtime": "godot-desktop(xvfb)",
+  "overall": "FAIL",
+  "checks": {
+    "launch": {
+      "status": "NOT_RUN",
+      "evidence": ""
+    },
+    "render": {
+      "status": "NOT_RUN",
+      "evidence": ""
+    },
+    "input": {
+      "status": "NOT_RUN",
+      "evidence": ""
+    },
+    "coreLoop": {
+      "status": "NOT_RUN",
+      "evidence": ""
+    },
+    "outcome": {
+      "status": "NOT_RUN",
+      "evidence": ""
+    },
+    "restart": {
+      "status": "NOT_RUN",
+      "evidence": ""
+    }
+  },
+  "static": {
+    "content_check": {
+      "status": "PASS",
+      "exit_code": 0,
+      "summary": "检查完：11 个节点，98 行台词，54 个变量，0 个错误，9 条提醒",
+      "seconds": 0.0
+    },
+    "knowledge_check": {
+      "status": "REVIEW",
+      "exit_code": 1,
+      "summary": "检查完：17 条事实，2 处由不在知情名单的角色说出，0 处说法与事实矛盾，请逐条判断",
+      "seconds": 0.0
+    },
+    "parse_check": {
+      "status": "FAIL",
+      "exit_code": 0,
+      "summary": "SCRIPT ERROR: Parse Error: Could not parse global class \"Hud\" from \"res://scripts/ui/hud.gd\".",
+      "seconds": 0.4
+    }
+  },
+  "playtest": {
+    "command": "",
+    "exit_code": null,
+    "seconds": 0
+  },
+  "autotest_shots": null,
+  "web": null,
+  "evidence_dir": "production/qa/evidence/20261109-112020",
+  "screenshots": [],
+  "limitations": [
+    "脚本解析失败 2 处，没有跑 --playtest；见 parse_check.log",
+    "有必需项 NOT_RUN：没有证据不等于通过"
+  ],
+  "not_covered": [
+    "趣味",
+    "数值平衡",
+    "战斗手感",
+    "真人试玩反馈（确认点 C）"
+  ]
+}

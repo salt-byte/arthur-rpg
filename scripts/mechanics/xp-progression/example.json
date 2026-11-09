@@ -1,0 +1,41 @@
+{
+	"_说明": "示例数据。项目里放 content/data/progression.json（progression + skill_tree 两段）。经验曲线照宝可梦六种成长速度（默认 medium_fast = n³，100 级封顶）；投点照暗黑破坏神 2（每级 1 技能点 5 属性点，需求等级分档 1/6/12/18/24/30，每技能最多 20 点）。技能名都是通用名。narrative 段照 arthur-rpg 的 content/data/story-unlocks.json 改写：不用经验，剧情节点 + 变量给解锁。",
+	"progression": {
+		"mode": "xp",
+		"curve": "medium_fast",
+		"max_level": 100,
+		"at_cap": "discard",
+		"points_per_level": 1,
+		"attribute_points_per_level": 5,
+		"stats_per_level": {},
+		"rewards": {}
+	},
+	"curve_samples": {
+		"linear": {"curve": "linear", "base": 100, "growth": 50},
+		"table": {"curve": "table", "table": [80, 120, 200, 320]}
+	},
+	"skill_tree": {
+		"max_rank": 20,
+		"respec_charges": 1,
+		"respec_refund": 1.0,
+		"nodes": {
+			"strike": {"cost": 1, "level_req": 1},
+			"guard": {"cost": 1, "level_req": 1},
+			"cleave": {"cost": 1, "level_req": 6, "requires": ["strike"]},
+			"whirl": {"cost": 1, "level_req": 12, "requires": ["cleave", "guard"]},
+			"blood_rite": {"cost": 1, "level_req": 1, "flags": ["vamp"]}
+		}
+	},
+	"narrative": {
+		"progression": {"mode": "narrative"},
+		"skill_tree": {
+			"story_unlocks": [
+				{"id": "u_interrupt", "kind": "spell", "what": "interrupt", "at": "1103", "requires": []},
+				{"id": "u_scabbard", "kind": "companion_move", "what": "scabbard", "at": "1303", "requires": []},
+				{"id": "u_still_water", "kind": "spell", "what": "still_water", "at": "1303", "requires": ["D2b"]},
+				{"id": "u_deflect", "kind": "spell", "what": "deflect", "at": "1305", "requires": ["D2b", "D3a"]},
+				{"id": "u_scabbard_lost", "kind": "lose", "what": "scabbard", "at": "1402", "requires": []}
+			]
+		}
+	}
+}

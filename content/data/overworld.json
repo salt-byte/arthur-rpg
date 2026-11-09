@@ -131,21 +131,30 @@
     {
       "id": "manor_chapel",
       "area": "manor",
-      "cell": null,
+      "cell": [
+        1,
+        9
+      ],
       "name": "shrine_manor",
       "first_of_chapter": true
     },
     {
       "id": "forest_shrine",
       "area": "forest",
-      "cell": null,
+      "cell": [
+        26,
+        9
+      ],
       "name": "shrine_forest",
       "_说明": "放在头狼群前，走路 30 秒内"
     },
     {
       "id": "stone_circle_cross",
       "area": "stone_circle",
-      "cell": null,
+      "cell": [
+        15,
+        2
+      ],
       "name": "shrine_stone_circle"
     }
   ],
@@ -153,9 +162,13 @@
     {
       "id": "forest_oak",
       "area": "forest",
-      "cell": null,
+      "cell": [
+        3,
+        13
+      ],
       "drop": "chest",
-      "_说明": "空心老橡树里的包袱"
+      "_说明": "空心老橡树里的包袱",
+      "name": "chest_forest_oak"
     }
   ],
   "water_spots": [

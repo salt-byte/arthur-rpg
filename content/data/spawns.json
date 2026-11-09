@@ -1,27 +1,69 @@
 {
-  "_说明": "敌人放在哪（game-data-schema 格式）。2026-11-06 起照《Vampire's Fall 2》：zones 是能绕开的敌人在哪块地方转（会走动、4 格内会追）；spawns 是任务敌人，站着不动（stay: true）。enemy 一栏填遭遇 id（combat.json 的 encounters），不是单个敌人。condition 为真时出现；on_defeat 是打赢后运行的对话节点。打死的都不回来。现在只有第 1 章，其余第 10 步补。",
+  "_说明": "敌人放在哪（game-data-schema 格式）。2026-11-06 起照《Vampire's Fall 2》：zones 是能绕开的敌人，每群在地图上是一个看得见的人影，在自己那块地方（rect：[x, y, 宽, 高]，格子坐标）里转，4 格内会追，出不了 rect；cell 是出生的格子；enemy 填遭遇 id（combat.json 的 encounters）。spawns 是任务敌人，站着不动（stay: true），撞上才开打。condition 为真时出现；on_defeat 是打赢后运行的对话节点。打死的都不回来（defeated 记 zone 的 id）。第 10 步白盒填好第 1 章：森林四群能绕开的，加头狼群；其余章生产阶段补。",
   "zones": {
     "forest_east": {
       "area": "forest",
-      "rect": null,
-      "groups": [
-        {
-          "enemy": "forest_wolves",
-          "count": 1
-        }
+      "rect": [
+        17,
+        1,
+        7,
+        4
       ],
-      "_说明": "小路右边的蕨丛"
+      "cell": [
+        20,
+        3
+      ],
+      "enemy": "forest_wolves",
+      "label": "enc_forest_wolves",
+      "_说明": "小路右边的蕨丛，两只狼来回转。rect 离大路隔两格：追得到路边、上不了路，想绕开就绕得开"
     },
     "forest_road": {
       "area": "forest",
-      "rect": null,
-      "groups": [
-        {
-          "enemy": "road_bandits",
-          "count": 1
-        }
+      "rect": [
+        1,
+        3,
+        10,
+        7
       ],
-      "_说明": "路中间横着死羊，弓手蹲在树后"
+      "cell": [
+        8,
+        8
+      ],
+      "enemy": "road_bandits",
+      "label": "enc_road_bandits",
+      "_说明": "西边路中间横着死羊，强盗和蹲在树后的弓手"
+    },
+    "forest_oak": {
+      "area": "forest",
+      "rect": [
+        1,
+        10,
+        10,
+        6
+      ],
+      "cell": [
+        6,
+        12
+      ],
+      "enemy": "oak_wolves",
+      "label": "enc_oak_wolves",
+      "_说明": "空心老橡树边：守着树洞里的包袱，瘦狼会叫狼"
+    },
+    "forest_log": {
+      "area": "forest",
+      "rect": [
+        26,
+        1,
+        5,
+        6
+      ],
+      "cell": [
+        28,
+        3
+      ],
+      "enemy": "log_wolves",
+      "label": "enc_log_wolves",
+      "_说明": "东北角倒木后面的两只灰狼，从倒木左边的缺口进去"
     }
   },
   "spawns": [
@@ -30,8 +72,8 @@
       "enemy": "wolves",
       "area": "forest",
       "cell": [
-        19,
-        12
+        23,
+        13
       ],
       "stay": true,
       "condition": "quest_part(1001) == 1101",

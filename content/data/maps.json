@@ -1,5 +1,5 @@
 {
-  "_说明": "白盒地图（第 8 步）：色块格子，验证走位和任务链；第 11 步照 overworld.md 换成正式地图。rows 每个字一格，图例见 tiles。exits 是走上去就换地方的格子；triggers 是走上去、条件为真就开始对话的格子；npcs.json 和 spawns.json 的 cell 指这里的坐标。颜色只给白盒用，正式颜色照 ART_DIRECTION。 battle_bg 是在这里开打时战斗画面的底色。",
+  "_说明": "白盒地图（第 8 步搭，第 10 步重做：森林扩成 32×18，放四群会走动的敌人、林边石龛、空心老橡树里的包袱）：色块格子，验证走位和任务链；第 11 步照 overworld.md 换成正式地图。rows 每个字一格，图例见 tiles。exits 是走上去就换地方的格子；triggers 是走上去、条件为真就开始对话的格子；npcs.json 和 spawns.json 的 cell 指这里的坐标。颜色只给白盒用，正式颜色照 ART_DIRECTION。 battle_bg 是在这里开打时战斗画面的底色。",
   "cell_px": 64,
   "tiles": {
     "#": {
@@ -66,6 +66,26 @@
       "color": "#7D7F88",
       "block": true,
       "_": "插着剑的石头"
+    },
+    "B": {
+      "color": "#4F6B4A",
+      "block": false,
+      "_": "蕨丛"
+    },
+    "X": {
+      "color": "#6B4F3A",
+      "block": true,
+      "_": "倒木"
+    },
+    "Q": {
+      "color": "#5A4632",
+      "block": true,
+      "_": "空心老橡树"
+    },
+    "m": {
+      "color": "#C9C2B4",
+      "block": true,
+      "_": "死羊"
     }
   },
   "actors": {
@@ -156,20 +176,24 @@
     "forest": {
       "name": "area_forest",
       "rows": [
-        "TTTTTTTTTTTT+TTTTTTTTTTT",
-        "TTTT......T.:.TT.....TTT",
-        "TT........T.:..T.......T",
-        "T.....TT....:.......TT.T",
-        "T....TTTT...:......TTT.T",
-        "T.....TT....::::.......T",
-        "T..............:.......T",
-        "TTT............:....TTTT",
-        "TTTT...........::::.TTTT",
-        "T..................:...T",
-        "T..TT..............:.T.T",
-        "T.TTTT.......TTTT..:.TTT",
-        "T..TT.........TTTT.:TTTT",
-        "TTTTTTTTTTTTTTTTTTT+TTTT"
+        "TTTTTTTTTTTT+TTTTTTTTTTTTTTTTTTT",
+        "TTTTT.TTTT..:.TTT....TT.TT...TTT",
+        "TTTTT.TTTT..:.TTT..B....TT.....T",
+        "T.....TTTT..:.....B..B..TT.....T",
+        "T.........TT:...TT..B...TT.....T",
+        "T.........TT:...TT.B..B.TT.....T",
+        "T...........:T..........TT.....T",
+        "T...::m::::::::::::::::::..XXXXT",
+        "T......................:....TTTT",
+        "T.............TTTTTT...:....TTTT",
+        "TTT........TT.TTTTTT...:....TTTT",
+        "TTT........TT.TTTTTT...:....TTTT",
+        "T..........TT.TTTTTT...:....TTTT",
+        "T..Q.......TT....TTTTTT:TTTTTTTT",
+        "T..........TT....TTTTTT:TTTTTTTT",
+        "T..........TT....TTTTTT:TTTTTTTT",
+        "TTTTTTTTTTTTTTTTTTTTTTT:TTTTTTTT",
+        "TTTTTTTTTTTTTTTTTTTTTTT+TTTTTTTT"
       ],
       "exits": [
         {
@@ -185,8 +209,8 @@
         },
         {
           "cell": [
-            19,
-            13
+            23,
+            17
           ],
           "to": "stone_circle",
           "at": [
@@ -222,8 +246,8 @@
           ],
           "to": "forest",
           "at": [
-            19,
-            12
+            23,
+            16
           ]
         }
       ],

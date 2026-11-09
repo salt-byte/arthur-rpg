@@ -1,17 +1,24 @@
 class_name World
 extends Node2D
-## 白盒大地图（第 8 步）：色块格子，地图从 content/data/maps.json 读，人从 npcs.json，敌人从 spawns.json，
-## 水面从 overworld.json。规则照 design/systems/overworld.md：
-## 方向键走格子；面对人或东西按确认才说话；敌人站在路上，碰到就开打；能看将来的水面剧情到了才发光；
-## 走到出口换地方；走上触发格、条件为真就开始对话（走进阁楼梅林就开口）。
+## 白盒大地图：色块格子，地图从 content/data/maps.json 读，人从 npcs.json，敌人从 spawns.json，
+## 水面、圣龛、宝物从 overworld.json。规则照 design/systems/overworld.md（照《Vampire's Fall 2》的大地图）：
+## 方向键走格子；面对人或东西按确认才说话；能看将来的水面剧情到了才发光；走到出口换地方；
+## 走上触发格、条件为真就开始对话（走进阁楼梅林就开口）。
+## 第 10 步重做：能绕开的敌人（spawns.zones）在地图上看得见、自己走动，4 格内会追，和你上下左右挨着就开打，
+## 打死就没了；任务敌人（spawns.spawns）站着不动、撞上才打。你走一格，它们各走一格（照 mechanics-library overworld-grid）。
+## 圣龛：面对按确认祈祷（三人回满、记成上次祈祷的地方、存档，可以传送、洗点）；宝物：面对按确认打开。
 
 signal want_dialog(node: String)
 signal want_battle(spawn: Dictionary)
 signal want_bark(text: String, at: Vector2)
 signal area_changed(area: String)
 signal moved(cell: Vector2i)
+signal want_pray(shrine: Dictionary)
+signal want_chest(chest: Dictionary)
 
 const DIRS := {"up": Vector2i(0, -1), "down": Vector2i(0, 1), "left": Vector2i(-1, 0), "right": Vector2i(1, 0)}
+const DIR4: Array[Vector2i] = [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]
+const Walk := preload("res://scripts/mechanics/overworld-grid/grid_walk.gd")
 
 var main  # main.gd：问它现在能不能走、跑表达式
 var M: Dictionary          # maps.json
@@ -31,6 +38,10 @@ var _t := 0.0
 var _last_trigger := Vector2i(-1, -1)
 var hover_cell := Vector2i(-1, -1)   # 鼠标停在哪一格
 var _walk_id := 0                    # 点地面走路：新的一下点击取消上一条路
+var roamers: Array = []              # 这片地方里能绕开的敌人：{id, enc, cell, rect, home, stun, chasing, label}
+var grace := 0                       # 刚回到圣龛：这几步里敌人不追（overworld.json flee_grace_steps）
+var _rng := RandomNumberGenerator.new()
+var _anim := {}                      # 敌人走动的补间：id -> [从哪, 到哪, 进度]
 
 func _ready() -> void:
 	M = Data.t("maps")
@@ -55,6 +66,7 @@ func load_area(id: String, cell: Vector2i) -> void:
 	moving = false
 	GS.S.area = id
 	GS.S.cell = [cell.x, cell.y]
+	_load_roamers()
 	_update_cam()
 	queue_redraw()
 	player.queue_redraw()
@@ -130,11 +142,115 @@ func blocked(c: Vector2i) -> bool:
 	if tile_def(tile(c)).get("block", false): return true
 	if npc_at(c) != null: return true
 	if water_at(c) != null: return true
+	if shrine_at(c) != null or chest_at(c) != null: return true
 	return false
+
+# ---------------- 圣龛、宝物 ----------------
+func shrines_here() -> Array:
+	return Data.t("overworld").get("shrines", []).filter(func(s): return s.area == area and s.cell != null)
+
+func shrine_at(c: Vector2i):
+	for s in shrines_here():
+		if Vector2i(int(s.cell[0]), int(s.cell[1])) == c: return s
+	return null
+
+func chest_at(c: Vector2i):
+	for s in Data.t("overworld").get("chests", []):
+		if s.area == area and s.cell != null and Vector2i(int(s.cell[0]), int(s.cell[1])) == c: return s
+	return null
+
+func chest_opened(ch: Dictionary) -> bool:
+	return ch.id in GS.S.get("opened", [])
+
+# ---------------- 能绕开的敌人（spawns.zones） ----------------
+func _load_roamers() -> void:
+	roamers = []
+	_anim = {}
+	var zones: Dictionary = Data.t("spawns").get("zones", {})
+	for zid in zones:
+		var z: Dictionary = zones[zid]
+		if z.get("area", "") != area or z.get("cell") == null or zid in GS.S.get("defeated", []): continue
+		if not main.cond(z.get("condition", "")): continue
+		var r: Array = z.get("rect", [0, 0, W, H])
+		roamers.append({"id": zid, "enc": z.enemy, "cell": Vector2i(int(z.cell[0]), int(z.cell[1])), "home": Vector2i(int(z.cell[0]), int(z.cell[1])),
+			"rect": Rect2i(int(r[0]), int(r[1]), int(r[2]), int(r[3])), "stun": 0, "chasing": false, "label": z.get("label", "")})
+
+func roamer_at(c: Vector2i):
+	for r in roamers:
+		if r.cell == c: return r
+	return null
+
+func roamer(id: String):
+	for r in roamers:
+		if r.id == id: return r
+	return null
+
+## 打赢了：从地图上拿掉（GS.S.defeated 由 main 记）
+func remove_roamer(id: String) -> void:
+	roamers = roamers.filter(func(r): return r.id != id)
+	queue_redraw()
+
+## 这群敌人回到出生的格子（逃跑后那群敌人留在原地、血回满：位置也回到它那块地方的出生点）
+func reset_roamer(id: String) -> void:
+	var r = roamer(id)
+	if r != null:
+		r.cell = r.home
+		r.chasing = false
+
+## 两群敌人同时挨着：先开打的那群之外，别的原地停几步
+func stun_others(except: String, n: int) -> void:
+	for r in roamers:
+		if r.id != except: r.stun = maxi(int(r.stun), n)
+
+func _touching(r: Dictionary) -> bool:
+	if int(r.stun) > 0: return false
+	var d: Vector2i = r.cell - player_cell
+	return absi(d.x) + absi(d.y) <= 1
+
+## 敌人能进的格：能走、不是出口、没有人和别的敌人、不是玩家、在它那块地方里
+func _enemy_can_enter(c: Vector2i) -> bool:
+	if c.x < 0 or c.y < 0 or c.x >= W or c.y >= H or blocked(c) or exit_at(c) != null: return false
+	if trigger_at(c) != null or spawn_at(c) != null: return false
+	return roamer_at(c) == null and c != player_cell
+
+## 你走完一格以后，敌人按数据顺序各走一格；每走一个立刻查碰撞（overworld-grid 的做法）
+func _enemies_turn() -> Dictionary:
+	_rng.seed = hash([int(GS.S.get("seed", 1)), area, int(GS.S.get("steps", 0))])
+	var radius := int(Data.param("overworld", "chase_radius", 4))
+	var chance := float(Data.param("overworld", "chase_chance", 0.65))
+	for r in roamers:
+		if int(r.stun) > 0:
+			r.stun = int(r.stun) - 1
+			continue
+		var nxt := Vector2i(-999, -999)
+		var was: bool = r.chasing
+		r.chasing = false
+		if grace <= 0 and radius > 0:
+			var path: Array = Walk.bfs_path(self, r.cell, player_cell, radius)
+			if not path.is_empty() and _rng.randf() < chance:
+				nxt = path[0]
+				r.chasing = true
+		if not r.chasing:
+			nxt = r.cell + DIR4[_rng.randi_range(0, 3)]
+		if was != r.chasing:
+			print("  [地图] %s ×%d %s" % [UIKit.t(Data.encounter(r.enc).get("name", r.enc)), Data.encounter(r.enc).get("enemies", []).size(),
+				"开始追" if r.chasing else "不追了"])
+		if nxt != player_cell and r.rect.has_point(nxt) and _enemy_can_enter(nxt):
+			_anim[r.id] = [r.cell, nxt, 0.0]
+			r.cell = nxt
+		if _touching(r):
+			return r
+	return {}
 
 # ---------------- 走 ----------------
 func _process(delta: float) -> void:
 	_t += delta
+	if not _anim.is_empty():
+		var speed := float(Data.param("overworld", "move_speed_tiles", 4))
+		for k in _anim.keys():
+			_anim[k][2] = minf(1.0, float(_anim[k][2]) + delta * speed)
+			if _anim[k][2] >= 1.0: _anim.erase(k)
+		queue_redraw()
 	if _has_glow(): queue_redraw()
 	player.queue_redraw()
 	if moving or main == null or not main.can_move(): return
@@ -147,6 +263,7 @@ func _has_glow() -> bool:
 	if hover_cell.x >= 0: return true
 	for w in Data.t("overworld").get("water_spots", []):
 		if w.area == area and water_glows(w): return true
+	if not roamers.is_empty(): return true
 	return not markers().is_empty()
 
 func _held_dir() -> Vector2i:
@@ -162,6 +279,10 @@ func step(d: Vector2i) -> bool:
 	var sp = spawn_at(n)
 	if sp != null:
 		want_battle.emit(sp)
+		return false
+	var ro = roamer_at(n)
+	if ro != null:
+		want_battle.emit(_roamer_spawn(ro, "player"))
 		return false
 	if blocked(n):
 		player.queue_redraw()
@@ -184,7 +305,8 @@ func cell_at_screen(pos: Vector2) -> Vector2i:
 
 ## 能不能点：人、发光或不发光的水面、敌人，算「点了有事」
 func clickable(c: Vector2i) -> bool:
-	return npc_at(c) != null or water_at(c) != null or spawn_at(c) != null
+	return npc_at(c) != null or water_at(c) != null or spawn_at(c) != null or roamer_at(c) != null \
+		or shrine_at(c) != null or chest_at(c) != null
 
 ## 鼠标或手指点了地图上的一格：空地就走过去；人和水面走到旁边再说话 / 看；敌人走到旁边就开打
 func click_cell(c: Vector2i) -> void:
@@ -192,8 +314,8 @@ func click_cell(c: Vector2i) -> void:
 	_walk_id += 1
 	var my := _walk_id
 	var kind := ""
-	if npc_at(c) != null or water_at(c) != null: kind = "talk"
-	elif spawn_at(c) != null: kind = "fight"
+	if npc_at(c) != null or water_at(c) != null or shrine_at(c) != null or chest_at(c) != null: kind = "talk"
+	elif spawn_at(c) != null or roamer_at(c) != null: kind = "fight"
 	elif blocked(c): return
 	var path := path_to(c, kind != "")
 	for n in path:
@@ -205,7 +327,10 @@ func click_cell(c: Vector2i) -> void:
 	var d := c - player_cell
 	if absi(d.x) + absi(d.y) != 1: return
 	if kind == "fight":
-		step(d)
+		if roamer_at(c) != null:
+			want_battle.emit(_roamer_spawn(roamer_at(c), "player"))
+		else:
+			step(d)
 	else:
 		facing = d
 		player.queue_redraw()
@@ -229,6 +354,7 @@ func _bfs(t: Vector2i, adjacent: bool, avoid_triggers: bool) -> Array:
 		for tr_ in A.get("triggers", []):
 			if main.cond(tr_.get("cond", "")): avoid[Vector2i(int(tr_.cell[0]), int(tr_.cell[1]))] = true
 	for s in spawns_here(): avoid[Vector2i(int(s.cell[0]), int(s.cell[1]))] = true
+	for r in roamers: avoid[r.cell] = true
 	var goal := {}
 	if adjacent:
 		for d in DIRS.values(): goal[t + d] = true
@@ -267,6 +393,7 @@ func place(c: Vector2i, face := Vector2i(0, 1)) -> void:
 
 func _arrive(c: Vector2i) -> void:
 	GS.S.cell = [c.x, c.y]
+	GS.S.steps = int(GS.S.get("steps", 0)) + 1
 	moved.emit(c)
 	var e = exit_at(c)
 	if e != null:
@@ -278,6 +405,20 @@ func _arrive(c: Vector2i) -> void:
 		want_dialog.emit(t.node)
 		return
 	if t == null: _last_trigger = Vector2i(-1, -1)
+	# 你自己走到敌人旁边
+	for r in roamers:
+		if _touching(r):
+			want_battle.emit(_roamer_spawn(r, "player"))
+			return
+	if grace > 0: grace -= 1
+	var hit := _enemies_turn()
+	queue_redraw()
+	if not hit.is_empty():
+		want_battle.emit(_roamer_spawn(hit, "enemy"))
+
+## 给 main 的开打信息：和任务敌人一样的格式，多 roamer、cause（谁撞上谁，试玩记录用）
+func _roamer_spawn(r: Dictionary, cause: String) -> Dictionary:
+	return {"id": r.id, "enemy": r.enc, "roamer": true, "cause": cause}
 
 ## 面对的那一格按确认
 func interact() -> void:
@@ -299,6 +440,15 @@ func interact() -> void:
 			want_dialog.emit(w.node)
 		else:
 			want_bark.emit(str(Data.param("prophecy", "idle_water_text", "")), _px(c))
+		return
+	var sh = shrine_at(c)
+	if sh != null:
+		want_pray.emit(sh)
+		return
+	var ch = chest_at(c)
+	if ch != null:
+		if chest_opened(ch): want_bark.emit(UIKit.t("chest_empty"), _px(c))
+		else: want_chest.emit(ch)
 		return
 
 # ---------------- 任务标记：下一步该去的格子 ----------------
@@ -390,6 +540,35 @@ func _draw() -> void:
 		_crossed_swords(c + Vector2(0, -cs * 0.62))
 		var nm := UIKit.t(Data.encounter(s.enemy).get("name", s.enemy))
 		_name_tag(nm, c + Vector2(0, -cs * 0.95), UIKit.DANGER)
+	# 圣龛：灰石底座上一个十字；祈祷过的十字是金色，脚下一圈暖光
+	for sh in shrines_here():
+		var c := _px(Vector2i(int(sh.cell[0]), int(sh.cell[1])))
+		var prayed: bool = sh.id in GS.S.get("shrines", [])
+		if prayed: draw_circle(c + Vector2(0, 8), cs * 0.42, Color(1.0, 0.85, 0.5, 0.22 + 0.08 * sin(_t * 2.0)))
+		draw_rect(Rect2(c.x - 18, c.y + 4, 36, 18), Color("#7A7F8C"))
+		draw_rect(Rect2(c.x - 4, c.y - 26, 8, 32), UIKit.GOLD if prayed else Color("#B8BCC6"))
+		draw_rect(Rect2(c.x - 14, c.y - 18, 28, 7), UIKit.GOLD if prayed else Color("#B8BCC6"))
+		_name_tag(UIKit.t(sh.name), c + Vector2(0, -cs * 0.62), UIKit.GOLD if prayed else UIKit.CREAM)
+	# 宝物：没开的包袱发一点光；开过的是空的
+	for ch in Data.t("overworld").get("chests", []):
+		if ch.area != area or ch.cell == null: continue
+		var c := _px(Vector2i(int(ch.cell[0]), int(ch.cell[1])))
+		var open := chest_opened(ch)
+		if not open: draw_circle(c, cs * 0.30, Color(1.0, 0.9, 0.5, 0.25 + 0.15 * sin(_t * 3.0)))
+		draw_rect(Rect2(c.x - 13, c.y - 6, 26, 20), Color("#3A2E22") if open else Color("#B08A55"))
+		if not open: draw_rect(Rect2(c.x - 13, c.y - 1, 26, 4), UIKit.GOLD)
+	# 能绕开的敌人：灰色的身子，几只就画几个；脚下的圈追你时变红、平时是灰的；头上一块牌子写名字和几只
+	for r in roamers:
+		var at := _px(r.cell)
+		if _anim.has(r.id): at = _px(_anim[r.id][0]).lerp(_px(_anim[r.id][1]), float(_anim[r.id][2]))
+		var n: int = Data.encounter(r.enc).get("enemies", []).size()
+		draw_arc(at + Vector2(0, 14), cs * 0.44, 0, TAU, 32, UIKit.DANGER if r.chasing else Color("#6E6A66"), 4.0)
+		for i in n:
+			var ox := (i - (n - 1) / 2.0) * 16.0
+			draw_rect(Rect2(at.x + ox - 7, at.y - 4, 14, 20), Color("#55575F"))
+			draw_rect(Rect2(at.x + ox - 7, at.y - 8, 14, 6), Color("#6C6E77"))
+		var nm := group_label(r.enc)
+		_name_tag(nm + ("！" if r.chasing else ""), at + Vector2(0, -cs * 0.62), UIKit.DANGER if r.chasing else UIKit.CREAM)
 	# 人
 	for n in npcs_here():
 		var c := _px(Vector2i(int(n.cell[0]), int(n.cell[1])))
@@ -411,6 +590,16 @@ func _draw() -> void:
 		var c := _px(m) + Vector2(0, -cs * 0.9 + sin(_t * 4.0) * 5.0)
 		draw_colored_polygon(PackedVector2Array([c + Vector2(-12, -10), c + Vector2(12, -10), c + Vector2(0, 8)]), UIKit.GOLD)
 		draw_polyline(PackedVector2Array([c + Vector2(-12, -10), c + Vector2(12, -10), c + Vector2(0, 8), c + Vector2(-12, -10)]), UIKit.INK, 2.0)
+
+## 牌子上的字：同一种写「狼 ×2」，不同的写「强盗、弓手」（overworld.md：走近时看得见是什么、几只）
+static func group_label(enc: String) -> String:
+	var names := []
+	for e in Data.encounter(enc).get("enemies", []):
+		var nm := UIKit.t(Data.enemy(e).get("name", e))
+		if not nm in names: names.append(nm)
+	var n: int = Data.encounter(enc).get("enemies", []).size()
+	if names.size() == 1: return UIKit.f("map_group", {"t": names[0], "n": n})
+	return "、".join(PackedStringArray(names))
 
 func _draw_player() -> void:
 	var look: Dictionary = M.actors.get("apprentice", {})

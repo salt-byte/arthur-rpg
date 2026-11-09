@@ -303,7 +303,8 @@
             "act": "attack",
             "power": 12,
             "target": "apprentice",
-            "move": "move_heavy_slash"
+            "move": "move_heavy_slash",
+            "lethal": true
           },
           "move": "move_charge"
         },
@@ -313,7 +314,8 @@
           "target": "apprentice",
           "move": "move_slash"
         }
-      ]
+      ],
+      "_说明": "重劈挨上就倒（lethal：伤害 = 目标当时的血 + 格挡）。学徒的血从 10 改成 14、又会随升级和装备涨，原来的 12 点已经劈不倒人；这一仗要教的是打断，所以改成挨上就倒（第 10 步，2026-11-09）"
     },
     "_其他": "第 2–6 章的敌人第 10 步写遭遇时补"
   },
@@ -343,6 +345,40 @@
       "enemies": [
         "bandit",
         "archer"
+      ],
+      "party": {
+        "fixed": [
+          "kay",
+          "arthur"
+        ]
+      },
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "oak_wolves": {
+      "name": "enc_oak_wolves",
+      "kind": "map",
+      "enemies": [
+        "wolf_howler",
+        "wolf"
+      ],
+      "party": {
+        "fixed": [
+          "kay",
+          "arthur"
+        ]
+      },
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "log_wolves": {
+      "name": "enc_log_wolves",
+      "kind": "map",
+      "enemies": [
+        "wolf_grey",
+        "wolf_grey"
       ],
       "party": {
         "fixed": [

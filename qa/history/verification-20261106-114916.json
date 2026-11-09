@@ -1,0 +1,89 @@
+{
+  "_说明": "唯一 QA 事实源。六项必需来自同一次 --playtest 运行；NOT_RUN 不是通过；趣味和平衡不在此判定。",
+  "run_id": "20261106-114916",
+  "started": "2026-11-06T11:49:29",
+  "project": "/home/claude/arthur-rpg",
+  "engine": "4.3.stable.official.77dcf97d8",
+  "target_runtime": "godot-desktop(xvfb)",
+  "tested_runtime": "godot-desktop(xvfb)",
+  "overall": "PASS",
+  "checks": {
+    "launch": {
+      "status": "PASS",
+      "evidence": "清存档后新开一局：在庄园，主线 1001 开始，没有旧存档"
+    },
+    "render": {
+      "status": "PASS",
+      "evidence": "production/qa/evidence/20261106-114916/gd_verify_render.png 1280x720，缩略后 579 种颜色"
+    },
+    "input": {
+      "status": "PASS",
+      "evidence": "按「下」以后学徒从 (2, 2) 走到 (2, 4)"
+    },
+    "coreLoop": {
+      "status": "PASS",
+      "evidence": "接 1001 → 打赢狼群 → 1102 → 看水面记下 D1 → 学打断、打赢影子 → 马厩选 D1a → 1001 完成 → 进第 2 章 1203"
+    },
+    "outcome": {
+      "status": "PASS",
+      "evidence": "第 2 章教堂按 D1a 演完：预言簿写上「凯在教堂里自己改了口，说剑是亚瑟拔的。埃克托没让他起誓。」，任务到 1204，出现白盒结尾"
+    },
+    "restart": {
+      "status": "PASS",
+      "evidence": "点「重新开始」以后存档删掉了，回到标题，没有「继续」"
+    }
+  },
+  "static": {
+    "content_check": {
+      "status": "PASS",
+      "exit_code": 0,
+      "summary": "检查完：11 个节点，98 行台词，54 个变量，0 个错误，9 条提醒",
+      "seconds": 0.0
+    },
+    "knowledge_check": {
+      "status": "REVIEW",
+      "exit_code": 1,
+      "summary": "检查完：17 条事实，2 处由不在知情名单的角色说出，0 处说法与事实矛盾，请逐条判断",
+      "seconds": 0.0
+    },
+    "parse_check": {
+      "status": "PASS",
+      "exit_code": 0,
+      "summary": "脚本解析无错误（0.4s）",
+      "seconds": 0.4
+    }
+  },
+  "playtest": {
+    "command": "xvfb-run -a /home/claude/godot/Godot_v4.3-stable_linux.x86_64 --path /home/claude/arthur-rpg -- --playtest",
+    "exit_code": 0,
+    "seconds": 11.9
+  },
+  "autotest_shots": null,
+  "web": null,
+  "evidence_dir": "production/qa/evidence/20261106-114916",
+  "screenshots": [
+    "battle_intents.png",
+    "battle_lose.png",
+    "battle_planned.png",
+    "battle_win.png",
+    "gd_verify_render.png",
+    "key_confirm.png",
+    "map_forest.png",
+    "map_london.png",
+    "map_manor.png",
+    "map_stone_circle.png",
+    "screen_book.png",
+    "screen_card.png",
+    "screen_unlock.png",
+    "screen_vision.png",
+    "title.png",
+    "toast_after.png"
+  ],
+  "limitations": [],
+  "not_covered": [
+    "趣味",
+    "数值平衡",
+    "战斗手感",
+    "真人试玩反馈（确认点 C）"
+  ]
+}

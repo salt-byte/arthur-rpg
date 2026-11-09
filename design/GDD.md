@@ -86,7 +86,7 @@ flowchart TD
 | content/data/*.json | 设计页里每个会调的数 | game-design → balancing | 2026-11-06 | 草稿；第 1 章的战斗数来自原型 | [GitHub](https://github.com/salt-byte/arthur-rpg/tree/main/content/data) |
 | site/ | 项目主页的页面文件 | producer | 2026-11-06 | 每步重新生成 | 项目主页；[GitHub](https://github.com/salt-byte/arthur-rpg/tree/main/site) |
 | content/README.md | 内容数据格式：变量、指令、任务表、遭遇表 | game-data-schema | 2026-11-05 | 草稿（第 6 步） | [GitHub](https://github.com/salt-byte/arthur-rpg/blob/main/content/README.md) |
-| project.godot、scripts/ | Godot 4.3 工程骨架：读数据、跑对白、存读档 | godot-project-structure | 2026-11-05 | 旧白盒的代码，读的是旧格式的 combat.json；第 10 步白盒重做时改 | [GitHub](https://github.com/salt-byte/arthur-rpg/tree/main/scripts) |
+| project.godot、scripts/ | Godot 4.3 工程：读数据、跑对白、存读档；第 10 步加了意图战斗、会走动的敌人、圣龛、宝物、经验和技能树、背包（scripts/mechanics/ 是 mechanics-library 带进来的参考代码） | godot-project-structure → 第 10 步白盒 | 2026-11-09 | 白盒切片按新玩法重做完，等白盒试玩 | [GitHub](https://github.com/salt-byte/arthur-rpg/tree/main/scripts) |
 | design/ART_DIRECTION.md | 画风：视觉原则、怎么一眼认出、颜色随章节褪色、界面风格、两张目标图 | art-direction → ui-layout | 2026-11-06 | 已确认（B） | 项目主页「画风」；[GitHub](https://github.com/salt-byte/arthur-rpg/blob/main/design/ART_DIRECTION.md) |
 | design/targets/ | 目标图：庆功宴的酒杯、教堂里凯改口 | art-direction | 2026-11-06 | 已确认（B） | [GitHub](https://github.com/salt-byte/arthur-rpg/tree/main/design/targets) |
 | CREDITS.md | 用到的美术和字体署名 | asset-sourcing | 2026-11-06 | 每加一个素材加一行 | [GitHub](https://github.com/salt-byte/arthur-rpg/blob/main/CREDITS.md) |

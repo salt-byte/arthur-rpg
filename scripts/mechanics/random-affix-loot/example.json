@@ -1,0 +1,41 @@
+{
+	"_说明": "示例数据，项目里放 content/data/loot.json。规则照暗黑破坏神 2：魔法 1–2 条（前+后 25% / 只有前缀 25% / 只有后缀 50%），稀有 3–6 条（各 1/4，前缀后缀各最多 3 条，随机名）。名字、数值是通用示例。slot 是词缀筛选用的部位；equip_slots 是 inventory.gd 的装备槽（不写就等于 [slot]）。qlvl：底材从几级开始掉。词缀 level / max_level 和词缀等级比（公式见 affix_level）。同一 group 一件只出一条。percent=true 时存整数百分点（3 = 3%），算修饰时除以 100。op 同 stats-modifiers：flat / increased（增加，同属性相加）/ more。",
+	"rarities": [
+		{"id": "normal", "name": "普通", "weight": 70, "mult": 1.0, "count_weights": [[0, 1]], "color": "#c8c8c8"},
+		{"id": "magic", "name": "魔法", "weight": 25, "mult": 1.0, "count_weights": [[1, 75], [2, 25]], "side_weights": [1, 2], "prefix_max": 1, "suffix_max": 1, "color": "#6f7cff"},
+		{"id": "rare", "name": "稀有", "weight": 5, "mult": 1.0, "count_weights": [[3, 1], [4, 1], [5, 1], [6, 1]], "side_weights": [1, 1], "prefix_max": 3, "suffix_max": 3, "random_name": true, "color": "#e8d36a", "price_mult": 3.0}
+	],
+	"level_cap": 99,
+	"bases": {
+		"short_sword": {"name": "短剑", "slot": "main_hand", "qlvl": 1, "weight": 10, "stats": {"attack": 8}, "price": 20},
+		"knight_sword": {"name": "长剑", "slot": "main_hand", "qlvl": 5, "weight": 6, "stats": {"attack": 14}, "price": 70},
+		"oak_wand": {"name": "橡木短杖", "slot": "main_hand", "qlvl": 2, "magic_lvl": 1, "weight": 4, "stats": {"attack": 3}, "price": 30},
+		"oak_shield": {"name": "橡木盾", "slot": "off_hand", "qlvl": 1, "weight": 8, "stats": {"defense": 3}, "price": 14},
+		"leather_cap": {"name": "皮帽", "slot": "head", "qlvl": 1, "weight": 10, "stats": {"defense": 1}, "price": 8, "look": "cap"},
+		"leather_armor": {"name": "皮甲", "slot": "body", "qlvl": 1, "weight": 10, "stats": {"defense": 4}, "price": 32, "look": "leather"},
+		"plate_armor": {"name": "板甲", "slot": "body", "qlvl": 6, "weight": 5, "stats": {"defense": 8, "max_hp": 10}, "price": 90, "look": "plate"},
+		"bone_ring": {"name": "骨戒", "slot": "ring", "equip_slots": ["ring_1", "ring_2"], "qlvl": 1, "weight": 4, "stats": {}, "price": 20}
+	},
+	"affixes": {
+		"sharp_1": {"group": "attack", "pos": "prefix", "label": "锋利的", "slots": ["main_hand"], "level": 1, "max_level": 6, "weight": 10, "stat": "attack", "op": "flat", "min": 1, "max": 3},
+		"sharp_2": {"group": "attack", "pos": "prefix", "label": "嗜血的", "slots": ["main_hand"], "level": 5, "weight": 6, "stat": "attack", "op": "flat", "min": 4, "max": 7},
+		"brutal_1": {"group": "attack_pct", "pos": "prefix", "label": "残暴的", "slots": ["main_hand", "ring"], "level": 3, "weight": 4, "stat": "attack", "op": "increased", "percent": true, "min": 5, "max": 10},
+		"sturdy_1": {"group": "defense", "pos": "prefix", "label": "坚固的", "slots": ["head", "body", "off_hand"], "level": 1, "max_level": 6, "weight": 10, "stat": "defense", "op": "flat", "min": 1, "max": 2},
+		"sturdy_2": {"group": "defense", "pos": "prefix", "label": "铁壁的", "slots": ["head", "body", "off_hand"], "level": 5, "weight": 6, "stat": "defense", "op": "flat", "min": 3, "max": 5},
+		"reinforced_1": {"group": "defense_pct", "pos": "prefix", "label": "加固的", "slots": ["head", "body", "off_hand"], "level": 4, "weight": 5, "stat": "defense", "op": "increased", "percent": true, "min": 10, "max": 20},
+		"mighty_1": {"group": "str", "pos": "prefix", "label": "蛮力的", "slots": ["main_hand", "body", "ring"], "level": 2, "weight": 6, "stat": "str", "op": "flat", "min": 1, "max": 3},
+		"keen_1": {"group": "crit", "pos": "suffix", "label": "·鹰眼", "slots": ["main_hand", "ring"], "level": 1, "weight": 6, "stat": "crit", "op": "flat", "percent": true, "min": 2, "max": 4},
+		"vigor_1": {"group": "max_hp", "pos": "suffix", "label": "·活力", "slots": ["head", "body", "ring", "off_hand"], "level": 1, "max_level": 6, "weight": 10, "stat": "max_hp", "op": "flat", "min": 5, "max": 10},
+		"vigor_2": {"group": "max_hp", "pos": "suffix", "label": "·生机", "slots": ["head", "body", "ring", "off_hand"], "level": 5, "weight": 6, "stat": "max_hp", "op": "flat", "min": 11, "max": 20},
+		"tough_1": {"group": "vit", "pos": "suffix", "label": "·坚韧", "slots": ["head", "body", "ring"], "level": 2, "weight": 6, "stat": "vit", "op": "flat", "min": 1, "max": 3},
+		"swift_1": {"group": "agi", "pos": "suffix", "label": "·迅捷", "slots": ["main_hand", "body", "ring"], "level": 3, "weight": 6, "stat": "agi", "op": "flat", "min": 1, "max": 3},
+		"wise_1": {"group": "int", "pos": "suffix", "label": "·睿智", "slots": ["head", "ring"], "level": 3, "weight": 6, "stat": "int", "op": "flat", "min": 1, "max": 3}
+	},
+	"rare_names": {
+		"first": ["鸦啼", "灰烬", "裂骨", "寒星", "荒原", "铁锈", "夜雾", "残月"],
+		"second": ["獠牙", "之握", "低语", "王冠", "护符", "刻痕", "誓言", "回响"]
+	},
+	"stat_names": {"attack": "攻击", "defense": "防御", "max_hp": "生命", "crit": "暴击", "str": "力量", "agi": "敏捷", "int": "智力", "vit": "体力"},
+	"name_format": "{prefix}{base}{suffix}",
+	"store_seed": true
+}

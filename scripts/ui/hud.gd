@@ -1,7 +1,7 @@
 class_name Hud
 extends Control
 ## 地图上的常驻和瞬时信息（ART_DIRECTION 第 4 节）：
-## 常驻：左上「下一步：……」，右上预言簿按钮；手机上左下方向键、右下确认键。
+## 常驻：左上「下一步：……」和三个人的血、学徒的等级和经验、银币和药；右上预言簿、背包、技能树按钮；手机上左下方向键、右下确认键。
 ## 瞬时：走进新地方的地名、预言簿「后来」的提示条（右上，停 4 秒）、自动存档、人冒的一句话。
 
 var main
@@ -15,6 +15,8 @@ var bark := ""
 var bark_at := Vector2.ZERO
 var _bark_t := 0.0
 var book_btn: Button
+var bag_btn: Button
+var tree_btn: Button
 var touch: Control
 var show_controls := true
 
@@ -27,6 +29,17 @@ func _ready() -> void:
 	book_btn.size = Vector2(200, 44)
 	book_btn.pressed.connect(func(): if main: main.open_book())
 	add_child(book_btn)
+	bag_btn = Button.new()
+	bag_btn.text = UIKit.t("ui_bag_btn")
+	bag_btn.focus_mode = Control.FOCUS_NONE
+	bag_btn.size = Vector2(140, 44)
+	bag_btn.pressed.connect(func(): if main: main.open_bag())
+	add_child(bag_btn)
+	tree_btn = Button.new()
+	tree_btn.focus_mode = Control.FOCUS_NONE
+	tree_btn.size = Vector2(160, 44)
+	tree_btn.pressed.connect(func(): if main: main.open_tree())
+	add_child(tree_btn)
 	if DisplayServer.is_touchscreen_available():
 		_build_touch()
 	resized.connect(_place)
@@ -35,6 +48,8 @@ func _ready() -> void:
 func _place() -> void:
 	var v := get_viewport_rect().size
 	book_btn.position = Vector2(v.x - 216, 16)
+	bag_btn.position = Vector2(v.x - 372, 16)
+	tree_btn.position = Vector2(v.x - 548, 16)
 	if touch:
 		touch.position = Vector2.ZERO
 		touch.size = v
@@ -94,7 +109,43 @@ func show_bark(t: String, screen_pos: Vector2) -> void:
 	bark_at = screen_pos
 	_bark_t = 2.6
 
+## 左上：三个人的血条，学徒的等级和经验条，银币和药（overworld.md：打完看一眼血，再决定回圣龛还是接着打）
+func _draw_party(font: Font) -> void:
+	var x := 16.0
+	var w := 300.0
+	var uids: Array = Party.party_uids()
+	var ph := 30.0 + uids.size() * 30 + 64
+	# 左下角，不挡开场站在左上角的学徒；有触屏方向键时放回左上
+	var y := 76.0 if touch != null else get_viewport_rect().size.y - ph - (64.0 if show_controls else 16.0)
+	var r := Rect2(x, y, w, ph)
+	draw_rect(r, Color(UIKit.INK, 0.72))
+	var xp: Dictionary = Party.xp_progress()
+	var lv := UIKit.f("hud_level", {"n": int(xp.level)})
+	draw_string(font, Vector2(x + 12, y + 24), lv, HORIZONTAL_ALIGNMENT_LEFT, -1, UIKit.SMALL * 2, UIKit.GOLD)
+	var bar := Rect2(x + 96, y + 12, w - 108, 10)
+	draw_rect(bar, Color(UIKit.NAVY_2))
+	draw_rect(Rect2(bar.position, Vector2(bar.size.x * float(xp.ratio), bar.size.y)), UIKit.GOLD)
+	var xt := UIKit.t("hud_max") if xp.at_cap else "%d/%d" % [int(xp.xp), int(xp.need)]
+	draw_string(font, Vector2(bar.position.x, y + 40), UIKit.f("hud_xp", {"t": xt}), HORIZONTAL_ALIGNMENT_LEFT, -1, UIKit.SMALL * 2, UIKit.CREAM_DIM)
+	y += 50
+	for u in uids:
+		var h: int = Party.hp(u)
+		var m: int = Party.max_hp(u)
+		draw_string(font, Vector2(x + 12, y + 20), Party.display_name(u), HORIZONTAL_ALIGNMENT_LEFT, 64, UIKit.SMALL * 2, UIKit.CREAM)
+		var hb := Rect2(x + 76, y + 8, 150, 12)
+		draw_rect(hb, Color(UIKit.NAVY_2))
+		draw_rect(Rect2(hb.position, Vector2(hb.size.x * float(h) / maxf(1.0, m), hb.size.y)), UIKit.HP_OK if h * 3 > m else UIKit.DANGER)
+		draw_string(font, Vector2(x + 236, y + 20), "%d/%d" % [h, m], HORIZONTAL_ALIGNMENT_LEFT, -1, UIKit.SMALL * 2, UIKit.CREAM)
+		y += 30
+	var money := UIKit.f("hud_money", {"silver": int(GS.S.get("silver", 0)), "hp": int(GS.S.get("potions", {}).get("potion_hp", 0))})
+	draw_string(font, Vector2(x + 12, y + 22), money, HORIZONTAL_ALIGNMENT_LEFT, -1, UIKit.SMALL * 2, UIKit.CREAM_DIM)
+
 func _process(delta: float) -> void:
+	var on_map: bool = main != null and main.mode == "map"
+	for bt in [book_btn, bag_btn, tree_btn]: bt.visible = on_map
+	if tree_btn.visible:
+		var pts: int = Party.tree_points()
+		tree_btn.text = UIKit.f("ui_tree_btn_pts", {"n": pts}) if pts > 0 else UIKit.t("ui_tree_btn")
 	_area_t = maxf(0.0, _area_t - delta)
 	_toast_t = maxf(0.0, _toast_t - delta)
 	_saved_t = maxf(0.0, _saved_t - delta)
@@ -110,6 +161,7 @@ func _draw() -> void:
 		draw_rect(r, Color(UIKit.INK, 0.85))
 		draw_rect(Rect2(r.position, Vector2(6, r.size.y)), UIKit.GOLD)
 		draw_string(font, r.position + Vector2(24, 33), next_text, HORIZONTAL_ALIGNMENT_LEFT, -1, UIKit.BODY, UIKit.CREAM)
+	if main and main.mode in ["map", "dialog"]: _draw_party(font)
 	if _area_t > 0.0:
 		var a := minf(1.0, _area_t)
 		var w := font.get_string_size(area_text, HORIZONTAL_ALIGNMENT_LEFT, -1, UIKit.BIG).x

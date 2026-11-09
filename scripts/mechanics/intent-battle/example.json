@@ -1,0 +1,40 @@
+{
+  "rules": {
+    "weak_mult": 0.75,
+    "vulnerable_mult": 1.5,
+    "enemy_debuff_grace": true,
+    "execution": "party_first",
+    "party_order": "slot",
+    "party_retarget": "next_enemy",
+    "enemy_retarget": "lowest_hp"
+  },
+  "actions": {
+    "attack": {"name": "攻击", "target": "enemy", "use_power": true},
+    "spark": {"name": "星火", "target": "enemy", "damage": 2},
+    "expose": {"name": "破绽", "target": "enemy", "damage": 1, "vulnerable": 2},
+    "sap": {"name": "削弱", "target": "enemy", "weak": 2},
+    "flurry": {"name": "连刺", "target": "enemy", "damage": 1, "hits": 3},
+    "stun": {"name": "打断", "target": "enemy", "stun": true},
+    "guard": {"name": "护身", "target": "ally", "block": 4},
+    "defend": {"name": "防御", "target": "self", "block": 5}
+  },
+  "party": [
+    {"id": "fighter", "name": "战士", "hp": 12, "power": 3, "speed": 5, "actions": ["attack", "defend", "flurry"]},
+    {"id": "squire", "name": "侍从", "hp": 8, "power": 2, "speed": 4, "actions": ["attack", "defend", "expose"]},
+    {"id": "mage", "name": "学徒", "hp": 10, "power": 0, "speed": 3, "actions": ["spark", "guard", "stun", "sap"]}
+  ],
+  "enemies": [
+    {"id": "alpha", "name": "头狼", "hp": 8, "speed": 6, "pick": "cycle", "intents": [
+      {"act": "attack", "move": "扑咬", "damage": 5, "target": "squire"},
+      {"act": "block", "move": "低伏", "block": 6},
+      {"act": "attack", "move": "横扫", "damage": 2, "target": "all"}
+    ]},
+    {"id": "wolf", "name": "灰狼", "hp": 4, "speed": 4, "pick": "cycle", "intents": [
+      {"act": "attack", "move": "咬", "damage": 3, "target": "lowest_hp"}
+    ]},
+    {"id": "runt", "name": "瘦狼", "hp": 4, "speed": 2, "pick": "random", "intents": [
+      {"act": "charge", "move": "蓄力", "weight": 2, "then": {"act": "attack", "move": "撕咬", "damage": 6, "target": "lowest_hp"}},
+      {"act": "attack", "move": "连咬", "damage": 2, "hits": 2, "weak": 1, "target": "random", "weight": 1}
+    ]}
+  ]
+}

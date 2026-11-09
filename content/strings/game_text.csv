@@ -137,10 +137,10 @@ book_told_D1a,你提醒了凯：到了伦敦，不管发生什么，别对父亲
 book_told_D1b,你告诉了亚瑟：凯会说剑是他拔的。
 book_told_D1c,你谁都没说。
 ui_title,梅林的学徒
-ui_subtitle,白盒切片：第 1 章，接第 2 章教堂那一幕
+ui_subtitle,白盒切片：第 1 章，接第 2 章教堂那一幕（第 10 步重做：明雷、升级、掉落）
 ui_new_game,新游戏
 ui_continue,继续
-ui_controls,点地面走过去，点人说话 · 也可以方向键 / WASD 走，Z 或空格确认 · Esc 预言簿
+ui_controls,点地面走，点人说话，点敌人开打 · 方向键或 WASD 走，Z 确认 · Esc 预言簿 · B 背包 · K 技能
 ui_next,下一步：{t}
 ui_book,预言簿
 ui_book_btn,预言簿（Esc）
@@ -176,22 +176,22 @@ ui_lose,你们倒下了
 ui_retry,再来一次
 ui_back_map,回地图
 ui_you,你
-act_attack,攻击
+act_attack,砍
 act_defend,防御
 act_kay_cover,挡在前面
 act_charge,蓄力
 act_summon,召唤
-hint_attack,打一个敌人，{n} 点
+hint_attack,打一个敌人 {n} 点
 hint_defend,这回合挨的伤害减半
-hint_kay_cover,这回合打向另一个同伴的一下改打凯，凯少挨 {n} 点
-hint_spark,打一个敌人，{n} 点
-hint_ward,一个人这回合挨的伤害少 {n} 点
-hint_focus,不出手，这回合多回 {n} 点法力
-hint_interrupt,让一个敌人的蓄力或召唤作废
+hint_kay_cover,凯挡 {n}，这回合打向另一个人的一下改打凯
+hint_spark,打一个敌人 {n} 点，它易伤 {v} 回合：同伴接着砍它，伤害 ×1.5
+hint_ward,给一个人挡 {n}：这回合挨打先扣它
+hint_focus,不出手，法力回 {n}
+hint_interrupt,让一个敌人的蓄力、召唤或长嚎作废
 intent_attack,{who} {move} → {target} {n}
 intent_all,{who} {move} → 你们全体 {n}
 intent_charge,{who} 蓄力 → 下回合{move} → {target} {n}
-intent_summon,{who} 召唤 {n}
+intent_summon,{who} {move} 叫来 {n} 只{what}
 intent_defend,{who} 防御
 plate_all,全体
 plate_summon,叫来 {n} 只
@@ -203,12 +203,12 @@ ev_cover,凯挡在{target}前面
 ev_down,{who}倒下了
 ev_void,{who}倒下，{act}作废
 ev_cancel,{who}的{act}被打断，作废
-ev_attack,{who}·攻击 → {target}：{n} 点
-ev_spark,你·星火 → {target}：{n} 点
+ev_attack,{who}·砍 → {target}：{n} 点
+ev_spark,你·星火 → {target}：{n} 点，易伤 {v}
 ev_defend_act,{who}举起盾，防御
-ev_focus,你凝神，这回合多回 {n} 点法力
-ev_ward_cast,你给{target}施了护身
-ev_charge,{who}在蓄力
+ev_focus,你凝神，法力回 {n}
+ev_ward_cast,你给{target}护身，挡 {n}
+ev_charge,{who}在蓄力，下回合{move}
 ev_summon,{who}叫来了 {n} 只{what}
 ev_nothing,{who}这回合没动
 ev_mana,法力回到 {n}
@@ -238,3 +238,135 @@ enc_road_bandits,路上的强盗
 shrine_forest,林边石龛
 shrine_manor,庄园小礼拜堂
 shrine_stone_circle,石圈边的石十字
+ui_no_potion,药用完了
+ui_all_full,大家的血都是满的
+ui_fled,逃了
+ui_flee,逃跑
+ui_back_shrine,回圣龛
+ui_lose_hint,再来一次：回到开打那一刻，敌人的招一样。回圣龛：三个人回满血，这群敌人留在原地。
+ui_back_at_shrine,三个人回满了血。刚回来的几步里，敌人不追你。
+ui_bag_btn,背包（B）
+ui_tree_btn,技能（K）
+ui_tree_btn_pts,技能（K）· {n} 点
+ui_metrics,试玩记录
+met_first,第一次打地图上的敌人：开局后第 {t} 秒
+met_map,地图上的敌人打了 {n} / {all} 群：自己撞上去 {mine} 群，被追上 {chased} 群
+met_left,走到石圈看水面时，还剩 {n} 群没打
+met_level,学徒 {lv} 级，一共拿了 {xp} 点经验
+met_pause,挑奖励平均停 {lv} 秒，加点 {tree} 秒，看背包 {bag} 秒；换了 {eq} 次装备
+hud_level,{n} 级
+hud_xp,经验 {t}
+hud_max,已满级
+hud_money,银币 {silver} · 血药 {hp}
+map_group,{t} ×{n}
+res_xp,经验 +{n}  现在 {lv} 级，{cur}/{need}
+res_xp_cap,已满级，经验不再涨
+res_level,升到 {n} 级：三个人的血都满了
+res_drops,掉落：{t}
+res_revived,{who}站起来了，剩 1 点血
+res_hp,血：{t}
+loot_silver,银币 {n}
+loot_potion,{t} {n} 瓶
+loot_none,什么也没有
+lv_title,升到 {n} 级
+lv_heal,三个人的血都满了。挑一样带走：
+lv_points,另外多了 {n} 个技能点，挑完去技能树里加。
+lv_hint,点一张；方向键选，Z 确认
+boon_power,{who}砍的时候多 {n} 点
+boon_hp,{who}血上限多 {n}
+boon_guard,同伴举盾多挡 {n}
+boon_potion,{n} 瓶血药
+boon_silver,{n} 枚银币
+boon_point,多 {n} 个技能点
+tree_title,技能树  {lv} 级 · 还有 {n} 点
+tree_need_level,要 {n} 级
+tree_need_prev,先点“{t}”
+tree_full,点满了
+tree_no_points,没有点了
+tree_click,点一下加 1 点
+tree_done,好了
+tree_respec,重新加点（点数全拿回来）
+node_spark_heat,星火多打 1 点
+node_spark_ember,星火的易伤多 1 回合
+node_spark_twin,双星：打两个敌人
+node_spark_rain,火雨：所有敌人各 2 点
+node_water_deep,法力上限 +1
+node_water_ripple,凝神多回 1 法力
+node_water_calm,打断少花 1 法力
+node_water_tide,每回合多回 1 法力
+node_ward_sturdy,你的血上限 +3
+node_ward_thick,护身多挡 2
+node_ward_twin,护身同时给两个人
+node_ward_stand,第一次倒下时留 1 血
+node_trick_blind,迷眼：一个敌人虚弱 2
+node_trick_see,开打时敌人都易伤 1
+node_trick_lever,打断成功，它易伤 2
+node_trick_haze,乱影：敌人都虚弱 1
+bag_title,背包
+bag_money,银币 {silver} · 血药 {hp} · 法力药 {mp}
+bag_drink,喝一瓶血药（给血最少的人）
+bag_you,你：血上限 {hp} · 法力上限 {mp}
+slot_staff,杖
+slot_clothes,衣服
+slot_charm,护符
+slot_empty,空着
+bag_off,脱下
+bag_on,换上
+bag_list,背包 {n}/{max}
+bag_empty,还没捡到装备。
+shrine_done,三个人的血都满了。这里记成上次祈祷的地方，已存档；逃跑或输了会回到这里。
+shrine_travel,传到：{t}
+shrine_tree,技能树 · 重新加点
+shrine_tree_pts,技能树（{n} 点没加）
+shrine_leave,走了
+shrine_desc_manor_chapel,院子西墙根下一间小礼拜堂，门框比人矮，进去得低头。圣母像的鼻尖让人摸得发亮。
+shrine_desc_forest_shrine,路边一座齐腰高的石龛。龛里的圣母像脸磨平了，脚边一截蜡烛头冻成了白的。
+shrine_desc_stone_circle_cross,石圈外头立着一个石十字，横臂断了一截。底座的苔藓结着冰碴，摸上去扎手。
+chest_forest_oak,空心老橡树
+chest_open_forest_oak,树洞里塞着个油布包袱，冻得发硬。谁藏的不知道，看样子没打算回来拿。
+chest_empty,树洞里只剩一把干苔藓。
+enc_oak_wolves,橡树边的狼
+enc_log_wolves,倒木后的灰狼
+act_attack_n,砍 {n}
+act_guard_n,举盾 {n}
+act_potion_hp,血药 ×{n}
+act_potion_mana,法力药 ×{n}
+act_buff,长嚎
+act_guard,举盾
+hint_blind,一个敌人虚弱 {n}：它打出去的伤害 ×0.75
+hint_guard,自己挡 {n}：这回合挨打先扣它
+hint_potion_hp,喝一瓶血药，或喂给身边一个人：回 {n} 血
+hint_potion_mana,喝一瓶法力药：法力回 {n}
+intent_buff,{who} {move} 力量 +{n}
+intent_weak,{who} {move} → {target} 虚弱 {n}
+intent_block,{who} {move} 挡 {n}
+ev_guard,{who}举盾，挡 {n}
+ev_blind,你在{target}眼前一晃：虚弱 {n}
+ev_haze,你搅乱了一片影子：敌人都虚弱 {n}
+ev_rain,火星落在{target}身上：{n} 点
+ev_interrupt_miss,打断落了空
+ev_retarget,目标已经倒下，改打{target}
+ev_blocked,（挡掉 {n}）
+ev_cover_cast,凯挡到前面，挡 {n}
+ev_potion,{who}喂{target}一瓶血药：回 {n} 血
+ev_potion_mana,你喝了一瓶法力药：法力回 {n}
+ev_summon_none,{who}叫了一声，没有回应
+ev_buff,{who}仰头长嚎：同类力量 +{n}
+ev_weak,{who}往{target}眼里撒了一把沙：虚弱 {n}
+ev_enemy_block,{who}躲起来：挡 {n}
+ev_stand,不倒：{who}留着 1 点血
+ev_start_see,看穿：敌人都易伤 {n}
+ev_start_keen,明眼：{who}易伤 {n}
+ev_start_vigil,守夜：你第 1 回合挡 {n}
+st_block,挡{n}
+st_strength,力量+{n}
+st_weak,虚弱{n}
+st_vulnerable,易伤{n}
+plate_buff,同类力量
+plate_weak,→ {t} 虚弱
+plate_block,躲起来挡
+move_long_howl,长嚎
+move_double_pounce,连扑
+move_sand,撒沙
+move_shoot,射
+move_hide,躲

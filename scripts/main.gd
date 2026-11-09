@@ -1,6 +1,8 @@
 extends Node2D
-## 入口。第 8 步白盒切片：色块地图 + 占位人物，把第 1 章（狼群、石圈看水面、阁楼学打断、梅林的影子、马厩的关键选择）
+## 入口。白盒切片：色块地图 + 占位人物，把第 1 章（狼群、石圈看水面、阁楼学打断、梅林的影子、马厩的关键选择）
 ## 接到第 2 章教堂那一幕应验。剧情全在 content/dialogue/*.yarn，这里只实现指令、把地图 / 对话 / 战斗 / 整屏画面串起来。
+## 第 10 步重做（照新的玩法参考）：森林里四群会走动的敌人、圣龛、宝物；打赢拿经验和掉落，升级挑奖励、加点，背包换装；
+## 逃跑或输了回上次祈祷的圣龛。成长和背包在 party.gd，地图在 world.gd，战斗规则在 battle.gd。
 ##
 ## 测试：godot --path . -- --playtest [--route=a|b|c]（verify.py 用 xvfb 跑，SHOT_DIR 给了就截图）
 ##   清存档新开一局，用和玩家一样的走格子、按确认、点战斗按钮，走完白盒全程；
@@ -63,6 +65,9 @@ func _ready() -> void:
 	world.want_dialog.connect(start_dialog)
 	world.want_battle.connect(_on_spawn_battle)
 	world.want_bark.connect(_on_bark)
+	world.want_pray.connect(_on_pray)
+	world.want_chest.connect(_on_chest)
+	battle_view.reward_fn = _battle_rewards
 	world.area_changed.connect(_on_area)
 	Quests.changed.connect(_refresh_next)
 	battle_view.finished.connect(_on_battle_finished)
@@ -110,19 +115,41 @@ func _on_title() -> void:
 
 func new_game() -> void:
 	GS.new_game()
+	Party.new_game()
+	if not playtest: GS.S.seed = randi()   # 每局的掉落、奖励不一样；测试用固定种子，结果可重复
+	GS.S.metrics = {"t0": Time.get_ticks_msec(), "fights": [], "levelup_ms": [], "tree_ms": [], "bag_ms": [], "equip": 0}
 	runner.init_vars()
 	_end_shown = false
 	var cs := chapter_start(1)
+	_first_shrine(1)
 	world.load_area(cs.area, Vector2i(int(cs.cell[0]), int(cs.cell[1])))
 	mode = "map"
 	_refresh_next()
 	start_dialog(cs.node)
+
+## 每章开始时这一章第一座圣龛自动记成「上次祈祷的地方」（overworld.json first_shrine_auto）：还没祈祷过就逃跑时也有地方回
+func _first_shrine(ch: int) -> void:
+	for sh in Data.t("overworld").get("shrines", []):
+		if sh.get("first_of_chapter", false) and _area_chapter(sh.area) == ch:
+			GS.S.last_shrine = sh.id
+			return
+
+func _area_chapter(a: String) -> int:
+	for x in Data.t("overworld").get("areas", []):
+		if x.id == a: return int(x.chapter)
+	return 0
+
+func shrine_def(id: String) -> Dictionary:
+	for sh in Data.t("overworld").get("shrines", []):
+		if sh.id == id: return sh
+	return {}
 
 func load_game() -> void:
 	if not GS.load_save():
 		new_game()
 		return
 	if not GS.S.has("defeated"): GS.S["defeated"] = []
+	Party.restore()
 	runner.init_vars()
 	var c: Array = GS.S.cell if GS.S.cell != null else chapter_start(int(runner.v("chapter"))).cell
 	world.load_area(GS.S.area, Vector2i(int(c[0]), int(c[1])))
@@ -140,6 +167,7 @@ func chapter_start(n: int) -> Dictionary:
 	return Data.t("maps").get("chapter_start", {}).get(str(n), {})
 
 func save_game() -> void:
+	Party.store()
 	if GS.save():
 		hud.flash_saved()
 		print("  [存档] 第 %s 章 %s %s" % [str(runner.v("chapter")), GS.S.area, str(GS.S.cell)])
@@ -161,6 +189,24 @@ func open_book() -> void:
 	if mode != "map" or screens.is_open(): return
 	mode = "screen"
 	screens.open("book", {}, func(): mode = "map")
+
+func open_bag() -> void:
+	if mode != "map" or screens.is_open(): return
+	mode = "screen"
+	GS.S.metrics["bag_opens"] = int(GS.S.metrics.get("bag_opens", 0)) + 1
+	screens.open("bag", {}, func():
+		GS.S.metrics.bag_ms.append(Time.get_ticks_msec() - int(screens.data.get("t0", Time.get_ticks_msec())))
+		GS.S.metrics.equip = int(GS.S.metrics.get("equip", 0)) + int(screens.data.get("equipped", 0))
+		mode = "map")
+
+func open_tree(respec := false, after := Callable()) -> void:
+	if screens.is_open(): return
+	mode = "screen"
+	screens.open("tree", {"respec": respec}, func():
+		GS.S.metrics.tree_ms.append(Time.get_ticks_msec() - int(screens.data.get("t0", Time.get_ticks_msec())))
+		mode = "map"
+		Party.store()
+		if after.is_valid(): after.call())
 
 func _refresh_next() -> void:
 	for q in Quests.active():
@@ -198,6 +244,10 @@ func _unhandled_input(e: InputEvent) -> void:
 				world.interact()
 			elif e.is_action_pressed("cancel"):
 				open_book()
+			elif e is InputEventKey and e.pressed and e.physical_keycode == KEY_B:
+				open_bag()
+			elif e is InputEventKey and e.pressed and e.physical_keycode == KEY_K:
+				open_tree()
 
 # ---------------- 对话 ----------------
 func start_dialog(node: String) -> void:
@@ -229,13 +279,16 @@ func _after_dialog_checks() -> void:
 		start_dialog(cs.node)
 		return
 	_refresh_next()
+	if not GS.S.get("pending_levels", []).is_empty() and mode == "map":
+		_levelups()
+		return
 	if runner.visited("Ch2_Church") and not _end_shown:
 		_end_shown = true
 		await get_tree().create_timer(2.5, true, false, true).timeout
 		while screens.is_open() or runner.running:
 			await get_tree().create_timer(0.5, true, false, true).timeout
 		mode = "screen"
-		screens.open("end", {}, _on_end)
+		screens.open("end", {"metrics": metrics_lines()}, _on_end)
 
 func _on_end() -> void:
 	if screens.data.get("choice", "") == "restart":
@@ -271,6 +324,9 @@ func yarn_command(cmd: String, args: Array) -> bool:
 				return true
 		"vision":
 			if GS.book_page(args[0]).is_empty(): GS.S.book.append({"decision": args[0], "after": []})
+			if not GS.S.metrics.has("left_at_vision"):
+				GS.S.metrics["left_at_vision"] = _roamers_left(int(runner.v("chapter")))
+				GS.S.metrics["vision_s"] = (Time.get_ticks_msec() - int(GS.S.metrics.get("t0", 0))) / 1000
 			var vd := Data.vision(args[0])
 			print("  [看水面] ", UIKit.t(vd.get("text", "")))
 			_wait_screen("vision", {"surface": vd.get("surface", ""), "text": UIKit.t(vd.get("text", ""))},
@@ -285,6 +341,7 @@ func yarn_command(cmd: String, args: Array) -> bool:
 		"chapter":
 			var n := int(args[0])
 			GS.S.vars["chapter"] = n
+			_first_shrine(n)
 			var cs := chapter_start(n)
 			if not cs.is_empty():
 				GS.S.area = cs.area
@@ -304,13 +361,30 @@ func yarn_command(cmd: String, args: Array) -> bool:
 # ---------------- 战斗 ----------------
 func _on_spawn_battle(sp: Dictionary) -> void:
 	if mode != "map": return
+	world._walk_id += 1   # 点地面走路的那条路作废
+	if sp.get("roamer", false): world.stun_others(sp.id, int(Data.param("overworld", "flee_grace_steps", 3)))
 	start_battle(sp.enemy, {"spawn": sp})
+
+## 上场的人：剧情规定的同伴里眼下在队里的；没规定的按 party_max_companions 从队里取
+func _party_for(e: Dictionary) -> Array:
+	var pd: Dictionary = e.get("party", {})
+	var inp: Array = Party.companions_in_party()
+	var out: Array = pd.get("fixed", []).filter(func(c): return c in inp)
+	var mx := int(pd.get("max", Data.param("combat", "party_max_companions", 2)))
+	for c in inp:
+		if out.size() >= mx: break
+		if not c in out: out.append(c)
+	return out.slice(0, mx)
 
 func start_battle(enc_id: String, ctx: Dictionary) -> void:
 	var e := Data.encounter(enc_id)
-	var party: Array = e.get("party", {}).get("fixed", []).duplicate()
+	var party := _party_for(e)
 	var b := Battle.new()
-	b.setup(enc_id, party, int(runner.v("chapter")), GS.S.unlocks, GS.S.vars)
+	b.setup(enc_id, Party.battle_ctx(party, GS.S.unlocks), int(runner.v("chapter")), GS.S.vars)
+	var m: Dictionary = GS.S.metrics
+	var t := (Time.get_ticks_msec() - int(m.get("t0", 0))) / 1000
+	m.fights.append({"enc": enc_id, "kind": e.get("kind", ""), "cause": ctx.get("spawn", {}).get("cause", "story"), "t": t})
+	if not m.has("first_fight_s") and e.get("kind", "") == "map": m["first_fight_s"] = t
 	_battle_ctx = ctx.duplicate()
 	_battle_ctx["enc"] = enc_id
 	dbox.visible = false
@@ -322,32 +396,170 @@ func start_battle(enc_id: String, ctx: Dictionary) -> void:
 func _on_battle_finished(r: String) -> void:
 	var ctx := _battle_ctx
 	_battle_ctx = {}
+	var b := battle_view.b
 	if r == "win":
 		Quests.on_battle_won(ctx.enc)
 		if ctx.has("spawn"):
 			GS.S.defeated.append(ctx.spawn.id)
+			if ctx.spawn.get("roamer", false):
+				world.remove_roamer(ctx.spawn.id)
+				print("  [地图] %s 已移除" % UIKit.t(Data.encounter(ctx.enc).get("name", ctx.enc)))
 			mode = "map"
 			world.queue_redraw()
-			start_dialog(ctx.spawn.get("on_defeat", ""))
+			if ctx.spawn.get("on_defeat", "") != "":
+				start_dialog(ctx.spawn.on_defeat)
+			else:
+				_after_dialog_checks()
 		else:
 			mode = "dialog"
 			runner.resume()
 	else:
-		mode = "map"
+		Party.after_lose(b)
 		if ctx.has("yarn"):
 			runner.abort()
+		mode = "map"
+		if ctx.get("spawn", {}).get("roamer", false): world.reset_roamer(ctx.spawn.id)
+		_return_to_shrine("flee" if r == "flee" else "lose")
 	_refresh_next()
+
+## 打赢时结算框里的几行：经验、升级、掉落、谁站起来了
+func _battle_rewards(b: Battle) -> Array:
+	var res: Dictionary = Party.after_win(b)
+	_last_reward = res
+	var xp: Dictionary = Party.xp_progress()
+	var lines := []
+	if res.at_cap and int(res.xp) > 0: lines.append(UIKit.t("res_xp_cap"))
+	else: lines.append(UIKit.f("res_xp", {"n": int(res.xp), "lv": int(xp.level), "cur": int(xp.xp), "need": int(xp.need)}))
+	if int(res.levels) > 0: lines.append(UIKit.f("res_level", {"n": int(res.level)}))
+	if not res.drops.is_empty(): lines.append(UIKit.f("res_drops", {"t": Party.drops_text(res.drops)}))
+	for nm in res.get("revived", []): lines.append(UIKit.f("res_revived", {"who": nm}))
+	var hp := []
+	for u in Party.party_uids(): hp.append("%s %d/%d" % [Party.display_name(u), Party.hp(u), Party.max_hp(u)])
+	lines.append(UIKit.f("res_hp", {"t": "，".join(PackedStringArray(hp))}))
+	return lines
+
+var _last_reward := {}
+
+## 逃跑，或者输了选「回圣龛」：回到上次祈祷过的圣龛跟前，三个人回满血；刚回来的几步里敌人不追
+func _return_to_shrine(why: String) -> void:
+	var sh := shrine_def(str(GS.S.get("last_shrine", "")))
+	if sh.is_empty() or sh.cell == null: return
+	world.load_area(sh.area, _beside_shrine(sh))
+	Party.heal_all()
+	world.grace = int(Data.param("overworld", "flee_grace_steps", 3))
+	print("  [%s] 回到：%s，三人回满血" % ["逃跑" if why == "flee" else "输了", UIKit.t(sh.name)])
+	hud.show_toast([UIKit.t(sh.name), UIKit.t("ui_back_at_shrine")])
+
+func _beside_shrine(sh: Dictionary) -> Vector2i:
+	var c := Vector2i(int(sh.cell[0]), int(sh.cell[1]))
+	var A: Dictionary = Data.t("maps").areas[sh.area]
+	for d in [Vector2i(0, 1), Vector2i(-1, 0), Vector2i(1, 0), Vector2i(0, -1)]:
+		var n: Vector2i = c + d
+		var ch: String = A.rows[n.y][n.x] if n.y >= 0 and n.y < A.rows.size() and n.x >= 0 and n.x < A.rows[0].length() else "#"
+		if not Data.t("maps").tiles.get(ch, {"block": true}).get("block", false): return n
+	return c
+
+# ---------------- 圣龛、宝物 ----------------
+func _on_pray(sh: Dictionary) -> void:
+	if mode != "map": return
+	Party.heal_all()
+	if not sh.id in GS.S.shrines: GS.S.shrines.append(sh.id)
+	GS.S.last_shrine = sh.id
+	save_game()
+	print("  [祈祷] 三人回满，记下：%s，已存档" % UIKit.t(sh.name))
+	var travel := []
+	for id in GS.S.shrines:
+		var o := shrine_def(id)
+		if id != sh.id and not o.is_empty() and _area_chapter(o.area) == int(runner.v("chapter")): travel.append(o)
+	mode = "screen"
+	screens.open("shrine", {"shrine": sh, "travel": travel}, func():
+		mode = "map"
+		var c: String = screens.data.get("choice", "leave")
+		if c.begins_with("travel:"):
+			var to := shrine_def(c.substr(7))
+			world.load_area(to.area, _beside_shrine(to))
+			GS.S.last_shrine = to.id
+			print("  [传送] 传到：%s" % UIKit.t(to.name))
+		elif c == "tree":
+			open_tree(true))
+
+func _on_chest(ch: Dictionary) -> void:
+	if mode != "map" or ch.id in GS.S.opened: return
+	var d: Dictionary = Party.roll_chest(ch.id)
+	GS.S.opened.append(ch.id)
+	world.queue_redraw()
+	var t := Party.drops_text(d)
+	print("  [宝物] %s：%s" % [UIKit.t(ch.get("name", ch.id)), t])
+	hud.show_toast([UIKit.t(ch.get("name", ch.id)), UIKit.t("chest_open_" + str(ch.id)), UIKit.f("res_drops", {"t": t})])
+
+# ---------------- 升级：每级挑一个奖励，挑完打开技能树 ----------------
+func _levelups() -> void:
+	if GS.S.pending_levels.is_empty() or screens.is_open(): return
+	var lv := int(GS.S.pending_levels[0])
+	var offers := Party.boon_offers(lv)
+	mode = "screen"
+	print("  [升级] %d 级，奖励：%s" % [lv, "、".join(PackedStringArray(offers.map(func(o): return o.name)))])
+	screens.open("levelup", {"level": lv, "offers": offers, "points": int(Data.t("progression").progression.points_per_level)}, func():
+		var o: Dictionary = screens.data.get("choice", offers[0])
+		Party.pick_boon(o)
+		GS.S.metrics.levelup_ms.append(int(screens.data.get("ms", 0)))
+		print("  [奖励] 挑了 %s：%s" % [o.name, o.text])
+		mode = "map"
+		if not GS.S.pending_levels.is_empty():
+			_levelups()
+		elif Party.tree_points() > 0:
+			open_tree(false, _after_dialog_checks)
+		else:
+			_after_dialog_checks())
+
+# ---------------- 试玩记录（CONCEPT 最大风险：两次看水面之间玩家会不会自己去找仗打） ----------------
+func _roamers_left(ch: int) -> int:
+	var n := 0
+	var zones: Dictionary = Data.t("spawns").get("zones", {})
+	for z in zones:
+		if _area_chapter(zones[z].get("area", "")) == ch and not z in GS.S.defeated: n += 1
+	return n
+
+func metrics_lines() -> Array:
+	var m: Dictionary = GS.S.metrics
+	var fights: Array = m.get("fights", [])
+	var map_f := fights.filter(func(f): return f.kind == "map")
+	var mine := map_f.filter(func(f): return f.cause == "player").size()
+	var zones := 0
+	for z in Data.t("spawns").get("zones", {}).values():
+		if _area_chapter(z.get("area", "")) == 1: zones += 1
+	var avg := func(a: Array) -> String:
+		if a.is_empty(): return "—"
+		var s := 0
+		for x in a: s += int(x)
+		return "%.1f" % (s / 1000.0 / a.size())
+	return [
+		UIKit.f("met_first", {"t": str(m.get("first_fight_s", "—"))}),
+		UIKit.f("met_map", {"n": map_f.size(), "all": zones, "mine": mine, "chased": map_f.size() - mine}),
+		UIKit.f("met_left", {"n": str(m.get("left_at_vision", "—"))}),
+		UIKit.f("met_level", {"lv": Party.level(), "xp": int(GS.S.get("xp_total", 0))}),
+		UIKit.f("met_pause", {"lv": avg.call(m.get("levelup_ms", [])), "tree": avg.call(m.get("tree_ms", [])), "bag": avg.call(m.get("bag_ms", [])), "eq": int(m.get("equip", 0))}),
+	]
 
 # =====================================================================
 # 无头测试
 # =====================================================================
 var _key_pick := -1
 
+## 三条路线（verify.py 跑 a；三条都要过）：
+##   a 全打：森林里四群能绕开的敌人都打，开宝物、换装备、在石龛祈祷，马厩选 D1a
+##   b 只打必须打的：绕开所有能绕开的敌人，头狼群照战斗设计页的例子打，马厩选 D1b
+##   c 全打 + 逃跑、输了回圣龛、圣龛传送和洗点、召唤的狼不给经验，马厩选 D1c
+const ROUTE_TREE := {"a": ["spark_heat", "spark_heat", "spark_heat", "spark_ember", "water_deep", "ward_sturdy"],
+	"b": ["water_deep", "ward_sturdy", "trick_blind"], "c": ["ward_sturdy", "spark_heat", "trick_blind", "trick_see"]}
+var _shrine_plan: Array = []
+var _tree_tries := 0
+
 func _playtest() -> void:
 	print("[playtest] route=", route)
 	Engine.time_scale = 6.0
-	# 看门狗：卡住超过 4 分钟就判失败退出，不让 verify.py 干等
-	get_tree().create_timer(240.0, true, false, true).timeout.connect(func():
+	# 看门狗：卡住超过 6 分钟就判失败退出，不让 verify.py 干等
+	get_tree().create_timer(360.0, true, false, true).timeout.connect(func():
 		print("[playtest] FAIL 卡住了：mode=%s area=%s node=%s screen=%s" % [mode, world.area, runner.current, screens.kind])
 		get_tree().quit(1))
 	shot_dir = OS.get_environment("SHOT_DIR")
@@ -368,7 +580,9 @@ func _playtest() -> void:
 	screens.data["choice"] = "new"
 	screens.close()
 	await _until(func(): return mode == "map" and not runner.running)
-	verify("launch", world.area == "manor" and Quests.is_active("1001") and not GS.has_save(), "清存档后新开一局：在庄园，主线 1001 开始，没有旧存档")
+	verify("launch", world.area == "manor" and Quests.is_active("1001") and not GS.has_save() and Party.level() == 1,
+		"清存档后新开一局：在庄园，主线 1001 开始，学徒 1 级，没有旧存档")
+	_expect(GS.S.last_shrine == "manor_chapel", "第 1 章开始时，庄园小礼拜堂自动记成上次祈祷的地方")
 	await _shot("gd_verify_render")
 
 	# 一次输入：按「下」走一格
@@ -381,20 +595,113 @@ func _playtest() -> void:
 	await _until(func(): return runner.running, 20.0)
 	await _until(func(): return mode == "map" and not runner.running)
 	_expect(runner.visited("Kay"), "鼠标点凯：学徒走到他旁边，跑了 Kay 节点")
+	_expect(Party.companions_in_party() == ["kay", "arthur"], "凯和亚瑟在队里")
+	if route == "c":
+		_shrine_plan = ["leave", "travel:manor_chapel", "travel:forest_shrine", "tree"]
+		await _pray_at("manor_chapel")
 	await _shot("map_manor")
 
-	# 进林子，碰上狼
+	# 进林子
 	await _walk_area("forest")
 	_expect(world.area == "forest", "从庄园南门走进森林")
+	_expect(world.roamers.size() == 4, "森林里四群能绕开的敌人都在地图上（%d 群）" % world.roamers.size())
+	for r in world.roamers: print("  [地图] %s：%s，在 %s 一带转" % [r.id, World.group_label(r.enc), r.rect])
 	await _shot("map_forest")
+	var hp_before_fights := Party.hp("kay")
+
+	if route in ["a", "c"]:
+		# 第一群：小路右边的蕨丛
+		await _hunt("forest_east")
+		await _until(func(): return mode == "battle")
+		_expect(not "kay_cover" in battle_view.b.actions_for("kay"), "第 1 章凯的菜单里没有「挡在前面」（%s）" % route)
+		if route == "c":
+			# 逃跑：回到上次祈祷的圣龛（c 路线先在庄园小礼拜堂祈祷过）
+			_expect(battle_view._flee_btn.visible, "地图上的小仗有「逃跑」按钮")
+			battle_view._on_flee()
+			await _until(func(): return mode == "map" and world.area == "manor")
+			_expect(world.area == "manor" and Party.all_full(), "逃跑：回到庄园小礼拜堂跟前，三个人回满血")
+			await _walk_area("forest")
+			_expect(world.roamer("forest_east") != null, "逃跑后那群狼还在林子里")
+			await _hunt("forest_east")
+			await _until(func(): return mode == "battle")
+		await _auto_fight()
+		await _win_continue()
+		_expect(Party.hp("kay") <= hp_before_fights, "血带出战斗：打完凯 %d/%d，没有回满" % [Party.hp("kay"), Party.max_hp("kay")])
+		_expect(world.roamer("forest_east") == null and "forest_east" in GS.S.defeated, "打赢的那群狼从地图上没了")
+		# 第二群：西边路上的强盗
+		await _hunt("forest_road")
+		await _until(func(): return mode == "battle")
+		await _shot("battle_bandits")
+		await _auto_fight()
+		for l in _fight_log:
+			if "撒了一把沙" in str(l) or ("凯·砍" in str(l)): print("  [强盗那一仗] ", l)
+		await _win_continue()
+		await _until(func(): return mode == "map" and not screens.is_open(), 30.0)
+		_expect(Party.level() >= 2, "打完两群：学徒 %d 级，经验 %d" % [Party.level(), int(GS.S.xp_total)])
+		# 第三群：空心老橡树边（c 路线故意让瘦狼叫狼，验召唤出来的不给经验）
+		await _hunt("forest_oak")
+		await _until(func(): return mode == "battle")
+		var xp0 := int(GS.S.xp_total)
+		_fight_log = []
+		if route == "c":
+			_plan("apprentice", "ward", "arthur")
+			_plan("kay", "attack", "wolf")
+			_plan("arthur", "attack", "wolf")
+			_expect(battle_view.b.enemies().size() >= 2, "第 1 回合没打瘦狼")
+		await _auto_fight()
+		var summoned := _find_in(_fight_log, "叫来了 1 只")
+		var spark4 := _find_in(_fight_log, "星火 → ") and _spark_hit(4)
+		if route == "a": _expect(spark4, "点了两下星火加热：星火打 4 点")
+		await _win_continue()
+		if route == "c": _expect(not summoned or int(GS.S.xp_total) - xp0 == 4, "瘦狼叫来的狼不给经验：这一仗经验 %d（狼 2 + 瘦狼 2）" % (int(GS.S.xp_total) - xp0))
+		await _until(func(): return mode == "map" and not screens.is_open(), 30.0)
+		# 宝物：空心老橡树里的包袱
+		var ch: Dictionary = Data.t("overworld").chests[0]
+		await _walk_next_to(Vector2i(int(ch.cell[0]), int(ch.cell[1])))
+		var bag0: int = GS.S.bag.size()
+		await _press("confirm")
+		await _until(func(): return "forest_oak" in GS.S.opened, 5.0)
+		_expect(GS.S.bag.size() == bag0 + 1 and str(GS.S.bag[-1].rarity) in ["magic", "rare"], "开宝物：背包多了一件精良以上的装备（%s）" % (Party.item_info(GS.S.bag[-1]).name if not GS.S.bag.is_empty() else ""))
+		# 背包：换上
+		var hp_max0 := Party.max_hp("apprentice")
+		var spark0 := int(Party.spells(GS.S.unlocks).spark.damage)
+		var mp0 := Party.mana_max()
+		open_bag()
+		await _until(func(): return mode == "map" and not screens.is_open(), 10.0)
+		var changed := Party.max_hp("apprentice") != hp_max0 or int(Party.spells(GS.S.unlocks).spark.damage) != spark0 or Party.mana_max() != mp0
+		_expect(changed, "换上装备：血上限 %d → %d，星火 %d → %d，法力上限 %d → %d" % [hp_max0, Party.max_hp("apprentice"), spark0, int(Party.spells(GS.S.unlocks).spark.damage), mp0, Party.mana_max()])
+		# 第四群：倒木后的灰狼
+		await _hunt("forest_log")
+		await _until(func(): return mode == "battle")
+		await _auto_fight()
+		await _win_continue()
+		await _until(func(): return mode == "map" and not screens.is_open(), 30.0)
+		_expect(world.roamers.is_empty(), "森林里能绕开的敌人打光了，安静下来")
+	else:
+		_expect(GS.S.defeated.is_empty(), "只打必须打的：没有碰上能绕开的敌人")
+
+	# 林边石龛：头狼群前面的圣龛
+	await _pray_at("forest_shrine")
+	if route != "c":
+		_expect(GS.S.last_shrine == "forest_shrine" and Party.all_full(), "林边石龛祈祷：三人回满，记成上次祈祷的地方")
+	else:
+		await _until(func(): return world.area == "manor", 10.0)
+		_expect(world.area == "manor", "圣龛传送：从林边石龛传到庄园小礼拜堂")
+		await _pray_at("manor_chapel")
+		await _until(func(): return world.area == "forest", 10.0)
+		_expect(world.area == "forest", "再传回林边石龛")
+		await _pray_at("forest_shrine")   # 这一次在圣龛跟前打开技能树洗点
+
+	# 头狼群：任务要打的，站着不动
 	var sp := _spawn("ch1_wolves")
 	await _walk_next_to(Vector2i(int(sp.cell[0]), int(sp.cell[1])))
 	world.step(Vector2i(int(sp.cell[0]), int(sp.cell[1])) - world.player_cell)
 	await _until(func(): return mode == "battle")
 	await _fight_wolves()
-	await _until(func(): return mode == "map" and not runner.running)
+	await _until(func(): return mode == "map" and not runner.running and not screens.is_open(), 40.0)
 	_expect(runner.quest_part(1001) == 1102, "打完狼任务到 1102 石圈")
 	_expect(_spawn_visible("ch1_wolves") == false, "打赢的狼群从地图上消失")
+	_expect(not hud.tree_btn.visible or mode == "map", "技能按钮只在地图上出现，战斗里打不开技能树")
 
 	# 石圈：发光的水面
 	await _walk_area("stone_circle")
@@ -407,6 +714,8 @@ func _playtest() -> void:
 	_expect(not GS.book_page("D1").is_empty(), "看水面以后预言簿有 D1 这一页")
 	_expect(runner.quest_part(1001) == 1103, "看完水面任务到 1103 阁楼")
 	_expect(not world.water_glows(w), "看完以后水面不再发光")
+	var left := int(GS.S.metrics.get("left_at_vision", -1))
+	_expect(left == (4 if route == "b" else 0), "试玩记录：走到石圈看水面时还剩 %d 群没打" % left)
 	await _press("cancel")
 	await _until(func(): return screens.kind == "" and mode == "map")
 
@@ -416,7 +725,7 @@ func _playtest() -> void:
 	await _until(func(): return mode == "battle")
 	_expect(runner.has_unlock("u_interrupt"), "梅林教了打断（新能力提示弹过）")
 	await _fight_shadow()
-	await _until(func(): return mode == "map" and not runner.running)
+	await _until(func(): return mode == "map" and not runner.running and not screens.is_open(), 40.0)
 	_expect(runner.quest_part(1001) == 1104, "影子那一仗以后任务到 1104 马厩")
 
 	# 马厩：关键选择
@@ -428,13 +737,17 @@ func _playtest() -> void:
 	_expect(runner.v("kay_rift") == (want == "D1b"), "兄弟有没有疙瘩跟着选项走")
 	_expect(Quests.state("1001") == "done", "第 1 章主线完成")
 	_expect(int(runner.v("chapter")) == 2 and runner.quest_part(1002) == 1203, "进第 2 章，任务到 1203 跟埃克托回教堂")
+	var lv_want := 3 if route != "b" else 2
+	_expect(Party.level() == lv_want, "第 1 章末学徒 %d 级、经验 %d（设计页：只打必须打的 12 / 2 级，全打 28 / 3 级）" % [Party.level(), int(GS.S.xp_total)])
 	verify("coreLoop", Quests.state("1001") == "done" and runner.visited("Ch1_WolvesDone") and "ch1_wolves" in GS.S.defeated
-		and runner.has_unlock("u_interrupt") and runner.v("D1") == want and runner.quest_part(1002) == 1203,
-		"接 1001 → 打赢狼群 → 1102 → 看水面记下 D1 → 学打断、打赢影子 → 马厩选 %s → 1001 完成 → 进第 2 章 1203" % want)
-	# 存档：马厩选完、进第 2 章时自动存过；存档里是第 2 章、选的是 want、站在伦敦
+		and int(GS.S.xp_total) > 0 and Party.level() >= 2 and runner.has_unlock("u_interrupt") and runner.v("D1") == want and runner.quest_part(1002) == 1203,
+		"接 1001 → 打赢狼群（地图上打了 %d 群）→ 经验 %d、%d 级 → 看水面记下 D1 → 学打断、打赢影子 → 马厩选 %s → 1001 完成 → 进第 2 章 1203" % [
+			GS.S.defeated.size() - 1, int(GS.S.xp_total), Party.level(), want])
+	# 存档：马厩选完、进第 2 章时自动存过；存档里是第 2 章、选的是 want、站在伦敦，经验和背包都在
 	var saved = JSON.parse_string(FileAccess.get_file_as_string(GS.SAVE_PATH))
-	_expect(typeof(saved) == TYPE_DICTIONARY and int(saved.vars.chapter) == 2 and saved.vars.D1 == want and saved.area == "london",
-		"进第 2 章时自动存档：存档里是第 2 章、D1=%s、站在伦敦" % want)
+	_expect(typeof(saved) == TYPE_DICTIONARY and int(saved.vars.chapter) == 2 and saved.vars.D1 == want and saved.area == "london"
+		and int(saved.prog.level) == Party.level() and saved.bag.size() == GS.S.bag.size(),
+		"进第 2 章时自动存档：第 2 章、D1=%s、站在伦敦、%d 级、背包 %d 件" % [want, Party.level(), GS.S.bag.size()])
 	await _shot("map_london")
 
 	# 教堂：第 1 章那句话应验
@@ -448,6 +761,7 @@ func _playtest() -> void:
 	await _until(func(): return screens.kind != "book")
 	_expect("book" in _seen_screens, "地图上按 Esc 打开预言簿，看得到这一页和「后来」")
 	await _until(func(): return screens.kind == "end", 30.0)
+	for l in screens.data.get("metrics", []): print("  [试玩记录] ", l)
 	verify("outcome", screens.kind == "end" and after_key in GS.book_page("D1").after and runner.quest_part(1002) == 1204,
 		"第 2 章教堂按 %s 演完：预言簿写上「%s」，任务到 1204，出现白盒结尾" % [want, UIKit.t(after_key)])
 	print("[playtest] %s（%d 条不过）" % ["PASS" if fails.is_empty() else "FAIL", fails.size()])
@@ -494,72 +808,177 @@ func _restart_check() -> void:
 	get_tree().quit(1 if prior > 0 or not ok else 0)
 
 # ---------------- 测试里打仗：照战斗设计页的验收条件 ----------------
+var _fight_log: Array = []
+
+## 头狼群。b 路线照设计页「一个例子」打第 1、2 回合（基础数），其余路线按通用打法
 func _fight_wolves() -> void:
 	var b := battle_view.b
-	_expect(not "kay_cover" in b.actions_for("kay"), "第 1 章凯的菜单里没有「挡在前面」（%s）" % route)
+	_fight_log = []
 	_expect(b.turn == 1 and b.intents.size() == 3, "狼群第 1 回合三只狼都亮出意图")
-	# 第 1 回合：凯和亚瑟打头狼，学徒给凯护身
-	_plan("kay", "attack", "wolf_leader")
-	_plan("arthur", "attack", "wolf_leader")
-	_plan("apprentice", "ward", "kay")
-	_expect(b.turn == 2, "三个人都排好就自动开打，进第 2 回合")
-	var texts := b.intents.map(func(it): return b.intent_text(it))
-	_expect("头狼 扑咬 → 亚瑟 5" in texts and "灰狼 咬 → 凯 3" in texts and "瘦狼 召唤 2" in texts,
-		"第 2 回合同时亮出「头狼 扑咬 → 亚瑟 5」「灰狼 咬 → 凯 3」「瘦狼 召唤 2」")
-	await _shot("battle_intents")
-	# 第 2 回合：凯和亚瑟打瘦狼、学徒护身亚瑟
-	var arthur_hp: int = b.unit("arthur").hp
-	_plan("kay", "attack", "wolf_howler")
-	_plan("arthur", "attack", "wolf_howler")
-	await _shot("battle_planned")
-	_plan("apprentice", "ward", "arthur")
-	var log_t := "\n".join(PackedStringArray(_last_report()))
-	_expect("瘦狼倒下，召唤作废" in log_t, "瘦狼在叫之前倒下，打印「瘦狼倒下，召唤作废」")
-	_expect(arthur_hp - b.unit("arthur").hp == 1, "亚瑟有护身，头狼那一口只挨 1 点")
-	# 第 3 回合收尾
-	_plan("kay", "attack", "wolf_leader")
-	_plan("arthur", "attack", "wolf_grey")
-	_plan("apprentice", "spark", "wolf_grey")
-	_expect(b.result == "win" and b.turn == 3, "狼群 3 回合打赢（设计页 3–5 回合）")
+	if route == "b":
+		_plan("apprentice", "ward", "arthur")
+		_plan("kay", "attack", "wolf_leader")
+		_plan("arthur", "attack", "wolf_leader")
+		_expect(b.turn == 2, "三个人都排好就自动开打，进第 2 回合")
+		var texts := b.intents.map(func(it): return b.intent_text(it))
+		_expect("头狼 长嚎 力量 +1" in texts and "灰狼 咬 → 亚瑟 3" in texts and "瘦狼 嚎叫 叫来 1 只狼" in texts,
+			"第 2 回合同时亮出「头狼 长嚎 力量 +1」「灰狼 咬 → 亚瑟 3」「瘦狼 嚎叫 叫来 1 只狼」（%s）" % ", ".join(PackedStringArray(texts)))
+		_expect(b.unit("wolf_howler").hp == 5, "第 2 回合开始瘦狼还是满血 5 点")
+		await _shot("battle_intents")
+		_plan("apprentice", "spark", "wolf_howler")
+		_plan("kay", "attack", "wolf_howler")
+		await _shot("battle_planned")
+		_plan("arthur", "guard")
+		var t := "\n".join(PackedStringArray(_last_report()))
+		_expect("你·星火 → 瘦狼：2 点，易伤 1" in t, "打印「星火 2，瘦狼 易伤 1」")
+		_expect("凯·砍 → 瘦狼：4 点" in t and "瘦狼倒下，召唤作废" in t, "打印「凯 砍 4，瘦狼 倒下」「召唤作废」")
+		_expect("灰狼 咬 → 亚瑟：1 点（挡掉 3）" in t, "头狼先长嚎，灰狼这一口从 3 变 4：打印「亚瑟 挡掉 3，掉 1」")
+	await _auto_fight()
+	_expect(b.result == "win" and b.turn >= 3 and b.turn <= 6, "头狼群第 %d 回合打赢（设计页 4–5 回合）" % b.turn)
 	await _shot("battle_win")
-	battle_view.end_btns[0].pressed.emit()
+	await _win_continue()
 
+## 影子：先不打断，第 2 回合挨重劈倒下；再来一次，意图逐字一样；打断就能赢。c 路线输了先选回圣龛，再走回阁楼打
 func _fight_shadow() -> void:
 	var b := battle_view.b
-	_expect(b.allies().size() == 1, "影子那一仗只有学徒一个人")
+	_expect(b.allies().size() == 1 and not b.can_flee(), "影子那一仗只有学徒一个人，剧情战不能逃")
 	var first := b.intents.map(func(it): return b.intent_text(it))
-	# 第一次：不打断，第 2 回合挨 12 点倒下（只有一个人，排好就自动开打；第 2 回合什么都不排，点「结束回合」）
 	_plan("apprentice", "spark", "merlin_shadow")
-	battle_view._on_end_turn()
-	var log_t := "\n".join(PackedStringArray(_last_report()))
-	_expect(b.result == "lose" and "梅林的影子 重劈 → 你：12 点" in log_t, "不打断：第 2 回合学徒挨 12 点、倒下")
-	_expect(battle_view.end_btns.size() == 2 and battle_view.end_btns[0].text == UIKit.t("ui_retry"), "输了出现「再来一次」和「回地图」")
+	if b.result == "" and b.turn == 2:
+		_plan("apprentice", "focus")
+	var t := "\n".join(PackedStringArray(_last_report()))
+	_expect(b.result == "lose" and "梅林的影子 重劈 → 你：" in t, "不打断：第 2 回合学徒挨重劈、倒下")
+	_expect(battle_view.end_btns.size() == 2 and battle_view.end_btns[0].text == UIKit.t("ui_retry") and battle_view.end_btns[1].text == UIKit.t("ui_back_shrine"),
+		"输了出现「再来一次」和「回圣龛」")
 	await _shot("battle_lose")
-	battle_view.end_btns[0].pressed.emit()
-	var again := b.intents.map(func(it): return b.intent_text(it))
-	_expect(first == again and b.turn == 1, "再来一次：第 1 回合的意图逐字一样（%s）" % ", ".join(PackedStringArray(again)))
-	# 第二次：第 1 回合打断
+	if route == "c":
+		battle_view.end_btns[1].pressed.emit()
+		await _until(func(): return mode == "map" and not runner.running)
+		_expect(world.area == str(shrine_def(GS.S.last_shrine).area) and Party.all_full(), "输了选回圣龛：回到 %s，三人回满" % UIKit.t(shrine_def(GS.S.last_shrine).get("name", "")))
+		await _walk_area("manor")
+		await _walk_onto(Vector2i(5, 3))
+		await _until(func(): return mode == "battle")
+		b = battle_view.b
+	else:
+		battle_view.end_btns[0].pressed.emit()
+		var again := b.intents.map(func(it): return b.intent_text(it))
+		_expect(first == again and b.turn == 1, "再来一次：第 1 回合的意图逐字一样（%s）" % ", ".join(PackedStringArray(again)))
 	_plan("apprentice", "interrupt", "merlin_shadow")
-	_expect("蓄力被打断，作废" in "\n".join(PackedStringArray(_last_report())), "第 1 回合打断：打印「蓄力……作废」")
-	_plan("apprentice", "spark", "merlin_shadow")
-	_plan("apprentice", "interrupt", "merlin_shadow")
-	_plan("apprentice", "spark", "merlin_shadow")
-	_plan("apprentice", "spark", "merlin_shadow")
-	_expect(b.result == "win", "打断两次、星火三次，5 回合打赢影子（第 %d 回合）" % b.turn)
-	battle_view.end_btns[0].pressed.emit()
+	_expect(_find_in(_last_report(), "蓄力被打断，作废"), "第 1 回合打断：打印「蓄力……作废」")
+	await _auto_fight()
+	_expect(b.result == "win", "打断以后打赢影子（第 %d 回合）" % b.turn)
+	await _win_continue()
 
-var _report_seen := []
+## 通用打法：先管会叫狼、长嚎、蓄力的，打断够得着就打断；有人这回合会倒就护他；其余打血最少的
+func _auto_fight(max_turns := 14) -> void:
+	var b := battle_view.b
+	var n := 0
+	while b.result == "" and n < max_turns:
+		n += 1
+		var turn0 := b.turn
+		var danger := ""
+		for u in b.allies():
+			var inc := 0
+			for it in b.intents:
+				if not it.cancelled and it.act == "attack" and (it.target == u.uid or it.target == "all"): inc += b.intent_damage(it, u.uid) * int(it.hits)
+			if inc >= u.hp + int(u.block): danger = u.uid
+		var tgt := _pick_target(b)
+		for u in b.allies():
+			if b.result != "" or b.turn != turn0: break
+			if b.planned(u.uid) != null: continue
+			if u.uid == "apprentice":
+				var it_list := b.interruptible()
+				if b.has_spell("interrupt") and not it_list.is_empty() and b.why_not("apprentice", "interrupt") == "":
+					_plan("apprentice", "interrupt", it_list[0])
+				elif danger != "" and b.has_spell("ward") and b.why_not("apprentice", "ward") == "":
+					_plan("apprentice", "ward", danger)
+				elif b.why_not("apprentice", "spark") == "":
+					_plan("apprentice", "spark", tgt)
+				else:
+					_plan("apprentice", "focus")
+			else:
+				var e = b.unit(tgt)
+				_plan(u.uid, "attack", tgt if e != null and e.alive else b.enemies()[0].uid)
+		if b.result == "" and b.turn == turn0:
+			battle_view._on_end_turn()
+			_fight_log.append_array(battle_view.last_report)
+	_expect(b.result != "", "这一仗 %d 回合内分出胜负（%s）" % [max_turns, b.enc_id])
+
+func _pick_target(b: Battle) -> String:
+	var best = null
+	for it in b.intents:
+		var e = b.unit(it.uid)
+		if e != null and e.alive and not it.cancelled and it.act in ["summon", "buff", "charge"]:
+			if best == null or e.hp < best.hp: best = e
+	if best == null:
+		for e in b.enemies():
+			if best == null or e.hp < best.hp: best = e
+	return best.uid if best != null else ""
+
+func _win_continue() -> void:
+	var b := battle_view.b
+	if b.result != "win":
+		_expect(false, "没打赢：%s" % b.enc_id)
+		return
+	await _shot("battle_result_" + b.enc_id)
+	battle_view.end_btns[0].pressed.emit()
+	await get_tree().process_frame
+
+func _spark_hit(n: int) -> bool:
+	for l in _fight_log:
+		if str(l).begins_with("你·星火 → ") and ("：%d 点" % n) in str(l): return true
+	return false
+
+func _find_in(lines: Array, s: String) -> bool:
+	for l in lines:
+		if s in str(l): return true
+	return false
+
 func _plan(who: String, act: String, target := "") -> void:
 	var b := battle_view.b
 	var turn0 := b.turn
 	battle_view._on_act(who, act)
 	if target != "": battle_view._on_target(target)
+	if b.turn != turn0 or b.result != "": _fight_log.append_array(battle_view.last_report)
 	# 排进去了，或者这一下排满了、已经自动开打（回合往前走了 / 分出胜负）
 	if b.planned(who) == null and b.turn == turn0 and b.result == "":
-		_expect(false, "排不进去：%s %s → %s" % [who, act, target])
+		_expect(false, "排不进去：%s %s → %s（%s）" % [who, act, target, b.why_not(who, act)])
 
 func _last_report() -> Array:
 	return battle_view.last_report
+
+## 追着一群会走动的敌人，走到它旁边撞上去（它也可能自己追上来）
+func _hunt(zid: String) -> void:
+	for i in 300:
+		if mode == "battle": return
+		if not can_move():
+			await get_tree().process_frame
+			continue
+		var r = world.roamer(zid)
+		if r == null:
+			_expect(false, "%s 不在地图上" % zid)
+			return
+		var d: Vector2i = r.cell - world.player_cell
+		if absi(d.x) + absi(d.y) == 1:
+			world.step(d)
+			await _until(func(): return mode == "battle", 3.0)
+			return
+		var path := world.path_to(r.cell, true)
+		if path.is_empty():
+			_expect(false, "走不到 %s 旁边" % zid)
+			return
+		world.step(path[0] - world.player_cell)
+		await _until(func(): return not world.moving)
+		await get_tree().process_frame
+	_expect(false, "追 %s 追了 300 步" % zid)
+
+## 走到某座圣龛跟前祈祷（圣龛画面由 _on_screen 按 _shrine_plan 选）
+func _pray_at(id: String) -> void:
+	var sh := shrine_def(id)
+	if world.area != sh.area: await _walk_area(sh.area)
+	await _walk_next_to(Vector2i(int(sh.cell[0]), int(sh.cell[1])))
+	await _press("confirm")
+	await _until(func(): return screens.kind == "" and mode == "map", 20.0)
 
 # ---------------- 测试里走路：和玩家一样一格一格走 ----------------
 func _check_maps() -> void:
@@ -668,11 +1087,57 @@ func _on_key_choice(pick: int) -> void:
 
 ## 整屏画面：截图后关上（标题和结尾由测试自己点）
 var _seen_screens := []
+var _first_level_checked := false
 func _on_screen(kind: String) -> void:
 	_seen_screens.append(kind)
 	if kind in ["title", "end"]: return
-	await _shot("screen_" + kind)
-	screens.close()
+	match kind:
+		"levelup":
+			var offers: Array = screens.data.offers
+			var names := offers.map(func(o): return o.name)
+			_expect(offers.size() == 3 and names[0] != names[1] and names[1] != names[2] and names[0] != names[2], "升级弹出三张不重样的奖励：%s" % "、".join(PackedStringArray(names)))
+			if route == "a" and not _first_level_checked:
+				_first_level_checked = true
+				_expect(int(GS.S.xp_total) == 8 and Party.level() == 2 and Party.tree_points() == 2 and Party.all_full(),
+					"打完林子边的狼和路上的强盗：经验 %d，%d 级，技能点 %d，三个人回满" % [int(GS.S.xp_total), Party.level(), Party.tree_points()])
+			await _shot("screen_levelup")
+			screens._pick_boon(0)
+		"tree":
+			await _shot("screen_tree")
+			if screens.data.get("respec", false) and not Party.tree.paid.is_empty():
+				var spent := 0
+				for k in Party.tree.paid: spent += int(Party.tree.paid[k])
+				var p0 := Party.tree_points()
+				var r := Party.respec()
+				_expect(Party.tree_points() == p0 + spent, "在圣龛跟前洗点：%d 点全拿回来" % spent)
+			for id in ROUTE_TREE.get(route, []):
+				if Party.tree_points() <= 0: break
+				var why := Party.node_why(id)
+				if why != "":
+					if id == "spark_heat" and route == "a" and Party.tree.rank("spark_heat") == 2 and Party.level() == 2:
+						_expect(why == "要 3 级", "2 级时星火加热第三下点不了，写着「%s」" % why)
+					continue
+				screens._buy_node(id)
+			screens._choose("done")
+		"shrine":
+			await _shot("screen_shrine")
+			var c: String = _shrine_plan.pop_front() if not _shrine_plan.is_empty() else "leave"
+			if c.begins_with("travel:") and not screens.data.travel.any(func(o): return o.id == c.substr(7)):
+				_expect(false, "圣龛画面里没有「传到」%s" % c.substr(7))
+				c = "leave"
+			screens.data["choice"] = c
+			screens.close()
+		"bag":
+			await _shot("screen_bag")
+			if not GS.S.bag.is_empty():
+				var it0: Dictionary = GS.S.bag[0]
+				Party.equip(int(it0.uid))
+				screens.data["equipped"] = 1
+				print("  [换装] 换上 %s：%s" % [Party.item_info(it0).name, "，".join(PackedStringArray(Party.item_info(it0).lines))])
+			screens._choose("done")
+		_:
+			await _shot("screen_" + kind)
+			screens.close()
 
 func _shot(name: String) -> void:
 	if shot_dir == "" or DisplayServer.get_name() == "headless": return
