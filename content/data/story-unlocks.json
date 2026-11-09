@@ -160,7 +160,12 @@
       "kind": "companion",
       "what": "bedivere",
       "at": "1502",
-      "requires": []
+      "requires": [],
+      "popup": {
+        "name": "unlock_u_bedivere_name",
+        "effect": "unlock_u_bedivere_effect",
+        "origin": "unlock_u_bedivere_origin"
+      }
     }
   ],
   "_提示框说明": "popup 是「新能力提示」的三行文字（文本键）。现在写了几条样例，其余第 10 步补。"

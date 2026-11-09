@@ -39,6 +39,7 @@ tags: declarations
 // S2a
 <<declare $gareth_refused_order = false>>
 <<declare $arthur_knew_affair = false>>
+<<declare $d5_told = "">>
 // S1a
 <<declare $gawain_confessed = false>>
 // S1a

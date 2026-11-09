@@ -33,7 +33,7 @@
 | S2502_Rumor | 城门边的伤员屋 | 和贝狄威尔说话 | `visited("Ch5_Return") and quest_state(2502) == "none"` | Ch5_Bedivere 1502 那一支先说「下个月有比武……兰斯洛特爵士倒说，他不去」，在这句后面接 `<<if quest_state(2502) == "none">><<jump S2502_Rumor>><<endif>>`。我的节点开头先跳到「比武开场那天傍晚」，两句接得上 |
 | S2502_Tournament | 比武场 | 走进这片地方 | `quest_part(2502) == 1` | 打 tournament |
 | S2502_Astolat | 阿斯托拉特城外河边的隐修士小屋 | 和床边的伊莲恩说话 | `quest_part(2502) == 2` | 看水面 S4、关键选择 S4 |
-| S2502_Boat | 卡美洛城下河边 | 和小船互动 | `$S4 == "S4c" and quest_part(1005) == 1502 and not visited("S2502_Boat")` | Ch5 的 Prop_river 第一支写了同一条船。二选一，建议在 Prop_river 第一支里 `<<jump S2502_Boat>>`，把洗衣妇那句挪进我的节点；Ch5_GuinevereDoor 的条件改成 `visited("S2502_Boat")` |
+| S2502_Boat | 卡美洛城下河边 | 选完 S4c 回到卡美洛（进 camelot 区域）自动演；Prop_river 第一支也跳过来 | `$S4 == "S4c" and quest_part(1005) == 1502 and not visited("S2502_Boat")` | 不靠玩家碰巧去河边（review_ch5 O7）。Ch5_GuinevereDoor 要等这一段演过才演（R2） |
 
 ## 2. 变量
 用到的全在 Variables.yarn 里：`$S1`–`$S4`，以及 `gawain_confessed`、`gawain_early_letter`（S1a），`gawain_secret`（S1b），`gareth_refused_order`（S2a），`kay_protected_gareth`（S2b），`gawain_owes_you`、`apple_prevented`（S3a），`guinevere_trusts_you`、`apple_prevented`（S3b），`apple_happened`（S3c），`elaine_lives`、`rumor_up`（S4a），`elaine_convent`（S4b），`elaine_died`（S4c）。标记照 bible.json 的 flags 一一设。
@@ -179,7 +179,7 @@ Ch3 高文护腕内侧缝着弟弟们的名字 → 美手盯着那只护腕、�
 ## 10. 需要你决定的地方
 1. **加雷斯在红骑士那一仗怎么上场。** 对白里他是主角（马洛礼里红骑士是他打的），可受封前他还不在队里，`_party_for` 只从在队的人里挑 fixed。两个办法：A 代码给遭遇加 `party.guests`（推荐，圆桌上不会提前多一把椅子）；B 在 S2401_RedLaunds 的 `<<fight_npcs red_knight>>` 前面加 `<<companion gareth party>>`，代价是受封前同伴面板上就有他。我现在写的是 A，`<<companion gareth party>>` 只在受封以后。
 2. **S2301_Rumor 是整场圣诞宴（14 行），不止一句线索。** 线索那句已经在 Ch3_Kay（「你去劝劝他」）。绿衣骑士进门、砍头、头开口这一幕只在支线里演，不接支线的玩家看不到。要是你想让所有人都看到，就把这个节点挪进主线 1304 之后，任务从它的最后一行开。
-3. **S2502_Boat 和 Ch5 的 Prop_river 写了同一条船**，二选一（建议见第 1 节）。
+3. **S2502_Boat 和 Ch5 的 Prop_river 写了同一条船**：已合并，Prop_river 第一支跳 S2502_Boat；S4c 回城自动演（2026-11-09）。
 4. **2301 中间过了一年。** 做支线的玩家在 1305 之前过了一年，不做的没过。第 3 章梅林那一幕不提日子就不矛盾；Ch3 作者要是写了「第二天」之类，要对一下。
 5. **原诗里绿衣骑士背后是摩根**（她把城主变成绿衣骑士，想吓王后）。bible 写摩根「第 3 章起学徒只听人说起过她」，这里正好是第一次听说的机会，但怕和第 3、4 章主线怎么引出摩根撞车，没写。要的话在 S2301_Chapel 加一句。
 6. **wild_men 只带高文一个同伴**，比别的仗少一个人，难度要 balancing 按两个人调；不想要这个限制就把 max 去掉，台词不受影响。

@@ -97,7 +97,7 @@ D5b 拆成两个互斥选项，条件就是上面两条：凯在、信你 →「
 |---|---|---|---|
 | arthur_hall | camelot 大厅 | Ch5_Arthur | `quest_part(1005) != 1503` |
 | guinevere_hall | camelot 大厅 / 伤员屋 / 花园 | Ch5_Guinevere | `quest_part(1005) == 1501 or quest_part(1005) == 1502` |
-| lancelot_stable | camelot 马厩 | Ch5_Lancelot | `quest_part(1005) == 1502 and visited("Ch5_Return")` |
+| lancelot_stable | camelot 马厩 | Ch5_Lancelot | `quest_part(1005) == 1502 and visited("Ch5_Return") and quest_state(2502) != "active"`（伊莲恩支线进行中他在比武场、阿斯托拉特，review_ch5 O10） |
 | gawain_well | camelot 井台 | Ch5_Gawain | `quest_part(1005) == 1502 and visited("Ch5_Return")` |
 | gawain_1504 | camelot 礼拜堂外 | Ch5_Gawain | `quest_part(1005) == 1504` |
 | gareth_yard | camelot 练剑场 | Ch5_Gareth | `quest_part(1005) == 1502 and visited("Ch5_Return")` |

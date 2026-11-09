@@ -248,7 +248,7 @@ tags: side vision decision
 -> 谁都不说 #key #line:side_129
     <<set $S2 to "S2c">>
     你把碗里的水泼到窗外，楼下有只猫叫了一声。 #line:side_130
-    加雷斯: 什么也没有？那就是好事。 #line:side_131
+    加雷斯: 什么也没有？那我明早还去练剑场。 #line:side_131
     <<complete_quest 2401 S2c>>
 <<companion gareth party>>
 <<autosave>>
@@ -263,7 +263,7 @@ tags: side rumor
 // 马洛礼第 18 卷：王后私下设宴，席上的骑士一个不落；高文爱吃苹果和梨。
 王后的侍女提着裙角跑过回廊，在你跟前站住，喘了两口气。 #line:side_132
 侍女: 王后后天在小宴会厅给高文爵士他们接风，回来的人一个都不落。 #line:side_133
-侍女: 王后说，席上不能出一点岔子。请你先去宴会厅看一眼。 #line:side_134
+侍女: 王后说，后天的席上不能出一点岔子。请你拿你那只碗替她看一眼。 #line:side_134
 <<start_quest 2501>>
 ===
 
@@ -304,8 +304,8 @@ tags: side vision decision
     <<set $guinevere_trusts_you to true>>
     <<set $apple_prevented to true>>
     王后还没睡。她听完，转了转手上那枚印章戒指。 #line:side_152
-    桂妮维亚: 这件事，别让第三个人知道。 #line:side_153
-    桂妮维亚: 我的宴席上死了人，大家只会记得是谁设的宴。 #line:side_154
+    桂妮维亚: 这件事，除了我的侍女，别让别人知道。 #line:side_153
+    桂妮维亚: 那盘苹果从我厨房端出去，有人倒在桌上，他们头一个来看我的手。 #line:side_154
 -> 谁都不说 #key #line:side_155
     <<set $S3 to "S3c">>
     <<set $apple_happened to true>>
@@ -379,7 +379,7 @@ tags: side battle
 贝狄威尔: 比完了还追，想扒他的甲抵自己输掉的马。这不合规矩。 #line:side_188
 <<fight_npcs tournament>>
 林子边上，红袖子骑士从马上栽下来，压倒了一片蕨草。 #line:side_189
-你解开他的头盔。是兰斯洛特，嘴唇白得像蜡。 #line:side_190
+你解开他的头盔。是兰斯洛特。嘴唇干得起了皮，一点血色也没有。 #line:side_190
 贝狄威尔: 你这是图什么？ #line:side_191
 兰斯洛特: 想看看不叫兰斯洛特的时候，我还剩几分本事。 #line:side_192
 兰斯洛特: 阿斯托拉特城外，河边有个隐修士。送我去那儿，别告诉宫里。 #line:side_193
@@ -398,12 +398,13 @@ tags: side vision decision
 桌上叠着那只红袖子，洗干净了，珍珠一颗颗擦得发亮。 #line:side_198
 伊莲恩: 你是卡美洛来的？我叫伊莲恩，阿斯托拉特城主的女儿。 #line:side_199
 伊莲恩: 袖子是我给他的。他说比完了就还我，我说不用还。 #line:side_200
-宫里已经有人在问，兰斯洛特怎么一病病了这么久。 #line:side_201
+宫里已经有人去敲兰斯洛特的门，敲了三天没人应。 #line:side_201
 你想知道这道伤还要几天才好。 #line:side_202
 你蹲在河边，用木碗舀起半碗水，等它平下来。 #line:side_203
 <<vision S4>>
 你的耳朵嗡嗡直响，蹲麻了的腿忍不住发软。 #line:side_204
 船上那只红袖子，这会儿就叠在屋里的桌上。 #line:side_205
+船上那个姑娘攥着信，眼睛一直没合上。 #line:side_243
 屋里，伊莲恩一边拧布，一边哼着一支你没听过的歌。 #line:side_206
 -> 告诉伊莲恩：他心里的人不是你 #key #line:side_207
     <<set $S4 to "S4a">>
@@ -437,9 +438,9 @@ title: S2502_Boat
 tags: side readback
 ---
 // 世界变化 W3：选了 S4c 以后、1503 之前，卡美洛城下河边的小船。和小船互动开始。S4c 只能在阿斯托拉特选，所以走到这里一定见过伊莲恩。
-// Ch5 的 Prop_river 第一支也写了这条船；合并时二选一，建议在 Prop_river 第一支里 <<jump S2502_Boat>>，洗衣妇那句挪进来。
+// 选完 S4c 回到卡美洛（进 camelot 区域）自动演，不靠玩家碰巧去河边（review_ch5 O7）；Prop_river 第一支也会跳过来。
 // 马洛礼：伊莲恩死后，照她的遗愿被放在船上，手里握着信，顺水漂到王宫。
-清早，河边洗衣服的女人扔下棒槌，一个挨一个往后退。 #line:side_220
+半个多月以后的清早，河边洗衣服的女人扔下棒槌，往后退。 #line:side_220
 一条小船卡在卡美洛城下的芦苇里，船头蒙着一块黑布。 #line:side_221
 船上躺着一个穿白衣的姑娘，胸口叠着一只红袖子，手里攥着一封信。 #line:side_222
 是伊莲恩。她攥着信的手指，还是换药时那样稳。 #line:side_223

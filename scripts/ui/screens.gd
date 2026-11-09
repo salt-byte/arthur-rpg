@@ -137,7 +137,10 @@ func _build_book() -> void:
 		l = _add_label(UIKit.f("ui_book_seen", {"t": UIKit.t(vd.get("text", ""))}), Vector2(r.position.x + 40, y), 880)
 		y += 40 * _rows(l.text, 880)
 		var picked := str(main.runner.v(p.decision)) if main else ""
-		var told := UIKit.t("book_told_" + picked) if picked != "" else UIKit.t("ui_book_undecided")
+		var told_key := "book_told_" + picked
+		if picked == "D5b" and main and str(main.runner.v("d5_told")) == "bedivere":
+			told_key += "_bedivere"   # D5b 告诉凯和告诉贝狄威尔是同一个值，这里按 $d5_told 分开记
+		var told := UIKit.t(told_key) if picked != "" else UIKit.t("ui_book_undecided")
 		l = _add_label(UIKit.f("ui_book_told", {"t": told}), Vector2(r.position.x + 40, y), 880)
 		y += 40 * _rows(l.text, 880)
 		for a in p.get("after", []):
