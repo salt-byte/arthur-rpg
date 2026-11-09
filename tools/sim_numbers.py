@@ -4,7 +4,7 @@
 只读 content/data/*.json，不改游戏数据、不改代码。
 1. 战斗规则照 scripts/battle.gd 和 design/systems/combat.md 逐条搬过来（伤害只有 hit_damage 一处）。
    代码里还没写、设计页写了的几样（同伴专属招、撑过几回合、首领的「？」、补位）照设计页补上。
-2. 第 1 章用 combat.json 里现有的数；第 2–6 章用 design/NUMBERS.md 里提案的数（本文件 PROPOSAL）。
+2. 数值全从 content/data/*.json 读（2026-11-09 第 2–6 章落进 combat.json）；本文件只记每场仗的元信息（META）和走的顺序。
 3. 三种打法走完六章：全力（全打、用药）、省资源（全打、不喝药、血一路带着、只在任务战前回圣龛）、
    只打必须的（只打任务战和剧情战，普通装备）。另在每场任务战上跑三种退化打法做检验。
 
@@ -33,164 +33,43 @@ PR = load("progression")
 IT = load("items")
 RULES = CB["rules"]
 
-# ---------------------------------------------------------------------------
-# 提案：第 2–6 章的同伴、敌人、遭遇（和 NUMBERS.md 第 5 节的表一一对应，改数两边一起改）
-# 格式照 combat.json：pattern 按回合轮着用。新增字段（代码还没实现，见 NUMBERS.md 第 1 节缺口）：
-#   hidden: true          这一招头上是「？」，花 1 法力揭开（第 4 章起首领）
-#   buff who: "self"      只给自己加力量（红骑士）
-#   encounter.reserve / field_max   场上最多几个，倒一个下回合补一个（比武）
-#   encounter.party.guests          不在队里也上场（红骑士那一仗的加雷斯）
-# ---------------------------------------------------------------------------
+META = {
+    # 第 2–6 章每场仗的元信息：第几章、给人看的名字、必打 / 支线 / 另一条路线，模拟按谁上场（最弱的那一组，NUMBERS.md 5.1）。
+    # 数值本身全在 content/data/combat.json。
+    "ch2_north_road": {"ch": 2, "label": "北门外的叛军步兵", "party": ["kay", "arthur"]},
+    "ch2_ford": {"ch": 2, "label": "渡口的盾兵", "party": ["kay", "arthur"]},
+    "ch2_hill": {"ch": 2, "label": "山坡上的骑兵", "party": ["kay", "arthur"]},
+    "ch2_camp": {"ch": 2, "label": "营地外的游骑", "party": ["kay", "arthur"]},
+    "bedegraine": {"ch": 2, "label": "贝德格兰之战", "party": ["kay", "arthur"], "required": True},
+    "pellinore": {"ch": 3, "label": "泉边的佩利诺", "party": ["arthur"], "required": True, "no_scabbard": True},
+    "ch3_road_knight": {"ch": 3, "label": "往卡美洛路上的骑士", "party": ["kay", "arthur"]},
+    "ch3_squires": {"ch": 3, "label": "两个侍从", "party": ["kay", "gawain"]},
+    "ch3_wild_pair": {"ch": 3, "label": "林边的两个野人", "party": ["kay", "arthur"]},
+    "ch3_knight_pair": {"ch": 3, "label": "比武场外的挑战者", "party": ["kay", "gawain"]},
+    "wild_men": {"ch": 3, "label": "支线：北边的野人", "party": ["gawain"], "side": True},
+    "morgan_chase": {"ch": 4, "label": "追摩根", "party": ["arthur", "kay"], "required": True},
+    "red_knight": {"ch": 4, "label": "支线：红地的红骑士", "party": ["gawain", "gareth"], "side": True},
+    "ch4_brigands": {"ch": 4, "label": "林中的强人", "party": ["kay", "gawain"]},
+    "ch4_wolves": {"ch": 4, "label": "冬狼", "party": ["kay", "gawain"]},
+    "ch4_riders": {"ch": 4, "label": "湖边的摩根骑士", "party": ["kay", "lancelot"]},
+    "ch4_mixed": {"ch": 4, "label": "路边的强人和狼", "party": ["gawain", "lancelot"]},
+    "camelot_defense": {"ch": 5, "label": "守卡美洛", "party": ["kay", "bedivere"], "required": True},
+    "tournament": {"ch": 5, "label": "支线：比武", "party": ["bedivere", "kay"], "side": True},
+    "ch5_deserters": {"ch": 5, "label": "城外的逃兵", "party": ["kay", "bedivere"]},
+    "ch5_raiders": {"ch": 5, "label": "河边的强盗", "party": ["kay", "bedivere"]},
+    "ch5_pair": {"ch": 5, "label": "两个强盗", "party": ["kay", "bedivere"]},
+    "ch5_mixed": {"ch": 5, "label": "落单的骑士", "party": ["kay", "bedivere"]},
+    "ch6_looters": {"ch": 6, "label": "欢乐堡外的抢掠兵", "party": ["arthur", "bedivere"]},
+    "joyous_gard": {"ch": 6, "label": "攻欢乐堡城门", "party": ["arthur", "bedivere"], "required": True},
+    "ch6_shore": {"ch": 6, "label": "海边的兵", "party": ["arthur", "bedivere"]},
+    "dover": {"ch": 6, "label": "多佛登陆", "party": ["gawain", "arthur"], "required": True},
+    "ch6_riders": {"ch": 6, "label": "路上的骑兵", "party": ["arthur", "bedivere"]},
+    "ch6_camp": {"ch": 6, "label": "营外的斥候", "party": ["arthur", "bedivere"]},
+    "camlann": {"ch": 6, "label": "卡姆兰", "party": ["arthur", "bedivere"], "required": True},
+    "camlann_rear": {"ch": 6, "label": "卡姆兰后队（D5c）", "party": ["bedivere", "kay"], "alt": True},
+}
+
 PROPOSAL = {
-    "companions_by_chapter": {
-        # 第 1 章是原型的数，不动。其余按 NUMBERS.md 3.3。
-        "kay":      {"1": [16, 3], "2": [16, 3], "3": [18, 3], "4": [18, 4], "5": [20, 4], "6": [20, 4]},
-        "arthur":   {"1": [13, 2], "2": [16, 3], "3": [16, 4], "4": [18, 4], "5": [20, 5], "6": [20, 5]},
-        "gawain":   {"3": [18, 3], "4": [20, 3], "5": [20, 4], "6": [20, 4]},
-        "lancelot": {"4": [20, 4], "5": [22, 5]},
-        "gareth":   {"4": [16, 3], "5": [18, 4], "6": [18, 4]},
-        "bedivere": {"5": [18, 3], "6": [20, 4]},
-    },
-    "enemies": {
-        # ---- 第 2 章：叛军（群攻第一次出现）----
-        "rebel_foot": {"name": "叛军步兵", "hp": 12, "kind": "man", "chapter": 2,
-                       "pattern": [{"act": "attack", "power": 5, "target": "arthur", "move": "move_slash"},
-                                   {"act": "attack", "power": 4, "target": "lowest_hp", "move": "move_slash"}]},
-        "rebel_shield": {"name": "盾兵", "hp": 13, "kind": "man", "chapter": 2,
-                         "pattern": [{"act": "block", "block": 6, "move": "move_shield_up"},
-                                     {"act": "attack", "power": 4, "target": "kay", "move": "move_shield_bash"}]},
-        "rebel_rider": {"name": "叛军骑兵", "hp": 11, "kind": "man", "chapter": 2,
-                        "pattern": [{"act": "charge", "move": "move_charge",
-                                     "then": {"act": "attack", "power": 5, "target": "all", "move": "move_lance_charge"}},
-                                    {"act": "attack", "power": 3, "target": "apprentice", "move": "move_slash"}]},
-        # ---- 第 3 章：佩利诺、野人 ----
-        "pellinore": {"name": "佩利诺", "hp": 60, "kind": "man", "chapter": 3, "boss": True,
-                      "pattern": [{"act": "attack", "power": 6, "hits": 2, "target": "arthur", "move": "move_slash"},
-                                  {"act": "charge", "move": "move_charge",
-                                   "then": {"act": "attack", "power": 16, "target": "arthur", "move": "move_heavy_slash"}},
-                                  {"act": "attack", "power": 9, "target": "arthur", "move": "move_slash"}]},
-        "wild_man": {"name": "野人", "hp": 13, "kind": "wild", "chapter": 3,
-                     "pattern": [{"act": "attack", "power": 5, "target": "lowest_hp", "move": "move_pounce"},
-                                 {"act": "attack", "power": 3, "hits": 2, "target": "lowest_hp", "move": "move_maul"}]},
-        "ch3_knight": {"name": "拦路的骑士", "hp": 16, "kind": "man", "chapter": 3,
-                       "pattern": [{"act": "attack", "power": 7, "target": "lowest_hp", "move": "move_slash"},
-                                   {"act": "block", "block": 6, "move": "move_shield_up"}]},
-        "ch3_squire": {"name": "骑士的侍从", "hp": 12, "kind": "man", "chapter": 3,
-                       "pattern": [{"act": "attack", "power": 4, "target": "lowest_hp", "move": "move_slash"},
-                                   {"act": "weak", "stacks": 2, "target": "lowest_hp", "move": "move_sand"}]},
-        # ---- 第 4 章：摩根的人、红骑士（「？」第一次出现）----
-        "morgan_knight": {"name": "摩根的骑士", "hp": 14, "kind": "morgan", "chapter": 4,
-                          "pattern": [{"act": "attack", "power": 6, "target": "arthur", "move": "move_slash"},
-                                      {"act": "block", "block": 6, "move": "move_shield_up"}]},
-        "morgan_horn": {"name": "摩根的号手", "hp": 12, "kind": "morgan", "chapter": 4,
-                        "pattern": [{"act": "block", "block": 5, "move": "move_shield_up"},
-                                    {"act": "summon", "what": "morgan_knight_called", "count": 1, "move": "move_horn"},
-                                    {"act": "attack", "power": 4, "target": "lowest_hp", "move": "move_slash"}]},
-        "morgan_knight_called": {"name": "芦苇后的骑士", "hp": 10, "kind": "morgan", "chapter": 4,
-                                 "pattern": [{"act": "attack", "power": 4, "target": "lowest_hp", "move": "move_slash"}]},
-        "morgan_captain": {"name": "摩根的护卫队长", "hp": 34, "kind": "morgan", "chapter": 4, "boss": True,
-                           "pattern": [{"act": "attack", "power": 6, "target": "arthur", "move": "move_slash"},
-                                       {"act": "charge", "hidden": True, "move": "move_charge",
-                                        "then": {"act": "attack", "power": 11, "target": "lowest_hp", "move": "move_heavy_slash"}},
-                                       {"act": "attack", "power": 3, "hits": 2, "target": "apprentice", "move": "move_slash"}]},
-        "red_knight": {"name": "红骑士", "hp": 48, "kind": "red", "chapter": 4, "boss": True,
-                       "rise": {"strength": 2, "turns": 3},
-                       "pattern": [{"act": "attack", "power": 4, "target": "gareth", "move": "move_slash"},
-                                   {"act": "attack", "power": 3, "hits": 2, "target": "lowest_hp", "move": "move_slash"},
-                                   {"act": "charge", "move": "move_charge",
-                                    "then": {"act": "attack", "power": 6, "target": "all", "move": "move_sweep"}},
-                                   {"act": "attack", "power": 4, "target": "gareth", "move": "move_slash"}]},
-        "red_spearman": {"name": "红骑士的手下", "hp": 11, "kind": "man", "chapter": 4,
-                         "pattern": [{"act": "attack", "power": 4, "target": "gawain", "move": "move_thrust"},
-                                     {"act": "block", "block": 5, "move": "move_shield_up"}]},
-        "ch4_brigand": {"name": "林中的强人", "hp": 15, "kind": "man", "chapter": 4,
-                        "pattern": [{"act": "attack", "power": 6, "target": "lowest_hp", "move": "move_slash"},
-                                    {"act": "weak", "stacks": 2, "target": "lowest_hp", "move": "move_sand"}]},
-        "ch4_wolf": {"name": "冬狼", "hp": 13, "kind": "wolf", "chapter": 4,
-                     "pattern": [{"act": "attack", "power": 5, "target": "lowest_hp", "move": "move_bite"},
-                                 {"act": "attack", "power": 4, "hits": 2, "target": "apprentice", "move": "move_bite"}]},
-        # ---- 第 5 章：劫道的强盗（盯人）、比武骑士 ----
-        "raider": {"name": "劫道的强盗", "hp": 13, "kind": "man", "chapter": 5,
-                   "pattern": [{"act": "attack", "power": 7, "target": "lowest_hp", "move": "move_slash"},
-                               {"act": "attack", "power": 4, "hits": 2, "target": "lowest_hp", "move": "move_slash"}]},
-        "raider_chief": {"name": "强盗头子", "hp": 18, "kind": "man", "chapter": 5,
-                         "pattern": [{"act": "buff", "strength": 1, "who": "same_kind", "move": "move_shout"},
-                                     {"act": "attack", "power": 6, "target": "lowest_hp", "move": "move_slash"},
-                                     {"act": "charge", "move": "move_charge",
-                                      "then": {"act": "attack", "power": 4, "target": "all", "move": "move_sweep"}}]},
-        "tourney_knight": {"name": "输了马的骑士", "hp": 18, "kind": "man", "chapter": 5,
-                           "pattern": [{"act": "attack", "power": 6, "target": "bedivere", "move": "move_lance"},
-                                       {"act": "block", "block": 6, "move": "move_shield_up"},
-                                       {"act": "attack", "power": 4, "target": "lowest_hp", "move": "move_slash"}]},
-        "ch5_deserter": {"name": "逃兵", "hp": 16, "kind": "man", "chapter": 5,
-                         "pattern": [{"act": "attack", "power": 6, "target": "lowest_hp", "move": "move_slash"},
-                                     {"act": "attack", "power": 7, "target": "apprentice", "move": "move_slash"}]},
-        # ---- 第 6 章：欢乐堡、多佛、卡姆兰 ----
-        "joyous_guard": {"name": "欢乐堡守军", "hp": 20, "kind": "lancelot_men", "chapter": 6,
-                         "pattern": [{"act": "block", "block": 8, "move": "move_shield_up"},
-                                     {"act": "attack", "power": 6, "target": "lowest_hp", "move": "move_push"}]},
-        "dover_archer": {"name": "多佛的弓箭手", "hp": 40, "kind": "man", "chapter": 6,
-                         "pattern": [{"act": "attack", "power": 5, "target": "all", "move": "move_arrow_rain"}]},
-        "mordred": {"name": "莫德雷德", "hp": 50, "kind": "mordred", "chapter": 6, "boss": True,
-                    "pattern": [{"act": "attack", "power": 11, "target": "arthur", "move": "move_slash", "hidden": True},
-                                {"act": "charge", "move": "move_charge",
-                                 "then": {"act": "attack", "power": 18, "target": "arthur", "move": "move_heavy_slash"}},
-                                {"act": "summon", "what": "mordred_soldier_called", "count": 1, "move": "move_call"},
-                                {"act": "attack", "power": 6, "hits": 2, "target": "lowest_hp", "move": "move_slash", "hidden": True}]},
-        "mordred_soldier": {"name": "莫德雷德的兵", "hp": 15, "kind": "mordred", "chapter": 6,
-                            "pattern": [{"act": "attack", "power": 8, "target": "lowest_hp", "move": "move_slash"},
-                                        {"act": "summon", "what": "mordred_soldier_called", "count": 1, "move": "move_call"},
-                                        {"act": "attack", "power": 6, "target": "apprentice", "move": "move_slash"}]},
-        "mordred_soldier_called": {"name": "赶来的兵", "hp": 10, "kind": "mordred", "chapter": 6,
-                                   "pattern": [{"act": "attack", "power": 6, "target": "lowest_hp", "move": "move_slash"}]},
-        "mordred_rider": {"name": "莫德雷德的骑兵", "hp": 26, "kind": "mordred", "chapter": 6,
-                          "pattern": [{"act": "charge", "move": "move_charge",
-                                       "then": {"act": "attack", "power": 9, "target": "lowest_hp", "move": "move_lance_charge"}},
-                                      {"act": "attack", "power": 5, "target": "lowest_hp", "move": "move_slash"}]},
-        "ch6_looter": {"name": "趁乱抢掠的兵", "hp": 24, "kind": "man", "chapter": 6,
-                       "pattern": [{"act": "attack", "power": 7, "target": "lowest_hp", "move": "move_slash"},
-                                   {"act": "weak", "stacks": 2, "target": "lowest_hp", "move": "move_sand"},
-                                   {"act": "attack", "power": 4, "hits": 2, "target": "apprentice", "move": "move_slash"}]},
-    },
-    "encounters": {
-        # ch: 第几章；kind: map / quest / story；party: 上场的同伴（按「最弱的那一组」调，见 NUMBERS.md 5.0）
-        # ---- 第 2 章 ----
-        "ch2_north_road": {"ch": 2, "kind": "map", "enemies": ["rebel_foot", "rebel_foot"], "party": ["kay", "arthur"], "label": "北门外的叛军步兵"},
-        "ch2_ford": {"ch": 2, "kind": "map", "enemies": ["rebel_shield", "rebel_foot"], "party": ["kay", "arthur"], "label": "渡口的盾兵"},
-        "ch2_hill": {"ch": 2, "kind": "map", "enemies": ["rebel_rider", "rebel_foot"], "party": ["kay", "arthur"], "label": "山坡上的骑兵"},
-        "ch2_camp": {"ch": 2, "kind": "map", "enemies": ["rebel_shield", "rebel_rider"], "party": ["kay", "arthur"], "label": "营地外的游骑"},
-        "bedegraine": {"ch": 2, "kind": "story", "enemies": ["rebel_rider", "rebel_foot", "rebel_shield", "rebel_foot"], "party": ["kay", "arthur"], "label": "贝德格兰之战", "required": True},
-        # ---- 第 3 章 ----
-        "pellinore": {"ch": 3, "kind": "story", "enemies": ["pellinore"], "party": ["arthur"], "win": {"type": "survive", "turns": 3}, "label": "泉边的佩利诺", "required": True, "no_scabbard": True, "end_if_down": "arthur"},
-        "ch3_road_knight": {"ch": 3, "kind": "map", "enemies": ["ch3_knight", "ch3_squire"], "party": ["kay", "arthur"], "label": "往卡美洛路上的骑士"},
-        "ch3_squires": {"ch": 3, "kind": "map", "enemies": ["ch3_squire", "ch3_squire"], "party": ["kay", "gawain"], "label": "两个侍从"},
-        "ch3_wild_pair": {"ch": 3, "kind": "map", "enemies": ["wild_man", "wild_man"], "party": ["kay", "arthur"], "label": "林边的两个野人"},
-        "ch3_knight_pair": {"ch": 3, "kind": "map", "enemies": ["ch3_knight", "wild_man"], "party": ["kay", "gawain"], "label": "比武场外的挑战者"},
-        "wild_men": {"ch": 3, "kind": "quest", "enemies": ["wild_man", "wild_man", "wild_man"], "party": ["gawain"], "label": "支线：北边的野人", "side": True},
-        # ---- 第 4 章 ----
-        "morgan_chase": {"ch": 4, "kind": "quest", "enemies": ["morgan_captain", "morgan_knight", "morgan_horn"], "party": ["arthur", "kay"], "label": "追摩根", "required": True, "no_scabbard": True},
-        "red_knight": {"ch": 4, "kind": "quest", "enemies": ["red_knight", "red_spearman", "red_spearman"], "party": ["gawain", "gareth"], "label": "支线：红地的红骑士", "side": True},
-        "ch4_brigands": {"ch": 4, "kind": "map", "enemies": ["ch4_brigand", "ch4_brigand"], "party": ["kay", "gawain"], "label": "林中的强人"},
-        "ch4_wolves": {"ch": 4, "kind": "map", "enemies": ["ch4_wolf", "ch4_wolf"], "party": ["kay", "gawain"], "label": "冬狼"},
-        "ch4_riders": {"ch": 4, "kind": "map", "enemies": ["morgan_knight", "morgan_knight"], "party": ["kay", "lancelot"], "label": "湖边的摩根骑士"},
-        "ch4_mixed": {"ch": 4, "kind": "map", "enemies": ["ch4_brigand", "ch4_wolf"], "party": ["gawain", "lancelot"], "label": "路边的强人和狼"},
-        # ---- 第 5 章 ----
-        "camelot_defense": {"ch": 5, "kind": "quest", "enemies": ["raider_chief", "raider", "raider", "raider"], "party": ["kay", "bedivere"], "label": "守卡美洛", "required": True},
-        "tournament": {"ch": 5, "kind": "quest", "enemies": ["tourney_knight", "tourney_knight"], "reserve": ["tourney_knight"], "field_max": 2, "party": ["bedivere", "kay"], "label": "支线：比武", "side": True},
-        "ch5_deserters": {"ch": 5, "kind": "map", "enemies": ["ch5_deserter", "ch5_deserter"], "party": ["kay", "bedivere"], "label": "城外的逃兵"},
-        "ch5_raiders": {"ch": 5, "kind": "map", "enemies": ["raider", "ch5_deserter"], "party": ["kay", "bedivere"], "label": "河边的强盗"},
-        "ch5_pair": {"ch": 5, "kind": "map", "enemies": ["raider", "raider"], "party": ["kay", "bedivere"], "label": "两个强盗"},
-        "ch5_mixed": {"ch": 5, "kind": "map", "enemies": ["tourney_knight", "ch5_deserter"], "party": ["kay", "bedivere"], "label": "落单的骑士"},
-        # ---- 第 6 章 ----
-        "ch6_looters": {"ch": 6, "kind": "map", "enemies": ["ch6_looter", "ch6_looter"], "party": ["arthur", "bedivere"], "label": "欢乐堡外的抢掠兵"},
-        "joyous_gard": {"ch": 6, "kind": "story", "enemies": ["joyous_guard", "joyous_guard", "joyous_guard"], "party": ["arthur", "bedivere"], "label": "攻欢乐堡城门", "required": True},
-        "ch6_shore": {"ch": 6, "kind": "map", "enemies": ["mordred_soldier", "ch6_looter"], "party": ["arthur", "bedivere"], "label": "海边的兵"},
-        "dover": {"ch": 6, "kind": "story", "enemies": ["dover_archer", "dover_archer"], "party": ["gawain", "arthur"], "win": {"type": "survive", "turns": 4}, "label": "多佛登陆", "required": True},
-        "ch6_riders": {"ch": 6, "kind": "map", "enemies": ["mordred_rider", "ch6_looter"], "party": ["arthur", "bedivere"], "label": "路上的骑兵"},
-        "ch6_camp": {"ch": 6, "kind": "map", "enemies": ["mordred_soldier", "mordred_rider"], "party": ["arthur", "bedivere"], "label": "营外的斥候"},
-        "camlann": {"ch": 6, "kind": "story", "enemies": ["mordred", "mordred_soldier", "mordred_soldier"], "party": ["arthur", "bedivere"], "label": "卡姆兰", "required": True},
-        "camlann_rear": {"ch": 6, "kind": "story", "enemies": ["mordred_rider", "mordred_soldier", "mordred_rider", "mordred_soldier"], "party": ["bedivere", "kay"], "label": "卡姆兰后队（D5c）", "alt": True},
-    },
     # 第 1 章沿用 combat.json 的遭遇；顺序是玩家碰上的顺序（全打路线）
     "route": {
         1: ["forest_wolves", "road_bandits", "oak_wolves", "log_wolves", "wolves", "merlin_shadow"],
@@ -200,9 +79,9 @@ PROPOSAL = {
         5: ["ch5_deserters", "ch5_raiders", "camelot_defense", "ch5_pair", "ch5_mixed", "tournament"],
         6: ["ch6_looters", "joyous_gard", "ch6_shore", "dover", "ch6_riders", "ch6_camp", "camlann"],
     },
-    # 主线做完给的经验：提案把第 3 章 30 → 50，第 5 章不变（见 NUMBERS.md 4.1）
-    "quest_xp": [0, 20, 50, 40, 60, 0],
-    # 「撑过几回合」的仗给不给经验：提案给，按上场敌人算（NUMBERS.md 1.3 缺口 G4）
+    # 主线做完给的经验：从 progression.json 读（第 3 章 2026-11-09 改成 50，NUMBERS.md G9）
+    "quest_xp": PR["xp"]["quest_by_chapter"],
+    # 「撑过几回合」的仗按上场敌人给经验（combat.md「需要的新字段」，NUMBERS.md G4）
     "survive_gives_xp": True,
 }
 
@@ -219,19 +98,24 @@ CH_DIFF = {1: 1, 2: 2, 3: 3, 4: 2, 5: 4, 6: 5}
 
 
 def enemy_def(eid):
-    if eid in CB["enemies"] and not eid.startswith("_"):
-        return CB["enemies"][eid]
-    return PROPOSAL["enemies"][eid]
+    return CB["enemies"][eid]
 
 
 def enc_def(eid):
-    if eid in PROPOSAL["encounters"]:
-        return PROPOSAL["encounters"][eid]
     e = CB["encounters"][eid]
-    d = {"ch": 1, "kind": e["kind"], "enemies": e["enemies"], "party": e["party"]["fixed"],
-         "label": CH1_ENCOUNTERS.get(eid, eid), "win": e.get("win", {"type": "all_down"})}
-    if e["kind"] in ("quest", "story"):
-        d["required"] = True
+    pd = e.get("party", {})
+    d = dict(e)
+    d["win"] = e.get("win", {"type": "all_down"})
+    if eid in META:
+        m = META[eid]
+        d.update({"ch": m["ch"], "label": m["label"], "party": list(m["party"])})
+        for f in ("required", "side", "alt", "no_scabbard"):
+            if m.get(f):
+                d[f] = True
+    else:
+        d.update({"ch": 1, "label": CH1_ENCOUNTERS.get(eid, eid), "party": list(pd.get("fixed", []))})
+        if e["kind"] in ("quest", "story"):
+            d["required"] = True
     return d
 
 
@@ -952,17 +836,17 @@ GEAR = {
         1: {},
         2: {"hp": 2},                                   # 头狼掉的粗布斗篷
         3: {"hp": 2, "spark": 1},                       # + 伦敦买的橡木杖（30 银）
-        4: {"hp": 4, "mana_max": 2, "spark": 1, "focus": 1},          # 佩利诺掉的羊皮袄；梅林的杖
-        5: {"hp": 4, "mana_max": 2, "spark": 1, "focus": 1, "ward": 1},  # + 护卫队长掉的银十字
-        6: {"hp": 6, "mana_max": 2, "spark": 1, "focus": 1, "ward": 1},  # 镶边斗篷（守城后买）
+        4: {"hp": 4, "mana_max": 2, "spark": 2, "focus": 1},          # 佩利诺掉的羊皮袄；梅林的杖（星火 +2，2026-11-09）
+        5: {"hp": 4, "mana_max": 2, "spark": 2, "focus": 1, "ward": 1},  # + 护卫队长掉的银十字
+        6: {"hp": 6, "mana_max": 2, "spark": 2, "focus": 1, "ward": 1},  # 镶边斗篷（守城后买）
     },
     "all": {    # 全打：每章约 4 件掉落，挑得出一件带一条词缀的
         1: {},
         2: {"hp": 4, "spark": 2, "mana_max": 1},        # 灼热的橡木杖、结实的粗布斗篷、河石护符
         3: {"hp": 4, "spark": 2, "mana_max": 2, "start_block": 3},  # 斗篷换成「·守夜」，护符「深水的」
-        4: {"hp": 8, "spark": 1, "mana_max": 3, "focus": 1, "ward": 1},   # 梅林的杖；厚重的羊皮袄；深水的银十字
-        5: {"hp": 10, "spark": 1, "mana_max": 3, "focus": 2, "ward": 1, "after_heal": 2},  # 镶边斗篷·回春；鹿角坠
-        6: {"hp": 10, "spark": 3, "mana_max": 3, "focus": 2, "ward": 1, "after_heal": 2},  # 炽烈的冬青杖换下梅林的杖
+        4: {"hp": 8, "spark": 2, "mana_max": 3, "focus": 1, "ward": 1},   # 梅林的杖；厚重的羊皮袄；深水的银十字
+        5: {"hp": 10, "spark": 2, "mana_max": 3, "focus": 2, "ward": 1, "after_heal": 2},  # 镶边斗篷·回春；鹿角坠
+        6: {"hp": 10, "spark": 4, "mana_max": 1, "focus": 1, "ward": 1, "after_heal": 2},  # 炽烈的冬青杖（星火 +4）换下梅林的杖，少了杖的法力 +2、凝神 +1
     },
 }
 
@@ -1028,8 +912,10 @@ def comp_stats(cid, chapter, prof):
         else:
             hp, pw = base["hp"], base["power"]
     else:
-        tab = PROPOSAL["companions_by_chapter"][cid]
-        hp, pw = tab[str(chapter)] if str(chapter) in tab else tab[max(tab, key=int)]
+        bc = CB["companions"][cid]["by_chapter"]
+        keys = [int(k) for k in bc if int(k) <= chapter] or [min(int(k) for k in bc)]
+        st = bc[str(max(keys))]
+        hp, pw = st["hp"], st["power"]
     return hp + 3 * prof.boon("well_fed", cid), pw + prof.boon("sharpen", cid)
 
 
@@ -1214,7 +1100,7 @@ def degenerate_checks():
     out = []
     prof = Profile("must")
     for ch in range(1, 7):
-        alts = [k for k, v in PROPOSAL["encounters"].items() if v.get("alt") and v["ch"] == ch]
+        alts = [k for k, v in META.items() if v.get("alt") and v["ch"] == ch]
         for enc_id in PROPOSAL["route"][ch][:-1] + alts + PROPOSAL["route"][ch][-1:]:
             enc = enc_def(enc_id)
             if not (enc.get("required") or enc.get("side") or enc.get("alt")):
@@ -1379,7 +1265,7 @@ def main():
     style_name = {"full": "全力", "save": "省资源", "must": "只打必须的"}
     md = []
     md.append("# 数值模拟结果（tools/sim_numbers.py 生成，别手改）\n")
-    md.append("第 1 章用 combat.json 现有的数，第 2–6 章用 design/NUMBERS.md 的提案。最优打法每回合把三个人能排的组合全试一遍，挑评分最高的。\n")
+    md.append("数值全从 content/data 读（第 2–6 章 2026-11-09 落进 combat.json，见 design/NUMBERS.md）。最优打法每回合把三个人能排的组合全试一遍，挑评分最高的。\n")
     md.append("## 第 1 章对照 Godot `--sim`（同样的三种固定打法）\n")
     md.append("```\n" + "\n".join(val) + "\n```\n")
     md.append("## 每章末等级和经验\n")
@@ -1416,7 +1302,7 @@ def main():
                 "；".join(fl) if fl else "—"))
         md.append("")
     md.append("## 退化打法检验（只打必须的等级、普通装备）\n")
-    md.append("| 章 | 仗 | 开打等级 | 最优打法（四棵树平均点） | 永远打第一只 | 学徒不放法术 | 全点星火 + 最优打法 |")
+    md.append("| 章 | 仗 | 开打等级 | 最优打法（四棵树平均点） | 永远打排在最前的 | 学徒不放法术 | 全点星火 + 最优打法 |")
     md.append("|---|---|---|---|---|---|---|")
     for r in degen:
         md.append("| %d | %s | %d | %s | %s | %s | %s |" % (r["ch"], r["label"], r["level"], r["smart"], r["always_first"], r["no_magic"], r["smart_spark_build"]))
@@ -1437,14 +1323,6 @@ def main():
         md.append("| %d | %s | %s | %d | %s |" % (r["ch"], r["label"], "赢" if r["win"] else "输", r["turns"], fmt_pct(r["hp_pct"])))
     with open(os.path.join(OUT, "sim_results.md"), "w", encoding="utf-8") as f:
         f.write("\n".join(md) + "\n")
-    # 提案的 combat.json 片段：能直接合进去（用户确认后）
-    prop = {"companions_by_chapter": PROPOSAL["companions_by_chapter"],
-            "enemies": PROPOSAL["enemies"],
-            "encounters": {k: {kk: vv for kk, vv in v.items() if kk not in ("ch", "label", "required", "side", "alt")}
-                           for k, v in PROPOSAL["encounters"].items()},
-            "quest_xp": PROPOSAL["quest_xp"]}
-    with open(os.path.join(OUT, "proposal_combat.json"), "w", encoding="utf-8") as f:
-        json.dump(prop, f, ensure_ascii=False, indent=1)
     print("\n".join(md))
 
 

@@ -104,8 +104,32 @@
   "companions": {
     "kay": {
       "name": "凯",
-      "hp": 16,
-      "power": 3,
+      "by_chapter": {
+        "1": {
+          "hp": 16,
+          "power": 3
+        },
+        "2": {
+          "hp": 16,
+          "power": 3
+        },
+        "3": {
+          "hp": 18,
+          "power": 3
+        },
+        "4": {
+          "hp": 18,
+          "power": 4
+        },
+        "5": {
+          "hp": 20,
+          "power": 4
+        },
+        "6": {
+          "hp": 20,
+          "power": 4
+        }
+      },
       "move": "kay_cover"
     },
     "arthur": {
@@ -126,41 +150,93 @@
         "4": {
           "hp": 18,
           "power": 4
+        },
+        "5": {
+          "hp": 20,
+          "power": 5
+        },
+        "6": {
+          "hp": 20,
+          "power": 5
         }
       },
       "move": "scabbard"
     },
     "gawain": {
       "name": "高文",
-      "hp": 18,
-      "power": 3,
+      "by_chapter": {
+        "3": {
+          "hp": 18,
+          "power": 3
+        },
+        "4": {
+          "hp": 20,
+          "power": 3
+        },
+        "5": {
+          "hp": 20,
+          "power": 4
+        },
+        "6": {
+          "hp": 20,
+          "power": 4
+        }
+      },
       "move": "noon_strength",
       "noon_strength": 3,
       "noon_turns": 3
     },
     "lancelot": {
       "name": "兰斯洛特",
-      "hp": 20,
-      "power": 4,
+      "by_chapter": {
+        "4": {
+          "hp": 20,
+          "power": 4
+        },
+        "5": {
+          "hp": 22,
+          "power": 5
+        }
+      },
       "move": "double_strike",
       "double_strike_damage": 3
     },
     "gareth": {
       "name": "加雷斯",
-      "hp": 16,
-      "power": 3,
+      "by_chapter": {
+        "4": {
+          "hp": 16,
+          "power": 3
+        },
+        "5": {
+          "hp": 18,
+          "power": 4
+        },
+        "6": {
+          "hp": 18,
+          "power": 4
+        }
+      },
       "move": "riposte",
       "riposte_mult": 2
     },
     "bedivere": {
       "name": "贝狄威尔",
-      "hp": 16,
-      "power": 3,
+      "by_chapter": {
+        "5": {
+          "hp": 18,
+          "power": 3
+        },
+        "6": {
+          "hp": 20,
+          "power": 4
+        }
+      },
       "move": "bandage",
       "bandage_heal": 4,
       "bandage_uses": 2
     },
-    "_说明": "第 1 章（凯、亚瑟）是原型调过的数；其他人先按第 1 章的比例定，第 10 步写遭遇时跑模拟再调。"
+    "_说明": "按章的血和砍：第 1 章是原型调过的数；第 2–6 章照 design/NUMBERS.md 3.3（2026-11-09 用户定：同伴按章变强）。没写的章取不晚于这一章的最近一章。"
   },
   "enemies": {
     "wolf": {
@@ -219,7 +295,7 @@
     },
     "wolf_leader": {
       "name": "enemy_wolf_leader",
-      "hp": 18,
+      "hp": 20,
       "kind": "wolf",
       "chapter": 1,
       "boss": true,
@@ -244,6 +320,63 @@
           "move": "move_double_pounce"
         }
       ]
+    },
+    "wolf_grey_pack": {
+      "name": "enemy_wolf_grey",
+      "hp": 7,
+      "kind": "wolf",
+      "chapter": 1,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 4,
+          "target": "kay",
+          "move": "move_bite"
+        },
+        {
+          "act": "attack",
+          "power": 4,
+          "target": "arthur",
+          "move": "move_bite"
+        }
+      ],
+      "_说明": "头狼群里的灰狼：咬 3 → 4（2026-11-09 定调题第 1 题 A）。地图小仗用 wolf_grey，数不动"
+    },
+    "wolf_pack": {
+      "name": "enemy_wolf",
+      "hp": 6,
+      "kind": "wolf",
+      "chapter": 1,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 4,
+          "target": "lowest_hp",
+          "move": "move_bite"
+        }
+      ],
+      "_说明": "头狼群里瘦狼叫来的狼：咬 3 → 4（同上）"
+    },
+    "wolf_howler_pack": {
+      "name": "enemy_wolf_howler",
+      "hp": 5,
+      "kind": "wolf",
+      "chapter": 1,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 2,
+          "target": "apprentice",
+          "move": "move_bite"
+        },
+        {
+          "act": "summon",
+          "what": "wolf_pack",
+          "count": 1,
+          "move": "move_howl"
+        }
+      ],
+      "_说明": "头狼群里的瘦狼：数和 wolf_howler 一样，叫来的是 wolf_pack"
     },
     "bandit": {
       "name": "enemy_bandit",
@@ -317,11 +450,619 @@
       ],
       "_说明": "重劈挨上就倒（lethal：伤害 = 目标当时的血 + 格挡）。学徒的血从 10 改成 14、又会随升级和装备涨，原来的 12 点已经劈不倒人；这一仗要教的是打断，所以改成挨上就倒（第 10 步，2026-11-09）"
     },
-    "_其他": "第 2–6 章的敌人第 10 步写遭遇时补"
+    "rebel_foot": {
+      "name": "enemy_rebel_foot",
+      "hp": 12,
+      "kind": "man",
+      "chapter": 2,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 5,
+          "target": "arthur",
+          "move": "move_slash"
+        },
+        {
+          "act": "attack",
+          "power": 4,
+          "target": "lowest_hp",
+          "move": "move_slash"
+        }
+      ]
+    },
+    "rebel_shield": {
+      "name": "enemy_rebel_shield",
+      "hp": 13,
+      "kind": "man",
+      "chapter": 2,
+      "pattern": [
+        {
+          "act": "block",
+          "block": 6,
+          "move": "move_shield_up"
+        },
+        {
+          "act": "attack",
+          "power": 4,
+          "target": "kay",
+          "move": "move_shield_bash"
+        }
+      ]
+    },
+    "rebel_rider": {
+      "name": "enemy_rebel_rider",
+      "hp": 11,
+      "kind": "man",
+      "chapter": 2,
+      "pattern": [
+        {
+          "act": "charge",
+          "move": "move_charge",
+          "then": {
+            "act": "attack",
+            "power": 5,
+            "target": "all",
+            "move": "move_lance_charge"
+          }
+        },
+        {
+          "act": "attack",
+          "power": 3,
+          "target": "apprentice",
+          "move": "move_slash"
+        }
+      ]
+    },
+    "pellinore": {
+      "name": "enemy_pellinore",
+      "hp": 60,
+      "kind": "man",
+      "chapter": 3,
+      "boss": true,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 6,
+          "hits": 2,
+          "target": "arthur",
+          "move": "move_slash"
+        },
+        {
+          "act": "charge",
+          "move": "move_charge",
+          "then": {
+            "act": "attack",
+            "power": 16,
+            "target": "arthur",
+            "move": "move_heavy_slash"
+          }
+        },
+        {
+          "act": "attack",
+          "power": 9,
+          "target": "arthur",
+          "move": "move_slash"
+        }
+      ]
+    },
+    "wild_man": {
+      "name": "enemy_wild_man",
+      "hp": 13,
+      "kind": "wild",
+      "chapter": 3,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 5,
+          "target": "lowest_hp",
+          "move": "move_pounce"
+        },
+        {
+          "act": "attack",
+          "power": 3,
+          "hits": 2,
+          "target": "lowest_hp",
+          "move": "move_maul"
+        }
+      ]
+    },
+    "ch3_knight": {
+      "name": "enemy_ch3_knight",
+      "hp": 16,
+      "kind": "man",
+      "chapter": 3,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 7,
+          "target": "lowest_hp",
+          "move": "move_slash"
+        },
+        {
+          "act": "block",
+          "block": 6,
+          "move": "move_shield_up"
+        }
+      ]
+    },
+    "ch3_squire": {
+      "name": "enemy_ch3_squire",
+      "hp": 12,
+      "kind": "man",
+      "chapter": 3,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 4,
+          "target": "lowest_hp",
+          "move": "move_slash"
+        },
+        {
+          "act": "weak",
+          "stacks": 2,
+          "target": "lowest_hp",
+          "move": "move_sand"
+        }
+      ]
+    },
+    "morgan_knight": {
+      "name": "enemy_morgan_knight",
+      "hp": 14,
+      "kind": "morgan",
+      "chapter": 4,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 6,
+          "target": "arthur",
+          "move": "move_slash"
+        },
+        {
+          "act": "block",
+          "block": 6,
+          "move": "move_shield_up"
+        }
+      ]
+    },
+    "morgan_horn": {
+      "name": "enemy_morgan_horn",
+      "hp": 12,
+      "kind": "morgan",
+      "chapter": 4,
+      "pattern": [
+        {
+          "act": "block",
+          "block": 5,
+          "move": "move_shield_up"
+        },
+        {
+          "act": "summon",
+          "what": "morgan_knight_called",
+          "count": 1,
+          "move": "move_horn"
+        },
+        {
+          "act": "attack",
+          "power": 4,
+          "target": "lowest_hp",
+          "move": "move_slash"
+        }
+      ]
+    },
+    "morgan_knight_called": {
+      "name": "enemy_morgan_knight_called",
+      "hp": 10,
+      "kind": "morgan",
+      "chapter": 4,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 4,
+          "target": "lowest_hp",
+          "move": "move_slash"
+        }
+      ]
+    },
+    "morgan_captain": {
+      "name": "enemy_morgan_captain",
+      "hp": 34,
+      "kind": "morgan",
+      "chapter": 4,
+      "boss": true,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 6,
+          "target": "arthur",
+          "move": "move_slash"
+        },
+        {
+          "act": "charge",
+          "hidden": true,
+          "move": "move_charge",
+          "then": {
+            "act": "attack",
+            "power": 11,
+            "target": "lowest_hp",
+            "move": "move_heavy_slash"
+          }
+        },
+        {
+          "act": "attack",
+          "power": 3,
+          "hits": 2,
+          "target": "apprentice",
+          "move": "move_slash"
+        }
+      ]
+    },
+    "red_knight": {
+      "name": "enemy_red_knight",
+      "hp": 48,
+      "kind": "red",
+      "chapter": 4,
+      "boss": true,
+      "rise": {
+        "strength": 2,
+        "turns": 3
+      },
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 4,
+          "target": "gareth",
+          "move": "move_slash"
+        },
+        {
+          "act": "attack",
+          "power": 3,
+          "hits": 2,
+          "target": "lowest_hp",
+          "move": "move_slash"
+        },
+        {
+          "act": "charge",
+          "move": "move_charge",
+          "then": {
+            "act": "attack",
+            "power": 6,
+            "target": "all",
+            "move": "move_sweep"
+          }
+        },
+        {
+          "act": "attack",
+          "power": 4,
+          "target": "gareth",
+          "move": "move_slash"
+        }
+      ]
+    },
+    "red_spearman": {
+      "name": "enemy_red_spearman",
+      "hp": 11,
+      "kind": "man",
+      "chapter": 4,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 4,
+          "target": "gawain",
+          "move": "move_thrust"
+        },
+        {
+          "act": "block",
+          "block": 5,
+          "move": "move_shield_up"
+        }
+      ]
+    },
+    "ch4_brigand": {
+      "name": "enemy_ch4_brigand",
+      "hp": 15,
+      "kind": "man",
+      "chapter": 4,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 6,
+          "target": "lowest_hp",
+          "move": "move_slash"
+        },
+        {
+          "act": "weak",
+          "stacks": 2,
+          "target": "lowest_hp",
+          "move": "move_sand"
+        }
+      ]
+    },
+    "ch4_wolf": {
+      "name": "enemy_ch4_wolf",
+      "hp": 13,
+      "kind": "wolf",
+      "chapter": 4,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 5,
+          "target": "lowest_hp",
+          "move": "move_bite"
+        },
+        {
+          "act": "attack",
+          "power": 4,
+          "hits": 2,
+          "target": "apprentice",
+          "move": "move_bite"
+        }
+      ]
+    },
+    "raider": {
+      "name": "enemy_raider",
+      "hp": 13,
+      "kind": "man",
+      "chapter": 5,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 7,
+          "target": "lowest_hp",
+          "move": "move_slash"
+        },
+        {
+          "act": "attack",
+          "power": 4,
+          "hits": 2,
+          "target": "lowest_hp",
+          "move": "move_slash"
+        }
+      ]
+    },
+    "raider_chief": {
+      "name": "enemy_raider_chief",
+      "hp": 18,
+      "kind": "man",
+      "chapter": 5,
+      "pattern": [
+        {
+          "act": "buff",
+          "strength": 1,
+          "who": "same_kind",
+          "move": "move_shout"
+        },
+        {
+          "act": "attack",
+          "power": 6,
+          "target": "lowest_hp",
+          "move": "move_slash"
+        },
+        {
+          "act": "charge",
+          "move": "move_charge",
+          "then": {
+            "act": "attack",
+            "power": 4,
+            "target": "all",
+            "move": "move_sweep"
+          }
+        }
+      ]
+    },
+    "tourney_knight": {
+      "name": "enemy_tourney_knight",
+      "hp": 18,
+      "kind": "man",
+      "chapter": 5,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 6,
+          "target": "bedivere",
+          "move": "move_lance"
+        },
+        {
+          "act": "block",
+          "block": 6,
+          "move": "move_shield_up"
+        },
+        {
+          "act": "attack",
+          "power": 4,
+          "target": "lowest_hp",
+          "move": "move_slash"
+        }
+      ]
+    },
+    "ch5_deserter": {
+      "name": "enemy_ch5_deserter",
+      "hp": 16,
+      "kind": "man",
+      "chapter": 5,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 6,
+          "target": "lowest_hp",
+          "move": "move_slash"
+        },
+        {
+          "act": "attack",
+          "power": 7,
+          "target": "apprentice",
+          "move": "move_slash"
+        }
+      ]
+    },
+    "joyous_guard": {
+      "name": "enemy_joyous_guard",
+      "hp": 22,
+      "kind": "lancelot_men",
+      "chapter": 6,
+      "pattern": [
+        {
+          "act": "block",
+          "block": 8,
+          "move": "move_shield_up"
+        },
+        {
+          "act": "attack",
+          "power": 6,
+          "target": "lowest_hp",
+          "move": "move_push"
+        }
+      ]
+    },
+    "dover_archer": {
+      "name": "enemy_dover_archer",
+      "hp": 40,
+      "kind": "man",
+      "chapter": 6,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 5,
+          "target": "all",
+          "move": "move_arrow_rain"
+        }
+      ]
+    },
+    "mordred": {
+      "name": "enemy_mordred",
+      "hp": 50,
+      "kind": "mordred",
+      "chapter": 6,
+      "boss": true,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 12,
+          "target": "arthur",
+          "move": "move_slash",
+          "hidden": true
+        },
+        {
+          "act": "charge",
+          "move": "move_charge",
+          "then": {
+            "act": "attack",
+            "power": 18,
+            "target": "arthur",
+            "move": "move_heavy_slash"
+          }
+        },
+        {
+          "act": "summon",
+          "what": "mordred_soldier_called",
+          "count": 1,
+          "move": "move_call"
+        },
+        {
+          "act": "attack",
+          "power": 6,
+          "hits": 2,
+          "target": "lowest_hp",
+          "move": "move_slash",
+          "hidden": true
+        }
+      ]
+    },
+    "mordred_soldier": {
+      "name": "enemy_mordred_soldier",
+      "hp": 15,
+      "kind": "mordred",
+      "chapter": 6,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 9,
+          "target": "lowest_hp",
+          "move": "move_slash"
+        },
+        {
+          "act": "summon",
+          "what": "mordred_soldier_called",
+          "count": 1,
+          "move": "move_call"
+        },
+        {
+          "act": "attack",
+          "power": 6,
+          "target": "apprentice",
+          "move": "move_slash"
+        }
+      ]
+    },
+    "mordred_soldier_called": {
+      "name": "enemy_mordred_soldier_called",
+      "hp": 10,
+      "kind": "mordred",
+      "chapter": 6,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 6,
+          "target": "lowest_hp",
+          "move": "move_slash"
+        }
+      ]
+    },
+    "mordred_rider": {
+      "name": "enemy_mordred_rider",
+      "hp": 26,
+      "kind": "mordred",
+      "chapter": 6,
+      "pattern": [
+        {
+          "act": "charge",
+          "move": "move_charge",
+          "then": {
+            "act": "attack",
+            "power": 9,
+            "target": "lowest_hp",
+            "move": "move_lance_charge"
+          }
+        },
+        {
+          "act": "attack",
+          "power": 5,
+          "target": "lowest_hp",
+          "move": "move_slash"
+        }
+      ]
+    },
+    "ch6_looter": {
+      "name": "enemy_ch6_looter",
+      "hp": 24,
+      "kind": "man",
+      "chapter": 6,
+      "pattern": [
+        {
+          "act": "attack",
+          "power": 7,
+          "target": "lowest_hp",
+          "move": "move_slash"
+        },
+        {
+          "act": "weak",
+          "stacks": 2,
+          "target": "lowest_hp",
+          "move": "move_sand"
+        },
+        {
+          "act": "attack",
+          "power": 4,
+          "hits": 2,
+          "target": "apprentice",
+          "move": "move_slash"
+        }
+      ]
+    },
+    "_说明": "第 1 章是原型调过的数；头狼群用 *_pack 变体（2026-11-09 定调题第 1 题 A）。第 2–6 章 2026-11-09 照 design/NUMBERS.md 第 5 节填，模拟见 tools/sim_numbers.py。新字段：pattern 里 hidden: true 是首领的「？」；rise 是前几回合每回合开头加力量（红骑士）；buff 的 who: self 只加自己。"
   },
   "_敌人招式说明": "pattern 按回合轮着用（第 1 回合用第 1 条，用完从头再来）。act：attack（hits 是几下）、charge（蓄力，then 是下回合放出的招）、summon（what 是敌人 id）、buff（strength 加力量，who: same_kind 同一类都加）、weak（给目标上虚弱）、block（自己加格挡）。target：某个同伴 id、apprentice（学徒）、lowest_hp（血最少的人）、all（群攻）。boss：首领，经验 × 3、必掉装备。move 是招式名的文本键（game_text.csv）。chapter 决定经验和掉落（progression.json、items.json）。",
   "encounters": {
-    "_说明": "一场仗：上场的敌人（按出手顺序）、我方规则、怎么算赢。kind：quest 任务战（地图上站着不动，3–5 回合）；map 地图上能绕开的小仗（会走动、会追，2–3 回合）；story 剧情战（不能逃）。party.fixed 是剧情规定一定上场的同伴，party.max 是最多带几个（默认 party_max_companions）。win：all_down 敌人全倒；survive 撑过 turns 回合，到了由剧情接管。",
+    "_说明": "一场仗：上场的敌人（按出手顺序）、我方规则、怎么算赢。kind：quest 任务战（地图上站着不动，3–5 回合）；map 地图上能绕开的小仗（会走动、会追，2–3 回合）；story 剧情战（不能逃）。party.fixed 是剧情规定一定上场的同伴，party.max 是最多带几个（默认 party_max_companions）。win：all_down 敌人全倒；survive 撑过 turns 回合，到了由剧情接管。 第 2–6 章 2026-11-09 照 design/NUMBERS.md 第 5 节填。新字段（代码第 15 步第二批写，见 combat.md「需要的新字段」）：win.type survive；party.guests 不在队也上场；party.exclude 这一仗不能上的人；reserve + field_max 倒一个补一个；end_if_down 这个人倒下由剧情接管。",
     "forest_wolves": {
       "name": "enc_forest_wolves",
       "kind": "map",
@@ -395,8 +1136,8 @@
       "kind": "quest",
       "enemies": [
         "wolf_leader",
-        "wolf_grey",
-        "wolf_howler"
+        "wolf_grey_pack",
+        "wolf_howler_pack"
       ],
       "party": {
         "fixed": [
@@ -423,52 +1164,476 @@
         "type": "all_down"
       }
     },
+    "ch2_north_road": {
+      "name": "enc_ch2_north_road",
+      "kind": "map",
+      "enemies": [
+        "rebel_foot",
+        "rebel_foot"
+      ],
+      "party": {
+        "fixed": [
+          "kay",
+          "arthur"
+        ]
+      },
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "ch2_ford": {
+      "name": "enc_ch2_ford",
+      "kind": "map",
+      "enemies": [
+        "rebel_shield",
+        "rebel_foot"
+      ],
+      "party": {
+        "fixed": [
+          "kay",
+          "arthur"
+        ]
+      },
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "ch2_hill": {
+      "name": "enc_ch2_hill",
+      "kind": "map",
+      "enemies": [
+        "rebel_rider",
+        "rebel_foot"
+      ],
+      "party": {
+        "fixed": [
+          "kay",
+          "arthur"
+        ]
+      },
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "ch2_camp": {
+      "name": "enc_ch2_camp",
+      "kind": "map",
+      "enemies": [
+        "rebel_shield",
+        "rebel_rider"
+      ],
+      "party": {
+        "fixed": [
+          "kay",
+          "arthur"
+        ]
+      },
+      "win": {
+        "type": "all_down"
+      }
+    },
     "bedegraine": {
-      "_待写": "第 13 步写遭遇时补：敌人和上场的人见 content/dialogue/notes/ 里这一章的交接说明「遭遇和敌人」"
+      "name": "enc_bedegraine",
+      "kind": "story",
+      "flee": false,
+      "enemies": [
+        "rebel_rider",
+        "rebel_foot",
+        "rebel_shield",
+        "rebel_foot"
+      ],
+      "party": {
+        "fixed": [
+          "kay",
+          "arthur"
+        ],
+        "max": 2
+      },
+      "win": {
+        "type": "all_down"
+      }
     },
     "pellinore": {
-      "_待写": "第 13 步写遭遇时补：敌人和上场的人见 content/dialogue/notes/ 里这一章的交接说明「遭遇和敌人」",
+      "name": "enc_pellinore",
+      "kind": "story",
+      "flee": false,
+      "enemies": [
+        "pellinore"
+      ],
+      "party": {
+        "fixed": [
+          "arthur"
+        ],
+        "max": 1
+      },
+      "end_if_down": "arthur",
       "win": {
         "type": "survive",
         "turns": 3
+      }
+    },
+    "ch3_road_knight": {
+      "name": "enc_ch3_road_knight",
+      "kind": "map",
+      "enemies": [
+        "ch3_knight",
+        "ch3_squire"
+      ],
+      "party": {},
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "ch3_squires": {
+      "name": "enc_ch3_squires",
+      "kind": "map",
+      "enemies": [
+        "ch3_squire",
+        "ch3_squire"
+      ],
+      "party": {},
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "ch3_wild_pair": {
+      "name": "enc_ch3_wild_pair",
+      "kind": "map",
+      "enemies": [
+        "wild_man",
+        "wild_man"
+      ],
+      "party": {},
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "ch3_knight_pair": {
+      "name": "enc_ch3_knight_pair",
+      "kind": "map",
+      "enemies": [
+        "ch3_knight",
+        "wild_man"
+      ],
+      "party": {},
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "wild_men": {
+      "name": "enc_wild_men",
+      "kind": "quest",
+      "enemies": [
+        "wild_man",
+        "wild_man",
+        "wild_man"
+      ],
+      "party": {
+        "fixed": [
+          "gawain"
+        ],
+        "max": 1
       },
-      "kind": "story",
-      "flee": false
+      "win": {
+        "type": "all_down"
+      }
     },
     "morgan_chase": {
-      "_待写": "第 13 步写遭遇时补：敌人和上场的人见 content/dialogue/notes/ 里这一章的交接说明「遭遇和敌人」"
+      "name": "enc_morgan_chase",
+      "kind": "quest",
+      "enemies": [
+        "morgan_captain",
+        "morgan_knight",
+        "morgan_horn"
+      ],
+      "party": {
+        "fixed": [
+          "arthur"
+        ]
+      },
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "red_knight": {
+      "name": "enc_red_knight",
+      "kind": "quest",
+      "enemies": [
+        "red_knight",
+        "red_spearman",
+        "red_spearman"
+      ],
+      "party": {
+        "fixed": [
+          "gawain"
+        ],
+        "guests": [
+          "gareth"
+        ]
+      },
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "ch4_brigands": {
+      "name": "enc_ch4_brigands",
+      "kind": "map",
+      "enemies": [
+        "ch4_brigand",
+        "ch4_brigand"
+      ],
+      "party": {},
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "ch4_wolves": {
+      "name": "enc_ch4_wolves",
+      "kind": "map",
+      "enemies": [
+        "ch4_wolf",
+        "ch4_wolf"
+      ],
+      "party": {},
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "ch4_riders": {
+      "name": "enc_ch4_riders",
+      "kind": "map",
+      "enemies": [
+        "morgan_knight",
+        "morgan_knight"
+      ],
+      "party": {},
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "ch4_mixed": {
+      "name": "enc_ch4_mixed",
+      "kind": "map",
+      "enemies": [
+        "ch4_brigand",
+        "ch4_wolf"
+      ],
+      "party": {},
+      "win": {
+        "type": "all_down"
+      }
     },
     "camelot_defense": {
-      "_待写": "第 13 步写遭遇时补：敌人和上场的人见 content/dialogue/notes/ 里这一章的交接说明「遭遇和敌人」"
+      "name": "enc_camelot_defense",
+      "kind": "quest",
+      "enemies": [
+        "raider_chief",
+        "raider",
+        "raider",
+        "raider"
+      ],
+      "party": {
+        "fixed": [
+          "kay",
+          "bedivere"
+        ],
+        "max": 2
+      },
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "tournament": {
+      "name": "enc_tournament",
+      "kind": "quest",
+      "enemies": [
+        "tourney_knight",
+        "tourney_knight"
+      ],
+      "reserve": [
+        "tourney_knight"
+      ],
+      "field_max": 2,
+      "party": {
+        "fixed": [
+          "bedivere"
+        ],
+        "exclude": [
+          "lancelot"
+        ]
+      },
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "ch5_deserters": {
+      "name": "enc_ch5_deserters",
+      "kind": "map",
+      "enemies": [
+        "ch5_deserter",
+        "ch5_deserter"
+      ],
+      "party": {},
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "ch5_raiders": {
+      "name": "enc_ch5_raiders",
+      "kind": "map",
+      "enemies": [
+        "raider",
+        "ch5_deserter"
+      ],
+      "party": {},
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "ch5_pair": {
+      "name": "enc_ch5_pair",
+      "kind": "map",
+      "enemies": [
+        "raider",
+        "raider"
+      ],
+      "party": {},
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "ch5_mixed": {
+      "name": "enc_ch5_mixed",
+      "kind": "map",
+      "enemies": [
+        "tourney_knight",
+        "ch5_deserter"
+      ],
+      "party": {},
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "ch6_looters": {
+      "name": "enc_ch6_looters",
+      "kind": "map",
+      "enemies": [
+        "ch6_looter",
+        "ch6_looter"
+      ],
+      "party": {},
+      "win": {
+        "type": "all_down"
+      }
     },
     "joyous_gard": {
-      "_待写": "第 13 步写遭遇时补：敌人和上场的人见 content/dialogue/notes/ 里这一章的交接说明「遭遇和敌人」"
+      "name": "enc_joyous_gard",
+      "kind": "story",
+      "flee": false,
+      "enemies": [
+        "joyous_guard",
+        "joyous_guard",
+        "joyous_guard"
+      ],
+      "party": {
+        "max": 2
+      },
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "ch6_shore": {
+      "name": "enc_ch6_shore",
+      "kind": "map",
+      "enemies": [
+        "mordred_soldier",
+        "ch6_looter"
+      ],
+      "party": {},
+      "win": {
+        "type": "all_down"
+      }
     },
     "dover": {
-      "_待写": "第 13 步写遭遇时补：敌人和上场的人见 content/dialogue/notes/ 里这一章的交接说明「遭遇和敌人」",
+      "name": "enc_dover",
+      "kind": "story",
+      "flee": false,
+      "enemies": [
+        "dover_archer",
+        "dover_archer"
+      ],
+      "party": {
+        "fixed": [
+          "gawain"
+        ]
+      },
       "win": {
         "type": "survive",
         "turns": 4
-      },
-      "kind": "story",
-      "flee": false
+      }
+    },
+    "ch6_riders": {
+      "name": "enc_ch6_riders",
+      "kind": "map",
+      "enemies": [
+        "mordred_rider",
+        "ch6_looter"
+      ],
+      "party": {},
+      "win": {
+        "type": "all_down"
+      }
+    },
+    "ch6_camp": {
+      "name": "enc_ch6_camp",
+      "kind": "map",
+      "enemies": [
+        "mordred_soldier",
+        "mordred_rider"
+      ],
+      "party": {},
+      "win": {
+        "type": "all_down"
+      }
     },
     "camlann": {
-      "_待写": "第 13 步写遭遇时补：敌人和上场的人见 content/dialogue/notes/ 里这一章的交接说明「遭遇和敌人」"
-    },
-    "wild_men": {
-      "_待写": "第 13 步写遭遇时补：敌人和上场的人见 content/dialogue/notes/ 里这一章的交接说明「遭遇和敌人」"
-    },
-    "red_knight": {
-      "_待写": "第 13 步写遭遇时补：敌人和上场的人见 content/dialogue/notes/ 里这一章的交接说明「遭遇和敌人」"
-    },
-    "tournament": {
-      "_待写": "第 13 步写遭遇时补：敌人和上场的人见 content/dialogue/notes/ 里这一章的交接说明「遭遇和敌人」"
+      "name": "enc_camlann",
+      "kind": "story",
+      "flee": false,
+      "enemies": [
+        "mordred",
+        "mordred_soldier",
+        "mordred_soldier"
+      ],
+      "party": {
+        "fixed": [
+          "arthur"
+        ],
+        "max": 2
+      },
+      "win": {
+        "type": "all_down"
+      }
     },
     "camlann_rear": {
-      "_待写": "第 13 步写遭遇时补：第 6 章 D5c 路线，你在后队，亚瑟不在这一仗（见 content/dialogue/notes/ch6_notes.md）",
+      "name": "enc_camlann_rear",
       "kind": "story",
-      "flee": false
+      "flee": false,
+      "enemies": [
+        "mordred_rider",
+        "mordred_soldier",
+        "mordred_rider",
+        "mordred_soldier"
+      ],
+      "party": {
+        "max": 2,
+        "exclude": [
+          "arthur"
+        ]
+      },
+      "win": {
+        "type": "all_down"
+      }
     }
   }
 }

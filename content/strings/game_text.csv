@@ -121,7 +121,7 @@ unlock_u_deflect_name,偏转
 unlock_u_deflect_effect,让一个敌人打向你们的一下，打到另一个敌人身上。
 unlock_u_deflect_origin,梅林临走前的最后一课。
 unlock_u_staff_name,梅林的白蜡木杖
-unlock_u_staff_effect,一根杖：法力上限 +2，星火 +1，凝神多回 1。
+unlock_u_staff_effect,一根杖：法力上限 +2，星火 +2，凝神多回 1。
 unlock_u_staff_origin,梅林走了，他的白蜡木杖留在你手里。
 unlock_u_scabbard_lost_name,失去：剑鞘
 unlock_u_scabbard_lost_effect,亚瑟的血会掉到 0 了。
@@ -561,3 +561,45 @@ enemy_dover_archer,多佛的弓箭手
 enemy_mordred,莫德雷德
 enemy_mordred_soldier,莫德雷德的兵
 enemy_mordred_rider,莫德雷德的骑兵
+enemy_ch3_knight,拦路的骑士
+enemy_ch3_squire,骑士的侍从
+enemy_morgan_horn,摩根的号手
+enemy_morgan_knight_called,芦苇后的骑士
+enemy_ch4_brigand,林中的强人
+enemy_ch4_wolf,冬狼
+enemy_raider_chief,强盗头子
+enemy_ch5_deserter,逃兵
+enemy_mordred_soldier_called,赶来的兵
+enemy_ch6_looter,趁乱抢掠的兵
+enc_ch2_north_road,北门外的叛军步兵
+enc_ch2_ford,渡口的盾兵
+enc_ch2_hill,山坡上的骑兵
+enc_ch2_camp,营地外的游骑
+enc_ch3_road_knight,往卡美洛路上的骑士
+enc_ch3_squires,两个侍从
+enc_ch3_wild_pair,林边的两个野人
+enc_ch3_knight_pair,比武场外的挑战者
+enc_ch4_brigands,林中的强人
+enc_ch4_wolves,冬狼
+enc_ch4_riders,湖边的摩根骑士
+enc_ch4_mixed,路边的强人和狼
+enc_ch5_deserters,城外的逃兵
+enc_ch5_raiders,河边的强盗
+enc_ch5_pair,两个强盗
+enc_ch5_mixed,落单的骑士
+enc_ch6_looters,欢乐堡外的抢掠兵
+enc_ch6_shore,海边的兵
+enc_ch6_riders,路上的骑兵
+enc_ch6_camp,营外的斥候
+move_arrow_rain,箭雨
+move_call,叫人
+move_horn,吹号
+move_lance,挺枪
+move_lance_charge,冲锋
+move_maul,撕扯
+move_push,推
+move_shield_bash,盾撞
+move_shield_up,举盾
+move_shout,吆喝
+move_sweep,横扫
+move_thrust,刺

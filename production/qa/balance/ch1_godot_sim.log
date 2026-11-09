@@ -11,6 +11,6 @@
 [sim] log_wolves always_first → win 第 2 回合，倒下 0 人，剩血 你 14/14, 凯 13/16, 亚瑟 13/13
 [sim] log_wolves smart → win 第 2 回合，倒下 0 人，剩血 你 14/14, 凯 13/16, 亚瑟 13/13
 [sim] log_wolves no_magic → win 第 3 回合，倒下 0 人，剩血 你 14/14, 凯 10/16, 亚瑟 10/13
-[sim] wolves always_first → win 第 5 回合，倒下 1 人，剩血 你 10/14, 凯 13/16, 亚瑟 0/13
-[sim] wolves smart → win 第 5 回合，倒下 0 人，剩血 你 14/14, 凯 4/16, 亚瑟 4/13
-[sim] wolves no_magic → lose 第 9 回合，倒下 3 人，剩血 你 0/14, 凯 0/16, 亚瑟 0/13
+[sim] wolves always_first → lose 第 6 回合，倒下 3 人，剩血 你 0/14, 凯 0/16, 亚瑟 0/13
+[sim] wolves smart → win 第 5 回合，倒下 0 人，剩血 你 14/14, 凯 2/16, 亚瑟 2/13
+[sim] wolves no_magic → lose 第 7 回合，倒下 3 人，剩血 你 0/14, 凯 0/16, 亚瑟 0/13

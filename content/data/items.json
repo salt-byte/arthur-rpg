@@ -377,7 +377,7 @@
       "slot": "staff",
       "stats": {
         "mana_max": 2,
-        "spark": 1,
+        "spark": 2,
         "focus": 1
       },
       "sellable": false,
