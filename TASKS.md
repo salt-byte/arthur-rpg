@@ -3,12 +3,12 @@
 故事来源：亚瑟王与梅林传说（公版，完整一生） · 玩家身份：梅林的学徒（原创） · 玩法参考：战斗照杀戮尖塔、地图和成长照 Vampire's Fall 2 · 引擎：Godot 4 · 故事体量：一包 6 章 + 2–4 条支线 · 成色：可玩原型 · 交付：网页链接 + 新建 GitHub 仓库
 
 ## 当前状态（每轮结束更新；对话压缩后先读这里）
-- 做到哪：第 15 步分批制作，第一批对白做到一半：初稿写完、五条走查路线跑通、四份审查报告出来、voices.md 定了，审查意见还没改
-- 下一步：按审查报告改第 2–6 章和支线对白（先 🔴 后 🟠），同时照 voices.md 调口气；顺带补第 1 步改编策略小节、第 4 步取舍表。对白这批改完复查过，用户用 content/dialogue/script.html 按章读一遍。之后补第 9、10 步（第 2–6 章数值和关卡），再做第 15 步第二批
+- 做到哪：第 15 步第一批（对白）改完：四份审查报告的 🔴 11 条和金句、🟠、🟡 都处理了，复查过，等用户按章读剧本页（content/dialogue/script.html）
+- 下一步：用户读完剧本页反馈；同时答三个问题（受众、🟠16 亚瑟那句剧情谱原句、🟡19 bible 回读）。之后第 4 步取舍表，再补第 9、10 步（第 2–6 章数值和关卡），再做第 15 步第二批
 - 项目主页：https://claude.ai/artifact/7GrrutxtorkDnBVH2DNaTN （每步重跑 render_site.py，更新同一个页面）
 - 仓库：https://github.com/salt-byte/arthur-rpg ，每步交接前提交并推送。旧白盒网页版在 docs/，GitHub Pages 打开后在 https://salt-byte.github.io/arthur-rpg/ 玩
 - 卡在哪：无
-- 最近一次 verify：2026-11-09 20261109-115232 整体 PASS（qa/verification.json）；--playtest 路线 a、b、c 都 PASS
+- 最近一次 verify：2026-11-09 剧情走查五条路线 PASS、--playtest a、b、c PASS（对白第一批改完后）；整体 verify.py 上次 20261109-115232
 - 停靠点：A0 ✓（第 3 步） · A1 ✓（第 4 步） · A2 ✓（第 6 步） · B ✓（第 11 步） · 白盒 ✓（第 13 步，2026-11-09） · C 未到（第 16 步） · D 未到（第 17 步）
 
 状态：[ ] 待做 · [~] 进行中 · [x] 完成 · [!] 被退回
@@ -16,7 +16,7 @@
 
 | # | 状态 | 任务 | 交给 | 依赖 | 层 | 验收标准 | 认领 / 结果 |
 |---|---|---|---|---|---|---|---|
-| 1 | [~] | 改编策略定位 | producer | — | — | 五项策略与红线记录并获用户确认 | 开工时定了：忠实改编、完整一生、玩家是梅林的学徒，玩家承诺写在 GAME_BRIEF。按 0.8.0 还缺 GAME_BRIEF「改编策略」小节（五项决定）和单列的改编红线，2026-11-09 补写，等用户确认 |
+| 1 | [~] | 改编策略定位 | producer | — | — | 五项策略与红线记录并获用户确认 | 开工时定了：忠实改编、完整一生、玩家是梅林的学徒，玩家承诺写在 GAME_BRIEF。按 0.8.0 还缺 GAME_BRIEF「改编策略」小节（五项决定）和单列的改编红线，2026-11-09 补写进 GAME_BRIEF「改编策略」，受众一项等用户确认 |
 | 2 | [x] | 建立项目记录 | producer | 1 | — | 任务板、目录和可访问主页就绪；采用 GitHub 时建立仓库 | 旧第 1 步：仓库 salt-byte/arthur-rpg（公开）2026-11-05 建，每步交接前推送；项目主页 2026-11-06 补发（插件 0.7.0） |
 | 3 | [x] | 世界观圣经 | story-bible | 2 | — | 世界规则、人物、术语与原作映射有依据；A0 确认 | 旧第 2 步：content/story/bible.json + bible.md 上半、source_extraction.md（38 条事件、7 条补写）。定调题：温情里带刺、忠实改编、主角动机=家人与继承者。检查：6 章、8 张人物卡关键字段不空、钩子 4/3/4/3/5/5；A0 通过 |
 | 4 | [~] | 叙事骨架与改编取舍 | story-bible, story-map, story-review | 3 | — | 取舍表、主线、关键选择与结局边界成立；A1 故事地基确认 | 旧第 5、6 步：outline.json（32 节点、4 支线、3 结局）+ story.html 已发布；走一遍三个结局都走到、0 空卡片、0 无结果选项。独立审查 20 条（🔴5 🟠12 🟡3），核验后全部保留。两轮修改：第一轮 20 条，复查 14 好 6 部分好 + 10 处新问题，第二轮全部补完，脚本核对 0 问题；剧情谱 30 节点、条件选项上线；A2 通过。按 0.8.0 还缺改编取舍表：source_extraction.md 有 38 条事件、7 条补写，没有逐条标保留 / 简化 / 删除 / 新增和理由（照 story-bible/references/narrative-outline.md 补） |
@@ -30,6 +30,6 @@
 | 12 | [x] | 数据与工程 | game-data-schema, godot-project-structure | 11 | mvp | 数据样例可校验，工程可运行，存档与任务状态对应 | 旧第 8 步：定好本作的数据格式（content/README.md）：变量由 bible.json 生成 54 个；任务表 10 条（主线步骤 = 剧情谱节点）；新加 6 个指令；遭遇表；第 1 章样例对白 65 行和 NPC、刷新点、文本表 131 条。check_content 0 错误（6 条提醒是新指令）、tools/check_project_data.py 0 错误。Godot 4.3 工程骨架：--playtest 跑完第 1 章样例三条路线全过（变量、任务、能力、预言簿、存读档）；网页导出 35MB，无头浏览器里打开 0 报错。证据 qa/evidence/step6/ |
 | 13 | [x] | 第一段完整可玩内容 | world-map, combat-system, progression-system, save-load, quest-design, dialogue-authoring, ui-layout, playtest-automation | 12 | mvp | 核心循环、剧情后果、奖励与存档接通；运行验证和四条体验门槛通过，用户试玩确认 | 旧第 10 步（白盒切片）：2026-11-09 按新玩法重做（DEVLOG 第 21 节）：参考代码 intent-battle、overworld-grid、xp-progression、random-affix-loot 带进 scripts/mechanics/，自带测试 62 个用例全过。森林 32×18，四群会走动、会追的敌人，头狼群堵在去石圈的路上，林边石龛、空心老橡树的包袱；战斗照杀戮尖塔，血带出战斗、喝药、逃跑；经验 N³、升级挑奖励加点、装备三格带词缀；结尾有试玩记录。verify.py 20261109-112111 六项 PASS；--playtest 三条路线 PASS（全打 28 经验 3 级、只打必须的 12 经验 2 级，和成长页对上）；网页版无头浏览器能进游戏。等用户试玩：四条硬门槛和复盘题、最大风险的留下 / 放弃信号都在白盒试玩时问。白盒试玩停靠点 2026-11-09 通过，四条硬门槛都过 |
 | 14 | [x] | 范围复盘与生产计划 | producer | 13 | — | 首版范围、接口和批次确认；完成范围复盘 ① | 旧第 11 步：GAME_BRIEF 范围复盘表第一行：预算不限，全程约 3 小时 40 分，用户选了接受；没删内容 |
-| 15 | [~] | 分批制作正式内容 | quest-design, dialogue-authoring, story-review, world-map, combat-system, progression-system, save-load, skill-checks, asset-sourcing, asset-generation, asset-upload, asset-pipeline, cutout-animation, style-consistency, ui-layout, localization-table | 14 | playable | 按适用系统分批实现，每批验证与试玩；必做项完成一半时范围复盘 ② | 按批做。① 对白（旧第 12 步），进行中：第 2–6 章主线和四条支线初稿写完，合进任务表和文本表；剧情走查五条路线跑通；第 1 章按新写法重过；审查报告四份（review_ch2_ch3 / ch4 / ch5 / ch6_cross，共 🔴33 🟠125 🟡103）还没改；voices.md 从马洛礼原文提炼了八个人的口气，台词只有第 1 章梅林三句跟着改了。② 地图、战斗、成长、存档（旧第 13 步）。③ 素材（旧第 14 步）。④ 界面和文本表（旧第 16 步）。必做项做完一半时范围复盘 ②（旧第 15 步） |
+| 15 | [~] | 分批制作正式内容 | quest-design, dialogue-authoring, story-review, world-map, combat-system, progression-system, save-load, skill-checks, asset-sourcing, asset-generation, asset-upload, asset-pipeline, cutout-animation, style-consistency, ui-layout, localization-table | 14 | playable | 按适用系统分批实现，每批验证与试玩；必做项完成一半时范围复盘 ② | 按批做。① 对白（旧第 12 步）：初稿、走查、四份审查报告都做完；报告按章改完（提交 82b34e3、294d2fd、c05ba02、fb1013d，DEVLOG 第 23 节），复查过，剧本页改由 tools/render_script.py 生成，等用户按章读。② 地图、战斗、成长、存档（旧第 13 步）。③ 素材（旧第 14 步）。④ 界面和文本表（旧第 16 步）。必做项做完一半时范围复盘 ②（旧第 15 步） |
 | 16 | [ ] | 整体验证与调整 | playtest-automation, story-review, balancing | 15 | full | 整体运行验证通过，剧情与数值问题修正；用户在 C 整体试玩 | 旧第 17 步证据化验证、第 18 步停靠点 C、第 19 步数值调整合在这一步 |
 | 17 | [ ] | 发布与交付 | web-release, producer | 16 | full | D 发布检查通过；交付游戏、源文件、设计资料和已知问题 | 旧第 20 步 |
