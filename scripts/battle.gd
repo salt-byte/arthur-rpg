@@ -316,7 +316,18 @@ func intent_damage(it: Dictionary, target_uid := "") -> int:
 		lethal = bool(it.then.get("lethal", false))
 		if t == null: t = unit(it.then_target)
 	if lethal and t != null: return int(t.hp) + int(t.block)   # 梅林的影子的重劈：挨上就倒（自创，见 combat.md 改动记录）
-	return Rules.hit_damage(power, e, t if t != null else {"vulnerable": 0}, cfg)
+	# 同一回合排在它前面、还没出手的长嚎会先给它加力量：算进去，亮出来的数就是挨的数
+	# （mechanics-library intent-battle「预告的数和实际伤害悄悄不一样」；白盒里头狼先嚎，灰狼「咬 3」实际咬了 4）
+	var src: Dictionary = e
+	var extra := 0
+	for o in intents:
+		if o == it or int(o.order) >= int(it.order) or o.act != "buff" or o.cancelled or o.get("done", false): continue
+		var oe = unit(o.uid)
+		if oe != null and oe.alive and oe.kind == e.kind: extra += int(o.strength)
+	if extra > 0:
+		src = e.duplicate()
+		src.strength = int(e.strength) + extra
+	return Rules.hit_damage(power, src, t if t != null else {"vulnerable": 0}, cfg)
 
 func intent_text(it: Dictionary) -> String:
 	var e = unit(it.uid)
@@ -542,6 +553,7 @@ func _check_enemy_down(t: Dictionary) -> void:
 func _enemy_act(it: Dictionary) -> void:
 	var e = unit(it.uid)
 	if e == null or not e.alive: return
+	it["done"] = true                   # 出过手的长嚎不再往后面的意图上加（intent_damage）
 	e.block = 0                         # 敌人的格挡在它自己出手时清零（照原作）
 	if it.cancelled:
 		out.append(UIKit.f("ev_nothing", {"who": e.name}))

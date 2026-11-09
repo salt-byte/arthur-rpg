@@ -821,8 +821,8 @@ func _fight_wolves() -> void:
 		_plan("arthur", "attack", "wolf_leader")
 		_expect(b.turn == 2, "三个人都排好就自动开打，进第 2 回合")
 		var texts := b.intents.map(func(it): return b.intent_text(it))
-		_expect("头狼 长嚎 力量 +1" in texts and "灰狼 咬 → 亚瑟 3" in texts and "瘦狼 嚎叫 叫来 1 只狼" in texts,
-			"第 2 回合同时亮出「头狼 长嚎 力量 +1」「灰狼 咬 → 亚瑟 3」「瘦狼 嚎叫 叫来 1 只狼」（%s）" % ", ".join(PackedStringArray(texts)))
+		_expect("头狼 长嚎 力量 +1" in texts and "灰狼 咬 → 亚瑟 4" in texts and "瘦狼 嚎叫 叫来 1 只狼" in texts,
+			"第 2 回合同时亮出「头狼 长嚎 力量 +1」「灰狼 咬 → 亚瑟 4」（排在前面的长嚎算进去）「瘦狼 嚎叫 叫来 1 只狼」（%s）" % ", ".join(PackedStringArray(texts)))
 		_expect(b.unit("wolf_howler").hp == 5, "第 2 回合开始瘦狼还是满血 5 点")
 		await _shot("battle_intents")
 		_plan("apprentice", "spark", "wolf_howler")
@@ -832,7 +832,7 @@ func _fight_wolves() -> void:
 		var t := "\n".join(PackedStringArray(_last_report()))
 		_expect("你·星火 → 瘦狼：2 点，易伤 1" in t, "打印「星火 2，瘦狼 易伤 1」")
 		_expect("凯·砍 → 瘦狼：4 点" in t and "瘦狼倒下，召唤作废" in t, "打印「凯 砍 4，瘦狼 倒下」「召唤作废」")
-		_expect("灰狼 咬 → 亚瑟：1 点（挡掉 3）" in t, "头狼先长嚎，灰狼这一口从 3 变 4：打印「亚瑟 挡掉 3，掉 1」")
+		_expect("灰狼 咬 → 亚瑟：1 点（挡掉 3）" in t, "头狼先长嚎，灰狼亮出来的 4 就是咬的 4：打印「亚瑟 挡掉 3，掉 1」")
 	await _auto_fight()
 	_expect(b.result == "win" and b.turn >= 3 and b.turn <= 6, "头狼群第 %d 回合打赢（设计页 4–5 回合）" % b.turn)
 	await _shot("battle_win")
