@@ -305,3 +305,91 @@ ui_back_at,回到{t}跟前，三个人的血都满了
 ui_xp_gain,经验 +{n}
 ui_level_up,升到 {n} 级
 bark_chest_empty,树洞里只剩一块摊平的空布。
+ui_controls_menu,点地面走过去，点人说话 · 也可以方向键 / WASD 走，Z 或空格确认 · Esc 菜单
+ui_menu_btn,菜单（Esc）
+ui_hud_lv,Lv {n}
+ui_lv_xp,{lv} 级 · 经验 {xp} / {need}
+ui_lv_cap,{lv} 级 · 已满级
+ui_party_hp,三个人的血
+ui_btn_close,关闭
+ui_res_title,赢了 · {t}
+ui_res_cap,已满级，经验不再涨
+ui_res_drops,掉落
+ui_res_nodrop,什么也没掉
+ui_res_ok,继续
+ui_res_bag,看背包
+ui_boon_title,升到 {n} 级 · 三个人的血都满了
+ui_boon_hint,挑一张带走：点它，或用方向键选好按确认
+ui_sk_title,技能树
+ui_sk_points,技能点 {n}
+ui_sk_tree,{t} · {n}
+ui_sk_rank,{r}/{max}
+ui_sk_req,要 {n} 级
+ui_sk_no_prereq,先点上一格
+ui_sk_no_points,没有点数
+ui_sk_no_max,满了
+ui_sk_cannot,点不了
+ui_sk_can,点一下加 1 点
+ui_sk_info,{name}：{eff}
+ui_sk_cost,（{n} 法力）
+ui_sk_hint,金边的格子能点；停在格子上看它做什么、为什么点不了
+ui_sk_battle,战斗里不能加点
+ui_sk_respec,全部重点
+ui_sk_respec_done,点数都回来了：现在 {n} 点
+eff_spark_damage,星火 +{n}
+eff_spark_vuln,易伤 +{n} 回合
+eff_new_spell,新招：{t}
+eff_two_targets,打两个敌人
+eff_all_damage,全体各 {n} 点
+eff_one_weak,一个敌人虚弱 {n}
+eff_all_weak,全体虚弱 {n}
+eff_mana_max,法力上限 +{n}
+eff_focus,凝神多回 {n}
+eff_interrupt,打断少花 {n} 法力
+eff_mana_regen,每回合多回 {n} 法力
+eff_hp,学徒血 +{n}
+eff_ward_block,护身多挡 {n}
+eff_ward_two,护身同时给两个人
+eff_survive,第一次倒下留 {n} 血
+eff_see,开打时全体易伤 {n}
+eff_lever,打断成功，它易伤 {n}
+ui_bag_title,背包
+ui_bag_worn,学徒身上
+ui_bag_count,背包 {n} / {max}
+ui_bag_silver,银币 {n}
+ui_bag_potion,{t} ×{n}
+ui_bag_hp,血 {cur} / {max}
+ui_slot_staff,杖
+ui_slot_clothes,衣服
+ui_slot_charm,护符
+ui_bag_empty,空
+ui_bag_item,{t}（{r}）
+ui_bag_pick,点一件，看它的数，和身上那件比
+ui_bag_vs,身上：{t}
+ui_bag_on_body,穿在身上
+ui_bag_slot_empty,{t}这一格是空的
+ui_bag_if_equip,换上：{t}
+ui_bag_if_unequip,卸下：{t}
+ui_bag_nochange,数不变
+ui_bag_cmp,{t} {a} → {b}
+ui_bag_equip,装上
+ui_bag_unequip,卸下
+ui_bag_full_unequip,背包满了，卸不下来
+stat_hp,血上限
+stat_mana_max,法力上限
+stat_spark,星火
+stat_ward,护身
+stat_focus,凝神
+stat_start_block,第 1 回合挡
+stat_start_vuln_top,开打易伤
+stat_after_heal,打赢回血
+ui_shrine_hint,祈祷：三个人的血都回满，存档
+ui_shrine_pray,祈祷
+ui_shrine_travel,传到{t}
+ui_shrine_skills,重新加点
+ui_shrine_leave,离开
+ui_shrine_no_travel,这一章还没在别的圣龛祈祷过，没有地方可传
+ui_menu_title,菜单
+ui_menu_skills,技能树
+ui_menu_skills_pts,技能树（还有 {n} 点）
+ui_menu_back,回到地图

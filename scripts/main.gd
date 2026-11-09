@@ -420,22 +420,22 @@ func _on_battle_finished(r: String) -> void:
 ## 打赢以后：结算框 →（升级了）每升一级挑一张奖励
 func _show_rewards(title: String, xp: int, levels: int, drops: Dictionary, comps: Array) -> void:
 	mode = "screen"
-	var done := false
-	screens.open("result", {"title": title, "xp": xp, "level_up": levels, "drops": Party.drop_lines(drops), "hp": party_rows()}, func(): done = true)
-	while not done: await get_tree().process_frame
+	await _screen_wait("result", {"title": title, "xp": xp, "level_up": levels, "drops": Party.drop_lines(drops), "hp": party_rows()})
 	var want_bag: bool = str(screens.data.get("choice", "")) == "bag"
 	while int(GS.S.pending_boons) > 0:
 		var cards := Party.roll_boons(comps)
-		done = false
-		screens.open("boon", {"cards": cards, "level": Party.level()}, func(): done = true)
-		while not done: await get_tree().process_frame
-		var pick := int(screens.data.get("choice", 0))
-		Party.take_boon(cards[clampi(pick, 0, cards.size() - 1)])
+		await _screen_wait("boon", {"cards": cards, "level": Party.level()})
+		var pick := clampi(int(screens.data.get("choice", 0)), 0, cards.size() - 1)
+		Party.take_boon(cards[pick])
 		print("  [奖励] 挑了：%s（%s）" % [cards[pick].name, cards[pick].text])
 	if want_bag:
-		done = false
-		screens.open("bag", {}, func(): done = true)
-		while not done: await get_tree().process_frame
+		await _screen_wait("bag", {})
+
+## 开一屏，等它关上（lambda 里改不了外面的局部变量，用一个字典当旗子）
+func _screen_wait(kind: String, d: Dictionary) -> void:
+	var flag := {"done": false}
+	screens.open(kind, d, func(): flag.done = true)
+	while not flag.done: await get_tree().process_frame
 
 ## 回到上次祈祷的圣龛跟前，三个人回满血；追你的敌人几步内不追
 func _back_to_shrine() -> void:
@@ -855,15 +855,15 @@ func _fight_wolves() -> void:
 	_plan("kay", "attack", "wolf_leader")
 	_plan("arthur", "attack", "wolf_leader")
 	var texts := b.intents.map(func(it): return b.intent_text(it))
-	_expect(b.turn == 2 and "头狼 长嚎：同类力量 +1" in texts and "灰狼 咬 → 亚瑟 3" in texts and "瘦狼 嚎叫：叫来 1 只狼" in texts,
-		"第 2 回合同时亮出「头狼 长嚎：同类力量 +1」「灰狼 咬 → 亚瑟 3」「瘦狼 嚎叫：叫来 1 只狼」")
+	_expect(b.turn == 2 and "头狼 长嚎：同类力量 +1" in texts and "灰狼 咬 → 亚瑟 4" in texts and "瘦狼 嚎叫：叫来 1 只狼" in texts,
+		"第 2 回合同时亮出「头狼 长嚎：同类力量 +1」「灰狼 咬 → 亚瑟 4」（长嚎先加的力量算进去了）「瘦狼 嚎叫：叫来 1 只狼」")
 	await _shot("battle_intents")
 	_plan("apprentice", "spark", "wolf_howler")
 	_plan("kay", "attack", "wolf_howler")
 	await _shot("battle_planned")
 	_plan("arthur", "guard")
 	_expect(_log_has("瘦狼倒下，召唤作废"), "瘦狼在叫之前倒下，打印「瘦狼倒下，召唤作废」")
-	_expect(_log_has("灰狼 咬 → 亚瑟：0 点（挡掉 3）"), "亚瑟举盾，灰狼那一口全挡掉")
+	_expect(_log_has("灰狼 咬 → 亚瑟：1 点（挡掉 3）"), "亚瑟举盾，灰狼那一口 4 点只进来 1 点")
 	var guard := 0
 	while b.result == "" and guard < 10:
 		guard += 1

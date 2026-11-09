@@ -286,7 +286,18 @@ func intent_damage(it: Dictionary, target_uid := "") -> int:
 	if it.act == "charge": power = int(it.then.get("power", 0))
 	var t = unit(target_uid if target_uid != "" else it.get("target", ""))
 	if e == null: return power
-	return hit_damage(power, e, t if t != null else {"vuln": 0})
+	# 同一回合排在前面的长嚎会先给它加力量：算进去，亮出来的数就是挨的数（intent-battle「预告的数和实际伤害悄悄不一样」）
+	var src: Dictionary = e
+	var extra := 0
+	for o in intents:
+		if o == it or int(o.order) >= int(it.order): continue
+		if o.act == "buff" and not o.cancelled and not o.get("done", false):
+			var oe = unit(o.uid)
+			if oe != null and oe.alive and oe.get("kind", "") == e.get("kind", ""): extra += int(o.n)
+	if extra > 0:
+		src = e.duplicate()
+		src.str = int(e.str) + extra
+	return hit_damage(power, src, t if t != null else {"vuln": 0})
 
 # ---------------- 意图 ----------------
 func begin_turn() -> void:
@@ -575,6 +586,7 @@ func _check_win() -> void:
 func _enemy_act(it: Dictionary) -> void:
 	var e = unit(it.uid)
 	if e == null or not e.alive or it.cancelled: return
+	it["done"] = true
 	var move := UIKit.t(it.move)
 	match it.act:
 		"attack":

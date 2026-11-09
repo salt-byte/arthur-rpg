@@ -22,11 +22,12 @@ var _t := 0.0
 # 六屏用：面板、要画的条、头像、技能树 / 背包底下那一行、背包的选中和右下的说明
 var _panel := Rect2()
 var _bars: Array = []           # {"r": Rect2, "v": 0..1, "c": Color}
-var _avatars: Array = []        # {"p": Vector2, "c": Color}
+var _extras: Array = []         # 画在按钮上面的小块（奖励卡上的头像）
 var _info: Label
 var _sel := {}                  # 背包：{"bag": i} 或 {"slot": "staff"}
 var _detail := {}               # 背包右下的几行 label
 var _act: Button                # 背包的「装上 / 卸下」
+var _focus_key := ""            # 重搭时焦点要回到的按钮
 
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -71,8 +72,9 @@ func _clear() -> void:
 	for bt in _buttons: bt.queue_free()
 	_labels = []
 	_buttons = []
+	for n in _extras: n.queue_free()
 	_bars = []
-	_avatars = []
+	_extras = []
 	_panel = Rect2()
 	_info = null
 	_sel = {}
@@ -81,14 +83,11 @@ func _clear() -> void:
 
 ## 技能树、背包点了以后整屏重搭，焦点回到 key 那个按钮
 func _rebuild(key := "") -> void:
+	_focus_key = key
 	_clear()
 	call("_build_" + kind)
+	_focus_key = ""
 	queue_redraw()
-	if key != "" and not auto:
-		for bt in _buttons:
-			if str(bt.get_meta("key", "")) == key:
-				bt.grab_focus()
-				break
 
 func _summary() -> String:
 	return " / ".join(_labels.map(func(l): return l.text))
@@ -142,8 +141,17 @@ func _add_cell(r: Rect2, fn: Callable, key := "") -> Button:
 	_buttons.append(bt)
 	return bt
 
+## 打开时把焦点给 bt；重搭时（_rebuild）给原来那个按钮，马上给，免得晚到的焦点把选中换掉
 func _focus(bt: Control) -> void:
-	if bt and not auto: bt.grab_focus.call_deferred()
+	if auto: return
+	if _focus_key != "":
+		for b in _buttons:
+			if str(b.get_meta("key", "")) == _focus_key and b.focus_mode != Control.FOCUS_NONE:
+				b.grab_focus()
+				return
+		if bt: bt.grab_focus()
+		return
+	if bt: bt.grab_focus.call_deferred()
 
 func _box(bg: Color, edge: Color, width := 4, center := true, grow := 0.0) -> StyleBoxFlat:
 	var b := StyleBoxFlat.new()
@@ -177,7 +185,7 @@ func _fit_panel(y_end: float) -> void:
 	for l in _labels: l.position.y += dy
 	for bt in _buttons: bt.position.y += dy
 	for b in _bars: b.r = Rect2(b.r.position + Vector2(0, dy), b.r.size)
-	for a in _avatars: a.p = a.p + Vector2(0, dy)
+	for n in _extras: n.position.y += dy
 	_panel.position.y = top
 
 func _bar(r: Rect2, v: float, col: Color) -> void:
@@ -375,7 +383,7 @@ func _build_boon() -> void:
 			var who := str(c.get("who", ""))
 			if who != "":
 				var actors: Dictionary = Data.t("maps").get("actors", {})
-				_avatars.append({"p": Vector2(r.position.x + cw / 2, yy + 26), "c": UIKit.hexcol(actors.get(who, {}).get("color", ""))})
+				_add_avatar(Vector2(r.position.x + cw / 2, yy + 26), UIKit.hexcol(actors.get(who, {}).get("color", "")))
 			yy += 64
 		var nm := str(c.get("name", ""))
 		_add_label(nm, Vector2(r.position.x + 16, yy), tw, UIKit.BODY, UIKit.GOLD, HORIZONTAL_ALIGNMENT_CENTER)
@@ -576,8 +584,8 @@ func _build_bag() -> void:
 		y += 68
 		_add_line(UIKit.t("ui_bag_worn"), Vector2(x, y), lw, UIKit.SMALL * 2, UIKit.CREAM_DIM)
 		for i in 3:
-			_slot_cell(["staff", "clothes", "charm"][i], Rect2(x, y + 32 + i * 60, lw, 52))
-		var sy := y + 32 + 3 * 60 + 8
+			_slot_cell(["staff", "clothes", "charm"][i], Rect2(x, y + 36 + i * 60, lw, 52))
+		var sy := y + 36 + 3 * 60 + 8
 		for i in stat_lines.size():
 			_add_line(stat_lines[i], Vector2(x, sy + i * ROW), lw)
 		sy += stat_lines.size() * ROW + 12
@@ -586,7 +594,7 @@ func _build_bag() -> void:
 		gx = x + lw + 28
 		gw = w - lw - 28
 		_add_line(count, Vector2(gx, y), gw, UIKit.SMALL * 2, UIKit.CREAM_DIM)
-		gy = y + 32
+		gy = y + 36
 		cols = 2
 	else:
 		_add_line(silver, Vector2(x, y + 10), w, UIKit.BODY, UIKit.CREAM, HORIZONTAL_ALIGNMENT_RIGHT)
@@ -900,15 +908,21 @@ func _draw() -> void:
 					draw_rect(b.r, Color(UIKit.NAVY_2, 1.0))
 					if b.v > 0.0:
 						draw_rect(Rect2(b.r.position, Vector2(maxf(2.0, b.r.size.x * b.v), b.r.size.y)), b.c)
-				for a in _avatars:
-					_draw_avatar(a.p, a.c)
 
-## 奖励卡上同伴的小头像：一圈墨黑底 + 人的颜色
-func _draw_avatar(c: Vector2, col: Color) -> void:
-	draw_circle(c, 26, UIKit.INK)
-	draw_circle(c, 22, Color(col, 0.35))
-	draw_circle(c + Vector2(0, -6), 9, col)
-	draw_rect(Rect2(c.x - 12, c.y + 5, 24, 13), col)
+## 奖励卡上同伴的小头像：一圈墨黑底 + 人的颜色。放在卡（按钮）上面一层，不挡鼠标
+func _add_avatar(c: Vector2, col: Color) -> void:
+	var n := Control.new()
+	n.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	n.position = c - Vector2(28, 28)
+	n.size = Vector2(56, 56)
+	n.draw.connect(func():
+		var o := Vector2(28, 28)
+		n.draw_circle(o, 26, UIKit.INK)
+		n.draw_circle(o, 22, Color(col, 0.35))
+		n.draw_circle(o + Vector2(0, -6), 9, col)
+		n.draw_rect(Rect2(o.x - 12, o.y + 5, 24, 13), col))
+	add_child(n)
+	_extras.append(n)
 
 ## 看水面：四周压暗，一圈金边，水纹往外走；圈里是一张静止的白盒画面
 func _draw_vision() -> void:
