@@ -167,7 +167,7 @@ ui_turn,第 {n} 回合
 ui_mana,法力 {n}/{max}
 ui_end_turn,结束回合
 ui_clear,清空
-ui_queue_empty,给每个人选一个行动，都选好就自动开打。选完血条上会先显示打完剩多少。
+ui_queue_empty,给每个人选一招，三个人都选好就自动开打。选完血条上会先显示打完剩多少。
 ui_pick_target,点一个闪着金边的目标（Esc 取消）
 ui_no_mana,法力不够：要 {need} 点，还剩 {left} 点
 ui_no_interrupt,这回合没有敌人在蓄力或召唤
@@ -176,22 +176,22 @@ ui_lose,你们倒下了
 ui_retry,再来一次
 ui_back_map,回地图
 ui_you,你
-act_attack,攻击
+act_attack,砍
 act_defend,防御
 act_kay_cover,挡在前面
 act_charge,蓄力
 act_summon,召唤
 hint_attack,打一个敌人，{n} 点
 hint_defend,这回合挨的伤害减半
-hint_kay_cover,这回合打向另一个同伴的一下改打凯，凯少挨 {n} 点
-hint_spark,打一个敌人，{n} 点
-hint_ward,一个人这回合挨的伤害少 {n} 点
-hint_focus,不出手，这回合多回 {n} 点法力
-hint_interrupt,让一个敌人的蓄力或召唤作废
+hint_kay_cover,凯挡 {n}，这回合打向别人的一下都改打凯
+hint_spark,打一个敌人 {n} 点，它易伤 {v} 回合：这回合同伴再砍它，伤害 ×1.5
+hint_ward,给一个人挡 {n}
+hint_focus,不出手，法力回 {n}
+hint_interrupt,让一个敌人的蓄力、召唤或长嚎作废
 intent_attack,{who} {move} → {target} {n}
 intent_all,{who} {move} → 你们全体 {n}
 intent_charge,{who} 蓄力 → 下回合{move} → {target} {n}
-intent_summon,{who} 召唤 {n}
+intent_summon,{who} 嚎叫：叫来 {n} 只{what}
 intent_defend,{who} 防御
 plate_all,全体
 plate_summon,叫来 {n} 只
@@ -206,28 +206,28 @@ ev_cancel,{who}的{act}被打断，作废
 ev_attack,{who}·攻击 → {target}：{n} 点
 ev_spark,你·星火 → {target}：{n} 点
 ev_defend_act,{who}举起盾，防御
-ev_focus,你凝神，这回合多回 {n} 点法力
-ev_ward_cast,你给{target}施了护身
+ev_focus,你凝神，法力回 {n}
+ev_ward_cast,你给{target}护身，挡 {n}
 ev_charge,{who}在蓄力
 ev_summon,{who}叫来了 {n} 只{what}
 ev_nothing,{who}这回合没动
 ev_mana,法力回到 {n}
 move_bite,咬
-move_pounce,扑咬
+move_pounce,扑
 move_howl,嚎叫
 move_charge,蓄力
 move_heavy_slash,重劈
-move_slash,劈
+move_slash,砍
 st_ward,护身 {n}
 st_charging,蓄力中
 ui_step1,① 看敌人头上的牌子
 ui_step2,② 给每人选一个行动
 ui_step3,③ 你们先动，敌人后动
-ui_all_set,都选好了，马上开打：你们按 ①②③ 先出手，敌人再按牌子上的顺序出手。
+ui_all_set,都选好了，马上开打：你们按站位 ①②③ 先出手，敌人再按牌子上的顺序出手。
 ui_plan_none,还没选
 ui_phase_ally,你们出手
 ui_phase_enemy,敌人出手
-ui_phase_ally_hint,你们按 ①②③ 的顺序出手。
+ui_phase_ally_hint,你们按站位 ①②③ 出手。
 ui_phase_enemy_hint,敌人按牌子上的顺序出手。
 ui_next_hit,下回合 {who} {n}
 st_down,倒下
@@ -238,3 +238,69 @@ enc_road_bandits,路上的强盗
 shrine_forest,林边石龛
 shrine_manor,庄园小礼拜堂
 shrine_stone_circle,石圈边的石十字
+act_guard,举盾
+act_buff,长嚎
+hint_ward_two,，同时护住血最少的另一个人
+hint_twin,打两个敌人，各 {n} 点
+hint_rain,打所有敌人，各 {n} 点
+hint_blind,一个敌人虚弱 {n} 回合：它打出去的伤害 ×0.75
+hint_haze,所有敌人虚弱 {n} 回合
+hint_guard,自己挡 {n}
+hint_potion_hp,喝一瓶血药，或喂给身边的人：回 {n} 血
+hint_potion_mana,喝一瓶法力药：法力回 {n}
+ui_no_potion,药用完了
+ui_mana_full,法力是满的
+ui_need_two,只剩一个敌人
+ui_flee,逃跑
+ui_fled,你们逃回了圣龛
+ui_back_shrine,回圣龛
+ui_survived,撑过去了
+intent_buff,{who} {move}：同类力量 +{n}
+intent_weak,{who} {move} → {target}：虚弱 {n}
+intent_block,{who} {move}：挡 {n}
+plate_buff,同类力量
+plate_weak,虚弱 → {t}
+plate_block,挡
+ev_strike,{who}·{move} → {target}：{n} 点
+ev_blocked,（挡掉 {n}）
+ev_vuln,{who}易伤 {n}
+ev_weak,{who}虚弱 {n}
+ev_haze,所有敌人虚弱 {n}
+ev_guard,{who}举盾，挡 {n}
+ev_cover_up,凯站到前面，挡 {n}
+ev_potion_hp,{who}用了一瓶血药，{target}回 {n} 血
+ev_potion_mana,你喝了一瓶法力药，法力回 {n}
+ev_interrupt_miss,打断落了空
+ev_vanish,{who}散了
+ev_summon_none,{who}叫了一声，没有回应
+ev_buff,{who}{move}：同类力量 +{n}
+ev_weak_on,{who}{move} → {target}：虚弱 {n}
+ev_enemy_block,{who}{move}：挡 {n}
+ev_see,看穿：所有敌人易伤 {n}
+ev_keen,明眼：{who}易伤 {n}
+ev_vigil,守夜：你第 1 回合挡 {n}
+ev_stand,，不倒：留了 1 血
+st_block,挡 {n}
+st_str,力量 +{n}
+st_weak,虚弱 {n}
+st_vuln,易伤 {n}
+sp_spark,星火
+ui_drop_silver,银币 {n}
+ui_bag_full,背包满了，{t}换成了银币
+ui_unique,唯一
+boon_power,{who}砍 +{n}
+boon_hp,{who}血 +{n}
+boon_guard,同伴举盾多挡 {n}
+boon_potions,{n} 瓶血药
+boon_silver,银币 {n}
+boon_point,多 {n} 个技能点
+move_long_howl,长嚎
+move_double_pounce,连扑
+move_sand,撒沙
+move_shoot,射
+move_hide,躲到树后
+ui_chest_open,打开了包袱
+ui_prayed,你在{t}跟前祈祷：三个人的血都满了，已存档
+ui_back_at,回到{t}跟前，三个人的血都满了
+ui_xp_gain,经验 +{n}
+ui_level_up,升到 {n} 级

@@ -13,6 +13,7 @@ config/features=PackedStringArray("4.3", "GL Compatibility")
 Data="*res://scripts/data.gd"
 GS="*res://scripts/gs.gd"
 Quests="*res://scripts/quests.gd"
+Party="*res://scripts/party.gd"
 
 [display]
 

@@ -5,7 +5,7 @@ extends Control
 ## 敌人头顶的意图牌写出手顺序、招、点数和打谁；被盯上的人头顶标着要挨几点（红）。
 ## 选完行动马上显示打完以后的血（「8 → 3」）；点「结束回合」后一来一回地播：你们按 ①②③ 出手，再轮到敌人。
 
-signal finished(result: String)   # "win" 打赢 / "back" 输了回地图
+signal finished(result: String)   # "win" 打赢 / "shrine" 输了回圣龛 / "flee" 逃跑
 
 var b: Battle
 var auto := false                  # --playtest：不播动画
@@ -22,6 +22,7 @@ var last_report: Array = []        # 上一次「结束回合」的全部记录�
 var _hint_label: Label
 var _clear_btn: Button
 var _end_btn: Button
+var _flee_btn: Button
 var _preview := {}                 # uid -> 打完以后的血
 # 播放这回合时用：画面上显示的血、播到哪一步、飘字、横幅
 var _shown := {}                   # uid -> [hp, alive]；空 = 用真的
@@ -53,8 +54,9 @@ func _ready() -> void:
 	_hint_label.position = Vector2(900, 504)
 	_hint_label.size = Vector2(356, 110)
 	stage.add_child(_hint_label)
-	_clear_btn = _button(UIKit.t("ui_clear"), Vector2(900, 628), Vector2(120, 52), _on_clear)
-	_end_btn = _button(UIKit.t("ui_end_turn"), Vector2(1032, 628), Vector2(224, 52), _on_end_turn)
+	_clear_btn = _button(UIKit.t("ui_clear"), Vector2(900, 628), Vector2(100, 52), _on_clear)
+	_end_btn = _button(UIKit.t("ui_end_turn"), Vector2(1008, 628), Vector2(140, 52), _on_end_turn)
+	_flee_btn = _button(UIKit.t("ui_flee"), Vector2(1156, 628), Vector2(100, 52), _on_flee)
 	visible = false
 	resized.connect(_center)
 
@@ -142,8 +144,8 @@ func _rebuild() -> void:
 		var q = b.planned(u.uid)
 		for j in acts.size():
 			var a: String = acts[j]
-			var pos := base + (Vector2((j % 2) * 208, (j / 2) * 52) if u.uid == "apprentice" else Vector2(0, j * 52))
-			var bt := _button(_act_label(a), pos, Vector2(200 if u.uid == "apprentice" else 196, 44), _on_act.bind(u.uid, a))
+			var pos := base + (Vector2((j % 3) * 140, (j / 3) * 52) if u.uid == "apprentice" else Vector2(0, j * 52))
+			var bt := _button(_act_label(a), pos, Vector2(134 if u.uid == "apprentice" else 196, 44), _on_act.bind(u.uid, a))
 			bt.disabled = not u.alive or b.why_not(u.uid, a) != ""
 			if q != null and q.act == a:
 				_style_selected(bt)
@@ -154,6 +156,7 @@ func _rebuild() -> void:
 			act_btns.append(bt)
 	_clear_btn.disabled = b.queue.is_empty()
 	_end_btn.disabled = false
+	_flee_btn.disabled = not b.can_flee()
 	if _all_planned():
 		_style_selected(_end_btn)
 		hint = UIKit.t("ui_all_set")
@@ -216,21 +219,34 @@ func _unit_button(uid: String, p: Vector2) -> void:
 	unit_btn[uid] = bt
 
 func _act_label(a: String) -> String:
-	if b.P.spells.has(a):
-		return "%s  %d" % [b.P.spells[a].name, b.spell_cost(a)]
+	if a in ["potion_hp", "potion_mana"]:
+		return "%s ×%d" % [Party.potion_def(a).name, b.potions_left(a) + (1 if _planned_act(a) else 0)]
+	if b.is_spell(a):
+		return "%s  %d" % [b.spell_def(a).name, b.spell_cost(a)]
 	return UIKit.t("act_" + a)
+
+func _planned_act(a: String) -> bool:
+	for q in b.queue:
+		if q.act == a: return true
+	return false
 
 func _act_hint(uid: String, a: String) -> String:
 	var why := b.why_not(uid, a)
 	var h := ""
 	match a:
-		"spark": h = UIKit.f("hint_spark", {"n": b.P.spells.spark.damage})
-		"ward": h = UIKit.f("hint_ward", {"n": b.P.spells.ward.absorb})
-		"focus": h = UIKit.f("hint_focus", {"n": b.P.focus_bonus})
+		"spark": h = UIKit.f("hint_spark", {"n": b.A.spark, "v": b.A.spark_vuln})
+		"ward": h = UIKit.f("hint_ward", {"n": b.A.ward}) + (UIKit.t("hint_ward_two") if int(b.A.ward_targets) > 1 else "")
+		"focus": h = UIKit.f("hint_focus", {"n": b.A.focus})
 		"interrupt": h = UIKit.f("hint_interrupt")
-		"attack": h = UIKit.f("hint_attack", {"n": b.unit(uid).weapon})
-		"defend": h = UIKit.f("hint_defend")
-		"kay_cover": h = UIKit.f("hint_kay_cover", {"n": b.P.kay_cover_reduce})
+		"twin_spark": h = UIKit.f("hint_twin", {"n": b.A.spark})
+		"fire_rain": h = UIKit.f("hint_rain", {"n": b.spell_def("fire_rain").get("damage", 2)})
+		"blind": h = UIKit.f("hint_blind", {"n": b.spell_def("blind").get("weak", 2)})
+		"haze": h = UIKit.f("hint_haze", {"n": b.spell_def("haze").get("weak", 1)})
+		"attack": h = UIKit.f("hint_attack", {"n": b.unit(uid).power})
+		"guard": h = UIKit.f("hint_guard", {"n": Party.guard_block()})
+		"kay_cover": h = UIKit.f("hint_kay_cover", {"n": b.P.kay_cover_block})
+		"potion_hp": h = UIKit.f("hint_potion_hp", {"n": Party.potion_def("potion_hp").heal})
+		"potion_mana": h = UIKit.f("hint_potion_mana", {"n": Party.potion_def("potion_mana").restore_mana})
 	if why != "" and why != "dead": h += "\n" + why
 	return h
 
@@ -257,6 +273,7 @@ func _on_act(uid: String, a: String) -> void:
 		unit_btn[k].disabled = not (k in valid)
 	for bt in act_btns: bt.disabled = true
 	_end_btn.disabled = true
+	_flee_btn.disabled = true
 	hint = "%s · %s：%s" % [b.unit(uid).name, _act_label(a).split("  ")[0], UIKit.t("ui_pick_target")]
 	_refresh_hint()
 	if not valid.is_empty(): unit_btn[valid[0]].grab_focus()
@@ -290,6 +307,11 @@ func _on_clear() -> void:
 	b.queue = []
 	_rebuild()
 
+func _on_flee() -> void:
+	if mode != "plan" or not b.flee(): return
+	_print(b.take_log())
+	_finish("flee")
+
 func _on_end_turn() -> void:
 	if mode != "plan": return
 	targeting = {}
@@ -316,6 +338,7 @@ func _play(before: Dictionary) -> void:
 	for bt in unit_btn.values(): bt.disabled = true
 	_clear_btn.disabled = true
 	_end_btn.disabled = true
+	_flee_btn.disabled = true
 	_end_btn.remove_theme_stylebox_override("normal")
 	_shown = before.duplicate(true)
 	_done_orders = {}
@@ -372,11 +395,14 @@ func _show_end() -> void:
 	act_btns = []
 	_clear_btn.disabled = true
 	_end_btn.disabled = true
+	_flee_btn.disabled = true
 	if b.result == "win":
 		end_btns.append(_button(UIKit.t("ui_continue"), Vector2(540, 400), Vector2(200, 52), _finish.bind("win")))
-	else:
+	elif b.can_flee():
 		end_btns.append(_button(UIKit.t("ui_retry"), Vector2(430, 400), Vector2(200, 52), _retry))
-		end_btns.append(_button(UIKit.t("ui_back_map"), Vector2(650, 400), Vector2(200, 52), _finish.bind("back")))
+		end_btns.append(_button(UIKit.t("ui_back_shrine"), Vector2(650, 400), Vector2(200, 52), _finish.bind("shrine")))
+	else:
+		end_btns.append(_button(UIKit.t("ui_retry"), Vector2(540, 400), Vector2(200, 52), _retry))
 	if auto:
 		print("  [战斗结束] %s；按钮：%s" % [UIKit.t("ui_win") if b.result == "win" else UIKit.t("ui_lose"), "、".join(PackedStringArray(end_btns.map(func(x): return x.text)))])
 	else:
@@ -465,7 +491,7 @@ func _draw_stage() -> void:
 		if not al[i].alive:
 			line = UIKit.t("st_down")
 		elif q != null:
-			line = "%s %s" % [ORDER_MARKS.substr(b.queue.find(q), 1), _act_label(q.act).split("  ")[0]]
+			line = "%s %s" % [ORDER_MARKS.substr(b.exec_order().find(q), 1), _act_label(q.act).split("  ")[0].split(" ×")[0]]
 			if q.target != "": line += " → " + b.unit(q.target).name
 		elif mode == "plan":
 			line = UIKit.t("ui_plan_none")
@@ -533,11 +559,14 @@ func _draw_unit(u: Dictionary, p: Vector2, ally: bool) -> void:
 		for lx in [-34, -18, 14, 30]:
 			ci.draw_rect(Rect2(p.x + lx, p.y - 12, 8, 12), Color(col.darkened(0.2), a))
 	var tags := []
-	if u.ward > 0 and _shown.is_empty(): tags.append(UIKit.f("st_ward", {"n": u.ward}))
-	if u.defend and _shown.is_empty(): tags.append(UIKit.t("act_defend"))
+	if _shown.is_empty():
+		if u.block > 0: tags.append(UIKit.f("st_block", {"n": u.block}))
+		if u.str > 0: tags.append(UIKit.f("st_str", {"n": u.str}))
+		if u.weak > 0: tags.append(UIKit.f("st_weak", {"n": u.weak}))
+		if u.vuln > 0: tags.append(UIKit.f("st_vuln", {"n": u.vuln}))
 	if u.get("pending") != null: tags.append(UIKit.t("st_charging"))
 	if not tags.is_empty():
-		ci.draw_string(font, p + Vector2(-60, 98), " ".join(tags), HORIZONTAL_ALIGNMENT_CENTER, 120, UIKit.SMALL * 2, UIKit.DROP)
+		ci.draw_string(font, p + Vector2(-80, 98), " ".join(tags), HORIZONTAL_ALIGNMENT_CENTER, 160, UIKit.SMALL * 2, UIKit.DROP)
 	ci.draw_string(font, p + Vector2(-70, 28), u.name, HORIZONTAL_ALIGNMENT_CENTER, 140, UIKit.BODY, Color(UIKit.CREAM, a))
 	var bar := Rect2(p.x - 50, p.y + 36, 100, 12)
 	ci.draw_rect(bar.grow(2), UIKit.INK)
@@ -565,15 +594,15 @@ func _draw_incoming(u: Dictionary, p: Vector2, intents: Array) -> void:
 		if not _hp(e)[1]: continue
 		var hit := false
 		var later := false
-		var n: int = it.power
+		var n := b.intent_damage(it, u.uid)
+		var hits: int = it.get("hits", 1)
 		if it.act == "attack" and it.target == u.uid: hit = true
 		elif it.act == "all": hit = true
 		elif it.act == "charge" and it.get("then_target", "") == u.uid:
 			hit = true
 			later = true
-			n = int(it.then.get("power", 0))
 		if not hit: continue
-		var t := "%s %s %d" % [ORDER_MARKS.substr(it.order - 1, 1), e.name, n]
+		var t := "%s %s %d%s" % [ORDER_MARKS.substr(it.order - 1, 1), e.name, n, ("×%d" % hits) if hits > 1 else ""]
 		if later: t = UIKit.f("ui_next_hit", {"who": e.name, "n": n})
 		var w := font.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, UIKit.SMALL * 2).x
 		var r := Rect2(p.x - w / 2 - 10, y - 32, w + 20, 32)
@@ -597,20 +626,27 @@ func _intent_plate(it: Dictionary, p: Vector2) -> void:
 	var num := ""
 	match it.act:
 		"attack":
-			num = str(it.power)
+			num = str(b.intent_damage(it)) + ("×%d" % it.hits if it.hits > 1 else "")
 			line2 = "→ " + b._name(it.target)
 		"all":
-			num = str(it.power)
+			num = str(b.intent_damage(it, b._lowest()))
 			line2 = "→ " + UIKit.t("plate_all")
 		"charge":
 			line1 = UIKit.t("act_charge")
-			num = str(int(it.then.get("power", 0)))
+			num = str(b.intent_damage(it, it.get("then_target", "")))
 			line2 = UIKit.f("plate_charge", {"move": UIKit.t(it.then.get("move", "")), "n": ""}).strip_edges()
 		"summon":
 			num = str(it.count)
 			line2 = UIKit.f("plate_summon", {"n": it.count})
-		"defend":
-			line1 = UIKit.t("act_defend")
+		"buff":
+			num = "+%d" % it.n
+			line2 = UIKit.t("plate_buff")
+		"weak":
+			num = str(it.n)
+			line2 = UIKit.f("plate_weak", {"t": b._name(it.target)})
+		"block":
+			num = str(it.n)
+			line2 = UIKit.t("plate_block")
 	var c1 := UIKit.CREAM if not dead else UIKit.CREAM_DIM
 	ci.draw_string(font, r.position + Vector2(38, 30), line1, HORIZONTAL_ALIGNMENT_LEFT, 60, UIKit.BODY, c1)
 	if num != "":

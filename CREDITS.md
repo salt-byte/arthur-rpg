@@ -21,5 +21,8 @@
 |---|---|---|---|---|
 | 目标图里的中文；之后游戏里的中文 | Fusion Pixel Font 12px 简体中文 | TakWolf | SIL OFL 1.1，全文 credits/FusionPixel_OFL.txt | [TakWolf/fusion-pixel-font](https://github.com/TakWolf/fusion-pixel-font) |
 
+2026-11-09 重做白盒时云端拿不到 GitHub 的发布包，同一套字改从 npm 包 [@vp-tw/cjk-web-fonts-fusion-pixel-font](https://www.npmjs.com/package/@vp-tw/cjk-web-fonts-fusion-pixel-font) 取：它把 Fusion Pixel 12px 简体按 Unicode 分块拆成 woff2，合并回一个字体后再用 tools/build_font.py 截取游戏用到的字。许可不变（OFL 1.1）。
+
 ## 代码
 Yarn 解释器、任务运行时、检查脚本改自 AI RPG Studio 插件的模板。
+scripts/lib/ 下的经验曲线（xp_progression.gd）、技能树（skill_tree.gd）、随机词缀装备（affix_loot.gd）照搬插件 mechanics-library 的参考代码。

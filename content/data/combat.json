@@ -293,7 +293,7 @@
     },
     "merlin_shadow": {
       "name": "enemy_merlin_shadow",
-      "hp": 6,
+      "hp": 10,
       "kind": "shadow",
       "chapter": 1,
       "pattern": [
@@ -301,7 +301,7 @@
           "act": "charge",
           "then": {
             "act": "attack",
-            "power": 12,
+            "power": 30,
             "target": "apprentice",
             "move": "move_heavy_slash"
           },
@@ -313,7 +313,9 @@
           "target": "apprentice",
           "move": "move_slash"
         }
-      ]
+      ],
+      "vanish_on_interrupt": true,
+      "_说明": "梅林的影子：被打断就散了（梅林收回影子），这一仗就赢；不打断、又没在它出手前打倒它，重劈 30 一下打倒学徒。2026-11-09 白盒改：学徒血从 10 涨到 14，原来的 12 打不倒人了。"
     },
     "_其他": "第 2–6 章的敌人第 10 步写遭遇时补"
   },

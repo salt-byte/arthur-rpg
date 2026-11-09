@@ -1,5 +1,5 @@
 {
-  "_说明": "参数登记，来自 design/systems/items.md 第 6 节；代码只读这里的数，改数先改设计页。loot 段格式照 mechanics-library random-affix-loot；shop 段照 shop-economy；装备进背包后按 stats-modifiers 的 flat 加成算。",
+  "_说明": "参数登记，来自 design/systems/items.md 第 6 节；代码只读这里的数，改数先改设计页。loot 段格式照 mechanics-library random-affix-loot；shop 段照 shop-economy；装备进背包后按 stats-modifiers 的 flat 加成算。 loot 段直接交给 scripts/lib/affix_loot.gd（照搬 random-affix-loot）。稀有装备的名字是两个字拼的（鸦语），界面后面接上格子名（杖、斗篷、坠）。",
   "slots": [
     "staff",
     "clothes",
@@ -53,21 +53,26 @@
   },
   "loot": {
     "level_cap": 6,
-    "rarities": {
-      "normal": {
+    "rarities": [
+      {
+        "id": "normal",
         "name": "普通",
         "weight": 70,
+        "mult": 1.0,
         "count_weights": [
           [
             0,
             1
           ]
         ],
+        "color": "#d8d2c4",
         "price_mult": 1
       },
-      "magic": {
+      {
+        "id": "magic",
         "name": "精良",
         "weight": 25,
+        "mult": 1.0,
         "count_weights": [
           [
             1,
@@ -84,12 +89,14 @@
         ],
         "prefix_max": 1,
         "suffix_max": 1,
-        "price_mult": 2,
-        "name_format": "{prefix}{base}{suffix}"
+        "color": "#7EC4EC",
+        "price_mult": 2
       },
-      "rare": {
+      {
+        "id": "rare",
         "name": "稀有",
         "weight": 5,
+        "mult": 1.0,
         "count_weights": [
           [
             3,
@@ -102,10 +109,11 @@
         ],
         "prefix_max": 2,
         "suffix_max": 2,
-        "price_mult": 4,
-        "random_name": true
+        "random_name": true,
+        "color": "#E8C25A",
+        "price_mult": 4
       }
-    },
+    ],
     "bases": {
       "oak_staff": {
         "name": "橡木杖",
@@ -115,7 +123,8 @@
         "stats": {
           "spark": 1
         },
-        "look": "staff_oak"
+        "look": "staff_oak",
+        "weight": 1
       },
       "yew_staff": {
         "name": "紫杉杖",
@@ -126,7 +135,8 @@
           "spark": 1,
           "mana_max": 1
         },
-        "look": "staff_yew"
+        "look": "staff_yew",
+        "weight": 1
       },
       "holly_staff": {
         "name": "冬青杖",
@@ -136,7 +146,8 @@
         "stats": {
           "spark": 2
         },
-        "look": "staff_holly"
+        "look": "staff_holly",
+        "weight": 1
       },
       "rough_cloak": {
         "name": "粗布斗篷",
@@ -146,7 +157,8 @@
         "stats": {
           "hp": 2
         },
-        "look": "cloak_rough"
+        "look": "cloak_rough",
+        "weight": 1
       },
       "sheepskin": {
         "name": "羊皮袄",
@@ -156,7 +168,8 @@
         "stats": {
           "hp": 4
         },
-        "look": "coat_sheepskin"
+        "look": "coat_sheepskin",
+        "weight": 1
       },
       "trim_cloak": {
         "name": "镶边斗篷",
@@ -166,7 +179,8 @@
         "stats": {
           "hp": 6
         },
-        "look": "cloak_trim"
+        "look": "cloak_trim",
+        "weight": 1
       },
       "river_stone": {
         "name": "河石护符",
@@ -175,7 +189,8 @@
         "price": 30,
         "stats": {
           "mana_max": 1
-        }
+        },
+        "weight": 1
       },
       "silver_cross": {
         "name": "银十字",
@@ -184,7 +199,8 @@
         "price": 60,
         "stats": {
           "ward": 1
-        }
+        },
+        "weight": 1
       },
       "antler": {
         "name": "鹿角坠",
@@ -193,7 +209,8 @@
         "price": 90,
         "stats": {
           "focus": 1
-        }
+        },
+        "weight": 1
       }
     },
     "affixes": {
@@ -210,7 +227,8 @@
         "stat": "hp",
         "op": "flat",
         "min": 2,
-        "max": 3
+        "max": 3,
+        "weight": 1
       },
       "heavy": {
         "group": "hp",
@@ -224,7 +242,8 @@
         "stat": "hp",
         "op": "flat",
         "min": 4,
-        "max": 5
+        "max": 5,
+        "weight": 1
       },
       "burning": {
         "group": "spark",
@@ -238,7 +257,8 @@
         "stat": "spark",
         "op": "flat",
         "min": 1,
-        "max": 1
+        "max": 1,
+        "weight": 1
       },
       "blazing": {
         "group": "spark",
@@ -251,7 +271,8 @@
         "stat": "spark",
         "op": "flat",
         "min": 2,
-        "max": 2
+        "max": 2,
+        "weight": 1
       },
       "deep": {
         "group": "mana",
@@ -265,7 +286,8 @@
         "stat": "mana_max",
         "op": "flat",
         "min": 1,
-        "max": 1
+        "max": 1,
+        "weight": 1
       },
       "thick": {
         "group": "ward",
@@ -279,7 +301,8 @@
         "stat": "ward",
         "op": "flat",
         "min": 1,
-        "max": 2
+        "max": 2,
+        "weight": 1
       },
       "vigil": {
         "group": "start_block",
@@ -292,7 +315,8 @@
         "stat": "start_block",
         "op": "flat",
         "min": 3,
-        "max": 4
+        "max": 4,
+        "weight": 1
       },
       "rest": {
         "group": "focus",
@@ -305,7 +329,8 @@
         "stat": "focus",
         "op": "flat",
         "min": 1,
-        "max": 1
+        "max": 1,
+        "weight": 1
       },
       "keen": {
         "group": "start_vuln",
@@ -319,7 +344,8 @@
         "stat": "start_vuln_top_hp",
         "op": "flat",
         "min": 2,
-        "max": 2
+        "max": 2,
+        "weight": 1
       },
       "mend": {
         "group": "after_heal",
@@ -333,11 +359,12 @@
         "stat": "after_battle_heal",
         "op": "flat",
         "min": 2,
-        "max": 2
+        "max": 2,
+        "weight": 1
       }
     },
-    "rare_names": [
-      [
+    "rare_names": {
+      "first": [
         "鸦",
         "霜",
         "灰",
@@ -345,7 +372,7 @@
         "潮",
         "狐"
       ],
-      [
+      "second": [
         "语",
         "痕",
         "影",
@@ -353,8 +380,7 @@
         "歌",
         "眠"
       ]
-    ],
-    "rare_name_format": "{w1}{w2}{slot_noun}",
+    },
     "slot_nouns": {
       "staff": "杖",
       "clothes": "斗篷",
@@ -369,7 +395,9 @@
       "start_block": "第 1 回合挡",
       "start_vuln_top_hp": "开打时血最多的敌人易伤",
       "after_battle_heal": "打赢后每人回血"
-    }
+    },
+    "name_format": "{prefix}{base}{suffix}",
+    "store_seed": true
   },
   "unique": {
     "merlin_staff": {
