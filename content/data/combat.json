@@ -424,10 +424,10 @@
       }
     },
     "bedegraine": {
-      "_待写": "第 10 步写遭遇时补"
+      "_待写": "第 13 步写遭遇时补：敌人和上场的人见 content/dialogue/notes/ 里这一章的交接说明「遭遇和敌人」"
     },
     "pellinore": {
-      "_待写": "第 10 步写遭遇时补",
+      "_待写": "第 13 步写遭遇时补：敌人和上场的人见 content/dialogue/notes/ 里这一章的交接说明「遭遇和敌人」",
       "win": {
         "type": "survive",
         "turns": 3
@@ -436,16 +436,16 @@
       "flee": false
     },
     "morgan_chase": {
-      "_待写": "第 10 步写遭遇时补"
+      "_待写": "第 13 步写遭遇时补：敌人和上场的人见 content/dialogue/notes/ 里这一章的交接说明「遭遇和敌人」"
     },
     "camelot_defense": {
-      "_待写": "第 10 步写遭遇时补"
+      "_待写": "第 13 步写遭遇时补：敌人和上场的人见 content/dialogue/notes/ 里这一章的交接说明「遭遇和敌人」"
     },
     "joyous_gard": {
-      "_待写": "第 10 步写遭遇时补"
+      "_待写": "第 13 步写遭遇时补：敌人和上场的人见 content/dialogue/notes/ 里这一章的交接说明「遭遇和敌人」"
     },
     "dover": {
-      "_待写": "第 10 步写遭遇时补",
+      "_待写": "第 13 步写遭遇时补：敌人和上场的人见 content/dialogue/notes/ 里这一章的交接说明「遭遇和敌人」",
       "win": {
         "type": "survive",
         "turns": 4
@@ -454,16 +454,21 @@
       "flee": false
     },
     "camlann": {
-      "_待写": "第 10 步写遭遇时补"
+      "_待写": "第 13 步写遭遇时补：敌人和上场的人见 content/dialogue/notes/ 里这一章的交接说明「遭遇和敌人」"
     },
     "wild_men": {
-      "_待写": "第 10 步写遭遇时补"
+      "_待写": "第 13 步写遭遇时补：敌人和上场的人见 content/dialogue/notes/ 里这一章的交接说明「遭遇和敌人」"
     },
     "red_knight": {
-      "_待写": "第 10 步写遭遇时补"
+      "_待写": "第 13 步写遭遇时补：敌人和上场的人见 content/dialogue/notes/ 里这一章的交接说明「遭遇和敌人」"
     },
     "tournament": {
-      "_待写": "第 10 步写遭遇时补"
+      "_待写": "第 13 步写遭遇时补：敌人和上场的人见 content/dialogue/notes/ 里这一章的交接说明「遭遇和敌人」"
+    },
+    "camlann_rear": {
+      "_待写": "第 13 步写遭遇时补：第 6 章 D5c 路线，你在后队，亚瑟不在这一仗（见 content/dialogue/notes/ch6_notes.md）",
+      "kind": "story",
+      "flee": false
     }
   }
 }

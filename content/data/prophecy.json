@@ -19,49 +19,57 @@
       "decision": "D2",
       "seen_at": "1205",
       "surface": "庆功宴的酒杯",
-      "decide_at": "1205"
+      "decide_at": "1205",
+      "text": "vision_D2"
     },
     {
       "decision": "D3",
       "seen_at": "1305",
       "surface": "湖面",
-      "decide_at": "1305"
+      "decide_at": "1305",
+      "text": "vision_D3"
     },
     {
       "decision": "D4",
       "seen_at": "1405",
       "surface": "圆桌宴席的酒杯",
-      "decide_at": "1405"
+      "decide_at": "1405",
+      "text": "vision_D4"
     },
     {
       "decision": "D5",
       "seen_at": "1505",
       "surface": "礼拜堂的圣水盆",
-      "decide_at": "1505"
+      "decide_at": "1505",
+      "text": "vision_D5"
     },
     {
       "decision": "S1",
       "seen_at": "2301",
       "surface": "木碗",
-      "decide_at": "2301"
+      "decide_at": "2301",
+      "text": "vision_S1"
     },
     {
       "decision": "S2",
       "seen_at": "2401",
       "surface": "木碗",
-      "decide_at": "2401"
+      "decide_at": "2401",
+      "text": "vision_S2"
     },
     {
       "decision": "S3",
       "seen_at": "2501",
       "surface": "木碗",
-      "decide_at": "2501"
+      "decide_at": "2501",
+      "text": "vision_S3"
     },
     {
       "decision": "S4",
       "seen_at": "2502",
       "surface": "木碗",
-      "decide_at": "2502"
+      "decide_at": "2502",
+      "text": "vision_S4"
     }
   ],
   "_画面说明": "text 是画面下面的两三句（文本键）。现在只有 D1，其余第 10 步补。"

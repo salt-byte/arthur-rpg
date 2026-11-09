@@ -34,15 +34,36 @@ func progress(id, part: int) -> void:
 	if part > int(r.part):
 		r.part = part
 		r.kills = 0
+		r.erase("sub")
 	check_auto()
+	changed.emit()
+
+## 一步里的小目标（<<objective 任务 文本键>>）：同一步里剧情往前走了、地点换了，目标条跟着换；进下一步时清掉
+func set_sub(id, key: String) -> void:
+	var r := _rec(id)
+	if r.is_empty() or r.state != "active": return
+	r["sub"] = key
 	changed.emit()
 
 func complete(id, ending := "") -> void:
 	var r := _rec(id)
 	if r.is_empty() or r.state != "active": return
+	r.erase("sub")
 	r.state = "done"
 	r.ending = ending
 	changed.emit()
+
+## 支线到关门还没做完：决定变量设成 skip.ending、设上它的标记、记成这个结局。做完了的不动，返回空
+func close_side(id) -> Dictionary:
+	var k := str(id)
+	if state(k) == "done" or not table.has(k): return {}
+	var sk: Dictionary = table[k].get("skip", {})
+	if sk.is_empty(): return {}
+	if state(k) == "none": GS.S.quests[k] = {"state": "active", "part": int(table[k].parts[0].id), "ending": "", "kills": 0}
+	if table[k].has("decision"): GS.S.vars[table[k].decision] = sk.ending
+	for f in sk.get("flags", []): GS.S.vars[f] = true
+	complete(k, sk.ending)
+	return sk
 
 func part_def(id) -> Dictionary:
 	var r := _rec(id)
@@ -53,7 +74,7 @@ func part_def(id) -> Dictionary:
 func objective(id) -> String:
 	var p := part_def(id)
 	if p.is_empty(): return ""
-	var t := tr(p.text)
+	var t := tr(str(_rec(id).get("sub", p.get("text", ""))))
 	return runner.interpolate(t) if runner else t
 
 func target(id):

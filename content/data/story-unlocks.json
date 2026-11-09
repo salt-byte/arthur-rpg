@@ -113,23 +113,38 @@
       "kind": "companion",
       "what": "lancelot",
       "at": "1403",
-      "requires": []
+      "requires": [],
+      "popup": {
+        "name": "unlock_u_lancelot_name",
+        "effect": "unlock_u_lancelot_effect",
+        "origin": "unlock_u_lancelot_origin"
+      }
     },
     {
       "id": "u_kay_cover",
       "kind": "companion_move",
       "what": "kay_cover",
-      "at": "1401",
+      "at": "1402",
       "requires": [
         "D1c"
-      ]
+      ],
+      "popup": {
+        "name": "unlock_u_kay_cover_name",
+        "effect": "unlock_u_kay_cover_effect",
+        "origin": "unlock_u_kay_cover_origin"
+      }
     },
     {
       "id": "u_reveal",
       "kind": "spell",
       "what": "reveal",
       "at": "first_boss_ch4",
-      "requires": []
+      "requires": [],
+      "popup": {
+        "name": "unlock_u_reveal_name",
+        "effect": "unlock_u_reveal_effect",
+        "origin": "unlock_u_reveal_origin"
+      }
     },
     {
       "id": "u_gareth",

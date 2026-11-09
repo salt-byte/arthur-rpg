@@ -282,7 +282,7 @@
             5
           ],
           "node": "Ch2_Church",
-          "cond": "quest_part(1002) == 1203"
+          "cond": "quest_part(1002) == 1203 and not visited(\"Ch2_Church\")"
         },
         {
           "cell": [
@@ -290,7 +290,7 @@
             5
           ],
           "node": "Ch2_Church",
-          "cond": "quest_part(1002) == 1203"
+          "cond": "quest_part(1002) == 1203 and not visited(\"Ch2_Church\")"
         }
       ],
       "battle_bg": "#6A6258"

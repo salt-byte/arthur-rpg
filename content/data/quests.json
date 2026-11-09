@@ -153,8 +153,7 @@
       {
         "id": 1502,
         "text": "quest_1005_p1502",
-        "area": "camelot",
-        "battle": "camelot_defense"
+        "area": "camelot"
       },
       {
         "id": 1503,
@@ -193,7 +192,8 @@
       {
         "id": 1603,
         "text": "quest_1006_p1603",
-        "area": "coast"
+        "area": "coast",
+        "_说明": "1602 演完渡海，1603 的 coast 是对岸班威克城外的营地（第 13 步做地图时定做两张还是换变体）"
       },
       {
         "id": 1604,
@@ -205,12 +205,28 @@
         "id": 1605,
         "text": "quest_1006_p1605",
         "area": "camlann",
-        "battle": "camlann"
+        "battle": "camlann",
+        "_说明": "D5c 路线打 camlann_rear，不自动进下一步，对白里 progress_quest"
       },
       {
         "id": 1606,
         "text": "quest_1006_p1606",
         "area": "lake_last"
+      }
+    ],
+    "decision": "D6",
+    "endings": [
+      {
+        "id": "E1",
+        "text": "quest_1006_end_E1"
+      },
+      {
+        "id": "E2",
+        "text": "quest_1006_end_E2"
+      },
+      {
+        "id": "E3",
+        "text": "quest_1006_end_E3"
       }
     ]
   },
@@ -239,6 +255,11 @@
         "id": 3,
         "text": "quest_2301_p3",
         "area": "green_chapel"
+      },
+      {
+        "id": 4,
+        "text": "quest_2301_p4",
+        "area": "camelot"
       }
     ],
     "endings": [
@@ -254,7 +275,11 @@
         "id": "S1_skip",
         "text": "quest_2301_end_S1_skip"
       }
-    ]
+    ],
+    "skip": {
+      "ending": "S1_skip",
+      "flags": []
+    }
   },
   "2401": {
     "type": "side",
@@ -296,7 +321,11 @@
         "id": "S2c",
         "text": "quest_2401_end_S2c"
       }
-    ]
+    ],
+    "skip": {
+      "ending": "S2c",
+      "flags": []
+    }
   },
   "2501": {
     "type": "side",
@@ -332,7 +361,13 @@
         "id": "S3c",
         "text": "quest_2501_end_S3c"
       }
-    ]
+    ],
+    "skip": {
+      "ending": "S3c",
+      "flags": [
+        "apple_happened"
+      ]
+    }
   },
   "2502": {
     "type": "side",
@@ -369,6 +404,12 @@
         "id": "S4c",
         "text": "quest_2502_end_S4c"
       }
-    ]
+    ],
+    "skip": {
+      "ending": "S4c",
+      "flags": [
+        "elaine_died"
+      ]
+    }
   }
 }

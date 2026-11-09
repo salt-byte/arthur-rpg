@@ -83,6 +83,9 @@ func _ready() -> void:
 	if "--sim" in args:
 		_sim()
 		return
+	if "--story" in args:
+		await _story()
+		return
 	if "--battle-demo" in args:
 		await _battle_demo()
 		return
@@ -261,12 +264,16 @@ func start_dialog(node: String) -> void:
 
 ## YarnRunner 的界面接口
 func dialog(entries: Array, cb := Callable()) -> void:
+	if story_mode:
+		_story_dialog(entries, cb)
+		return
 	mode = "dialog"
 	dbox.show_entries(entries, cb)
 
 func look_for(_who: String) -> String: return ""
 
 func _on_dialog_finished() -> void:
+	if story_mode: return
 	dbox.close()
 	if mode in ["dialog", "battle"]: mode = "map"
 	_after_dialog_checks.call_deferred()
@@ -314,10 +321,26 @@ func _wait_screen(kind: String, data: Dictionary, after := Callable()) -> void:
 # ---------------- 指令（剧情不进代码，这里只实现指令） ----------------
 func yarn_command(cmd: String, args: Array) -> bool:
 	print("  [指令] ", cmd, " ", " ".join(args))
+	if story_mode and _story_command(cmd, args): return false
 	match cmd:
 		"start_quest": Quests.start(args[0])
 		"progress_quest": Quests.progress(args[0], int(args[1]))
 		"complete_quest": Quests.complete(args[0], args[1] if args.size() > 1 else "")
+		"objective": Quests.set_sub(args[0], args[1])
+		"close_side":
+			# 章末关门（quests.md「关门」）：接了没做完的支线先弹一次提醒，选「先不走」这段对话就停在这里；
+			# 往前走，没做完的（包括没接的）按 quests.json 的 skip 结算
+			var open := args.filter(func(id): return Quests.state(id) == "active")
+			if open.is_empty() or story_mode:
+				_close_sides(args)
+				return false
+			var names := "、".join(PackedStringArray(open.map(func(id): return "“%s”" % Quests.title(id))))
+			dialog([{"who": "", "text": UIKit.f("ui_close_warn", {"t": names}), "look": "", "choices": [
+				{"t": UIKit.t("ui_close_go"), "kind": "", "fn": func():
+					_close_sides(args)
+					runner.resume()},
+				{"t": UIKit.t("ui_close_wait"), "kind": "", "fn": func(): runner.abort()}]}])
+			return true
 		"companion": GS.S.vars["c_" + args[0]] = args[1]
 		"unlock":
 			if not args[0] in GS.S.unlocks: GS.S.unlocks.append(args[0])
@@ -337,7 +360,11 @@ func yarn_command(cmd: String, args: Array) -> bool:
 			return true
 		"book_after":
 			var page := GS.book_page(args[0])
-			if not page.is_empty() and not args[1] in page.after: page.after.append(args[1])
+			if page.is_empty():
+				# 没看过这一幕（支线没做、到关门时按默认结算）：预言簿没有这一页，不弹提示
+				print("  [预言簿] 没有 %s 这一页，跳过" % args[0])
+				return false
+			if not args[1] in page.after: page.after.append(args[1])
 			var ch := int(str(Data.vision(args[0]).get("seen_at", "1100")).substr(1, 1))
 			hud.show_toast([UIKit.f("ui_book_toast", {"ch": ch}), UIKit.f("ui_book_after", {"t": UIKit.t(args[1])})])
 			print("  [预言簿] 后来：", UIKit.t(args[1]))
@@ -357,9 +384,17 @@ func yarn_command(cmd: String, args: Array) -> bool:
 		"fight_npcs":
 			start_battle(args[0], {"yarn": true})
 			return true
+		"show_ending":
+			# 结局回顾那一屏第 16 步做；现在先打印，回到标题
+			print("  [结局] ", args[0], " ", UIKit.t("ending_" + args[0] + "_title"))
 		_:
 			push_warning("没实现的指令 <<%s>>" % cmd)
 	return false
+
+func _close_sides(ids: Array) -> void:
+	for id in ids:
+		var r := Quests.close_side(id)
+		if not r.is_empty(): print("  [关门] %s 没做完，按 %s 算" % [id, r.ending])
 
 # ---------------- 战斗 ----------------
 func _on_spawn_battle(sp: Dictionary) -> void:
@@ -1206,3 +1241,164 @@ func _expect(ok: bool, what: String) -> void:
 func verify(key: String, ok: bool, note: String) -> void:
 	print("[verify] %s=%s %s" % [key, "PASS" if ok else "FAIL", note])
 	if not ok: fails.append(key)
+
+# ---------------- 剧情走查（--story） ----------------
+## 不走地图、不打仗，按 qa/story_walk.json 的顺序把六章和支线的对白一段段演完：
+## 关键选择按路线挑（--route=a|b|c|d，路线写在 story_walk.json 的 routes），普通选项第一次挑第一个，
+## 同一组选项再来时挑下一个（菜单就这样问遍再离开）；仗直接判赢；看水面、得到能力、换章只打印不弹画面。
+## 每段打印台词、指令、换了的「下一步」，最后核对：六条主线做完、六个决定都有值、结局记上了、支线都有结局。
+## 用法：godot --headless --path . -- --story --route=a [--quiet]
+var story_mode := false
+var _story_walk := {}
+var _story_route := {}
+var _story_picks := {}      # 普通选项：同一组选项第几次出现
+var _story_quiet := false
+var _story_node_picks := 0
+var _story_last_next := ""
+
+func _story() -> void:
+	story_mode = true
+	_story_quiet = "--quiet" in OS.get_cmdline_user_args()
+	_story_walk = JSON.parse_string(FileAccess.get_file_as_string("res://qa/story_walk.json"))
+	_story_route = _story_walk.routes.get(route, {})
+	print("[story] route=%s %s" % [route, JSON.stringify(_story_route)])
+	GS.new_game()
+	Party.new_game()
+	GS.S.metrics = {"t0": Time.get_ticks_msec(), "fights": [], "levelup_ms": [], "tree_ms": [], "bag_ms": [], "equip": 0}
+	runner.init_vars()
+	Quests.changed.connect(_story_next)
+	for ch in ["1", "2", "3", "4", "5", "6"]:
+		print("\n[story] ==== 第 %s 章 ====" % ch)
+		for e in _story_walk.chapters.get(ch, []):
+			var step: Dictionary = e if e is Dictionary else {"node": e}
+			if step.has("route") and not route in step.route: continue
+			if step.has("if") and not YarnRunner._truthy(runner.eval(step["if"])):
+				print("[story] 跳过 %s（%s 不成立）" % [step.get("node", step.get("battle", "")), step["if"]])
+				continue
+			if step.has("battle"):
+				print("[story] [地图战] %s 直接判赢" % step.battle)
+				Quests.on_battle_won(step.battle)
+				if step.has("spawn"): GS.S.defeated.append(step.spawn)
+				if not step.has("node"): continue
+			var node: String = step.node
+			if not runner.has_title(node):
+				_expect(false, "story_walk.json 里的节点 %s 不存在" % node)
+				continue
+			_story_node_picks = 0
+			print("\n[node] ", node)
+			runner.start(node)
+			var t0 := Time.get_ticks_msec()
+			while runner.running:
+				await get_tree().process_frame
+				if Time.get_ticks_msec() - t0 > 20000:
+					_expect(false, "%s 演了 20 秒还没完（卡在 %s）" % [node, runner.current])
+					runner.abort()
+		if int(runner.v("chapter")) != int(ch) + 1 and ch != "6":
+			_expect(false, "第 %s 章走完了没换到第 %d 章（现在 $chapter = %s）" % [ch, int(ch) + 1, str(runner.v("chapter"))])
+	_story_summary()
+	print("[story] 结果：%s，%d 条 FAIL" % ["PASS" if fails.is_empty() else "FAIL", fails.size()])
+	get_tree().quit(0 if fails.is_empty() else 1)
+
+func _story_dialog(entries: Array, cb: Callable) -> void:
+	for e in entries:
+		if not _story_quiet: print("    %s%s" % [(e.who + ": ") if e.who != "" else "", e.text])
+	var choices: Array = entries[-1].get("choices", [])
+	if choices.is_empty():
+		if cb.is_valid(): cb.call_deferred()
+		return
+	_story_node_picks += 1
+	if _story_node_picks > 40:
+		_expect(false, "%s 里选了 40 次还没出来，可能是菜单绕圈" % runner.current)
+		runner.abort.call_deferred()
+		return
+	var pick := -1
+	# 关键选择：选项下面 set 了哪个决定变量，就按路线挑
+	for i in choices.size():
+		for v in choices[i].get("sets", {}):
+			if _story_route.has(v) and str(choices[i].sets[v]) == str(_story_route[v]):
+				pick = i
+	var why := "路线"
+	if pick < 0:
+		var overrides: Dictionary = _story_walk.get("picks", {}).get(route, {})
+		var key := runner.current + "|" + "|".join(PackedStringArray(choices.map(func(c): return c.t)))
+		var n := int(_story_picks.get(key, 0))
+		_story_picks[key] = n + 1
+		if overrides.has(runner.current):
+			# 指定挑哪句：写选项里的几个字
+			for i in choices.size():
+				if str(overrides[runner.current]) in choices[i].t: pick = i
+			why = "指定"
+		if pick < 0:
+			pick = mini(n, choices.size() - 1)
+			why = "第 %d 次" % (n + 1)
+	var c: Dictionary = choices[pick]
+	var sets := ""
+	if not c.get("sets", {}).is_empty(): sets = " " + JSON.stringify(c.sets)
+	print("  [选] %s%s（%s，%d 选 1）%s" % ["◆ " if c.kind == "key" else "", c.t, why, choices.size(), sets])
+	c.fn.call_deferred()
+
+## 走查里不弹画面、不进战斗；返回 true 表示这里处理完了
+func _story_command(cmd: String, args: Array) -> bool:
+	match cmd:
+		"vision":
+			if GS.book_page(args[0]).is_empty(): GS.S.book.append({"decision": args[0], "after": []})
+			var vd := Data.vision(args[0])
+			print("  [看水面] %s：%s" % [vd.get("surface", ""), UIKit.t(vd.get("text", ""))])
+			if vd.get("text", "") == "": _expect(false, "%s 那一幕没有画面文字（prophecy.json text）" % args[0])
+			return true
+		"unlock":
+			if not args[0] in GS.S.unlocks: GS.S.unlocks.append(args[0])
+			print("  [能力] ", args[0])
+			return true
+		"chapter":
+			GS.S.vars["chapter"] = int(args[0])
+			print("  [换章] 第 %s 章" % args[0])
+			return true
+		"fight_npcs":
+			print("  [剧情战] %s 直接判赢" % args[0])
+			if Data.encounter(args[0]).is_empty(): _expect(false, "遭遇 %s 不在 combat.json" % args[0])
+			GS.S.vars["last_battle"] = args[0]
+			GS.S.vars["last_battle_won"] = true
+			Quests.on_battle_won(args[0])
+			return true
+		"autosave":
+			return true
+	return false
+
+func _story_next() -> void:
+	for q in Quests.active():
+		if Quests.is_main(q):
+			var t := Quests.objective(q)
+			if t != _story_last_next:
+				_story_last_next = t
+				print("  [下一步] ", t)
+			return
+
+func _story_summary() -> void:
+	print("\n[story] ==== 走完了 ====")
+	var vars: Dictionary = GS.S.vars
+	var line := []
+	for k in ["D1", "D2", "D3", "D4", "D5", "D6", "S1", "S2", "S3", "S4", "V"]: line.append("%s=%s" % [k, str(vars.get(k, ""))])
+	print("[story] 决定：", " ".join(PackedStringArray(line)))
+	var comp := []
+	for k in vars:
+		if str(k).begins_with("c_"): comp.append("%s=%s" % [str(k).substr(2), str(vars[k])])
+	comp.sort()
+	print("[story] 同伴：", " ".join(PackedStringArray(comp)))
+	var flags := []
+	for k in vars:
+		if typeof(vars[k]) == TYPE_BOOL and vars[k]: flags.append(str(k))
+	flags.sort()
+	print("[story] 标记：", " ".join(PackedStringArray(flags)))
+	print("[story] 能力：", " ".join(PackedStringArray(GS.S.unlocks)))
+	for p in GS.S.book: print("[story] 预言簿 %s：后来 %s" % [p.decision, "、".join(PackedStringArray(p.after.map(func(k): return UIKit.t(k))))])
+	for q in Quests.table:
+		var r: Dictionary = GS.S.quests.get(q, {})
+		print("[story] 任务 %s %s：%s %s" % [q, Quests.title(q), r.get("state", "none"), r.get("ending", "")])
+	for q in ["1001", "1002", "1003", "1004", "1005", "1006"]:
+		_expect(Quests.state(q) == "done", "主线 %s 做完了" % q)
+	for k in ["D1", "D2", "D3", "D4", "D5", "D6"]:
+		_expect(str(vars.get(k, "")) != "", "%s 有值" % k)
+	_expect(str(GS.S.quests.get("1006", {}).get("ending", "")) in ["E1", "E2", "E3"], "结局记在 1006 上（%s）" % str(GS.S.quests.get("1006", {}).get("ending", "")))
+	for q in ["2301", "2401", "2501", "2502"]:
+		_expect(Quests.state(q) == "done" and str(GS.S.quests.get(q, {}).get("ending", "")) != "", "支线 %s 有结局（做了，或到关门时按默认结算）" % q)

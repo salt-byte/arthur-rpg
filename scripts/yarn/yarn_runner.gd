@@ -131,8 +131,15 @@ func _present(sp: Array, opts: Dictionary) -> void:
 		var opt: Dictionary = o
 		# key：关键选择（带水滴标记，选中后先确认）。q / topic 是插件自带的图标
 		var kind := "key" if "key" in o.tags else ("q" if "quest" in o.tags else ("topic" if "topic" in o.tags else ""))
-		choices.append({"t": line_text(o), "kind": kind, "fn": func(): _choose(opt)})
+		choices.append({"t": line_text(o), "kind": kind, "fn": func(): _choose(opt), "sets": _sets_in(o.body)})
 	ui.dialog([{"who": sp[0], "text": sp[1], "look": handler.look_for(sp[0]), "choices": choices}])
+
+## 选项下面直接 <<set>> 的变量（剧情走查 --story 按它挑关键选择）
+func _sets_in(body: Array) -> Dictionary:
+	var out := {}
+	for st in body:
+		if st.type == "set": out[st.var] = eval(st.expr)
+	return out
 
 func _choose(o: Dictionary) -> void:
 	stack.append({"stmts": o.body, "pc": 0})

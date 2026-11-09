@@ -70,9 +70,12 @@
     }
   ],
   "relation_lines": {
-    "kay_believes_you": "半信半疑地觉得你能看见以后的事",
-    "kay_rift": "觉得被弟弟可怜了，和亚瑟之间有了疙瘩",
-    "kay_shamed": "当众认过错，一心想证明自己",
-    "_其他": "其余标记的句子第 8 步写对白时补，正文放进文本表"
+    "kay_believes_you": "rel_kay_believes_you",
+    "kay_rift": "rel_kay_rift",
+    "kay_shamed": "rel_kay_shamed",
+    "_其他": "其余标记的句子写对白时补；正文在文本表 rel_<标记>",
+    "arthur_trusts_sight": "rel_arthur_trusts_sight",
+    "merlin_teaches": "rel_merlin_teaches",
+    "lancelot_warned": "rel_lancelot_warned"
   }
 }
