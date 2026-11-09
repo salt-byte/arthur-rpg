@@ -1,0 +1,32 @@
+--- a/skills/story-map/scripts/story_tree.py
++++ b/skills/story-map/scripts/story_tree.py
+@@ -23,12 +23,28 @@
+     started = set(re.findall(r'<<start_quest\s+(\d+)', yarn))
+     done = set(re.findall(r'<<complete_quest\s+(\d+)', yarn))
+     endings = set(re.findall(r'<<complete_quest\s+\d+\s+(\w+)', yarn))
++    progressed = set(re.findall(r'<<progress_quest\s+(\d+)\s+(\d+)', yarn))
++    # 一章一条任务、步骤 id 就是大纲节点号的写法（parts 里的 id）：节点算作那条任务的一步
++    part_of = {}
++    for qid, q in quests.items():
++        for p in q.get('parts', []):
++            pid = str(p.get('id') if isinstance(p, dict) else p)
++            if pid in planned and pid not in quests: part_of[pid] = (qid, [str(x.get('id') if isinstance(x, dict) else x) for x in q['parts']])
+     problems = []
+     for q in sorted(planned):
++        if q in part_of:
++            qid, parts = part_of[q]
++            if q == parts[0]:
++                if qid not in started: problems.append(f'节点 {q} 是任务 {qid} 的第一步，没有任何对白 <<start_quest {qid}>>')
++            elif (qid, q) not in progressed: problems.append(f'节点 {q} 是任务 {qid} 的一步，没有任何对白 <<progress_quest {qid} {q}>>')
++            continue
+         if q not in quests: problems.append(f'大纲里的任务 {q} 不在 quests.json')
+         if q not in started: problems.append(f'任务 {q} 没有任何对白 <<start_quest {q}>>')
+         if q not in done: problems.append(f'任务 {q} 没有任何对白 <<complete_quest {q}>>')
+-    for q in sorted(set(quests) - planned): problems.append(f'quests.json 里的任务 {q} 不在大纲里（补进大纲，或删掉）')
++    chapter_quests = {qid for qid, _ in part_of.values()}
++    for qid in sorted(chapter_quests):
++        if qid not in done: problems.append(f'任务 {qid} 没有任何对白 <<complete_quest {qid}>>')
++    for q in sorted(set(quests) - planned - chapter_quests): problems.append(f'quests.json 里的任务 {q} 不在大纲里（补进大纲，或删掉）')
+     for e in outline.get('endings', []):
+         if e['id'] not in endings: problems.append(f'结局 {e["id"]} 没有对应的 <<complete_quest … {e["id"]}>>')
+     for p in problems: print('不一致 ', p)
