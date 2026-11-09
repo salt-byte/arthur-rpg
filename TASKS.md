@@ -8,7 +8,7 @@
 - 项目主页：https://claude.ai/artifact/7GrrutxtorkDnBVH2DNaTN （每步重跑 render_site.py，更新同一个页面）
 - 仓库：https://github.com/salt-byte/arthur-rpg ，每步交接前提交并推送。旧白盒网页版在 docs/，GitHub Pages 打开后在 https://salt-byte.github.io/arthur-rpg/ 玩
 - 卡在哪：无
-- 最近一次 verify：2026-11-09 20261109-112111 整体 PASS（qa/verification.json）；--playtest 路线 a、b、c 都 PASS
+- 最近一次 verify：2026-11-09 20261109-115232 整体 PASS（qa/verification.json）；--playtest 路线 a、b、c 都 PASS
 - 停靠点：A0 ✓ · A1 ✓（2026-11-06 重过） · A2 ✓ · B ✓ · 白盒 等你试玩 · C 未到 · D 未到
 
 状态：[ ] 待做 · [~] 进行中 · [x] 完成 · [!] 被退回

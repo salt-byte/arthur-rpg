@@ -1,0 +1,424 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:360)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+ALSA lib confmisc.c:855:(parse_card) cannot find card '0'
+ALSA lib conf.c:5208:(_snd_config_evaluate) function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) error evaluating strings
+ALSA lib conf.c:5208:(_snd_config_evaluate) function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) error evaluating name
+ALSA lib conf.c:5208:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5731:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2721:(snd_pcm_open_noupdate) Unknown PCM default
+ERROR: Condition "status < 0" is true. Returning: ERR_CANT_OPEN
+   at: init_output_device (drivers/alsa/audio_driver_alsa.cpp:90)
+WARNING: All audio drivers failed, falling back to the dummy driver.
+     at: initialize (servers/audio_server.cpp:247)
+
+[boot] ok tables=12 nodes=11 vars=54 quests=10 data_errors=0
+[playtest] route=a
+[check] PASS manor：人和敌人都有格子坐标 []
+[check] PASS forest：人和敌人都有格子坐标 []
+[check] PASS stone_circle：人和敌人都有格子坐标 []
+[check] PASS london：人和敌人都有格子坐标 []
+[check] PASS 文本表能按键取字（quest_1001_name）
+[check] PASS 对白表能按行号取字（ch1_001）
+  [画面] title 梅林的学徒 / 白盒切片：第 1 章，接第 2 章教堂那一幕（第 10 步重做：明雷、升级、掉落） / 点地面走，点人说话，点敌人开打 · 方向键或 WASD 走，Z 确认 · Esc 预言簿 · B 背包 · K 技能
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/title.png
+  [地方] manor (2, 2)
+[node] Ch1_Start
+  你醒来的时候，窗缝里塞的稻草结了一层霜。
+  院子里有人在磨剑，磨石一下一下地响，很慢。
+  [指令] companion kay party
+  [指令] companion arthur party
+  [指令] start_quest 1001
+[verify] launch=PASS 清存档后新开一局：在庄园，主线 1001 开始，学徒 1 级，没有旧存档
+[check] PASS 第 1 章开始时，庄园小礼拜堂自动记成上次祈祷的地方
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/gd_verify_render.png
+[verify] input=PASS 按「下」以后学徒从 (2, 2) 走到 (2, 4)
+[node] Kay
+  凯：林子里又有狼了。昨晚咬死了磨坊家两只羊。
+  凯：我带亚瑟去，你来不来？
+    → 我跟你去。
+      亚瑟也去？他连剑都拿不稳。
+  凯：那就把你那根树枝也带上。上回你拿它点着了我的袖子，这回对准狼。
+  凯：走吧。天黑前得回来，我可不想摸黑找你们俩。
+[check] PASS 鼠标点凯：学徒走到他旁边，跑了 Kay 节点
+[check] PASS 凯和亚瑟在队里
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/map_manor.png
+  [地方] forest (12, 1)
+[check] PASS 从庄园南门走进森林
+[check] PASS 森林里四群能绕开的敌人都在地图上（4 群）
+  [地图] forest_east：狼、灰狼，在 [P: (17, 1), S: (7, 4)] 一带转
+  [地图] forest_road：强盗、弓手，在 [P: (1, 3), S: (10, 7)] 一带转
+  [地图] forest_oak：瘦狼、狼，在 [P: (1, 10), S: (10, 6)] 一带转
+  [地图] forest_log：灰狼 ×2，在 [P: (26, 1), S: (5, 6)] 一带转
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/map_forest.png
+  [地图] 林子边的狼 ×2 开始追
+[战斗] forest_wolves 上场：你, 凯, 亚瑟
+  [第 1 回合] 法力 6/6
+  [意图] 1. 狼 咬 → 亚瑟 3
+  [意图] 2. 灰狼 咬 → 凯 3
+[check] PASS 第 1 章凯的菜单里没有「挡在前面」（a）
+  你·星火 → 狼：2 点，易伤 1
+  凯·砍 → 狼：4 点
+  狼倒下了
+  目标已经倒下，改打灰狼
+  亚瑟·砍 → 灰狼：2 点
+  灰狼 咬 → 凯：3 点
+  [第 2 回合] 法力 6/6
+  [意图] 1. 灰狼 咬 → 亚瑟 3
+  你·星火 → 灰狼：2 点，易伤 1
+  凯·砍 → 灰狼：4 点
+  灰狼倒下了
+  [结果] 赢了
+  [战斗结束] 赢了；按钮：继续
+  [结算] 经验 +4  现在 1 级，4/8
+  [结算] 掉落：银币 4、结实的粗布斗篷（精良）
+  [结算] 血：你 14/14，凯 13/16，亚瑟 13/13
+[check] PASS 这一仗 14 回合内分出胜负（forest_wolves）
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/battle_result_forest_wolves.png
+  [地图] 林子边的狼 已移除
+[check] PASS 血带出战斗：打完凯 13/16，没有回满
+[check] PASS 打赢的那群狼从地图上没了
+  [地图] 路上的强盗 ×2 开始追
+[战斗] road_bandits 上场：你, 凯, 亚瑟
+  [第 1 回合] 法力 6/6
+  [意图] 1. 强盗 劈 → 凯 4
+  [意图] 2. 弓手 射 → 你 2×2
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/battle_bandits.png
+  你·星火 → 弓手：2 点，易伤 1
+  凯·砍 → 弓手：4 点
+  亚瑟·砍 → 弓手：3 点
+  弓手倒下了
+  强盗 劈 → 凯：4 点
+  [第 2 回合] 法力 6/6
+  [意图] 1. 强盗 撒沙 → 凯 虚弱 2
+  你·星火 → 强盗：2 点，易伤 1
+  凯·砍 → 强盗：4 点
+  亚瑟·砍 → 强盗：3 点
+  强盗往凯眼里撒了一把沙：虚弱 2
+  [第 3 回合] 法力 6/6
+  [意图] 1. 强盗 劈 → 凯 5
+  你·星火 → 强盗：2 点，易伤 1
+  强盗倒下了
+  [结果] 赢了
+  [战斗结束] 赢了；按钮：继续
+  [结算] 经验 +4  现在 2 级，0/19
+  [结算] 升到 2 级：三个人的血都满了
+  [结算] 掉落：银币 4、血药 1 瓶
+  [结算] 血：你 14/14，凯 16/16，亚瑟 13/13
+[check] PASS 这一仗 14 回合内分出胜负（road_bandits）
+  [强盗那一仗] 凯·砍 → 狼：4 点
+  [强盗那一仗] 凯·砍 → 灰狼：4 点
+  [强盗那一仗] 凯·砍 → 弓手：4 点
+  [强盗那一仗] 凯·砍 → 强盗：4 点
+  [强盗那一仗] 强盗往凯眼里撒了一把沙：虚弱 2
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/battle_result_road_bandits.png
+  [地图] 路上的强盗 已移除
+  [升级] 2 级，奖励：亚瑟吃得饱、凯磨了剑、钱袋
+  [画面] levelup 升到 2 级 / 三个人的血都满了。挑一样带走： / 另外多了 2 个技能点，挑完去技能树里加。 / 点一张；方向键选，Z 确认
+[check] PASS 升级弹出三张不重样的奖励：亚瑟吃得饱、凯磨了剑、钱袋
+[check] PASS 打完林子边的狼和路上的强盗：经验 8，2 级，技能点 2，三个人回满
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/screen_levelup.png
+  [奖励] 挑了 亚瑟吃得饱：亚瑟血上限多 3
+  [画面] tree 技能树  2 级 · 还有 2 点 / 星火 / 水面 / 护身 / 把戏
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/screen_tree.png
+  [加点] 星火加热 → 1 级，还剩 1 点
+  [加点] 星火加热 → 2 级，还剩 0 点
+[check] PASS 打完两群：学徒 2 级，经验 8
+  [地图] 橡树边的狼 ×2 开始追
+[战斗] oak_wolves 上场：你, 凯, 亚瑟
+  [第 1 回合] 法力 6/6
+  [意图] 1. 瘦狼 咬 → 你 2
+  [意图] 2. 狼 咬 → 你 3
+  你·星火 → 瘦狼：4 点，易伤 1
+  凯·砍 → 瘦狼：4 点
+  瘦狼倒下了
+  目标已经倒下，改打狼
+  亚瑟·砍 → 狼：2 点
+  狼 咬 → 你：3 点
+  [第 2 回合] 法力 6/6
+  [意图] 1. 狼 咬 → 你 3
+  你·星火 → 狼：4 点，易伤 1
+  狼倒下了
+  [结果] 赢了
+  [战斗结束] 赢了；按钮：继续
+  [结算] 经验 +4  现在 2 级，4/19
+  [结算] 掉落：银币 4、法力药 1 瓶
+  [结算] 血：你 11/14，凯 16/16，亚瑟 16/16
+[check] PASS 这一仗 14 回合内分出胜负（oak_wolves）
+[check] PASS 点了两下星火加热：星火打 4 点
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/battle_result_oak_wolves.png
+  [地图] 橡树边的狼 已移除
+  [宝物] 空心老橡树：结实的粗布斗篷（精良）
+[check] PASS 开宝物：背包多了一件精良以上的装备（结实的粗布斗篷）
+  [画面] bag 背包 / 银币 12 · 血药 1 · 法力药 1 / 你：血上限 14 · 法力上限 6 / 杖：空着 / 衣服：空着 / 护符：空着 / 背包 2/20 / 结实的粗布斗篷（精良） /   血 +5  ｜换上：血 +5 / 结实的粗布斗篷（精良） /   血 +5  ｜换上：血 +5
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/screen_bag.png
+  [换装] 换上 结实的粗布斗篷：血 +5
+[check] PASS 换上装备：血上限 14 → 19，星火 4 → 4，法力上限 6 → 6
+  [地图] 倒木后的灰狼 ×2 开始追
+[战斗] log_wolves 上场：你, 凯, 亚瑟
+  [第 1 回合] 法力 6/6
+  [意图] 1. 灰狼 咬 → 凯 3
+  [意图] 2. 灰狼 2 咬 → 凯 3
+  你·星火 → 灰狼：4 点，易伤 1
+  凯·砍 → 灰狼：4 点
+  灰狼倒下了
+  目标已经倒下，改打灰狼 2
+  亚瑟·砍 → 灰狼 2：2 点
+  灰狼 2 咬 → 凯：3 点
+  [第 2 回合] 法力 6/6
+  [意图] 1. 灰狼 2 咬 → 亚瑟 3
+  你·星火 → 灰狼 2：4 点，易伤 1
+  凯·砍 → 灰狼 2：4 点
+  灰狼 2倒下了
+  [结果] 赢了
+  [战斗结束] 赢了；按钮：继续
+  [结算] 经验 +4  现在 2 级，8/19
+  [结算] 掉落：银币 4、结实的粗布斗篷（精良）
+  [结算] 血：你 16/19，凯 13/16，亚瑟 16/16
+[check] PASS 这一仗 14 回合内分出胜负（log_wolves）
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/battle_result_log_wolves.png
+  [地图] 倒木后的灰狼 已移除
+[check] PASS 森林里能绕开的敌人打光了，安静下来
+  [存档] 第 1 章 forest [26, 8]
+  [祈祷] 三人回满，记下：林边石龛，已存档
+  [画面] shrine 林边石龛 / 路边一座齐腰高的石龛。龛里的圣母像脸磨平了，脚边一截蜡烛头冻成了白的。 / 三个人的血都满了。这里记成上次祈祷的地方，已存档；逃跑或输了会回到这里。
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/screen_shrine.png
+[check] PASS 林边石龛祈祷：三人回满，记成上次祈祷的地方
+[战斗] wolves 上场：你, 凯, 亚瑟
+  [第 1 回合] 法力 6/6
+  [意图] 1. 头狼 扑咬 → 亚瑟 4
+  [意图] 2. 灰狼 咬 → 凯 3
+  [意图] 3. 瘦狼 咬 → 你 2
+[check] PASS 狼群第 1 回合三只狼都亮出意图
+  你·星火 → 瘦狼：4 点，易伤 1
+  凯·砍 → 瘦狼：4 点
+  瘦狼倒下了
+  目标已经倒下，改打头狼
+  亚瑟·砍 → 头狼：2 点
+  头狼 扑咬 → 亚瑟：4 点
+  灰狼 咬 → 凯：3 点
+  [第 2 回合] 法力 6/6
+  [意图] 1. 头狼 长嚎 力量 +1
+  [意图] 2. 灰狼 咬 → 亚瑟 4
+  你·星火 → 头狼：4 点，易伤 1
+  凯·砍 → 头狼：4 点
+  亚瑟·砍 → 头狼：3 点
+  头狼仰头长嚎：同类力量 +1
+  灰狼 咬 → 亚瑟：4 点
+  [第 3 回合] 法力 6/6
+  [意图] 1. 头狼 连扑 → 凯 4×2
+  [意图] 2. 灰狼 咬 → 凯 4
+  你·星火 → 头狼：4 点，易伤 1
+  凯·砍 → 头狼：4 点
+  头狼倒下了
+  目标已经倒下，改打灰狼
+  亚瑟·砍 → 灰狼：2 点
+  灰狼 咬 → 凯：4 点
+  [第 4 回合] 法力 6/6
+  [意图] 1. 灰狼 咬 → 亚瑟 4
+  你·星火 → 灰狼：4 点，易伤 1
+  凯·砍 → 灰狼：4 点
+  灰狼倒下了
+  [结果] 赢了
+  [战斗结束] 赢了；按钮：继续
+  [结算] 经验 +10  现在 2 级，18/19
+  [结算] 掉落：银币 6、结实的河石护符（精良）
+  [结算] 血：你 19/19，凯 9/16，亚瑟 8/16
+[check] PASS 这一仗 14 回合内分出胜负（wolves）
+[check] PASS 头狼群第 4 回合打赢（设计页 4–5 回合）
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/battle_win.png
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/battle_result_wolves.png
+[node] Ch1_WolvesDone
+  最后一只狼钻回灌木丛，雪地上留下一串歪歪扭扭的脚印。
+  亚瑟：它扑过来之前，你就喊了。你怎么知道的？
+    → 我看见它要扑。
+      猜的。
+  亚瑟：我也看着它啊。
+  凯：别问了，手冻掉之前先回去。梅林在路口等着，他找你。
+  [指令] progress_quest 1001 1102
+[check] PASS 打完狼任务到 1102 石圈
+[check] PASS 打赢的狼群从地图上消失
+[check] PASS 技能按钮只在地图上出现，战斗里打不开技能树
+  [地方] stone_circle (9, 1)
+[check] PASS 1102 时石圈的水面发光
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/map_stone_circle.png
+[node] Ch1_StoneCircle
+  梅林站在平石旁边，灰兜帽上落了一层雪。石面的凹坑里积着雨水，没有结冰。
+  梅林：你小时候说过，水里有人。现在还有吗？
+    → 有时候有。看不清。
+      我早就不看了。
+  梅林：今天看清楚。别眨眼。
+  [指令] vision D1
+  [看水面] 亚瑟双手把一把剑从石头里拔出来，剑刃上还沾着石屑。接着是凯，他举着同一把剑，对埃克托说：“父亲，是我拔出来的。”
+  [画面] vision 石圈平石上的积水 / 亚瑟双手把一把剑从石头里拔出来，剑刃上还沾着石屑。接着是凯，他举着同一把剑，对埃克托说：“父亲，是我拔出来的。” / 按确认继续
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/screen_vision.png
+  你的太阳穴一跳一跳地疼。水面又平了，只照出灰白的天。
+  梅林：你看见谁了？
+    → 亚瑟。还有凯。
+  梅林：嗯。
+  梅林：先别跟人说。明天到阁楼来。
+  [指令] progress_quest 1001 1103
+[check] PASS 看水面以后预言簿有 D1 这一页
+[check] PASS 看完水面任务到 1103 阁楼
+[check] PASS 看完以后水面不再发光
+[check] PASS 试玩记录：走到石圈看水面时还剩 0 群没打
+  [画面] book 预言簿 / 第 1 章 · 石圈平石上的积水 / 看见：亚瑟双手把一把剑从石头里拔出来，剑刃上还沾着石屑。接着是凯，他举着同一把剑，对埃克托说：“父亲，是我拔出来的。” / 说给谁：还没决定告诉谁。 / 按确认或 Esc 合上
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/screen_book.png
+  [地方] forest (23, 16)
+  [地方] manor (12, 14)
+[node] Merlin
+  阁楼里一股干草和蜡油的味道。梅林把门闩上了。
+  梅林：你知道亚瑟是怎么到这个家里来的？
+    → 埃克托说，是一个冬天抱回来的。
+  梅林：是我抱来的。
+  梅林：他父亲是尤瑟王。
+  梅林：那一夜，尤瑟想要廷塔杰尔城里的伊格赖因。我让他变成她丈夫的样子进了城。她丈夫当晚死在城外。
+  梅林：孩子生下来归我，这是尤瑟答应过的。我把他抱到了这里。
+    → 亚瑟知道吗？
+      你为什么告诉我？
+  梅林：还不该知道。
+  梅林：我走了以后，你替我看着他。
+  梅林：跟我下楼。光会看，还不够。
+  院子里，梅林朝雪地吹了口气。一个人影从雪里站起来，手里握着一把灰色的剑。
+  梅林：它要劈你。看见了吗？
+  梅林：看见了，就让它停下。
+  [指令] unlock u_interrupt
+  [画面] unlock 新能力 / 打断 / 让一个敌人的蓄力或召唤作废。 / 梅林在庄园院子里用一个影子教你的。 / 按确认继续
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/screen_unlock.png
+  [指令] fight_npcs merlin_shadow
+[战斗] merlin_shadow 上场：你
+  [第 1 回合] 法力 6/6
+  [意图] 1. 梅林的影子 蓄力 → 下回合重劈 → 你 19
+[check] PASS 梅林教了打断（新能力提示弹过）
+[check] PASS 影子那一仗只有学徒一个人，剧情战不能逃
+  你·星火 → 梅林的影子：4 点，易伤 1
+  梅林的影子在蓄力，下回合重劈
+  [第 2 回合] 法力 6/6
+  [意图] 1. 梅林的影子 重劈 → 你 19
+  你凝神，法力回 2
+  梅林的影子 重劈 → 你：19 点
+  你倒下了
+  [结果] 你们倒下了
+  [战斗结束] 你们倒下了；按钮：再来一次、回圣龛
+[check] PASS 不打断：第 2 回合学徒挨重劈、倒下
+[check] PASS 输了出现「再来一次」和「回圣龛」
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/battle_lose.png
+  [第 1 回合] 法力 6/6
+  [意图] 1. 梅林的影子 蓄力 → 下回合重劈 → 你 19
+[check] PASS 再来一次：第 1 回合的意图逐字一样（梅林的影子 蓄力 → 下回合重劈 → 你 19）
+  梅林的影子的蓄力被打断，作废
+  梅林的影子这回合没动
+  [第 2 回合] 法力 4/6
+  [意图] 1. 梅林的影子 劈 → 你 2
+[check] PASS 第 1 回合打断：打印「蓄力……作废」
+  你·星火 → 梅林的影子：4 点，易伤 1
+  梅林的影子 劈 → 你：2 点
+  [第 3 回合] 法力 4/6
+  [意图] 1. 梅林的影子 蓄力 → 下回合重劈 → 你 17
+  梅林的影子的蓄力被打断，作废
+  梅林的影子这回合没动
+  [第 4 回合] 法力 2/6
+  [意图] 1. 梅林的影子 劈 → 你 2
+  你·星火 → 梅林的影子：4 点，易伤 1
+  梅林的影子倒下了
+  [结果] 赢了
+  [战斗结束] 赢了；按钮：继续
+  [结算] 经验 +2  现在 3 级，1/37
+  [结算] 升到 3 级：三个人的血都满了
+  [结算] 掉落：银币 2
+  [结算] 血：你 19/19，凯 16/16，亚瑟 16/16
+[check] PASS 这一仗 14 回合内分出胜负（merlin_shadow）
+[check] PASS 打断以后打赢影子（第 4 回合）
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/battle_result_merlin_shadow.png
+  影子散成一地雪粉，落回原处。
+  梅林：一个影子，你让它停下了。到了伦敦，有的事你停不了。
+  梅林：哪些能停，你得自己分。
+  [指令] progress_quest 1001 1104
+  [升级] 3 级，奖励：凯磨了剑、凯吃得饱、钱袋
+  [画面] levelup 升到 3 级 / 三个人的血都满了。挑一样带走： / 另外多了 2 个技能点，挑完去技能树里加。 / 点一张；方向键选，Z 确认
+[check] PASS 升级弹出三张不重样的奖励：凯磨了剑、凯吃得饱、钱袋
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/screen_levelup.png
+  [奖励] 挑了 凯磨了剑：凯砍的时候多 1 点
+  [画面] tree 技能树  3 级 · 还有 2 点 / 星火 / 水面 / 护身 / 把戏
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/screen_tree.png
+  [加点] 星火加热 → 3 级，还剩 1 点
+  [加点] 余烬 → 1 级，还剩 0 点
+[check] PASS 影子那一仗以后任务到 1104 马厩
+[node] Ch1_Stable
+  马厩里点着一盏油灯。凯在给马刷毛，亚瑟坐在草料堆上，把凯的剑擦了又擦。
+  凯：明天到了伦敦，在比武场边上站好，别给我丢人。
+  亚瑟：你上回比武，是谁替你牵的马？
+  凯：所以这回让你牵两匹。
+  你想起石圈积水里那一幕：亚瑟手里的剑，凯举着同一把剑对父亲开口。
+    → 💧提醒凯：到了伦敦，不管发生什么，别对父亲说谎
+      💧告诉亚瑟：凯会说剑是他拔的
+      💧谁都不说
+  [确认] 说出口就不能收回。确定吗？ → 确定
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/key_confirm.png
+  凯：……你今晚怎么了？
+  凯：行。我记着。
+  [指令] autosave 
+  [存档] 第 1 章 manor [18, 5]
+  [指令] complete_quest 1001
+  [指令] chapter 2
+  [存档] 第 2 章 london [14, 10]
+  [画面] card 第 2 章 / 石中剑 / 按确认继续
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/screen_card.png
+  [地方] london (14, 10)
+[node] Ch2_Start
+  [指令] start_quest 1002
+  新年的伦敦，教堂墓地里挤满了人。一块方石头上压着铁砧，铁砧里插着一把剑，剑身上刻着一圈金字：谁把剑从石头里拔出来，谁就是全英格兰生来的王。
+  贵族们轮流上去拔，脸憋得通红。没人拔得动。大主教在石头边搭了顶帐篷，派十个骑士轮班守着，夜里帐篷里也坐着五个人。
+  [指令] progress_quest 1002 1202
+  比武那天早上，凯发现自己的剑落在了住处。亚瑟跑回去取，住处锁着门，人都去看比武了。
+  亚瑟抄近路穿过墓地。帐篷的门帘卷着，里面只剩几条板凳。守剑的骑士也去比武场了。他攥住剑柄，一拔就出来了。
+  你一路跟在他后面。石圈积水里那一幕，就是这块墓地。你停在墙外，看见剑刃上沾着石屑，和水里的一样。
+  亚瑟把剑递给凯。凯低头看见剑身上的金字，脸一下子白了。他把剑裹进斗篷，骑马去找埃克托。斗篷没裹严，金字露出一截，看台上有两个贵族站了起来。
+  埃克托看完剑，只说了一句：“都回教堂。”
+  [指令] progress_quest 1002 1203
+[check] PASS 关键选择记成 D1a
+[check] PASS 凯信不信你跟着选项走
+[check] PASS 兄弟有没有疙瘩跟着选项走
+[check] PASS 第 1 章主线完成
+[check] PASS 进第 2 章，任务到 1203 跟埃克托回教堂
+[check] PASS 第 1 章末学徒 3 级、经验 28（设计页：只打必须打的 12 / 2 级，全打 28 / 3 级）
+[verify] coreLoop=PASS 接 1001 → 打赢狼群（地图上打了 4 群）→ 经验 28、3 级 → 看水面记下 D1 → 学打断、打赢影子 → 马厩选 D1a → 1001 完成 → 进第 2 章 1203
+[check] PASS 进第 2 章时自动存档：第 2 章、D1=D1a、站在伦敦、3 级、背包 3 件
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/map_london.png
+[node] Ch2_Church
+  教堂里很冷，祭坛上只点了两根蜡烛。凯双手捧着那把剑，亚瑟站在他身后，埃克托背对着祭坛。从看台跟过来的两个贵族被神父拦在门口。
+  埃克托：凯，这把剑是哪来的？
+  凯：父亲，这把剑……
+  凯看见了你。你站在柱子边上。他张着嘴停了一下，喉结动了动。
+  凯：……是亚瑟拔出来的。
+  埃克托盯着凯看了很久，把手放到他肩膀上。
+  埃克托：好。不用起誓了。
+  [指令] book_after D1 after_D1a
+  [预言簿] 后来：凯在教堂里自己改了口，说剑是亚瑟拔的。埃克托没让他起誓。
+  埃克托：亚瑟，跟我到墓地去。把剑插回石头里，再拔一次。
+  剑插回去，又被亚瑟拔了出来，比上一回还顺。
+  埃克托跪了下去。凯看了父亲一眼，也跪下了。
+  亚瑟：父亲，你跪我干什么？
+  [指令] progress_quest 1002 1204
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/toast_after.png
+[check] PASS 教堂那一幕以后预言簿 D1 多了一行「后来」（after_D1a）
+  [画面] book 预言簿 / 第 1 章 · 石圈平石上的积水 / 看见：亚瑟双手把一把剑从石头里拔出来，剑刃上还沾着石屑。接着是凯，他举着同一把剑，对埃克托说：“父亲，是我拔出来的。” / 说给谁：你提醒了凯：到了伦敦，不管发生什么，别对父亲说谎。 / 后来：凯在教堂里自己改了口，说剑是亚瑟拔的。埃克托没让他起誓。 / 按确认或 Esc 合上
+[shot] /home/claude/arthur-rpg/production/qa/evidence/20261109-115232/screen_book.png
+[check] PASS 地图上按 Esc 打开预言簿，看得到这一页和「后来」
+  [画面] end 白盒切片到这里结束 / 出发前一晚，你提醒了凯：到了伦敦，不管发生什么，别对父亲说谎。 / 后来：凯在教堂里自己改了口，说剑是亚瑟拔的。埃克托没让他起誓。 / 试玩记录 / 第一次打地图上的敌人：开局后第 2 秒
+地图上的敌人打了 4 / 4 群：自己撞上去 1 群，被追上 3 群
+走到石圈看水面时，还剩 0 群没打
+学徒 3 级，一共拿了 28 点经验
+挑奖励平均停 0.1 秒，加点 0.3 秒，看背包 0.1 秒；换了 1 次装备
+  [试玩记录] 第一次打地图上的敌人：开局后第 2 秒
+  [试玩记录] 地图上的敌人打了 4 / 4 群：自己撞上去 1 群，被追上 3 群
+  [试玩记录] 走到石圈看水面时，还剩 0 群没打
+  [试玩记录] 学徒 3 级，一共拿了 28 点经验
+  [试玩记录] 挑奖励平均停 0.1 秒，加点 0.3 秒，看背包 0.1 秒；换了 1 次装备
+[verify] outcome=PASS 第 2 章教堂按 D1a 演完：预言簿写上「凯在教堂里自己改了口，说剑是亚瑟拔的。埃克托没让他起誓。」，任务到 1204，出现白盒结尾
+[playtest] PASS（0 条不过）
+[boot] ok tables=12 nodes=11 vars=54 quests=10 data_errors=0
+[verify] restart=PASS 点「重新开始」以后存档删掉了，回到标题，没有「继续」
