@@ -16,6 +16,7 @@
     "kay": 13,
     "arthur": 13
    },
+   "takeover": false,
    "arthur_pct": 1.0,
    "style": "full",
    "ch": 1,
@@ -30,6 +31,10 @@
    "spark": 2,
    "mana_max": 6,
    "ap_hp": 14,
+   "killed": [
+    "wolf",
+    "wolf_grey"
+   ],
    "xp": 4,
    "level_after": 1
   },
@@ -49,6 +54,7 @@
     "kay": 12,
     "arthur": 13
    },
+   "takeover": false,
    "arthur_pct": 1.0,
    "style": "full",
    "ch": 1,
@@ -63,6 +69,10 @@
    "spark": 2,
    "mana_max": 6,
    "ap_hp": 14,
+   "killed": [
+    "archer",
+    "bandit"
+   ],
    "xp": 4,
    "level_after": 2
   },
@@ -82,6 +92,7 @@
     "kay": 16,
     "arthur": 13
    },
+   "takeover": false,
    "arthur_pct": 1.0,
    "style": "full",
    "ch": 1,
@@ -96,6 +107,10 @@
    "spark": 3,
    "mana_max": 7,
    "ap_hp": 14,
+   "killed": [
+    "wolf",
+    "wolf_howler"
+   ],
    "xp": 4,
    "level_after": 2
   },
@@ -115,6 +130,7 @@
     "kay": 13,
     "arthur": 13
    },
+   "takeover": false,
    "arthur_pct": 1.0,
    "style": "full",
    "ch": 1,
@@ -129,6 +145,10 @@
    "spark": 3,
    "mana_max": 7,
    "ap_hp": 14,
+   "killed": [
+    "wolf_grey",
+    "wolf_grey"
+   ],
    "xp": 4,
    "level_after": 2
   },
@@ -148,6 +168,7 @@
     "kay": 16,
     "arthur": 12
    },
+   "takeover": false,
    "arthur_pct": 0.92,
    "style": "full",
    "ch": 1,
@@ -162,6 +183,11 @@
    "spark": 3,
    "mana_max": 7,
    "ap_hp": 14,
+   "killed": [
+    "wolf_grey",
+    "wolf_howler",
+    "wolf_leader"
+   ],
    "xp": 10,
    "level_after": 2
   },
@@ -179,6 +205,7 @@
    "end_hp": {
     "apprentice": 12
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "full",
    "ch": 1,
@@ -193,6 +220,9 @@
    "spark": 3,
    "mana_max": 7,
    "ap_hp": 14,
+   "killed": [
+    "merlin_shadow"
+   ],
    "xp": 2,
    "level_after": 3
   },
@@ -200,19 +230,20 @@
    "result": "win",
    "turns": 2,
    "down": 0,
-   "hp_end": 49,
+   "hp_end": 48,
    "hp_max": 53,
    "hp_start": 53,
-   "hp_pct": 0.92,
+   "hp_pct": 0.91,
    "potions": 0,
    "spells": 2,
    "mana_spent": 2,
    "end_hp": {
     "apprentice": 21,
     "kay": 16,
-    "arthur": 12
+    "arthur": 11
    },
-   "arthur_pct": 0.75,
+   "takeover": false,
+   "arthur_pct": 0.69,
    "style": "full",
    "ch": 2,
    "enc": "ch2_north_road",
@@ -226,26 +257,31 @@
    "spark": 5,
    "mana_max": 8,
    "ap_hp": 21,
+   "killed": [
+    "rebel_foot",
+    "rebel_foot"
+   ],
    "xp": 12,
    "level_after": 3
   },
   {
    "result": "win",
-   "turns": 3,
+   "turns": 2,
    "down": 0,
-   "hp_end": 49,
+   "hp_end": 48,
    "hp_max": 53,
    "hp_start": 53,
-   "hp_pct": 0.92,
+   "hp_pct": 0.91,
    "potions": 0,
-   "spells": 3,
-   "mana_spent": 3,
+   "spells": 2,
+   "mana_spent": 2,
    "end_hp": {
     "apprentice": 21,
-    "kay": 12,
-    "arthur": 16
+    "kay": 16,
+    "arthur": 11
    },
-   "arthur_pct": 1.0,
+   "takeover": false,
+   "arthur_pct": 0.69,
    "style": "full",
    "ch": 2,
    "enc": "ch2_ford",
@@ -259,6 +295,10 @@
    "spark": 5,
    "mana_max": 8,
    "ap_hp": 21,
+   "killed": [
+    "rebel_shield",
+    "rebel_foot"
+   ],
    "xp": 12,
    "level_after": 3
   },
@@ -266,19 +306,20 @@
    "result": "win",
    "turns": 2,
    "down": 0,
-   "hp_end": 49,
+   "hp_end": 48,
    "hp_max": 53,
    "hp_start": 53,
-   "hp_pct": 0.92,
+   "hp_pct": 0.91,
    "potions": 0,
    "spells": 2,
    "mana_spent": 2,
    "end_hp": {
     "apprentice": 21,
     "kay": 16,
-    "arthur": 12
+    "arthur": 11
    },
-   "arthur_pct": 0.75,
+   "takeover": false,
+   "arthur_pct": 0.69,
    "style": "full",
    "ch": 2,
    "enc": "ch2_hill",
@@ -292,6 +333,10 @@
    "spark": 5,
    "mana_max": 8,
    "ap_hp": 21,
+   "killed": [
+    "rebel_rider",
+    "rebel_foot"
+   ],
    "xp": 12,
    "level_after": 4
   },
@@ -311,6 +356,7 @@
     "kay": 19,
     "arthur": 16
    },
+   "takeover": false,
    "arthur_pct": 1.0,
    "style": "full",
    "ch": 2,
@@ -325,6 +371,10 @@
    "spark": 6,
    "mana_max": 9,
    "ap_hp": 21,
+   "killed": [
+    "rebel_rider",
+    "rebel_shield"
+   ],
    "xp": 12,
    "level_after": 4
   },
@@ -332,19 +382,20 @@
    "result": "win",
    "turns": 4,
    "down": 0,
-   "hp_end": 40,
+   "hp_end": 38,
    "hp_max": 56,
    "hp_start": 56,
-   "hp_pct": 0.71,
+   "hp_pct": 0.68,
    "potions": 0,
    "spells": 4,
    "mana_spent": 4,
    "end_hp": {
     "apprentice": 21,
     "kay": 15,
-    "arthur": 4
+    "arthur": 2
    },
-   "arthur_pct": 0.25,
+   "takeover": false,
+   "arthur_pct": 0.12,
    "style": "full",
    "ch": 2,
    "enc": "bedegraine",
@@ -358,6 +409,12 @@
    "spark": 6,
    "mana_max": 9,
    "ap_hp": 21,
+   "killed": [
+    "rebel_rider",
+    "rebel_foot",
+    "rebel_foot",
+    "rebel_shield"
+   ],
    "xp": 24,
    "level_after": 4
   },
@@ -365,18 +422,19 @@
    "result": "win",
    "turns": 3,
    "down": 0,
-   "hp_end": 32,
+   "hp_end": 23,
    "hp_max": 37,
    "hp_start": 37,
-   "hp_pct": 0.86,
+   "hp_pct": 0.62,
    "potions": 0,
    "spells": 3,
    "mana_spent": 4,
    "end_hp": {
     "apprentice": 21,
-    "arthur": 11
+    "arthur": 2
    },
-   "arthur_pct": 0.69,
+   "takeover": false,
+   "arthur_pct": 0.12,
    "style": "full",
    "ch": 3,
    "enc": "pellinore",
@@ -390,7 +448,46 @@
    "spark": 6,
    "mana_max": 10,
    "ap_hp": 21,
+   "killed": [],
    "xp": 27,
+   "level_after": 5
+  },
+  {
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_end": 60,
+   "hp_max": 61,
+   "hp_start": 61,
+   "hp_pct": 0.98,
+   "potions": 1,
+   "spells": 1,
+   "mana_spent": 1,
+   "end_hp": {
+    "apprentice": 24,
+    "kay": 21,
+    "arthur": 15
+   },
+   "takeover": false,
+   "arthur_pct": 0.94,
+   "style": "full",
+   "ch": 3,
+   "enc": "ch3_road_knight",
+   "label": "往卡美洛路上的骑士",
+   "kind": "map",
+   "boss": false,
+   "level": 5,
+   "side": false,
+   "tries": 1,
+   "required": false,
+   "spark": 6,
+   "mana_max": 10,
+   "ap_hp": 24,
+   "killed": [
+    "ch3_squire",
+    "ch3_knight"
+   ],
+   "xp": 18,
    "level_after": 5
   },
   {
@@ -409,40 +506,8 @@
     "kay": 21,
     "arthur": 11
    },
+   "takeover": false,
    "arthur_pct": 0.69,
-   "style": "full",
-   "ch": 3,
-   "enc": "ch3_road_knight",
-   "label": "往卡美洛路上的骑士",
-   "kind": "map",
-   "boss": false,
-   "level": 5,
-   "side": false,
-   "tries": 1,
-   "required": false,
-   "spark": 6,
-   "mana_max": 10,
-   "ap_hp": 24,
-   "xp": 18,
-   "level_after": 5
-  },
-  {
-   "result": "win",
-   "turns": 2,
-   "down": 0,
-   "hp_end": 57,
-   "hp_max": 61,
-   "hp_start": 61,
-   "hp_pct": 0.93,
-   "potions": 0,
-   "spells": 2,
-   "mana_spent": 2,
-   "end_hp": {
-    "apprentice": 24,
-    "kay": 21,
-    "arthur": 12
-   },
-   "arthur_pct": 0.75,
    "style": "full",
    "ch": 3,
    "enc": "ch3_wild_pair",
@@ -456,6 +521,10 @@
    "spark": 6,
    "mana_max": 10,
    "ap_hp": 24,
+   "killed": [
+    "wild_man",
+    "wild_man"
+   ],
    "xp": 18,
    "level_after": 5
   },
@@ -463,18 +532,19 @@
    "result": "win",
    "turns": 2,
    "down": 0,
-   "hp_end": 63,
+   "hp_end": 59,
    "hp_max": 63,
    "hp_start": 63,
-   "hp_pct": 1.0,
+   "hp_pct": 0.94,
    "potions": 0,
    "spells": 2,
    "mana_spent": 2,
    "end_hp": {
     "apprentice": 24,
     "kay": 21,
-    "gawain": 18
+    "gawain": 14
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "full",
    "ch": 3,
@@ -489,6 +559,10 @@
    "spark": 6,
    "mana_max": 10,
    "ap_hp": 24,
+   "killed": [
+    "ch3_squire",
+    "ch3_squire"
+   ],
    "xp": 18,
    "level_after": 5
   },
@@ -496,18 +570,19 @@
    "result": "win",
    "turns": 2,
    "down": 0,
-   "hp_end": 58,
+   "hp_end": 62,
    "hp_max": 63,
    "hp_start": 63,
-   "hp_pct": 0.92,
-   "potions": 0,
+   "hp_pct": 0.98,
+   "potions": 1,
    "spells": 2,
-   "mana_spent": 2,
+   "mana_spent": 3,
    "end_hp": {
     "apprentice": 24,
     "kay": 21,
-    "gawain": 13
+    "gawain": 17
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "full",
    "ch": 3,
@@ -522,6 +597,10 @@
    "spark": 6,
    "mana_max": 10,
    "ap_hp": 24,
+   "killed": [
+    "wild_man",
+    "ch3_knight"
+   ],
    "xp": 18,
    "level_after": 6
   },
@@ -529,17 +608,18 @@
    "result": "win",
    "turns": 3,
    "down": 0,
-   "hp_end": 28,
+   "hp_end": 26,
    "hp_max": 42,
    "hp_start": 42,
-   "hp_pct": 0.67,
+   "hp_pct": 0.62,
    "potions": 0,
    "spells": 3,
    "mana_spent": 3,
    "end_hp": {
     "apprentice": 24,
-    "gawain": 4
+    "gawain": 2
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "full",
    "ch": 3,
@@ -554,7 +634,50 @@
    "spark": 7,
    "mana_max": 11,
    "ap_hp": 24,
+   "killed": [
+    "wild_man",
+    "wild_man",
+    "wild_man"
+   ],
    "xp": 27,
+   "level_after": 6
+  },
+  {
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_end": 63,
+   "hp_max": 69,
+   "hp_start": 69,
+   "hp_pct": 0.91,
+   "potions": 0,
+   "spells": 2,
+   "mana_spent": 2,
+   "end_hp": {
+    "apprentice": 28,
+    "kay": 21,
+    "gawain": 14
+   },
+   "takeover": false,
+   "arthur_pct": 0,
+   "style": "full",
+   "ch": 4,
+   "enc": "ch4_brigands",
+   "label": "林中的强人",
+   "kind": "map",
+   "boss": false,
+   "level": 6,
+   "side": false,
+   "tries": 1,
+   "required": false,
+   "spark": 6,
+   "mana_max": 12,
+   "ap_hp": 28,
+   "killed": [
+    "ch4_brigand",
+    "ch4_brigand"
+   ],
+   "xp": 24,
    "level_after": 6
   },
   {
@@ -573,39 +696,7 @@
     "kay": 21,
     "gawain": 15
    },
-   "arthur_pct": 0,
-   "style": "full",
-   "ch": 4,
-   "enc": "ch4_brigands",
-   "label": "林中的强人",
-   "kind": "map",
-   "boss": false,
-   "level": 6,
-   "side": false,
-   "tries": 1,
-   "required": false,
-   "spark": 6,
-   "mana_max": 12,
-   "ap_hp": 28,
-   "xp": 24,
-   "level_after": 6
-  },
-  {
-   "result": "win",
-   "turns": 2,
-   "down": 0,
-   "hp_end": 65,
-   "hp_max": 69,
-   "hp_start": 69,
-   "hp_pct": 0.94,
-   "potions": 0,
-   "spells": 2,
-   "mana_spent": 2,
-   "end_hp": {
-    "apprentice": 28,
-    "kay": 21,
-    "gawain": 16
-   },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "full",
    "ch": 4,
@@ -620,26 +711,31 @@
    "spark": 6,
    "mana_max": 12,
    "ap_hp": 28,
+   "killed": [
+    "ch4_wolf",
+    "ch4_wolf"
+   ],
    "xp": 24,
    "level_after": 7
   },
   {
    "result": "win",
-   "turns": 3,
+   "turns": 4,
    "down": 0,
-   "hp_end": 59,
+   "hp_end": 70,
    "hp_max": 70,
    "hp_start": 70,
-   "hp_pct": 0.84,
-   "potions": 0,
+   "hp_pct": 1.0,
+   "potions": 2,
    "spells": 3,
    "mana_spent": 4,
    "end_hp": {
     "apprentice": 31,
-    "arthur": 7,
+    "arthur": 18,
     "kay": 21
    },
-   "arthur_pct": 0.39,
+   "takeover": false,
+   "arthur_pct": 1.0,
    "style": "full",
    "ch": 4,
    "enc": "morgan_chase",
@@ -653,6 +749,11 @@
    "spark": 6,
    "mana_max": 12,
    "ap_hp": 31,
+   "killed": [
+    "morgan_knight",
+    "morgan_horn",
+    "morgan_captain"
+   ],
    "xp": 60,
    "level_after": 7
   },
@@ -660,18 +761,19 @@
    "result": "win",
    "turns": 2,
    "down": 0,
-   "hp_end": 67,
+   "hp_end": 66,
    "hp_max": 72,
    "hp_start": 72,
-   "hp_pct": 0.93,
+   "hp_pct": 0.92,
    "potions": 0,
    "spells": 2,
    "mana_spent": 2,
    "end_hp": {
     "apprentice": 31,
     "kay": 21,
-    "lancelot": 15
+    "lancelot": 14
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "full",
    "ch": 4,
@@ -686,6 +788,10 @@
    "spark": 6,
    "mana_max": 12,
    "ap_hp": 31,
+   "killed": [
+    "morgan_knight",
+    "morgan_knight"
+   ],
    "xp": 24,
    "level_after": 7
   },
@@ -693,18 +799,19 @@
    "result": "win",
    "turns": 2,
    "down": 0,
-   "hp_end": 66,
+   "hp_end": 65,
    "hp_max": 71,
    "hp_start": 71,
-   "hp_pct": 0.93,
+   "hp_pct": 0.92,
    "potions": 0,
    "spells": 2,
    "mana_spent": 2,
    "end_hp": {
     "apprentice": 31,
-    "gawain": 15,
+    "gawain": 14,
     "lancelot": 20
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "full",
    "ch": 4,
@@ -719,25 +826,30 @@
    "spark": 6,
    "mana_max": 12,
    "ap_hp": 31,
+   "killed": [
+    "ch4_wolf",
+    "ch4_brigand"
+   ],
    "xp": 24,
    "level_after": 7
   },
   {
    "result": "win",
-   "turns": 4,
-   "down": 0,
-   "hp_end": 56,
+   "turns": 5,
+   "down": 1,
+   "hp_end": 47,
    "hp_max": 67,
    "hp_start": 67,
-   "hp_pct": 0.84,
+   "hp_pct": 0.7,
    "potions": 0,
-   "spells": 4,
-   "mana_spent": 4,
+   "spells": 5,
+   "mana_spent": 7,
    "end_hp": {
     "apprentice": 31,
     "gawain": 16,
-    "gareth": 9
+    "gareth": 0
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "full",
    "ch": 4,
@@ -752,105 +864,11 @@
    "spark": 6,
    "mana_max": 12,
    "ap_hp": 31,
-   "xp": 60,
-   "level_after": 8
-  },
-  {
-   "result": "win",
-   "turns": 2,
-   "down": 0,
-   "hp_end": 69,
-   "hp_max": 74,
-   "hp_start": 74,
-   "hp_pct": 0.93,
-   "potions": 0,
-   "spells": 2,
-   "mana_spent": 2,
-   "end_hp": {
-    "apprentice": 33,
-    "kay": 23,
-    "bedivere": 13
-   },
-   "arthur_pct": 0,
-   "style": "full",
-   "ch": 5,
-   "enc": "ch5_deserters",
-   "label": "城外的逃兵",
-   "kind": "map",
-   "boss": false,
-   "level": 8,
-   "side": false,
-   "tries": 1,
-   "required": false,
-   "spark": 6,
-   "mana_max": 12,
-   "ap_hp": 33,
-   "xp": 30,
-   "level_after": 8
-  },
-  {
-   "result": "win",
-   "turns": 2,
-   "down": 0,
-   "hp_end": 69,
-   "hp_max": 74,
-   "hp_start": 74,
-   "hp_pct": 0.93,
-   "potions": 0,
-   "spells": 2,
-   "mana_spent": 2,
-   "end_hp": {
-    "apprentice": 33,
-    "kay": 23,
-    "bedivere": 13
-   },
-   "arthur_pct": 0,
-   "style": "full",
-   "ch": 5,
-   "enc": "ch5_raiders",
-   "label": "河边的强盗",
-   "kind": "map",
-   "boss": false,
-   "level": 8,
-   "side": false,
-   "tries": 1,
-   "required": false,
-   "spark": 6,
-   "mana_max": 12,
-   "ap_hp": 33,
-   "xp": 30,
-   "level_after": 8
-  },
-  {
-   "result": "win",
-   "turns": 6,
-   "down": 1,
-   "hp_end": 50,
-   "hp_max": 74,
-   "hp_start": 74,
-   "hp_pct": 0.68,
-   "potions": 2,
-   "spells": 5,
-   "mana_spent": 5,
-   "end_hp": {
-    "apprentice": 33,
-    "kay": 17,
-    "bedivere": 0
-   },
-   "arthur_pct": 0,
-   "style": "full",
-   "ch": 5,
-   "enc": "camelot_defense",
-   "label": "守卡美洛",
-   "kind": "quest",
-   "boss": false,
-   "level": 8,
-   "side": false,
-   "tries": 1,
-   "required": true,
-   "spark": 6,
-   "mana_max": 12,
-   "ap_hp": 33,
+   "killed": [
+    "red_spearman",
+    "red_spearman",
+    "red_knight"
+   ],
    "xp": 60,
    "level_after": 8
   },
@@ -870,6 +888,123 @@
     "kay": 23,
     "bedivere": 12
    },
+   "takeover": false,
+   "arthur_pct": 0,
+   "style": "full",
+   "ch": 5,
+   "enc": "ch5_deserters",
+   "label": "城外的逃兵",
+   "kind": "map",
+   "boss": false,
+   "level": 8,
+   "side": false,
+   "tries": 1,
+   "required": false,
+   "spark": 6,
+   "mana_max": 12,
+   "ap_hp": 33,
+   "killed": [
+    "ch5_deserter",
+    "ch5_deserter"
+   ],
+   "xp": 30,
+   "level_after": 8
+  },
+  {
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_end": 68,
+   "hp_max": 74,
+   "hp_start": 74,
+   "hp_pct": 0.92,
+   "potions": 0,
+   "spells": 2,
+   "mana_spent": 2,
+   "end_hp": {
+    "apprentice": 33,
+    "kay": 23,
+    "bedivere": 12
+   },
+   "takeover": false,
+   "arthur_pct": 0,
+   "style": "full",
+   "ch": 5,
+   "enc": "ch5_raiders",
+   "label": "河边的强盗",
+   "kind": "map",
+   "boss": false,
+   "level": 8,
+   "side": false,
+   "tries": 1,
+   "required": false,
+   "spark": 6,
+   "mana_max": 12,
+   "ap_hp": 33,
+   "killed": [
+    "raider",
+    "ch5_deserter"
+   ],
+   "xp": 30,
+   "level_after": 8
+  },
+  {
+   "result": "win",
+   "turns": 4,
+   "down": 1,
+   "hp_end": 41,
+   "hp_max": 74,
+   "hp_start": 74,
+   "hp_pct": 0.55,
+   "potions": 0,
+   "spells": 4,
+   "mana_spent": 4,
+   "end_hp": {
+    "apprentice": 33,
+    "kay": 8,
+    "bedivere": 0
+   },
+   "takeover": false,
+   "arthur_pct": 0,
+   "style": "full",
+   "ch": 5,
+   "enc": "camelot_defense",
+   "label": "守卡美洛",
+   "kind": "quest",
+   "boss": false,
+   "level": 8,
+   "side": false,
+   "tries": 1,
+   "required": true,
+   "spark": 6,
+   "mana_max": 12,
+   "ap_hp": 33,
+   "killed": [
+    "raider_chief",
+    "raider",
+    "raider",
+    "raider"
+   ],
+   "xp": 60,
+   "level_after": 8
+  },
+  {
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_end": 67,
+   "hp_max": 74,
+   "hp_start": 74,
+   "hp_pct": 0.91,
+   "potions": 0,
+   "spells": 2,
+   "mana_spent": 2,
+   "end_hp": {
+    "apprentice": 33,
+    "kay": 23,
+    "bedivere": 11
+   },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "full",
    "ch": 5,
@@ -884,6 +1019,10 @@
    "spark": 6,
    "mana_max": 12,
    "ap_hp": 33,
+   "killed": [
+    "raider",
+    "raider"
+   ],
    "xp": 30,
    "level_after": 8
   },
@@ -891,18 +1030,19 @@
    "result": "win",
    "turns": 2,
    "down": 0,
-   "hp_end": 69,
+   "hp_end": 68,
    "hp_max": 74,
    "hp_start": 74,
-   "hp_pct": 0.93,
+   "hp_pct": 0.92,
    "potions": 0,
    "spells": 2,
    "mana_spent": 2,
    "end_hp": {
     "apprentice": 33,
     "kay": 23,
-    "bedivere": 13
+    "bedivere": 12
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "full",
    "ch": 5,
@@ -917,6 +1057,10 @@
    "spark": 6,
    "mana_max": 12,
    "ap_hp": 33,
+   "killed": [
+    "ch5_deserter",
+    "tourney_knight"
+   ],
    "xp": 30,
    "level_after": 9
   },
@@ -936,6 +1080,7 @@
     "bedivere": 15,
     "kay": 23
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "full",
    "ch": 5,
@@ -950,26 +1095,32 @@
    "spark": 6,
    "mana_max": 12,
    "ap_hp": 33,
+   "killed": [
+    "tourney_knight",
+    "tourney_knight",
+    "tourney_knight"
+   ],
    "xp": 45,
    "level_after": 9
   },
   {
    "result": "win",
-   "turns": 1,
+   "turns": 2,
    "down": 0,
-   "hp_end": 73,
+   "hp_end": 66,
    "hp_max": 73,
    "hp_start": 73,
-   "hp_pct": 1.0,
+   "hp_pct": 0.9,
    "potions": 0,
-   "spells": 1,
-   "mana_spent": 2,
+   "spells": 2,
+   "mana_spent": 3,
    "end_hp": {
     "apprentice": 33,
-    "arthur": 20,
+    "arthur": 13,
     "bedivere": 20
    },
-   "arthur_pct": 1.0,
+   "takeover": false,
+   "arthur_pct": 0.65,
    "style": "full",
    "ch": 6,
    "enc": "ch6_looters",
@@ -983,6 +1134,10 @@
    "spark": 8,
    "mana_max": 12,
    "ap_hp": 33,
+   "killed": [
+    "ch6_looter",
+    "ch6_looter"
+   ],
    "xp": 36,
    "level_after": 9
   },
@@ -990,19 +1145,20 @@
    "result": "win",
    "turns": 3,
    "down": 0,
-   "hp_end": 69,
+   "hp_end": 67,
    "hp_max": 73,
    "hp_start": 73,
-   "hp_pct": 0.95,
+   "hp_pct": 0.92,
    "potions": 0,
    "spells": 3,
    "mana_spent": 4,
    "end_hp": {
     "apprentice": 33,
-    "arthur": 16,
+    "arthur": 14,
     "bedivere": 20
    },
-   "arthur_pct": 0.8,
+   "takeover": false,
+   "arthur_pct": 0.7,
    "style": "full",
    "ch": 6,
    "enc": "joyous_gard",
@@ -1016,26 +1172,32 @@
    "spark": 8,
    "mana_max": 12,
    "ap_hp": 33,
+   "killed": [
+    "joyous_guard",
+    "joyous_guard",
+    "joyous_guard"
+   ],
    "xp": 54,
    "level_after": 9
   },
   {
    "result": "win",
-   "turns": 1,
+   "turns": 2,
    "down": 0,
-   "hp_end": 73,
+   "hp_end": 66,
    "hp_max": 73,
    "hp_start": 73,
-   "hp_pct": 1.0,
+   "hp_pct": 0.9,
    "potions": 0,
-   "spells": 1,
-   "mana_spent": 2,
+   "spells": 2,
+   "mana_spent": 3,
    "end_hp": {
     "apprentice": 33,
-    "arthur": 20,
+    "arthur": 13,
     "bedivere": 20
    },
-   "arthur_pct": 1.0,
+   "takeover": false,
+   "arthur_pct": 0.65,
    "style": "full",
    "ch": 6,
    "enc": "ch6_shore",
@@ -1049,26 +1211,31 @@
    "spark": 8,
    "mana_max": 12,
    "ap_hp": 33,
+   "killed": [
+    "mordred_soldier",
+    "ch6_looter"
+   ],
    "xp": 36,
    "level_after": 9
   },
   {
    "result": "win",
-   "turns": 2,
+   "turns": 4,
    "down": 0,
-   "hp_end": 65,
+   "hp_end": 41,
    "hp_max": 73,
    "hp_start": 73,
-   "hp_pct": 0.89,
+   "hp_pct": 0.56,
    "potions": 0,
-   "spells": 2,
-   "mana_spent": 3,
+   "spells": 4,
+   "mana_spent": 12,
    "end_hp": {
-    "apprentice": 29,
+    "apprentice": 9,
     "gawain": 16,
-    "arthur": 20
+    "arthur": 16
    },
-   "arthur_pct": 1.0,
+   "takeover": false,
+   "arthur_pct": 0.8,
    "style": "full",
    "ch": 6,
    "enc": "dover",
@@ -1082,25 +1249,27 @@
    "spark": 8,
    "mana_max": 12,
    "ap_hp": 33,
+   "killed": [],
    "xp": 36,
    "level_after": 9
   },
   {
    "result": "win",
-   "turns": 1,
+   "turns": 2,
    "down": 0,
    "hp_end": 73,
    "hp_max": 73,
    "hp_start": 73,
    "hp_pct": 1.0,
    "potions": 0,
-   "spells": 1,
-   "mana_spent": 2,
+   "spells": 2,
+   "mana_spent": 3,
    "end_hp": {
     "apprentice": 33,
     "arthur": 20,
     "bedivere": 20
    },
+   "takeover": false,
    "arthur_pct": 1.0,
    "style": "full",
    "ch": 6,
@@ -1115,25 +1284,30 @@
    "spark": 8,
    "mana_max": 12,
    "ap_hp": 33,
+   "killed": [
+    "ch6_looter",
+    "mordred_rider"
+   ],
    "xp": 36,
    "level_after": 10
   },
   {
    "result": "win",
-   "turns": 1,
+   "turns": 2,
    "down": 0,
    "hp_end": 73,
    "hp_max": 73,
    "hp_start": 73,
    "hp_pct": 1.0,
    "potions": 0,
-   "spells": 1,
-   "mana_spent": 2,
+   "spells": 2,
+   "mana_spent": 3,
    "end_hp": {
     "apprentice": 33,
     "arthur": 20,
     "bedivere": 20
    },
+   "takeover": false,
    "arthur_pct": 1.0,
    "style": "full",
    "ch": 6,
@@ -1148,26 +1322,31 @@
    "spark": 8,
    "mana_max": 12,
    "ap_hp": 33,
+   "killed": [
+    "mordred_soldier",
+    "mordred_rider"
+   ],
    "xp": 36,
    "level_after": 10
   },
   {
    "result": "win",
    "turns": 4,
-   "down": 0,
-   "hp_end": 72,
+   "down": 1,
+   "hp_end": 53,
    "hp_max": 73,
    "hp_start": 73,
-   "hp_pct": 0.99,
-   "potions": 1,
+   "hp_pct": 0.73,
+   "potions": 0,
    "spells": 4,
-   "mana_spent": 8,
+   "mana_spent": 7,
    "end_hp": {
     "apprentice": 33,
-    "arthur": 19,
+    "arthur": 0,
     "bedivere": 20
    },
-   "arthur_pct": 0.95,
+   "takeover": false,
+   "arthur_pct": 0,
    "style": "full",
    "ch": 6,
    "enc": "camlann",
@@ -1181,6 +1360,11 @@
    "spark": 8,
    "mana_max": 12,
    "ap_hp": 33,
+   "killed": [
+    "mordred_soldier",
+    "mordred_soldier",
+    "mordred"
+   ],
    "xp": 90,
    "level_after": 10
   },
@@ -1200,6 +1384,7 @@
     "kay": 13,
     "arthur": 13
    },
+   "takeover": false,
    "arthur_pct": 1.0,
    "style": "save",
    "ch": 1,
@@ -1214,6 +1399,10 @@
    "spark": 2,
    "mana_max": 6,
    "ap_hp": 14,
+   "killed": [
+    "wolf",
+    "wolf_grey"
+   ],
    "xp": 4,
    "level_after": 1
   },
@@ -1233,6 +1422,7 @@
     "kay": 9,
     "arthur": 13
    },
+   "takeover": false,
    "arthur_pct": 1.0,
    "style": "save",
    "ch": 1,
@@ -1247,6 +1437,10 @@
    "spark": 2,
    "mana_max": 6,
    "ap_hp": 14,
+   "killed": [
+    "archer",
+    "bandit"
+   ],
    "xp": 4,
    "level_after": 2
   },
@@ -1266,6 +1460,7 @@
     "kay": 16,
     "arthur": 13
    },
+   "takeover": false,
    "arthur_pct": 1.0,
    "style": "save",
    "ch": 1,
@@ -1280,6 +1475,10 @@
    "spark": 3,
    "mana_max": 7,
    "ap_hp": 14,
+   "killed": [
+    "wolf",
+    "wolf_howler"
+   ],
    "xp": 4,
    "level_after": 2
   },
@@ -1299,6 +1498,7 @@
     "kay": 13,
     "arthur": 13
    },
+   "takeover": false,
    "arthur_pct": 1.0,
    "style": "save",
    "ch": 1,
@@ -1313,6 +1513,10 @@
    "spark": 3,
    "mana_max": 7,
    "ap_hp": 14,
+   "killed": [
+    "wolf_grey",
+    "wolf_grey"
+   ],
    "xp": 4,
    "level_after": 2
   },
@@ -1332,6 +1536,7 @@
     "kay": 8,
     "arthur": 12
    },
+   "takeover": false,
    "arthur_pct": 0.92,
    "style": "save",
    "ch": 1,
@@ -1346,6 +1551,11 @@
    "spark": 3,
    "mana_max": 7,
    "ap_hp": 14,
+   "killed": [
+    "wolf_grey",
+    "wolf_howler",
+    "wolf_leader"
+   ],
    "xp": 10,
    "level_after": 2
   },
@@ -1363,6 +1573,7 @@
    "end_hp": {
     "apprentice": 12
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "save",
    "ch": 1,
@@ -1377,6 +1588,9 @@
    "spark": 3,
    "mana_max": 7,
    "ap_hp": 14,
+   "killed": [
+    "merlin_shadow"
+   ],
    "xp": 2,
    "level_after": 3
   },
@@ -1384,19 +1598,20 @@
    "result": "win",
    "turns": 2,
    "down": 0,
-   "hp_end": 49,
+   "hp_end": 48,
    "hp_max": 53,
    "hp_start": 53,
-   "hp_pct": 0.92,
+   "hp_pct": 0.91,
    "potions": 0,
    "spells": 2,
    "mana_spent": 2,
    "end_hp": {
     "apprentice": 21,
     "kay": 16,
-    "arthur": 12
+    "arthur": 11
    },
-   "arthur_pct": 0.75,
+   "takeover": false,
+   "arthur_pct": 0.69,
    "style": "save",
    "ch": 2,
    "enc": "ch2_north_road",
@@ -1410,26 +1625,31 @@
    "spark": 5,
    "mana_max": 8,
    "ap_hp": 21,
+   "killed": [
+    "rebel_foot",
+    "rebel_foot"
+   ],
    "xp": 12,
    "level_after": 3
   },
   {
    "result": "win",
-   "turns": 3,
+   "turns": 2,
    "down": 0,
-   "hp_end": 45,
+   "hp_end": 43,
    "hp_max": 53,
-   "hp_start": 49,
-   "hp_pct": 0.85,
+   "hp_start": 48,
+   "hp_pct": 0.81,
    "potions": 0,
-   "spells": 3,
-   "mana_spent": 3,
+   "spells": 2,
+   "mana_spent": 2,
    "end_hp": {
     "apprentice": 21,
-    "kay": 12,
-    "arthur": 12
+    "kay": 16,
+    "arthur": 6
    },
-   "arthur_pct": 0.75,
+   "takeover": false,
+   "arthur_pct": 0.38,
    "style": "save",
    "ch": 2,
    "enc": "ch2_ford",
@@ -1443,6 +1663,10 @@
    "spark": 5,
    "mana_max": 8,
    "ap_hp": 21,
+   "killed": [
+    "rebel_shield",
+    "rebel_foot"
+   ],
    "xp": 12,
    "level_after": 3
   },
@@ -1450,19 +1674,20 @@
    "result": "win",
    "turns": 2,
    "down": 0,
-   "hp_end": 41,
+   "hp_end": 38,
    "hp_max": 53,
-   "hp_start": 45,
-   "hp_pct": 0.77,
+   "hp_start": 43,
+   "hp_pct": 0.72,
    "potions": 0,
    "spells": 2,
    "mana_spent": 2,
    "end_hp": {
     "apprentice": 21,
-    "kay": 12,
-    "arthur": 8
+    "kay": 16,
+    "arthur": 1
    },
-   "arthur_pct": 0.5,
+   "takeover": false,
+   "arthur_pct": 0.06,
    "style": "save",
    "ch": 2,
    "enc": "ch2_hill",
@@ -1476,6 +1701,10 @@
    "spark": 5,
    "mana_max": 8,
    "ap_hp": 21,
+   "killed": [
+    "rebel_rider",
+    "rebel_foot"
+   ],
    "xp": 12,
    "level_after": 4
   },
@@ -1495,6 +1724,7 @@
     "kay": 19,
     "arthur": 16
    },
+   "takeover": false,
    "arthur_pct": 1.0,
    "style": "save",
    "ch": 2,
@@ -1509,6 +1739,10 @@
    "spark": 6,
    "mana_max": 9,
    "ap_hp": 21,
+   "killed": [
+    "rebel_rider",
+    "rebel_shield"
+   ],
    "xp": 12,
    "level_after": 4
   },
@@ -1516,19 +1750,20 @@
    "result": "win",
    "turns": 4,
    "down": 0,
-   "hp_end": 40,
+   "hp_end": 38,
    "hp_max": 56,
    "hp_start": 56,
-   "hp_pct": 0.71,
+   "hp_pct": 0.68,
    "potions": 0,
    "spells": 4,
    "mana_spent": 4,
    "end_hp": {
     "apprentice": 21,
     "kay": 15,
-    "arthur": 4
+    "arthur": 2
    },
-   "arthur_pct": 0.25,
+   "takeover": false,
+   "arthur_pct": 0.12,
    "style": "save",
    "ch": 2,
    "enc": "bedegraine",
@@ -1542,6 +1777,12 @@
    "spark": 6,
    "mana_max": 9,
    "ap_hp": 21,
+   "killed": [
+    "rebel_rider",
+    "rebel_foot",
+    "rebel_foot",
+    "rebel_shield"
+   ],
    "xp": 24,
    "level_after": 4
   },
@@ -1549,18 +1790,19 @@
    "result": "win",
    "turns": 3,
    "down": 0,
-   "hp_end": 32,
+   "hp_end": 23,
    "hp_max": 37,
    "hp_start": 37,
-   "hp_pct": 0.86,
+   "hp_pct": 0.62,
    "potions": 0,
    "spells": 3,
    "mana_spent": 4,
    "end_hp": {
     "apprentice": 21,
-    "arthur": 11
+    "arthur": 2
    },
-   "arthur_pct": 0.69,
+   "takeover": false,
+   "arthur_pct": 0.12,
    "style": "save",
    "ch": 3,
    "enc": "pellinore",
@@ -1574,6 +1816,7 @@
    "spark": 6,
    "mana_max": 10,
    "ap_hp": 21,
+   "killed": [],
    "xp": 27,
    "level_after": 5
   },
@@ -1581,19 +1824,20 @@
    "result": "win",
    "turns": 2,
    "down": 0,
-   "hp_end": 56,
+   "hp_end": 54,
    "hp_max": 61,
    "hp_start": 61,
-   "hp_pct": 0.92,
+   "hp_pct": 0.89,
    "potions": 0,
    "spells": 2,
    "mana_spent": 2,
    "end_hp": {
     "apprentice": 24,
     "kay": 21,
-    "arthur": 11
+    "arthur": 9
    },
-   "arthur_pct": 0.69,
+   "takeover": false,
+   "arthur_pct": 0.56,
    "style": "save",
    "ch": 3,
    "enc": "ch3_road_knight",
@@ -1607,6 +1851,10 @@
    "spark": 6,
    "mana_max": 10,
    "ap_hp": 24,
+   "killed": [
+    "ch3_squire",
+    "ch3_knight"
+   ],
    "xp": 18,
    "level_after": 5
   },
@@ -1614,19 +1862,20 @@
    "result": "win",
    "turns": 2,
    "down": 0,
-   "hp_end": 52,
+   "hp_end": 49,
    "hp_max": 61,
-   "hp_start": 56,
-   "hp_pct": 0.85,
+   "hp_start": 54,
+   "hp_pct": 0.8,
    "potions": 0,
    "spells": 2,
    "mana_spent": 2,
    "end_hp": {
     "apprentice": 24,
     "kay": 21,
-    "arthur": 7
+    "arthur": 4
    },
-   "arthur_pct": 0.44,
+   "takeover": false,
+   "arthur_pct": 0.25,
    "style": "save",
    "ch": 3,
    "enc": "ch3_wild_pair",
@@ -1640,6 +1889,10 @@
    "spark": 6,
    "mana_max": 10,
    "ap_hp": 24,
+   "killed": [
+    "wild_man",
+    "wild_man"
+   ],
    "xp": 18,
    "level_after": 5
   },
@@ -1647,18 +1900,19 @@
    "result": "win",
    "turns": 2,
    "down": 0,
-   "hp_end": 63,
+   "hp_end": 59,
    "hp_max": 63,
    "hp_start": 63,
-   "hp_pct": 1.0,
+   "hp_pct": 0.94,
    "potions": 0,
    "spells": 2,
    "mana_spent": 2,
    "end_hp": {
     "apprentice": 24,
     "kay": 21,
-    "gawain": 18
+    "gawain": 14
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "save",
    "ch": 3,
@@ -1673,6 +1927,10 @@
    "spark": 6,
    "mana_max": 10,
    "ap_hp": 24,
+   "killed": [
+    "ch3_squire",
+    "ch3_squire"
+   ],
    "xp": 18,
    "level_after": 5
   },
@@ -1680,18 +1938,19 @@
    "result": "win",
    "turns": 2,
    "down": 0,
-   "hp_end": 58,
+   "hp_end": 52,
    "hp_max": 63,
-   "hp_start": 63,
-   "hp_pct": 0.92,
+   "hp_start": 59,
+   "hp_pct": 0.83,
    "potions": 0,
    "spells": 2,
    "mana_spent": 2,
    "end_hp": {
     "apprentice": 24,
     "kay": 21,
-    "gawain": 13
+    "gawain": 7
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "save",
    "ch": 3,
@@ -1706,6 +1965,10 @@
    "spark": 6,
    "mana_max": 10,
    "ap_hp": 24,
+   "killed": [
+    "wild_man",
+    "ch3_knight"
+   ],
    "xp": 18,
    "level_after": 6
   },
@@ -1713,17 +1976,18 @@
    "result": "win",
    "turns": 3,
    "down": 0,
-   "hp_end": 28,
+   "hp_end": 26,
    "hp_max": 42,
    "hp_start": 42,
-   "hp_pct": 0.67,
+   "hp_pct": 0.62,
    "potions": 0,
    "spells": 3,
    "mana_spent": 3,
    "end_hp": {
     "apprentice": 24,
-    "gawain": 4
+    "gawain": 2
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "save",
    "ch": 3,
@@ -1738,6 +2002,11 @@
    "spark": 7,
    "mana_max": 11,
    "ap_hp": 24,
+   "killed": [
+    "wild_man",
+    "wild_man",
+    "wild_man"
+   ],
    "xp": 27,
    "level_after": 6
   },
@@ -1745,18 +2014,19 @@
    "result": "win",
    "turns": 2,
    "down": 0,
-   "hp_end": 49,
+   "hp_end": 46,
    "hp_max": 69,
-   "hp_start": 49,
-   "hp_pct": 0.71,
+   "hp_start": 47,
+   "hp_pct": 0.67,
    "potions": 0,
    "spells": 2,
    "mana_spent": 2,
    "end_hp": {
     "apprentice": 24,
     "kay": 21,
-    "gawain": 4
+    "gawain": 1
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "save",
    "ch": 4,
@@ -1771,6 +2041,10 @@
    "spark": 6,
    "mana_max": 12,
    "ap_hp": 28,
+   "killed": [
+    "ch4_brigand",
+    "ch4_brigand"
+   ],
    "xp": 24,
    "level_after": 6
   },
@@ -1778,18 +2052,19 @@
    "result": "win",
    "turns": 2,
    "down": 0,
-   "hp_end": 49,
+   "hp_end": 46,
    "hp_max": 69,
-   "hp_start": 49,
-   "hp_pct": 0.71,
+   "hp_start": 46,
+   "hp_pct": 0.67,
    "potions": 0,
    "spells": 2,
    "mana_spent": 2,
    "end_hp": {
     "apprentice": 24,
     "kay": 21,
-    "gawain": 4
+    "gawain": 1
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "save",
    "ch": 4,
@@ -1804,26 +2079,31 @@
    "spark": 6,
    "mana_max": 12,
    "ap_hp": 28,
+   "killed": [
+    "ch4_wolf",
+    "ch4_wolf"
+   ],
    "xp": 24,
    "level_after": 7
   },
   {
    "result": "win",
-   "turns": 3,
+   "turns": 4,
    "down": 0,
-   "hp_end": 59,
+   "hp_end": 53,
    "hp_max": 70,
    "hp_start": 70,
-   "hp_pct": 0.84,
+   "hp_pct": 0.76,
    "potions": 0,
-   "spells": 3,
-   "mana_spent": 4,
+   "spells": 4,
+   "mana_spent": 5,
    "end_hp": {
     "apprentice": 31,
-    "arthur": 7,
+    "arthur": 1,
     "kay": 21
    },
-   "arthur_pct": 0.39,
+   "takeover": false,
+   "arthur_pct": 0.06,
    "style": "save",
    "ch": 4,
    "enc": "morgan_chase",
@@ -1837,6 +2117,11 @@
    "spark": 6,
    "mana_max": 12,
    "ap_hp": 31,
+   "killed": [
+    "morgan_knight",
+    "morgan_horn",
+    "morgan_captain"
+   ],
    "xp": 60,
    "level_after": 7
   },
@@ -1844,18 +2129,19 @@
    "result": "win",
    "turns": 2,
    "down": 0,
-   "hp_end": 67,
+   "hp_end": 66,
    "hp_max": 72,
    "hp_start": 72,
-   "hp_pct": 0.93,
+   "hp_pct": 0.92,
    "potions": 0,
    "spells": 2,
    "mana_spent": 2,
    "end_hp": {
     "apprentice": 31,
     "kay": 21,
-    "lancelot": 15
+    "lancelot": 14
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "save",
    "ch": 4,
@@ -1870,6 +2156,10 @@
    "spark": 6,
    "mana_max": 12,
    "ap_hp": 31,
+   "killed": [
+    "morgan_knight",
+    "morgan_knight"
+   ],
    "xp": 24,
    "level_after": 7
   },
@@ -1877,18 +2167,19 @@
    "result": "win",
    "turns": 2,
    "down": 0,
-   "hp_end": 61,
+   "hp_end": 59,
    "hp_max": 71,
-   "hp_start": 66,
-   "hp_pct": 0.86,
+   "hp_start": 65,
+   "hp_pct": 0.83,
    "potions": 0,
    "spells": 2,
    "mana_spent": 2,
    "end_hp": {
     "apprentice": 31,
     "gawain": 20,
-    "lancelot": 10
+    "lancelot": 8
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "save",
    "ch": 4,
@@ -1903,25 +2194,30 @@
    "spark": 6,
    "mana_max": 12,
    "ap_hp": 31,
+   "killed": [
+    "ch4_wolf",
+    "ch4_brigand"
+   ],
    "xp": 24,
    "level_after": 7
   },
   {
    "result": "win",
-   "turns": 4,
-   "down": 0,
-   "hp_end": 56,
+   "turns": 5,
+   "down": 1,
+   "hp_end": 47,
    "hp_max": 67,
    "hp_start": 67,
-   "hp_pct": 0.84,
+   "hp_pct": 0.7,
    "potions": 0,
-   "spells": 4,
-   "mana_spent": 4,
+   "spells": 5,
+   "mana_spent": 7,
    "end_hp": {
     "apprentice": 31,
     "gawain": 16,
-    "gareth": 9
+    "gareth": 0
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "save",
    "ch": 4,
@@ -1936,6 +2232,11 @@
    "spark": 6,
    "mana_max": 12,
    "ap_hp": 31,
+   "killed": [
+    "red_spearman",
+    "red_spearman",
+    "red_knight"
+   ],
    "xp": 60,
    "level_after": 8
   },
@@ -1943,18 +2244,19 @@
    "result": "win",
    "turns": 2,
    "down": 0,
-   "hp_end": 69,
+   "hp_end": 68,
    "hp_max": 74,
    "hp_start": 74,
-   "hp_pct": 0.93,
+   "hp_pct": 0.92,
    "potions": 0,
    "spells": 2,
    "mana_spent": 2,
    "end_hp": {
     "apprentice": 33,
     "kay": 23,
-    "bedivere": 13
+    "bedivere": 12
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "save",
    "ch": 5,
@@ -1969,6 +2271,10 @@
    "spark": 6,
    "mana_max": 12,
    "ap_hp": 33,
+   "killed": [
+    "ch5_deserter",
+    "ch5_deserter"
+   ],
    "xp": 30,
    "level_after": 8
   },
@@ -1976,18 +2282,19 @@
    "result": "win",
    "turns": 2,
    "down": 0,
-   "hp_end": 66,
+   "hp_end": 64,
    "hp_max": 74,
-   "hp_start": 71,
-   "hp_pct": 0.89,
+   "hp_start": 70,
+   "hp_pct": 0.86,
    "potions": 0,
    "spells": 2,
    "mana_spent": 2,
    "end_hp": {
     "apprentice": 33,
     "kay": 23,
-    "bedivere": 10
+    "bedivere": 8
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "save",
    "ch": 5,
@@ -2002,25 +2309,30 @@
    "spark": 6,
    "mana_max": 12,
    "ap_hp": 33,
+   "killed": [
+    "raider",
+    "ch5_deserter"
+   ],
    "xp": 30,
    "level_after": 8
   },
   {
    "result": "win",
-   "turns": 6,
+   "turns": 4,
    "down": 1,
-   "hp_end": 40,
+   "hp_end": 41,
    "hp_max": 74,
    "hp_start": 74,
-   "hp_pct": 0.54,
+   "hp_pct": 0.55,
    "potions": 0,
-   "spells": 6,
-   "mana_spent": 8,
+   "spells": 4,
+   "mana_spent": 4,
    "end_hp": {
     "apprentice": 33,
-    "kay": 7,
+    "kay": 8,
     "bedivere": 0
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "save",
    "ch": 5,
@@ -2035,6 +2347,12 @@
    "spark": 6,
    "mana_max": 12,
    "ap_hp": 33,
+   "killed": [
+    "raider_chief",
+    "raider",
+    "raider",
+    "raider"
+   ],
    "xp": 60,
    "level_after": 8
   },
@@ -2042,18 +2360,19 @@
    "result": "win",
    "turns": 2,
    "down": 0,
-   "hp_end": 44,
+   "hp_end": 46,
    "hp_max": 74,
-   "hp_start": 45,
-   "hp_pct": 0.59,
+   "hp_start": 46,
+   "hp_pct": 0.62,
    "potions": 0,
    "spells": 2,
-   "mana_spent": 2,
+   "mana_spent": 3,
    "end_hp": {
     "apprentice": 33,
-    "kay": 9,
-    "bedivere": 2
+    "kay": 10,
+    "bedivere": 3
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "save",
    "ch": 5,
@@ -2068,6 +2387,10 @@
    "spark": 6,
    "mana_max": 12,
    "ap_hp": 33,
+   "killed": [
+    "raider",
+    "raider"
+   ],
    "xp": 30,
    "level_after": 8
   },
@@ -2075,18 +2398,19 @@
    "result": "win",
    "turns": 2,
    "down": 0,
-   "hp_end": 48,
+   "hp_end": 49,
    "hp_max": 74,
-   "hp_start": 48,
-   "hp_pct": 0.65,
+   "hp_start": 50,
+   "hp_pct": 0.66,
    "potions": 0,
    "spells": 2,
    "mana_spent": 2,
    "end_hp": {
     "apprentice": 33,
-    "kay": 11,
+    "kay": 12,
     "bedivere": 4
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "save",
    "ch": 5,
@@ -2101,6 +2425,10 @@
    "spark": 6,
    "mana_max": 12,
    "ap_hp": 33,
+   "killed": [
+    "ch5_deserter",
+    "tourney_knight"
+   ],
    "xp": 30,
    "level_after": 9
   },
@@ -2120,6 +2448,7 @@
     "bedivere": 15,
     "kay": 23
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "save",
    "ch": 5,
@@ -2134,25 +2463,31 @@
    "spark": 6,
    "mana_max": 12,
    "ap_hp": 33,
+   "killed": [
+    "tourney_knight",
+    "tourney_knight",
+    "tourney_knight"
+   ],
    "xp": 45,
    "level_after": 9
   },
   {
    "result": "win",
-   "turns": 1,
+   "turns": 2,
    "down": 0,
-   "hp_end": 70,
+   "hp_end": 63,
    "hp_max": 73,
    "hp_start": 70,
-   "hp_pct": 0.96,
+   "hp_pct": 0.86,
    "potions": 0,
-   "spells": 1,
-   "mana_spent": 2,
+   "spells": 2,
+   "mana_spent": 3,
    "end_hp": {
     "apprentice": 33,
     "arthur": 20,
-    "bedivere": 17
+    "bedivere": 10
    },
+   "takeover": false,
    "arthur_pct": 1.0,
    "style": "save",
    "ch": 6,
@@ -2167,6 +2502,10 @@
    "spark": 8,
    "mana_max": 12,
    "ap_hp": 33,
+   "killed": [
+    "ch6_looter",
+    "ch6_looter"
+   ],
    "xp": 36,
    "level_after": 9
   },
@@ -2174,19 +2513,20 @@
    "result": "win",
    "turns": 3,
    "down": 0,
-   "hp_end": 69,
+   "hp_end": 67,
    "hp_max": 73,
    "hp_start": 73,
-   "hp_pct": 0.95,
+   "hp_pct": 0.92,
    "potions": 0,
    "spells": 3,
    "mana_spent": 4,
    "end_hp": {
     "apprentice": 33,
-    "arthur": 16,
+    "arthur": 14,
     "bedivere": 20
    },
-   "arthur_pct": 0.8,
+   "takeover": false,
+   "arthur_pct": 0.7,
    "style": "save",
    "ch": 6,
    "enc": "joyous_gard",
@@ -2200,26 +2540,32 @@
    "spark": 8,
    "mana_max": 12,
    "ap_hp": 33,
+   "killed": [
+    "joyous_guard",
+    "joyous_guard",
+    "joyous_guard"
+   ],
    "xp": 54,
    "level_after": 9
   },
   {
    "result": "win",
-   "turns": 1,
+   "turns": 2,
    "down": 0,
-   "hp_end": 71,
+   "hp_end": 62,
    "hp_max": 73,
-   "hp_start": 71,
-   "hp_pct": 0.97,
+   "hp_start": 69,
+   "hp_pct": 0.85,
    "potions": 0,
-   "spells": 1,
-   "mana_spent": 2,
+   "spells": 2,
+   "mana_spent": 3,
    "end_hp": {
     "apprentice": 33,
-    "arthur": 18,
+    "arthur": 9,
     "bedivere": 20
    },
-   "arthur_pct": 0.9,
+   "takeover": false,
+   "arthur_pct": 0.45,
    "style": "save",
    "ch": 6,
    "enc": "ch6_shore",
@@ -2233,26 +2579,31 @@
    "spark": 8,
    "mana_max": 12,
    "ap_hp": 33,
+   "killed": [
+    "mordred_soldier",
+    "ch6_looter"
+   ],
    "xp": 36,
    "level_after": 9
   },
   {
    "result": "win",
-   "turns": 2,
+   "turns": 4,
    "down": 0,
-   "hp_end": 65,
+   "hp_end": 41,
    "hp_max": 73,
    "hp_start": 73,
-   "hp_pct": 0.89,
+   "hp_pct": 0.56,
    "potions": 0,
-   "spells": 2,
-   "mana_spent": 3,
+   "spells": 4,
+   "mana_spent": 12,
    "end_hp": {
-    "apprentice": 29,
+    "apprentice": 9,
     "gawain": 16,
-    "arthur": 20
+    "arthur": 16
    },
-   "arthur_pct": 1.0,
+   "takeover": false,
+   "arthur_pct": 0.8,
    "style": "save",
    "ch": 6,
    "enc": "dover",
@@ -2266,26 +2617,28 @@
    "spark": 8,
    "mana_max": 12,
    "ap_hp": 33,
+   "killed": [],
    "xp": 36,
    "level_after": 9
   },
   {
    "result": "win",
-   "turns": 1,
+   "turns": 2,
    "down": 0,
-   "hp_end": 71,
+   "hp_end": 49,
    "hp_max": 73,
-   "hp_start": 71,
-   "hp_pct": 0.97,
+   "hp_start": 49,
+   "hp_pct": 0.67,
    "potions": 0,
-   "spells": 1,
-   "mana_spent": 2,
+   "spells": 2,
+   "mana_spent": 3,
    "end_hp": {
-    "apprentice": 31,
-    "arthur": 20,
+    "apprentice": 11,
+    "arthur": 18,
     "bedivere": 20
    },
-   "arthur_pct": 1.0,
+   "takeover": false,
+   "arthur_pct": 0.9,
    "style": "save",
    "ch": 6,
    "enc": "ch6_riders",
@@ -2299,25 +2652,30 @@
    "spark": 8,
    "mana_max": 12,
    "ap_hp": 33,
+   "killed": [
+    "ch6_looter",
+    "mordred_rider"
+   ],
    "xp": 36,
    "level_after": 10
   },
   {
    "result": "win",
-   "turns": 1,
+   "turns": 2,
    "down": 0,
    "hp_end": 73,
    "hp_max": 73,
    "hp_start": 73,
    "hp_pct": 1.0,
    "potions": 0,
-   "spells": 1,
-   "mana_spent": 2,
+   "spells": 2,
+   "mana_spent": 3,
    "end_hp": {
     "apprentice": 33,
     "arthur": 20,
     "bedivere": 20
    },
+   "takeover": false,
    "arthur_pct": 1.0,
    "style": "save",
    "ch": 6,
@@ -2332,26 +2690,31 @@
    "spark": 8,
    "mana_max": 12,
    "ap_hp": 33,
+   "killed": [
+    "mordred_soldier",
+    "mordred_rider"
+   ],
    "xp": 36,
    "level_after": 10
   },
   {
    "result": "win",
    "turns": 4,
-   "down": 0,
-   "hp_end": 60,
+   "down": 1,
+   "hp_end": 53,
    "hp_max": 73,
    "hp_start": 73,
-   "hp_pct": 0.82,
+   "hp_pct": 0.73,
    "potions": 0,
    "spells": 4,
-   "mana_spent": 8,
+   "mana_spent": 7,
    "end_hp": {
     "apprentice": 33,
-    "arthur": 7,
+    "arthur": 0,
     "bedivere": 20
    },
-   "arthur_pct": 0.35,
+   "takeover": false,
+   "arthur_pct": 0,
    "style": "save",
    "ch": 6,
    "enc": "camlann",
@@ -2365,6 +2728,11 @@
    "spark": 8,
    "mana_max": 12,
    "ap_hp": 33,
+   "killed": [
+    "mordred_soldier",
+    "mordred_soldier",
+    "mordred"
+   ],
    "xp": 90,
    "level_after": 10
   },
@@ -2384,6 +2752,7 @@
     "kay": 5,
     "arthur": 9
    },
+   "takeover": false,
    "arthur_pct": 0.69,
    "style": "must",
    "ch": 1,
@@ -2398,6 +2767,11 @@
    "spark": 2,
    "mana_max": 6,
    "ap_hp": 14,
+   "killed": [
+    "wolf_howler",
+    "wolf_grey",
+    "wolf_leader"
+   ],
    "xp": 10,
    "level_after": 2
   },
@@ -2415,6 +2789,7 @@
    "end_hp": {
     "apprentice": 12
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "must",
    "ch": 1,
@@ -2429,6 +2804,9 @@
    "spark": 3,
    "mana_max": 7,
    "ap_hp": 14,
+   "killed": [
+    "merlin_shadow"
+   ],
    "xp": 2,
    "level_after": 2
   },
@@ -2436,19 +2814,20 @@
    "result": "win",
    "turns": 5,
    "down": 0,
-   "hp_end": 28,
+   "hp_end": 26,
    "hp_max": 48,
    "hp_start": 48,
-   "hp_pct": 0.58,
+   "hp_pct": 0.54,
    "potions": 0,
    "spells": 5,
    "mana_spent": 5,
    "end_hp": {
     "apprentice": 16,
     "kay": 8,
-    "arthur": 4
+    "arthur": 2
    },
-   "arthur_pct": 0.25,
+   "takeover": false,
+   "arthur_pct": 0.12,
    "style": "must",
    "ch": 2,
    "enc": "bedegraine",
@@ -2462,6 +2841,12 @@
    "spark": 3,
    "mana_max": 7,
    "ap_hp": 16,
+   "killed": [
+    "rebel_rider",
+    "rebel_foot",
+    "rebel_foot",
+    "rebel_shield"
+   ],
    "xp": 24,
    "level_after": 3
   },
@@ -2469,18 +2854,19 @@
    "result": "win",
    "turns": 3,
    "down": 0,
-   "hp_end": 35,
+   "hp_end": 28,
    "hp_max": 35,
    "hp_start": 35,
-   "hp_pct": 1.0,
+   "hp_pct": 0.8,
    "potions": 0,
    "spells": 3,
    "mana_spent": 6,
    "end_hp": {
     "apprentice": 19,
-    "arthur": 16
+    "arthur": 9
    },
-   "arthur_pct": 1.0,
+   "takeover": false,
+   "arthur_pct": 0.56,
    "style": "must",
    "ch": 3,
    "enc": "pellinore",
@@ -2494,6 +2880,7 @@
    "spark": 4,
    "mana_max": 7,
    "ap_hp": 19,
+   "killed": [],
    "xp": 27,
    "level_after": 4
   },
@@ -2501,19 +2888,20 @@
    "result": "win",
    "turns": 4,
    "down": 0,
-   "hp_end": 46,
+   "hp_end": 45,
    "hp_max": 63,
    "hp_start": 63,
-   "hp_pct": 0.73,
+   "hp_pct": 0.71,
    "potions": 0,
    "spells": 4,
    "mana_spent": 5,
    "end_hp": {
     "apprentice": 24,
-    "arthur": 4,
+    "arthur": 3,
     "kay": 18
    },
-   "arthur_pct": 0.19,
+   "takeover": false,
+   "arthur_pct": 0.14,
    "style": "must",
    "ch": 4,
    "enc": "morgan_chase",
@@ -2527,25 +2915,31 @@
    "spark": 5,
    "mana_max": 10,
    "ap_hp": 24,
+   "killed": [
+    "morgan_horn",
+    "morgan_knight",
+    "morgan_captain"
+   ],
    "xp": 60,
    "level_after": 5
   },
   {
    "result": "win",
-   "turns": 7,
+   "turns": 4,
    "down": 1,
-   "hp_end": 25,
+   "hp_end": 34,
    "hp_max": 62,
    "hp_start": 62,
-   "hp_pct": 0.4,
+   "hp_pct": 0.55,
    "potions": 0,
-   "spells": 7,
-   "mana_spent": 7,
+   "spells": 4,
+   "mana_spent": 4,
    "end_hp": {
     "apprentice": 24,
-    "kay": 1,
+    "kay": 10,
     "bedivere": 0
    },
+   "takeover": false,
    "arthur_pct": 0,
    "style": "must",
    "ch": 5,
@@ -2560,25 +2954,32 @@
    "spark": 6,
    "mana_max": 11,
    "ap_hp": 24,
+   "killed": [
+    "raider",
+    "raider",
+    "raider",
+    "raider_chief"
+   ],
    "xp": 60,
    "level_after": 6
   },
   {
    "result": "win",
-   "turns": 4,
+   "turns": 5,
    "down": 0,
-   "hp_end": 64,
+   "hp_end": 54,
    "hp_max": 72,
    "hp_start": 72,
-   "hp_pct": 0.89,
+   "hp_pct": 0.75,
    "potions": 0,
-   "spells": 4,
-   "mana_spent": 4,
+   "spells": 5,
+   "mana_spent": 5,
    "end_hp": {
     "apprentice": 29,
     "arthur": 23,
-    "bedivere": 12
+    "bedivere": 2
    },
+   "takeover": false,
    "arthur_pct": 1.0,
    "style": "must",
    "ch": 6,
@@ -2593,26 +2994,32 @@
    "spark": 6,
    "mana_max": 11,
    "ap_hp": 29,
+   "killed": [
+    "joyous_guard",
+    "joyous_guard",
+    "joyous_guard"
+   ],
    "xp": 54,
    "level_after": 7
   },
   {
    "result": "win",
-   "turns": 2,
+   "turns": 4,
    "down": 0,
-   "hp_end": 60,
+   "hp_end": 34,
    "hp_max": 72,
    "hp_start": 72,
-   "hp_pct": 0.83,
+   "hp_pct": 0.47,
    "potions": 0,
-   "spells": 2,
-   "mana_spent": 2,
+   "spells": 4,
+   "mana_spent": 4,
    "end_hp": {
-    "apprentice": 25,
-    "gawain": 16,
-    "arthur": 19
+    "apprentice": 3,
+    "gawain": 14,
+    "arthur": 17
    },
-   "arthur_pct": 0.83,
+   "takeover": false,
+   "arthur_pct": 0.74,
    "style": "must",
    "ch": 6,
    "enc": "dover",
@@ -2626,26 +3033,28 @@
    "spark": 6,
    "mana_max": 11,
    "ap_hp": 29,
+   "killed": [],
    "xp": 36,
    "level_after": 7
   },
   {
    "result": "win",
    "turns": 6,
-   "down": 0,
-   "hp_end": 46,
+   "down": 1,
+   "hp_end": 35,
    "hp_max": 72,
    "hp_start": 72,
-   "hp_pct": 0.64,
+   "hp_pct": 0.49,
    "potions": 0,
    "spells": 6,
-   "mana_spent": 9,
+   "mana_spent": 11,
    "end_hp": {
     "apprentice": 29,
-    "arthur": 3,
-    "bedivere": 14
+    "arthur": 0,
+    "bedivere": 6
    },
-   "arthur_pct": 0.13,
+   "takeover": false,
+   "arthur_pct": 0,
    "style": "must",
    "ch": 6,
    "enc": "camlann",
@@ -2659,6 +3068,11 @@
    "spark": 6,
    "mana_max": 11,
    "ap_hp": 29,
+   "killed": [
+    "mordred_soldier",
+    "mordred_soldier",
+    "mordred"
+   ],
    "xp": 90,
    "level_after": 8
   }
@@ -2669,126 +3083,162 @@
    "ch": 1,
    "xp": 28,
    "level": 3,
-   "silver_earned": 24
+   "silver_earned": 24,
+   "kills": 12,
+   "gear_drops": 2.2
   },
   {
    "style": "full",
    "ch": 2,
    "xp": 120,
    "level": 4,
-   "silver_earned": 48
+   "silver_earned": 48,
+   "kills": 12,
+   "gear_drops": 1.2
   },
   {
    "style": "full",
    "ch": 3,
    "xp": 296,
    "level": 6,
-   "silver_earned": 66
+   "silver_earned": 66,
+   "kills": 11,
+   "gear_drops": 2.2
   },
   {
    "style": "full",
    "ch": 4,
    "xp": 552,
    "level": 8,
-   "silver_earned": 112
+   "silver_earned": 112,
+   "kills": 14,
+   "gear_drops": 3.0
   },
   {
    "style": "full",
    "ch": 5,
    "xp": 837,
    "level": 9,
-   "silver_earned": 150
+   "silver_earned": 150,
+   "kills": 15,
+   "gear_drops": 1.5
   },
   {
    "style": "full",
    "ch": 6,
    "xp": 1161,
    "level": 10,
-   "silver_earned": 192
+   "silver_earned": 168,
+   "kills": 14,
+   "gear_drops": 2.5
   },
   {
    "style": "save",
    "ch": 1,
    "xp": 28,
    "level": 3,
-   "silver_earned": 44
+   "silver_earned": 44,
+   "kills": 12,
+   "gear_drops": 2.2
   },
   {
    "style": "save",
    "ch": 2,
    "xp": 120,
    "level": 4,
-   "silver_earned": 48
+   "silver_earned": 48,
+   "kills": 12,
+   "gear_drops": 1.2
   },
   {
    "style": "save",
    "ch": 3,
    "xp": 296,
    "level": 6,
-   "silver_earned": 66
+   "silver_earned": 66,
+   "kills": 11,
+   "gear_drops": 2.2
   },
   {
    "style": "save",
    "ch": 4,
    "xp": 552,
    "level": 8,
-   "silver_earned": 192
+   "silver_earned": 192,
+   "kills": 14,
+   "gear_drops": 3.0
   },
   {
    "style": "save",
    "ch": 5,
    "xp": 837,
    "level": 9,
-   "silver_earned": 150
+   "silver_earned": 150,
+   "kills": 15,
+   "gear_drops": 1.5
   },
   {
    "style": "save",
    "ch": 6,
    "xp": 1161,
    "level": 10,
-   "silver_earned": 312
+   "silver_earned": 288,
+   "kills": 14,
+   "gear_drops": 2.5
   },
   {
    "style": "must",
    "ch": 1,
    "xp": 12,
    "level": 2,
-   "silver_earned": 8
+   "silver_earned": 8,
+   "kills": 4,
+   "gear_drops": 1.2
   },
   {
    "style": "must",
    "ch": 2,
    "xp": 56,
    "level": 3,
-   "silver_earned": 56
+   "silver_earned": 56,
+   "kills": 4,
+   "gear_drops": 0.2
   },
   {
    "style": "must",
    "ch": 3,
    "xp": 133,
    "level": 5,
-   "silver_earned": 0
+   "silver_earned": 0,
+   "kills": 0,
+   "gear_drops": 1.0
   },
   {
    "style": "must",
    "ch": 4,
    "xp": 233,
    "level": 6,
-   "silver_earned": 104
+   "silver_earned": 104,
+   "kills": 3,
+   "gear_drops": 1.0
   },
   {
    "style": "must",
    "ch": 5,
    "xp": 353,
    "level": 7,
-   "silver_earned": 140
+   "silver_earned": 140,
+   "kills": 4,
+   "gear_drops": 0.2
   },
   {
    "style": "must",
    "ch": 6,
    "xp": 533,
    "level": 8,
-   "silver_earned": 96
+   "silver_earned": 72,
+   "kills": 6,
+   "gear_drops": 1.5
   }
  ],
  "degenerate": [
@@ -2797,6 +3247,8 @@
    "enc": "wolves",
    "label": "头狼群",
    "level": 1,
+   "smart": "赢 4 回合 倒 0 剩 65%",
+   "smart_win": true,
    "always_first": "赢 5 回合 倒 1 剩 53%",
    "always_first_win": true,
    "no_magic": "输 9 回合 倒 3 剩 0%",
@@ -2809,11 +3261,13 @@
    "enc": "bedegraine",
    "label": "贝德格兰之战",
    "level": 2,
+   "smart": "赢 5 回合 倒 0 剩 54%",
+   "smart_win": true,
    "always_first": "赢 5 回合 倒 1 剩 50%",
    "always_first_win": true,
-   "no_magic": "输 6 回合 倒 3 剩 0%",
+   "no_magic": "输 5 回合 倒 3 剩 0%",
    "no_magic_win": false,
-   "smart_spark_build": "赢 5 回合 倒 0 剩 58%",
+   "smart_spark_build": "赢 5 回合 倒 0 剩 54%",
    "smart_spark_build_win": true
   },
   {
@@ -2821,11 +3275,13 @@
    "enc": "pellinore",
    "label": "泉边的佩利诺",
    "level": 3,
+   "smart": "赢 3 回合 倒 0 剩 80%",
+   "smart_win": true,
    "always_first": "赢 3 回合 倒 1 剩 54%",
    "always_first_win": true,
    "no_magic": "赢 3 回合 倒 1 剩 54%",
    "no_magic_win": true,
-   "smart_spark_build": "赢 3 回合 倒 0 剩 78%",
+   "smart_spark_build": "赢 3 回合 倒 0 剩 56%",
    "smart_spark_build_win": true
   },
   {
@@ -2833,11 +3289,13 @@
    "enc": "wild_men",
    "label": "支线：北边的野人",
    "level": 4,
-   "always_first": "赢 3 回合 倒 0 剩 62%",
+   "smart": "赢 3 回合 倒 0 剩 57%",
+   "smart_win": true,
+   "always_first": "赢 3 回合 倒 0 剩 57%",
    "always_first_win": true,
    "no_magic": "输 3 回合 倒 2 剩 0%",
    "no_magic_win": false,
-   "smart_spark_build": "赢 3 回合 倒 0 剩 59%",
+   "smart_spark_build": "赢 6 回合 倒 1 剩 6%",
    "smart_spark_build_win": true
   },
   {
@@ -2845,7 +3303,9 @@
    "enc": "morgan_chase",
    "label": "追摩根",
    "level": 5,
-   "always_first": "赢 6 回合 倒 1 剩 54%",
+   "smart": "赢 4 回合 倒 0 剩 71%",
+   "smart_win": true,
+   "always_first": "赢 6 回合 倒 1 剩 48%",
    "always_first_win": true,
    "no_magic": "输 11 回合 倒 3 剩 0%",
    "no_magic_win": false,
@@ -2857,11 +3317,13 @@
    "enc": "red_knight",
    "label": "支线：红地的红骑士",
    "level": 5,
-   "always_first": "赢 4 回合 倒 0 剩 80%",
+   "smart": "赢 5 回合 倒 1 剩 27%",
+   "smart_win": true,
+   "always_first": "赢 10 回合 倒 2 剩 27%",
    "always_first_win": true,
-   "no_magic": "输 9 回合 倒 3 剩 0%",
+   "no_magic": "输 6 回合 倒 3 剩 0%",
    "no_magic_win": false,
-   "smart_spark_build": "赢 3 回合 倒 0 剩 89%",
+   "smart_spark_build": "赢 5 回合 倒 1 剩 63%",
    "smart_spark_build_win": true
   },
   {
@@ -2869,18 +3331,22 @@
    "enc": "camelot_defense",
    "label": "守卡美洛",
    "level": 6,
-   "always_first": "输 3 回合 倒 3 剩 0%",
-   "always_first_win": false,
+   "smart": "赢 4 回合 倒 1 剩 55%",
+   "smart_win": true,
+   "always_first": "赢 6 回合 倒 2 剩 15%",
+   "always_first_win": true,
    "no_magic": "输 3 回合 倒 3 剩 0%",
    "no_magic_win": false,
-   "smart_spark_build": "输 6 回合 倒 3 剩 0%",
-   "smart_spark_build_win": false
+   "smart_spark_build": "赢 6 回合 倒 2 剩 12%",
+   "smart_spark_build_win": true
   },
   {
    "ch": 5,
    "enc": "tournament",
    "label": "支线：比武",
    "level": 6,
+   "smart": "赢 4 回合 倒 0 剩 79%",
+   "smart_win": true,
    "always_first": "赢 5 回合 倒 0 剩 74%",
    "always_first_win": true,
    "no_magic": "输 10 回合 倒 3 剩 0%",
@@ -2893,11 +3359,13 @@
    "enc": "joyous_gard",
    "label": "攻欢乐堡城门",
    "level": 7,
-   "always_first": "赢 5 回合 倒 0 剩 83%",
+   "smart": "赢 5 回合 倒 0 剩 75%",
+   "smart_win": true,
+   "always_first": "赢 5 回合 倒 0 剩 75%",
    "always_first_win": true,
-   "no_magic": "超时 21 回合 倒 2 剩 18%",
+   "no_magic": "输 12 回合 倒 3 剩 0%",
    "no_magic_win": false,
-   "smart_spark_build": "赢 4 回合 倒 0 剩 87%",
+   "smart_spark_build": "赢 5 回合 倒 0 剩 71%",
    "smart_spark_build_win": true
   },
   {
@@ -2905,11 +3373,27 @@
    "enc": "dover",
    "label": "多佛登陆",
    "level": 7,
-   "always_first": "赢 2 回合 倒 0 剩 83%",
+   "smart": "赢 4 回合 倒 0 剩 47%",
+   "smart_win": true,
+   "always_first": "赢 4 回合 倒 1 剩 17%",
    "always_first_win": true,
-   "no_magic": "赢 4 回合 倒 0 剩 33%",
-   "no_magic_win": true,
-   "smart_spark_build": "赢 2 回合 倒 0 剩 81%",
+   "no_magic": "输 3 回合 倒 3 剩 0%",
+   "no_magic_win": false,
+   "smart_spark_build": "赢 4 回合 倒 1 剩 13%",
+   "smart_spark_build_win": true
+  },
+  {
+   "ch": 6,
+   "enc": "camlann_rear",
+   "label": "卡姆兰后队（D5c）",
+   "level": 7,
+   "smart": "赢 6 回合 倒 1 剩 62%",
+   "smart_win": true,
+   "always_first": "输 6 回合 倒 3 剩 0%",
+   "always_first_win": false,
+   "no_magic": "输 5 回合 倒 3 剩 0%",
+   "no_magic_win": false,
+   "smart_spark_build": "赢 7 回合 倒 1 剩 35%",
    "smart_spark_build_win": true
   },
   {
@@ -2917,11 +3401,13 @@
    "enc": "camlann",
    "label": "卡姆兰",
    "level": 7,
-   "always_first": "赢 6 回合 倒 1 剩 35%",
-   "always_first_win": true,
-   "no_magic": "输 6 回合 倒 3 剩 0%",
+   "smart": "赢 6 回合 倒 1 剩 49%",
+   "smart_win": true,
+   "always_first": "输 6 回合 倒 3 剩 0%",
+   "always_first_win": false,
+   "no_magic": "输 5 回合 倒 3 剩 0%",
    "no_magic_win": false,
-   "smart_spark_build": "赢 5 回合 倒 0 剩 57%",
+   "smart_spark_build": "赢 5 回合 倒 0 剩 56%",
    "smart_spark_build_win": true
   }
  ],
@@ -2963,8 +3449,8 @@
    "enc": "ch2_north_road",
    "label": "北门外的叛军步兵",
    "win": true,
-   "turns": 4,
-   "hp_pct": 0.7
+   "turns": 5,
+   "hp_pct": 0.62
   },
   {
    "ch": 2,
@@ -2972,7 +3458,7 @@
    "label": "渡口的盾兵",
    "win": true,
    "turns": 5,
-   "hp_pct": 0.77
+   "hp_pct": 0.75
   },
   {
    "ch": 2,
@@ -2980,7 +3466,7 @@
    "label": "山坡上的骑兵",
    "win": true,
    "turns": 4,
-   "hp_pct": 0.77
+   "hp_pct": 0.74
   },
   {
    "ch": 2,
@@ -2996,7 +3482,7 @@
    "label": "往卡美洛路上的骑士",
    "win": true,
    "turns": 4,
-   "hp_pct": 0.84
+   "hp_pct": 0.77
   },
   {
    "ch": 3,
@@ -3020,7 +3506,7 @@
    "label": "比武场外的挑战者",
    "win": true,
    "turns": 4,
-   "hp_pct": 0.84
+   "hp_pct": 0.78
   },
   {
    "ch": 4,
@@ -3028,15 +3514,15 @@
    "label": "林中的强人",
    "win": true,
    "turns": 3,
-   "hp_pct": 0.93
+   "hp_pct": 0.91
   },
   {
    "ch": 4,
    "enc": "ch4_wolves",
    "label": "冬狼",
    "win": true,
-   "turns": 2,
-   "hp_pct": 0.94
+   "turns": 3,
+   "hp_pct": 0.81
   },
   {
    "ch": 4,
@@ -3044,7 +3530,7 @@
    "label": "湖边的摩根骑士",
    "win": true,
    "turns": 3,
-   "hp_pct": 0.93
+   "hp_pct": 0.92
   },
   {
    "ch": 4,
@@ -3052,7 +3538,7 @@
    "label": "路边的强人和狼",
    "win": true,
    "turns": 3,
-   "hp_pct": 0.93
+   "hp_pct": 0.92
   },
   {
    "ch": 5,
@@ -3060,23 +3546,23 @@
    "label": "城外的逃兵",
    "win": true,
    "turns": 4,
-   "hp_pct": 0.72
+   "hp_pct": 0.66
   },
   {
    "ch": 5,
    "enc": "ch5_raiders",
    "label": "河边的强盗",
    "win": true,
-   "turns": 4,
-   "hp_pct": 0.76
+   "turns": 3,
+   "hp_pct": 0.82
   },
   {
    "ch": 5,
    "enc": "ch5_pair",
    "label": "两个强盗",
    "win": true,
-   "turns": 5,
-   "hp_pct": 0.59
+   "turns": 3,
+   "hp_pct": 0.8
   },
   {
    "ch": 5,
@@ -3091,32 +3577,454 @@
    "enc": "ch6_looters",
    "label": "欢乐堡外的抢掠兵",
    "win": true,
-   "turns": 4,
-   "hp_pct": 0.73
+   "turns": 8,
+   "hp_pct": 0.41
   },
   {
    "ch": 6,
    "enc": "ch6_shore",
    "label": "海边的兵",
    "win": true,
-   "turns": 4,
-   "hp_pct": 0.73
+   "turns": 6,
+   "hp_pct": 0.62
   },
   {
    "ch": 6,
    "enc": "ch6_riders",
    "label": "路上的骑兵",
-   "win": true,
-   "turns": 4,
-   "hp_pct": 0.81
+   "win": false,
+   "turns": 15,
+   "hp_pct": 0.0
   },
   {
    "ch": 6,
    "enc": "ch6_camp",
    "label": "营外的斥候",
    "win": true,
+   "turns": 7,
+   "hp_pct": 0.53
+  }
+ ],
+ "simple_player": [
+  {
+   "ch": 1,
+   "enc": "forest_wolves",
+   "label": "林子边的狼",
+   "kind": "map",
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_pct": 0.93,
+   "loss": 0.07,
+   "level": 1
+  },
+  {
+   "ch": 1,
+   "enc": "road_bandits",
+   "label": "路上的强盗",
+   "kind": "map",
+   "result": "win",
+   "turns": 3,
+   "down": 0,
+   "hp_pct": 0.91,
+   "loss": 0.09,
+   "level": 1
+  },
+  {
+   "ch": 1,
+   "enc": "oak_wolves",
+   "label": "橡树边的狼",
+   "kind": "map",
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_pct": 0.93,
+   "loss": 0.07,
+   "level": 2
+  },
+  {
+   "ch": 1,
+   "enc": "log_wolves",
+   "label": "倒木后的灰狼",
+   "kind": "map",
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_pct": 0.93,
+   "loss": 0.07,
+   "level": 2
+  },
+  {
+   "ch": 1,
+   "enc": "wolves",
+   "label": "头狼群",
+   "kind": "quest",
+   "result": "win",
    "turns": 4,
-   "hp_pct": 0.73
+   "down": 0,
+   "hp_pct": 0.72,
+   "loss": 0.28,
+   "level": 2
+  },
+  {
+   "ch": 2,
+   "enc": "ch2_north_road",
+   "label": "北门外的叛军步兵",
+   "kind": "map",
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_pct": 0.91,
+   "loss": 0.09,
+   "level": 3
+  },
+  {
+   "ch": 2,
+   "enc": "ch2_ford",
+   "label": "渡口的盾兵",
+   "kind": "map",
+   "result": "win",
+   "turns": 3,
+   "down": 0,
+   "hp_pct": 0.92,
+   "loss": 0.08,
+   "level": 3
+  },
+  {
+   "ch": 2,
+   "enc": "ch2_hill",
+   "label": "山坡上的骑兵",
+   "kind": "map",
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_pct": 0.91,
+   "loss": 0.09,
+   "level": 3
+  },
+  {
+   "ch": 2,
+   "enc": "ch2_camp",
+   "label": "营地外的游骑",
+   "kind": "map",
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_pct": 1.0,
+   "loss": 0.0,
+   "level": 4
+  },
+  {
+   "ch": 2,
+   "enc": "bedegraine",
+   "label": "贝德格兰之战",
+   "kind": "story",
+   "result": "win",
+   "turns": 5,
+   "down": 0,
+   "hp_pct": 0.66,
+   "loss": 0.34,
+   "level": 4
+  },
+  {
+   "ch": 3,
+   "enc": "pellinore",
+   "label": "泉边的佩利诺",
+   "kind": "story",
+   "result": "win",
+   "turns": 3,
+   "down": 1,
+   "hp_pct": 0.57,
+   "loss": 0.43,
+   "level": 4
+  },
+  {
+   "ch": 3,
+   "enc": "ch3_road_knight",
+   "label": "往卡美洛路上的骑士",
+   "kind": "map",
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_pct": 0.89,
+   "loss": 0.11,
+   "level": 5
+  },
+  {
+   "ch": 3,
+   "enc": "ch3_wild_pair",
+   "label": "林边的两个野人",
+   "kind": "map",
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_pct": 0.92,
+   "loss": 0.08,
+   "level": 5
+  },
+  {
+   "ch": 3,
+   "enc": "ch3_squires",
+   "label": "两个侍从",
+   "kind": "map",
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_pct": 0.94,
+   "loss": 0.06,
+   "level": 5
+  },
+  {
+   "ch": 3,
+   "enc": "ch3_knight_pair",
+   "label": "比武场外的挑战者",
+   "kind": "map",
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_pct": 0.89,
+   "loss": 0.11,
+   "level": 5
+  },
+  {
+   "ch": 3,
+   "enc": "wild_men",
+   "label": "支线：北边的野人",
+   "kind": "quest",
+   "result": "win",
+   "turns": 6,
+   "down": 1,
+   "hp_pct": 0.31,
+   "loss": 0.69,
+   "level": 6
+  },
+  {
+   "ch": 4,
+   "enc": "ch4_brigands",
+   "label": "林中的强人",
+   "kind": "map",
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_pct": 0.91,
+   "loss": 0.09,
+   "level": 6
+  },
+  {
+   "ch": 4,
+   "enc": "ch4_wolves",
+   "label": "冬狼",
+   "kind": "map",
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_pct": 0.93,
+   "loss": 0.07,
+   "level": 6
+  },
+  {
+   "ch": 4,
+   "enc": "morgan_chase",
+   "label": "追摩根",
+   "kind": "quest",
+   "result": "win",
+   "turns": 4,
+   "down": 1,
+   "hp_pct": 0.74,
+   "loss": 0.26,
+   "level": 7
+  },
+  {
+   "ch": 4,
+   "enc": "ch4_riders",
+   "label": "湖边的摩根骑士",
+   "kind": "map",
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_pct": 0.92,
+   "loss": 0.08,
+   "level": 7
+  },
+  {
+   "ch": 4,
+   "enc": "ch4_mixed",
+   "label": "路边的强人和狼",
+   "kind": "map",
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_pct": 0.92,
+   "loss": 0.08,
+   "level": 7
+  },
+  {
+   "ch": 4,
+   "enc": "red_knight",
+   "label": "支线：红地的红骑士",
+   "kind": "quest",
+   "result": "win",
+   "turns": 5,
+   "down": 1,
+   "hp_pct": 0.34,
+   "loss": 0.66,
+   "level": 7
+  },
+  {
+   "ch": 5,
+   "enc": "ch5_deserters",
+   "label": "城外的逃兵",
+   "kind": "map",
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_pct": 0.92,
+   "loss": 0.08,
+   "level": 8
+  },
+  {
+   "ch": 5,
+   "enc": "ch5_raiders",
+   "label": "河边的强盗",
+   "kind": "map",
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_pct": 0.92,
+   "loss": 0.08,
+   "level": 8
+  },
+  {
+   "ch": 5,
+   "enc": "camelot_defense",
+   "label": "守卡美洛",
+   "kind": "quest",
+   "result": "win",
+   "turns": 6,
+   "down": 1,
+   "hp_pct": 0.46,
+   "loss": 0.54,
+   "level": 8
+  },
+  {
+   "ch": 5,
+   "enc": "ch5_pair",
+   "label": "两个强盗",
+   "kind": "map",
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_pct": 0.91,
+   "loss": 0.09,
+   "level": 8
+  },
+  {
+   "ch": 5,
+   "enc": "ch5_mixed",
+   "label": "落单的骑士",
+   "kind": "map",
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_pct": 0.92,
+   "loss": 0.08,
+   "level": 8
+  },
+  {
+   "ch": 5,
+   "enc": "tournament",
+   "label": "支线：比武",
+   "kind": "quest",
+   "result": "win",
+   "turns": 3,
+   "down": 0,
+   "hp_pct": 0.84,
+   "loss": 0.16,
+   "level": 9
+  },
+  {
+   "ch": 6,
+   "enc": "ch6_looters",
+   "label": "欢乐堡外的抢掠兵",
+   "kind": "map",
+   "result": "win",
+   "turns": 3,
+   "down": 0,
+   "hp_pct": 0.9,
+   "loss": 0.1,
+   "level": 9
+  },
+  {
+   "ch": 6,
+   "enc": "joyous_gard",
+   "label": "攻欢乐堡城门",
+   "kind": "story",
+   "result": "win",
+   "turns": 5,
+   "down": 0,
+   "hp_pct": 0.82,
+   "loss": 0.18,
+   "level": 9
+  },
+  {
+   "ch": 6,
+   "enc": "ch6_shore",
+   "label": "海边的兵",
+   "kind": "map",
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_pct": 0.9,
+   "loss": 0.1,
+   "level": 9
+  },
+  {
+   "ch": 6,
+   "enc": "dover",
+   "label": "多佛登陆",
+   "kind": "story",
+   "result": "win",
+   "turns": 4,
+   "down": 2,
+   "hp_pct": 0.18,
+   "loss": 0.82,
+   "level": 9
+  },
+  {
+   "ch": 6,
+   "enc": "ch6_riders",
+   "label": "路上的骑兵",
+   "kind": "map",
+   "result": "win",
+   "turns": 3,
+   "down": 0,
+   "hp_pct": 0.88,
+   "loss": 0.12,
+   "level": 9
+  },
+  {
+   "ch": 6,
+   "enc": "ch6_camp",
+   "label": "营外的斥候",
+   "kind": "map",
+   "result": "win",
+   "turns": 2,
+   "down": 0,
+   "hp_pct": 1.0,
+   "loss": 0.0,
+   "level": 10
+  },
+  {
+   "ch": 6,
+   "enc": "camlann",
+   "label": "卡姆兰",
+   "kind": "story",
+   "result": "win",
+   "turns": 7,
+   "down": 1,
+   "hp_pct": 0.47,
+   "loss": 0.53,
+   "level": 10
   }
  ],
  "ch1_validate": [

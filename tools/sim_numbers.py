@@ -189,7 +189,7 @@ PROPOSAL = {
         "ch6_riders": {"ch": 6, "kind": "map", "enemies": ["mordred_rider", "ch6_looter"], "party": ["arthur", "bedivere"], "label": "路上的骑兵"},
         "ch6_camp": {"ch": 6, "kind": "map", "enemies": ["mordred_soldier", "mordred_rider"], "party": ["arthur", "bedivere"], "label": "营外的斥候"},
         "camlann": {"ch": 6, "kind": "story", "enemies": ["mordred", "mordred_soldier", "mordred_soldier"], "party": ["arthur", "bedivere"], "label": "卡姆兰", "required": True},
-        "camlann_rear": {"ch": 6, "kind": "story", "enemies": ["mordred_rider", "mordred_rider", "mordred_soldier"], "party": ["bedivere", "kay"], "label": "卡姆兰后队（D5c）", "alt": True},
+        "camlann_rear": {"ch": 6, "kind": "story", "enemies": ["mordred_rider", "mordred_soldier", "mordred_rider", "mordred_soldier"], "party": ["bedivere", "kay"], "label": "卡姆兰后队（D5c）", "alt": True},
     },
     # 第 1 章沿用 combat.json 的遭遇；顺序是玩家碰上的顺序（全打路线）
     "route": {
@@ -883,6 +883,8 @@ def fight(enc_id, ctx, chapter, policy, allow_potions=False, max_turns=20):
     while not b.result and b.turn <= max_turns:
         if policy == "smart":
             smart_plan(b, allow_potions, survive)
+        elif policy == "smart_simple":
+            godot_plan(b, "smart")
         else:
             godot_plan(b, policy)
         b.end_turn()
@@ -1054,7 +1056,7 @@ def make_ctx(prof, enc_id, chapter, build="balanced", gear_route=None, unlocks=N
 
     base = CB["spells"]
     have = ["spark", "ward", "focus"]
-    if chapter >= 1 and enc_id != "merlin_shadow_noint":
+    if chapter >= 2 or enc_id == "merlin_shadow":     # 打断是第 1 章梅林说出秘密以后教的，头狼群时还不会
         have.append("interrupt")
     if chapter >= 4:
         have.append("reveal")
@@ -1179,6 +1181,7 @@ def run_route(style, build="balanced"):
                       "ap_hp": ctx["allies"][0]["max"]})
             prof.potions = dict(b.potions)
             killed = list(b.killed)
+            s["killed"] = list(b.killed)
             if enc.get("win", {}).get("type") == "survive" and PROPOSAL["survive_gives_xp"]:
                 killed = list(enc["enemies"])
             xp = xp_of(killed, ch)
@@ -1200,7 +1203,9 @@ def run_route(style, build="balanced"):
         qxp = PROPOSAL["quest_xp"][ch - 1]
         prof.gain_xp(qxp, ch, ["apprentice"])
         chapter_log.append({"style": style, "ch": ch, "xp": prof.xp, "level": prof.level,
-                            "silver_earned": prof.silver - silver_start})
+                            "silver_earned": prof.silver - silver_start,
+                            "kills": sum(len([1 for _ in r["killed"]]) for r in rows if r["ch"] == ch),
+                            "gear_drops": round(sum((1.0 if r["boss"] else IT["drops"]["group"]["gear_chance"]) for r in rows if r["ch"] == ch), 1)})
     return rows, chapter_log
 
 
@@ -1209,16 +1214,20 @@ def degenerate_checks():
     out = []
     prof = Profile("must")
     for ch in range(1, 7):
-        for enc_id in PROPOSAL["route"][ch]:
+        alts = [k for k, v in PROPOSAL["encounters"].items() if v.get("alt") and v["ch"] == ch]
+        for enc_id in PROPOSAL["route"][ch][:-1] + alts + PROPOSAL["route"][ch][-1:]:
             enc = enc_def(enc_id)
             if not (enc.get("required") or enc.get("side") or enc.get("alt")):
                 continue
             if enc_id == "merlin_shadow":
                 continue
             row = {"ch": ch, "enc": enc_id, "label": enc["label"], "level": prof.level}
-            for pol in ("always_first", "no_magic", "smart_spark_build"):
+            for pol in ("smart", "always_first", "no_magic", "smart_spark_build"):
                 prof.hp = {}
-                if pol == "smart_spark_build":
+                if pol == "smart":
+                    ctx = make_ctx(prof, enc_id, ch, "balanced", gear_route="must")
+                    b = fight(enc_id, ctx, ch, "smart")
+                elif pol == "smart_spark_build":
                     ctx = make_ctx(prof, enc_id, ch, "spark", gear_route="must")
                     b = fight(enc_id, ctx, ch, "smart")
                 else:
@@ -1231,6 +1240,26 @@ def degenerate_checks():
             if enc.get("required"):
                 killed = list(enc["enemies"])
                 prof.gain_xp(xp_of(killed, ch), ch, ["apprentice"] + enc["party"])
+        prof.gain_xp(PROPOSAL["quest_xp"][ch - 1], ch, ["apprentice"])
+    return out
+
+
+def simple_player():
+    """「普通玩家」对照：main.gd 的 smart（先打要叫人、要长嚎的，快倒的举盾；不用打断、护身），全打路线的等级和装备"""
+    out = []
+    prof = Profile("full")
+    for ch in range(1, 7):
+        for enc_id in PROPOSAL["route"][ch]:
+            enc = enc_def(enc_id)
+            prof.hp = {}
+            ctx = make_ctx(prof, enc_id, ch, gear_route="all")
+            if enc_id != "merlin_shadow":
+                b = fight(enc_id, ctx, ch, "smart_simple")
+                sm = summarize(b, ctx)
+                out.append({"ch": ch, "enc": enc_id, "label": enc["label"], "kind": enc["kind"], "result": b.result,
+                            "turns": b.turn, "down": sm["down"], "hp_pct": sm["hp_pct"],
+                            "loss": round(1 - sm["hp_end"] / max(1, sm["hp_start"]), 2), "level": prof.level})
+            prof.gain_xp(xp_of(list(enc["enemies"]), ch), ch, ["apprentice"] + list(enc["party"]))
         prof.gain_xp(PROPOSAL["quest_xp"][ch - 1], ch, ["apprentice"])
     return out
 
@@ -1340,11 +1369,12 @@ def main():
         all_ch += chl
     degen = degenerate_checks()
     mapnm = map_no_magic()
+    simple = simple_player()
     val = validate()
 
     # ---- 写结果 ----
     with open(os.path.join(OUT, "sim_results.json"), "w", encoding="utf-8") as f:
-        json.dump({"fights": all_rows, "chapters": all_ch, "degenerate": degen, "map_no_magic": mapnm,
+        json.dump({"fights": all_rows, "chapters": all_ch, "degenerate": degen, "map_no_magic": mapnm, "simple_player": simple,
                    "ch1_validate": val}, f, ensure_ascii=False, indent=1)
     style_name = {"full": "全力", "save": "省资源", "must": "只打必须的"}
     md = []
@@ -1362,6 +1392,16 @@ def main():
             cells.append("%d / %d 级" % (c["xp"], c["level"]))
         md.append("| %d | %s |" % (ch, " | ".join(cells)))
     md.append("")
+    md.append("## 每章打倒几只、银币（只算打怪掉的，每只 2 × 章；省资源和只打必须的另把「钱袋」算进去）、期望掉几件装备（不含宝物和任务奖励）\n")
+    md.append("| 章 | " + " | ".join("%s：只数 / 银币 / 装备" % style_name[s] for s in ("full", "save", "must")) + " |")
+    md.append("|---|---|---|---|")
+    for ch in range(1, 7):
+        cells = []
+        for s in ("full", "save", "must"):
+            c = [x for x in all_ch if x["style"] == s and x["ch"] == ch][0]
+            cells.append("%d / %d / %.1f" % (c["kills"], c["silver_earned"], c["gear_drops"]))
+        md.append("| %d | %s |" % (ch, " | ".join(cells)))
+    md.append("")
     for s in ("full", "save", "must"):
         md.append("## %s\n" % style_name[s])
         md.append("| 章 | 仗 | 类型 | 开打等级 | 星火 / 法力 / 学徒血 | 结果 | 回合 | 倒下 | 剩血 | 用药 | 法术 | 离开目标 |")
@@ -1376,10 +1416,17 @@ def main():
                 "；".join(fl) if fl else "—"))
         md.append("")
     md.append("## 退化打法检验（只打必须的等级、普通装备）\n")
-    md.append("| 章 | 仗 | 开打等级 | 永远打第一只 | 学徒不放法术 | 全点星火 + 最优打法 |")
-    md.append("|---|---|---|---|---|---|")
+    md.append("| 章 | 仗 | 开打等级 | 最优打法（四棵树平均点） | 永远打第一只 | 学徒不放法术 | 全点星火 + 最优打法 |")
+    md.append("|---|---|---|---|---|---|---|")
     for r in degen:
-        md.append("| %d | %s | %d | %s | %s | %s |" % (r["ch"], r["label"], r["level"], r["always_first"], r["no_magic"], r["smart_spark_build"]))
+        md.append("| %d | %s | %d | %s | %s | %s | %s |" % (r["ch"], r["label"], r["level"], r["smart"], r["always_first"], r["no_magic"], r["smart_spark_build"]))
+    md.append("")
+    md.append("## 「普通玩家」对照（main.gd 的 smart 打法：不用打断和护身；全打路线的等级和装备）\n")
+    md.append("| 章 | 仗 | 开打等级 | 结果 | 回合 | 倒下 | 剩血 | 这一场掉的血 |")
+    md.append("|---|---|---|---|---|---|---|---|")
+    for r in simple:
+        md.append("| %d | %s | %d | %s | %d | %d | %s | %s |" % (r["ch"], r["label"], r["level"], {"win": "赢", "lose": "输", "timeout": "超时"}[r["result"]],
+                                                       r["turns"], r["down"], fmt_pct(r["hp_pct"]), fmt_pct(r["loss"])))
     md.append("")
     md.append("## 地图小仗：学徒不放法术（全打路线的等级和装备）\n")
     won = sum(1 for r in mapnm if r["win"])

@@ -108,13 +108,13 @@
  "enemies": {
   "rebel_foot": {
    "name": "叛军步兵",
-   "hp": 11,
+   "hp": 12,
    "kind": "man",
    "chapter": 2,
    "pattern": [
     {
      "act": "attack",
-     "power": 4,
+     "power": 5,
      "target": "arthur",
      "move": "move_slash"
     },
@@ -171,14 +171,15 @@
   },
   "pellinore": {
    "name": "佩利诺",
-   "hp": 40,
+   "hp": 60,
    "kind": "man",
    "chapter": 3,
    "boss": true,
    "pattern": [
     {
      "act": "attack",
-     "power": 5,
+     "power": 6,
+     "hits": 2,
      "target": "arthur",
      "move": "move_slash"
     },
@@ -187,10 +188,16 @@
      "move": "move_charge",
      "then": {
       "act": "attack",
-      "power": 12,
+      "power": 16,
       "target": "arthur",
       "move": "move_heavy_slash"
      }
+    },
+    {
+     "act": "attack",
+     "power": 9,
+     "target": "arthur",
+     "move": "move_slash"
     }
    ]
   },
@@ -202,7 +209,7 @@
    "pattern": [
     {
      "act": "attack",
-     "power": 4,
+     "power": 5,
      "target": "lowest_hp",
      "move": "move_pounce"
     },
@@ -223,7 +230,7 @@
    "pattern": [
     {
      "act": "attack",
-     "power": 5,
+     "power": 7,
      "target": "lowest_hp",
      "move": "move_slash"
     },
@@ -236,21 +243,21 @@
   },
   "ch3_squire": {
    "name": "骑士的侍从",
-   "hp": 11,
+   "hp": 12,
    "kind": "man",
    "chapter": 3,
    "pattern": [
     {
-     "act": "weak",
-     "stacks": 2,
-     "target": "arthur",
-     "move": "move_sand"
-    },
-    {
      "act": "attack",
      "power": 4,
-     "target": "apprentice",
+     "target": "lowest_hp",
      "move": "move_slash"
+    },
+    {
+     "act": "weak",
+     "stacks": 2,
+     "target": "lowest_hp",
+     "move": "move_sand"
     }
    ]
   },
@@ -262,7 +269,7 @@
    "pattern": [
     {
      "act": "attack",
-     "power": 5,
+     "power": 6,
      "target": "arthur",
      "move": "move_slash"
     },
@@ -347,39 +354,41 @@
   },
   "red_knight": {
    "name": "红骑士",
-   "hp": 36,
+   "hp": 48,
    "kind": "red",
    "chapter": 4,
    "boss": true,
+   "rise": {
+    "strength": 2,
+    "turns": 3
+   },
    "pattern": [
     {
-     "act": "buff",
-     "strength": 2,
-     "who": "self",
-     "move": "move_noon_rise"
-    },
-    {
      "act": "attack",
-     "power": 5,
+     "power": 4,
      "target": "gareth",
      "move": "move_slash"
     },
     {
-     "act": "buff",
-     "strength": 2,
-     "who": "self",
-     "move": "move_noon_rise"
-    },
-    {
      "act": "attack",
-     "power": 4,
+     "power": 3,
      "hits": 2,
      "target": "lowest_hp",
      "move": "move_slash"
     },
     {
+     "act": "charge",
+     "move": "move_charge",
+     "then": {
+      "act": "attack",
+      "power": 6,
+      "target": "all",
+      "move": "move_sweep"
+     }
+    },
+    {
      "act": "attack",
-     "power": 5,
+     "power": 4,
      "target": "gareth",
      "move": "move_slash"
     }
@@ -406,13 +415,13 @@
   },
   "ch4_brigand": {
    "name": "林中的强人",
-   "hp": 14,
+   "hp": 15,
    "kind": "man",
    "chapter": 4,
    "pattern": [
     {
      "act": "attack",
-     "power": 5,
+     "power": 6,
      "target": "lowest_hp",
      "move": "move_slash"
     },
@@ -426,19 +435,19 @@
   },
   "ch4_wolf": {
    "name": "冬狼",
-   "hp": 12,
+   "hp": 13,
    "kind": "wolf",
    "chapter": 4,
    "pattern": [
     {
      "act": "attack",
-     "power": 4,
+     "power": 5,
      "target": "lowest_hp",
      "move": "move_bite"
     },
     {
      "act": "attack",
-     "power": 3,
+     "power": 4,
      "hits": 2,
      "target": "apprentice",
      "move": "move_bite"
@@ -447,19 +456,19 @@
   },
   "raider": {
    "name": "劫道的强盗",
-   "hp": 16,
+   "hp": 13,
    "kind": "man",
    "chapter": 5,
    "pattern": [
     {
      "act": "attack",
-     "power": 6,
+     "power": 7,
      "target": "lowest_hp",
      "move": "move_slash"
     },
     {
      "act": "attack",
-     "power": 3,
+     "power": 4,
      "hits": 2,
      "target": "lowest_hp",
      "move": "move_slash"
@@ -468,7 +477,7 @@
   },
   "raider_chief": {
    "name": "强盗头子",
-   "hp": 22,
+   "hp": 18,
    "kind": "man",
    "chapter": 5,
    "pattern": [
@@ -523,19 +532,19 @@
   },
   "ch5_deserter": {
    "name": "逃兵",
-   "hp": 15,
+   "hp": 16,
    "kind": "man",
    "chapter": 5,
    "pattern": [
     {
      "act": "attack",
-     "power": 5,
+     "power": 6,
      "target": "lowest_hp",
      "move": "move_slash"
     },
     {
      "act": "attack",
-     "power": 6,
+     "power": 7,
      "target": "apprentice",
      "move": "move_slash"
     }
@@ -543,7 +552,7 @@
   },
   "joyous_guard": {
    "name": "欢乐堡守军",
-   "hp": 18,
+   "hp": 20,
    "kind": "lancelot_men",
    "chapter": 6,
    "pattern": [
@@ -554,7 +563,7 @@
     },
     {
      "act": "attack",
-     "power": 4,
+     "power": 6,
      "target": "lowest_hp",
      "move": "move_push"
     }
@@ -562,13 +571,13 @@
   },
   "dover_archer": {
    "name": "多佛的弓箭手",
-   "hp": 20,
+   "hp": 40,
    "kind": "man",
    "chapter": 6,
    "pattern": [
     {
      "act": "attack",
-     "power": 4,
+     "power": 5,
      "target": "all",
      "move": "move_arrow_rain"
     }
@@ -576,17 +585,27 @@
   },
   "mordred": {
    "name": "莫德雷德",
-   "hp": 52,
+   "hp": 50,
    "kind": "mordred",
    "chapter": 6,
    "boss": true,
    "pattern": [
     {
      "act": "attack",
-     "power": 7,
+     "power": 11,
      "target": "arthur",
      "move": "move_slash",
      "hidden": true
+    },
+    {
+     "act": "charge",
+     "move": "move_charge",
+     "then": {
+      "act": "attack",
+      "power": 18,
+      "target": "arthur",
+      "move": "move_heavy_slash"
+     }
     },
     {
      "act": "summon",
@@ -595,18 +614,8 @@
      "move": "move_call"
     },
     {
-     "act": "charge",
-     "move": "move_charge",
-     "then": {
-      "act": "attack",
-      "power": 14,
-      "target": "arthur",
-      "move": "move_heavy_slash"
-     }
-    },
-    {
      "act": "attack",
-     "power": 4,
+     "power": 6,
      "hits": 2,
      "target": "lowest_hp",
      "move": "move_slash",
@@ -616,13 +625,13 @@
   },
   "mordred_soldier": {
    "name": "莫德雷德的兵",
-   "hp": 16,
+   "hp": 15,
    "kind": "mordred",
    "chapter": 6,
    "pattern": [
     {
      "act": "attack",
-     "power": 6,
+     "power": 8,
      "target": "lowest_hp",
      "move": "move_slash"
     },
@@ -634,7 +643,7 @@
     },
     {
      "act": "attack",
-     "power": 5,
+     "power": 6,
      "target": "apprentice",
      "move": "move_slash"
     }
@@ -648,7 +657,7 @@
    "pattern": [
     {
      "act": "attack",
-     "power": 5,
+     "power": 6,
      "target": "lowest_hp",
      "move": "move_slash"
     }
@@ -656,7 +665,7 @@
   },
   "mordred_rider": {
    "name": "莫德雷德的骑兵",
-   "hp": 16,
+   "hp": 26,
    "kind": "mordred",
    "chapter": 6,
    "pattern": [
@@ -680,13 +689,13 @@
   },
   "ch6_looter": {
    "name": "趁乱抢掠的兵",
-   "hp": 17,
+   "hp": 24,
    "kind": "man",
    "chapter": 6,
    "pattern": [
     {
      "act": "attack",
-     "power": 6,
+     "power": 7,
      "target": "lowest_hp",
      "move": "move_slash"
     },
@@ -776,7 +785,8 @@
     "type": "survive",
     "turns": 3
    },
-   "no_scabbard": true
+   "no_scabbard": true,
+   "end_if_down": "arthur"
   },
   "ch3_road_knight": {
    "kind": "map",
@@ -1061,6 +1071,7 @@
    "kind": "story",
    "enemies": [
     "mordred_rider",
+    "mordred_soldier",
     "mordred_rider",
     "mordred_soldier"
    ],
