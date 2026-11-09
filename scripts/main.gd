@@ -774,12 +774,12 @@ func _playtest() -> void:
 	_expect(runner.v("kay_believes_you") == (want == "D1a"), "凯信不信你跟着选项走")
 	_expect(runner.v("kay_rift") == (want == "D1b"), "兄弟有没有疙瘩跟着选项走")
 	_expect(Quests.state("1001") == "done", "第 1 章主线完成")
-	_expect(int(runner.v("chapter")) == 2 and runner.quest_part(1002) == 1203, "进第 2 章，任务到 1203 跟埃克托回教堂")
+	_expect(int(runner.v("chapter")) == 2 and runner.quest_part(1002) == 1201, "进第 2 章，任务在 1201 去教堂墓地看那把剑")
 	var lv_want := 3 if route != "b" else 2
 	_expect(Party.level() == lv_want, "第 1 章末学徒 %d 级、经验 %d（设计页：只打必须打的 12 / 2 级，全打 28 / 3 级）" % [Party.level(), int(GS.S.xp_total)])
 	verify("coreLoop", Quests.state("1001") == "done" and runner.visited("Ch1_WolvesDone") and "ch1_wolves" in GS.S.defeated
-		and int(GS.S.xp_total) > 0 and Party.level() >= 2 and runner.has_unlock("u_interrupt") and runner.v("D1") == want and runner.quest_part(1002) == 1203,
-		"接 1001 → 打赢狼群（地图上打了 %d 群）→ 经验 %d、%d 级 → 看水面记下 D1 → 学打断、打赢影子 → 马厩选 %s → 1001 完成 → 进第 2 章 1203" % [
+		and int(GS.S.xp_total) > 0 and Party.level() >= 2 and runner.has_unlock("u_interrupt") and runner.v("D1") == want and runner.quest_part(1002) == 1201,
+		"接 1001 → 打赢狼群（地图上打了 %d 群）→ 经验 %d、%d 级 → 看水面记下 D1 → 学打断、打赢影子 → 马厩选 %s → 1001 完成 → 进第 2 章 1201" % [
 			GS.S.defeated.size() - 1, int(GS.S.xp_total), Party.level(), want])
 	# 存档：马厩选完、进第 2 章时自动存过；存档里是第 2 章、选的是 want、站在伦敦，经验和背包都在
 	var saved = JSON.parse_string(FileAccess.get_file_as_string(GS.SAVE_PATH))
@@ -787,6 +787,16 @@ func _playtest() -> void:
 		and int(saved.prog.level) == Party.level() and saved.bag.size() == GS.S.bag.size(),
 		"进第 2 章时自动存档：第 2 章、D1=%s、站在伦敦、%d 级、背包 %d 件" % [want, Party.level(), GS.S.bag.size()])
 	await _shot("map_london")
+
+	# 第 2 章：墓地看剑 → 比武场凯忘了剑 → 跑回住处（锁着门）→ 墓地（亚瑟拔剑）→ 送回比武场 → 1203
+	# 一步里人换地方时，「下一步」跟着换成小目标（<<objective>>）
+	for leg in [[Vector2i(4, 7), "Ch2_Churchyard", "quest_1002_p1202"], [Vector2i(18, 8), "Ch2_Tournament", "quest_1002_p1202b"],
+			[Vector2i(14, 11), "Ch2_LockedDoor", "quest_1002_p1202c"], [Vector2i(4, 7), "Ch2_SwordPulled", "quest_1002_p1202d"],
+			[Vector2i(18, 8), "Ch2_SwordToKay", "quest_1002_p1203"]]:
+		await _walk_onto(leg[0])
+		await _until(func(): return runner.visited(leg[1]) and not runner.running, 30.0)
+		_expect(Quests.objective("1002") == tr(leg[2]), "演完 %s，下一步换成「%s」（现在：%s）" % [leg[1], tr(leg[2]), Quests.objective("1002")])
+	_expect(runner.quest_part(1002) == 1203, "剑送到凯手里，任务到 1203 跟埃克托回教堂")
 
 	# 教堂：第 1 章那句话应验
 	var church_before: int = GS.book_page("D1").get("after", []).size()
@@ -800,8 +810,9 @@ func _playtest() -> void:
 	_expect("book" in _seen_screens, "地图上按 Esc 打开预言簿，看得到这一页和「后来」")
 	await _until(func(): return screens.kind == "end", 30.0)
 	for l in screens.data.get("metrics", []): print("  [试玩记录] ", l)
-	verify("outcome", screens.kind == "end" and after_key in GS.book_page("D1").after and runner.quest_part(1002) == 1204,
-		"第 2 章教堂按 %s 演完：预言簿写上「%s」，任务到 1204，出现白盒结尾" % [want, UIKit.t(after_key)])
+	verify("outcome", screens.kind == "end" and after_key in GS.book_page("D1").after and runner.quest_part(1002) == 1203
+		and Quests.objective("1002") == tr("quest_1002_p1203b"),
+		"第 2 章教堂按 %s 演完：预言簿写上「%s」，下一步换成「%s」，出现白盒结尾" % [want, UIKit.t(after_key), tr("quest_1002_p1203b")])
 	print("[playtest] %s（%d 条不过）" % ["PASS" if fails.is_empty() else "FAIL", fails.size()])
 	if screens.kind != "end":
 		get_tree().quit(1)

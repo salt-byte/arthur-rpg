@@ -278,6 +278,142 @@
       "triggers": [
         {
           "cell": [
+            2,
+            7
+          ],
+          "node": "Ch2_Churchyard",
+          "cond": "quest_part(1002) == 1201 and not visited(\"Ch2_Churchyard\")"
+        },
+        {
+          "cell": [
+            4,
+            7
+          ],
+          "node": "Ch2_Churchyard",
+          "cond": "quest_part(1002) == 1201 and not visited(\"Ch2_Churchyard\")"
+        },
+        {
+          "cell": [
+            3,
+            8
+          ],
+          "node": "Ch2_Churchyard",
+          "cond": "quest_part(1002) == 1201 and not visited(\"Ch2_Churchyard\")"
+        },
+        {
+          "cell": [
+            3,
+            6
+          ],
+          "node": "Ch2_Churchyard",
+          "cond": "quest_part(1002) == 1201 and not visited(\"Ch2_Churchyard\")"
+        },
+        {
+          "cell": [
+            18,
+            7
+          ],
+          "node": "Ch2_Tournament",
+          "cond": "quest_part(1002) == 1202 and not visited(\"Ch2_Tournament\")"
+        },
+        {
+          "cell": [
+            18,
+            8
+          ],
+          "node": "Ch2_Tournament",
+          "cond": "quest_part(1002) == 1202 and not visited(\"Ch2_Tournament\")"
+        },
+        {
+          "cell": [
+            18,
+            9
+          ],
+          "node": "Ch2_Tournament",
+          "cond": "quest_part(1002) == 1202 and not visited(\"Ch2_Tournament\")"
+        },
+        {
+          "cell": [
+            18,
+            10
+          ],
+          "node": "Ch2_Tournament",
+          "cond": "quest_part(1002) == 1202 and not visited(\"Ch2_Tournament\")"
+        },
+        {
+          "cell": [
+            14,
+            11
+          ],
+          "node": "Ch2_LockedDoor",
+          "cond": "visited(\"Ch2_Tournament\") and not visited(\"Ch2_LockedDoor\")"
+        },
+        {
+          "cell": [
+            2,
+            7
+          ],
+          "node": "Ch2_SwordPulled",
+          "cond": "visited(\"Ch2_LockedDoor\") and not visited(\"Ch2_SwordPulled\")"
+        },
+        {
+          "cell": [
+            4,
+            7
+          ],
+          "node": "Ch2_SwordPulled",
+          "cond": "visited(\"Ch2_LockedDoor\") and not visited(\"Ch2_SwordPulled\")"
+        },
+        {
+          "cell": [
+            3,
+            8
+          ],
+          "node": "Ch2_SwordPulled",
+          "cond": "visited(\"Ch2_LockedDoor\") and not visited(\"Ch2_SwordPulled\")"
+        },
+        {
+          "cell": [
+            3,
+            6
+          ],
+          "node": "Ch2_SwordPulled",
+          "cond": "visited(\"Ch2_LockedDoor\") and not visited(\"Ch2_SwordPulled\")"
+        },
+        {
+          "cell": [
+            18,
+            7
+          ],
+          "node": "Ch2_SwordToKay",
+          "cond": "quest_part(1002) == 1202 and visited(\"Ch2_SwordPulled\") and not visited(\"Ch2_SwordToKay\")"
+        },
+        {
+          "cell": [
+            18,
+            8
+          ],
+          "node": "Ch2_SwordToKay",
+          "cond": "quest_part(1002) == 1202 and visited(\"Ch2_SwordPulled\") and not visited(\"Ch2_SwordToKay\")"
+        },
+        {
+          "cell": [
+            18,
+            9
+          ],
+          "node": "Ch2_SwordToKay",
+          "cond": "quest_part(1002) == 1202 and visited(\"Ch2_SwordPulled\") and not visited(\"Ch2_SwordToKay\")"
+        },
+        {
+          "cell": [
+            18,
+            10
+          ],
+          "node": "Ch2_SwordToKay",
+          "cond": "quest_part(1002) == 1202 and visited(\"Ch2_SwordPulled\") and not visited(\"Ch2_SwordToKay\")"
+        },
+        {
+          "cell": [
             9,
             5
           ],
@@ -293,7 +429,8 @@
           "cond": "quest_part(1002) == 1203 and not visited(\"Ch2_Church\")"
         }
       ],
-      "battle_bg": "#6A6258"
+      "battle_bg": "#6A6258",
+      "_说明": "白盒的伦敦：第 2 章 1201–1203 的触发点先摆在这张小图上（墓地 = 左边那块石头四周，比武场 = 右边一排，住处门口 = 出生点南边一格），第 13 步按 ch2_notes.md 做正式地图"
     }
   },
   "chapter_start": {

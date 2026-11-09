@@ -118,7 +118,7 @@
         2
       ],
       "node": "",
-      "condition": "$chapter == 2",
+      "condition": "quest_part(1002) == 1203",
       "act": {
         "type": "look"
       },
@@ -134,7 +134,7 @@
         3
       ],
       "node": "",
-      "condition": "$chapter == 2",
+      "condition": "quest_part(1002) == 1203",
       "act": {
         "type": "look"
       },
@@ -150,7 +150,7 @@
         3
       ],
       "node": "",
-      "condition": "$chapter == 2",
+      "condition": "quest_part(1002) == 1203",
       "act": {
         "type": "look"
       },
