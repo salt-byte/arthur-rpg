@@ -8341,7 +8341,14 @@ footer { color: var(--muted); font-size: .85rem; padding-block: 0 3rem; }
 <p>插件问题（记给插件）：
 - verify.py --shots 会跑 --autotest，本项目的 main.gd 没有这个开关，游戏停在标题一直不退出，verify.py 干等；playtest-automation 应该写明 --autotest 是必须实现的入口，或者 verify.py 给 --autotest 设个超时。
 - 像素字体换版本、改字表以后，旧的 .translation 可能让 Godot 启动就崩；localization-table 里写一句「改了字表先删 *.translation 再导入」。
-- mechanics-library 的 random-affix-loot 要的稀有度是数组、稀有名是 first / second 两张表，本项目 items.json 按设计页写的是字典和二维数组，要写一段转换；game-design 写 items.json 时可以直接照参考代码的格式写。</p></section></section>
+- mechanics-library 的 random-affix-loot 要的稀有度是数组、稀有名是 first / second 两张表，本项目 items.json 按设计页写的是字典和二维数组，要写一段转换；game-design 写 items.json 时可以直接照参考代码的格式写。</p>
+<h5>21.1 两个会话同时做第 10 步</h5>
+<p>推送时发现 main 上多了另一个会话（session_01WhMn5QKdaQjVf25BUquAms）的三个提交，最后一个 11:12，说明写着「写到一半」。两份改的是同一批文件，合不到一起。</p>
+<p>对比后用户选了「用我这份覆盖 main（推荐）」：
+- 那份的三个提交存到分支 step10-other-session，不删。
+- 那份里值得以后用的两点：<code>--sim</code> 数值模拟开关（第 19 步调数值时参考），梅林的影子「被打断一次就散」的改法。
+- 那份当时自己的测试路线 a：19 条过、14 条不过（升级画面卡住、走不到强盗跟前、一处脚本报错）；森林还是 24×14、两群敌人。</p>
+<p>插件问题（记给插件）：producer 的 github-sync 只写了「每步交接前提交并推送」，没写推送前先 fetch、发现别的会话推过就停下来问。这次是推送被拒才发现的；要是用了强推，那份就被静默盖掉了。</p></section></section>
 </main>
 <footer class="wrap">这一页由项目里的文件生成（GAME_BRIEF、TASKS、design/、content/、qa/、DEVLOG）；要改内容改那些文件，再重新生成。生成于 2026-11-09。</footer>
 <script>
