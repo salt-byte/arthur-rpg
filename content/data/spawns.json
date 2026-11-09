@@ -3,22 +3,24 @@
   "zones": {
     "forest_east": {
       "area": "forest",
-      "rect": null,
+      "rect": [16, 1, 22, 6],
       "groups": [
         {
           "enemy": "forest_wolves",
-          "count": 1
+          "count": 1,
+          "cell": [18, 2]
         }
       ],
       "_说明": "小路右边的蕨丛"
     },
     "forest_road": {
       "area": "forest",
-      "rect": null,
+      "rect": [1, 1, 9, 6],
       "groups": [
         {
           "enemy": "road_bandits",
-          "count": 1
+          "count": 1,
+          "cell": [8, 2]
         }
       ],
       "_说明": "路中间横着死羊，弓手蹲在树后"
