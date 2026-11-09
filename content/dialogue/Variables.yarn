@@ -38,6 +38,7 @@ tags: declarations
 <<declare $elaine_lives = false>>
 // S2a
 <<declare $gareth_refused_order = false>>
+<<declare $arthur_knew_affair = false>>
 // S1a
 <<declare $gawain_confessed = false>>
 // S1a

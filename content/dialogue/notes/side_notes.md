@@ -22,10 +22,10 @@
 | S2301_Castle | 林中城堡门口 | 和城主说话 | `quest_part(2301) == 2` | 看水面 S1 在这里 |
 | S2301_Chapel | 绿色礼拜堂 | 走进这片地方（或和绿衣骑士说话） | `quest_part(2301) == 3` | |
 | S2301_Return | 卡美洛马厩 | 和高文说话 | `quest_part(2301) == 4` | Ch3_Gawain 在这个条件下 `<<jump S2301_Return>>`，或在马厩另放一个高文。关键选择 S1 |
-| S2401_Rumor | 卡美洛（凯在厨房门口） | 和凯说话 | `quest_state(2401) == "none"` | Ch4_Kay 1403/1404 那一支已经写了凯的线索和 D1a、D1c 回读，末尾留了开任务的占位：在占位处 `<<if quest_state(2401) == "none">><<jump S2401_Rumor>><<endif>>`。我这边只补一句原话（任务记录抄它），不重复 D1 回读 |
-| S2401_Kitchen | 卡美洛厨房后院 | 和劈柴的美手说话 | `quest_part(2401) == 1` | Ch4_Kay 说「他在后院劈柴」，地点照它。节点里跳过一年，第二年五旬节凯说出北门去红地 |
-| S2401_RedLaunds | 去红地的路尽头（树下有号角） | 和美手说话 | `quest_part(2401) == 2` | 打 red_knight |
-| S2401_Knighted | 圆桌大厅 | 和兰斯洛特说话 | `quest_part(2401) == 3` | Ch4_Lancelot 在这个条件下跳过来。看水面 S2、关键选择 S2、加雷斯入队 |
+| S2401_Rumor | 卡美洛（凯在厨房门口） | 和凯说话（1403、1404） | `quest_state(2401) == "none"` | Ch4_Kay 1403/1404 第一次说话跳过来。凯的线索（劈了快一年柴）、外号美手、D1a / D1c 回读都在这个节点里（2026-11-09 按 review_ch4 🔴1、🟠2 补） |
+| S2401_Kitchen | 卡美洛厨房后院 | 和劈柴的美手说话 | `quest_part(2401) == 1 and not visited("S2401_Kitchen")` | 只演一次。凯当面挖苦一回；那一年在主线 1403 之前已经过去，节点里不再跳一年（review_ch4 🔴2） |
+| S2401_RedLaunds | 去红地的路尽头（树下有号角） | 和美手说话 | `quest_part(1004) == 1405 and quest_part(2401) == 2` | 打 red_knight。姑娘求救在 S2401_Plea（Ch4_Brothers 末尾跳过去） |
+| S2401_Knighted | 圆桌大厅 | 和兰斯洛特说话 | `quest_part(1004) == 1405 and quest_part(2401) == 3` | 宴席开席前。看水面 S2、关键选择 S2、加雷斯入队；Ch4_Arthur 这时说宴席压着等你们回来 |
 | S2501_Rumor | 卡美洛回廊 | 和王后的侍女说话 | `visited("Ch5_Return") and quest_state(2501) == "none"` | Ch5_Return 注释写了「演完才出现给任务人（王后的侍女、贝狄威尔）」；侍女的节点挂这里 |
 | S2501_Hall | 宴会厅 | 和凯说话 | `quest_part(2501) == 1` | 宴会厅里另放一个凯（Ch5_Kay 这时在厨房） |
 | S2501_Bowl | 你在塔楼顶上的屋子（Ch4 说阁楼在东边塔楼顶上） | 和桌上的木碗互动 | `quest_part(2501) == 2` | 看水面 S3、关键选择 S3；结尾 `<<jump S2501_Feast>>` |
@@ -75,7 +75,7 @@ cell 第 13 步做地图时补。speakers 要给这些名字牌配头像：绿�
 | castle_lord | castle | S2301_Castle | `quest_part(2301) == 2` | |
 | green_knight | green_chapel | S2301_Chapel | `quest_part(2301) == 3` | |
 | gawain_stable | camelot | S2301_Return | `quest_part(2301) == 4` | |
-| beaumains | camelot（厨房后院） | S2401_Kitchen | `quest_part(2401) == 1` | bark_beaumains_1 |
+| beaumains | camelot（厨房后院） | S2401_Kitchen | `quest_part(2401) == 1 and not visited("S2401_Kitchen")` | bark_beaumains_1 |
 | beaumains_red | red_launds | S2401_RedLaunds | `quest_part(2401) == 2` | |
 | lancelot_knighting | camelot（圆桌大厅） | S2401_Knighted | `quest_part(2401) == 3` | |
 | queen_maid | camelot（回廊） | S2501_Rumor | `visited("Ch5_Return") and quest_state(2501) == "none"`；开任务以后留着冒闲话，到 1503 撤 | bark_queen_maid_1 |
