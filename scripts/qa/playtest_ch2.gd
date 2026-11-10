@@ -24,6 +24,9 @@ func run(want: String) -> void:
 	m._expect(w.markers() == [Vector2i(7, 11)], "1201 的任务标记只标墓地门 (7, 11)，照 quests.json 的 target（%s）" % str(w.markers()))
 	m._expect(m._npc_cell("shop_london") == Vector2i(18, 18) and w.npc_at(Vector2i(18, 18)) != null, "桥头铺子的店主站在 (18, 18)")
 	await m._shot("map_london_ch2")
+	if route == "a":
+		await m._walk_onto(Vector2i(16, 3))
+		await m._shot("map_london_gate_closed")
 
 	# 墓地看剑 → 比武场凯忘了剑 → 跑回住处（锁着门）→ 墓地（亚瑟拔剑）→ 送回比武场 → 1203；一步里人换地方时「下一步」换成小目标
 	for leg in [[Vector2i(7, 11), "Ch2_Churchyard", "quest_1002_p1202"], [Vector2i(11, 16), "Ch2_Tournament", "quest_1002_p1202b"],
@@ -48,6 +51,7 @@ func run(want: String) -> void:
 	m._expect(m.runner.quest_part(1002) == 1204 and Quests.objective("1002") == m.tr("quest_1002_p1204"), "任务到 1204：%s" % Quests.objective("1002"))
 	m._expect(w.exit_at(Vector2i(16, 0)) != null, "1204 起北门开了")
 	m._expect(w.markers() == [Vector2i(16, 0)], "1204 在伦敦标北门（%s）" % str(w.markers()))
+	await m._shot("map_london_1204_gate_open")
 	m.open_book()
 	await m._until(func(): return m.screens.kind != "book")
 	m._expect("book" in m._seen_screens, "地图上按 Esc 打开预言簿，看得到这一页和「后来」")
@@ -104,6 +108,8 @@ func run(want: String) -> void:
 	var travel: Array = m.travel_targets(m.shrine_def("bedegraine_camp")).map(func(o): return o.id)
 	m._expect("london_bridge" in travel, "木十字的传送菜单里有桥头小礼拜堂（本章第一座，%s）" % str(travel))
 
+	await m._walk_onto(Vector2i(22, 9))
+	await m._shot("map_bedegraine_flag_marker")
 	# 旗前三格：先说三句话，再 <<fight_npcs bedegraine>>
 	await m._walk_onto(Vector2i(22, 5))
 	await m._until(func(): return m.mode == "battle", 30.0)
@@ -112,6 +118,8 @@ func run(want: String) -> void:
 	await m._until(func(): return m.mode == "map" and not m.runner.running and not m.screens.is_open(), 60.0)
 	m._expect(m.runner.visited("Ch2_Bedegraine") and m.runner.quest_part(1002) == 1205, "打赢贝德格兰，任务到 1205：%s" % Quests.objective("1002"))
 	m._expect(w.markers() == [Vector2i(24, 13)], "1205 在贝德格兰标木十字 (24, 13)，提示传回伦敦（%s）" % str(w.markers()))
+	await m._walk_onto(Vector2i(22, 10))
+	await m._shot("map_bedegraine_1205_shrine_marker")
 
 	# ---------------- 2-4 回伦敦 ----------------
 	m._shrine_plan = ["travel:london_bridge"]
@@ -166,7 +174,7 @@ func _story_fight() -> void:
 		var b = m.battle_view.b
 		var texts: Array = b.intents.map(func(it): return b.intent_text(it))
 		print("  [贝德格兰] 第 %d 次，第 1 回合意图：%s" % [attempt + 1, ", ".join(PackedStringArray(texts))])
-		await _hold_the_flag()
+		await _search_fight(b.ctx.duplicate(true))
 		print("  [贝德格兰] %s，第 %d 回合；%s" % [b.result, b.turn, ", ".join(PackedStringArray(b.allies(false).map(func(u): return "%s %d/%d" % [u.name, u.hp, u.max])))])
 		if b.result == "win":
 			m._expect(true, "贝德格兰之战第 %d 次打赢（第 %d 回合）" % [attempt + 1, b.turn])
@@ -176,6 +184,108 @@ func _story_fight() -> void:
 		m.battle_view.end_btns[0].pressed.emit()
 		await m.get_tree().process_frame
 	m._expect(false, "贝德格兰之战三次都没打赢")
+
+## 最优打法（和 tools/sim_numbers.py 的 smart_plan 同一个思路）：战斗是确定的，每回合把三个人能排的组合
+## 在一份新开的同一场仗里试一遍（先照前几回合的排法重放，再排这一组，往后按 _greedy 打完），挑打完剩血最多的那组，
+## 再在真正的战斗画面里照它点按钮。不改战斗规则，只替玩家多想几步。
+func _search_fight(ctx: Dictionary, max_turns := 14) -> void:
+	var b = m.battle_view.b
+	var history: Array = []
+	while b.result == "" and history.size() < max_turns:
+		var turn0: int = b.turn
+		var best: Array = []
+		var best_score := -INF
+		for plan in _combos(_fresh(b, ctx, history)):
+			var s = _fresh(b, ctx, history)
+			if not _apply(s, plan): continue
+			for i in max_turns:
+				if s.result != "": break
+				_greedy(s)
+			var sc := _score(s)
+			if sc > best_score:
+				best_score = sc
+				best = plan
+		if best.is_empty():
+			m._expect(false, "第 %d 回合一组能排的都没有" % turn0)
+			return
+		history.append(best)
+		for p in best:
+			if b.result != "" or b.turn != turn0: break
+			m._plan(p[0], p[1], p[2])
+		if b.result == "" and b.turn == turn0:
+			m.battle_view._on_end_turn()
+		var s = _fresh(b, ctx, history)
+		var hp_of := func(x): return x.allies(false).map(func(u): return u.hp) + x.enemies(false).map(func(u): return u.hp)
+		if hp_of.call(s) != hp_of.call(b): print("  [贝德格兰] 试算和实战对不上：%s / %s" % [hp_of.call(s), hp_of.call(b)])
+	m._expect(b.result != "", "贝德格兰之战 %d 回合内分出胜负" % max_turns)
+
+## 新开一份同样的仗，照 history 把前几回合重放一遍
+func _fresh(b, ctx: Dictionary, history: Array):
+	var s := Battle.new()
+	s.setup(b.enc_id, ctx.duplicate(true), int(m.runner.v("chapter")), GS.S.vars.duplicate(true))
+	for plan in history: _apply(s, plan)
+	return s
+
+func _apply(s, plan: Array) -> bool:
+	for p in plan:
+		if not s.plan(p[0], p[1], p[2]): return false
+	s.end_turn()
+	s.take_log()
+	return true
+
+## 这回合三个人能排的所有组合（不喝药）
+func _combos(s) -> Array:
+	var per := []
+	for u in s.allies():
+		var opts := []
+		for act in s.actions_for(u.uid):
+			if act.begins_with("potion") or s.why_not(u.uid, act) != "": continue
+			var tk: String = s.target_kind(act)
+			if tk == "": opts.append([u.uid, act, ""])
+			elif tk in ["enemy", "ally"]:
+				for t in s.valid_targets(act): opts.append([u.uid, act, t])
+		per.append(opts)
+	var out := [[]]
+	for opts in per:
+		var nxt := []
+		for base in out:
+			for o in opts: nxt.append(base + [o])
+		out = nxt
+	return out
+
+## 打完以后的分：赢了按剩血算，输了按敌人还剩多少血扣
+func _score(s) -> float:
+	var mine := 0
+	for u in s.allies(false): mine += maxi(0, u.hp)
+	var theirs := 0
+	for e in s.enemies(): theirs += e.hp
+	return (1000.0 + mine * 10 - s.turn) if s.result == "win" else (-theirs * 10.0 + mine)
+
+## 往后几回合的打法：打断蓄力、要倒的人举盾或护身，其余人打同一个不举盾的敌人
+func _greedy(s) -> void:
+	var tgt := _flag_target(s)
+	var inc := {}
+	for u in s.allies():
+		var n := 0
+		for it in s.intents:
+			if not it.cancelled and it.act == "attack" and (it.target == u.uid or it.target == "all"): n += s.intent_damage(it, u.uid) * int(it.hits)
+		inc[u.uid] = n
+	for u in s.allies():
+		if u.uid == "apprentice":
+			var cut: Array = s.interruptible()
+			var weak := ""
+			for a in s.allies():
+				if a.uid != "apprentice" and int(inc.get(a.uid, 0)) >= a.hp + int(a.block): weak = a.uid
+			if not cut.is_empty() and s.plan("apprentice", "interrupt", cut[0]): pass
+			elif weak != "" and s.plan("apprentice", "ward", weak): pass
+			elif tgt != "" and s.plan("apprentice", "spark", tgt): pass
+			else: s.plan("apprentice", "focus")
+		elif int(inc.get(u.uid, 0)) >= u.hp + int(u.block):
+			s.plan(u.uid, "guard")
+		elif tgt != "":
+			s.plan(u.uid, "attack", tgt)
+	s.end_turn()
+	s.take_log()
 
 ## 一回合一回合排：学徒先打断蓄力，有人这回合要倒就护他，否则星火；凯和亚瑟这回合要倒就举盾，否则打同一个目标
 ## （没倒的骑兵 → 血最少、这回合不举盾的步兵 → 盾兵）

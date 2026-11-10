@@ -803,3 +803,21 @@ Esc 菜单没搬：这一份地图右上已经有预言簿、背包、技能树�
 复查 2401 关门：Ch4_Feast 开头已有 `<<close_side 2401>>`，关门发生在走到宴席座位时，草稿说的「红骑士打不上」不成立，quests.json 不用改。
 
 关卡落进地图数据、7.1 的六处代码（出口条件、跨章地方、宝物条件、挪人指令、支线水面发光、商店位置）和 combat.md 的七个新字段，一起并进第 15 步第二批。
+
+## 29. 第 15 步第二批之一：战斗七个字段 + 第 2 章白盒
+
+两个子代理并行，一个只碰战斗代码，一个只碰地图、大地图代码和 Ch2.yarn。
+
+**战斗**（battle.gd、新 battle_sim.gd、party.gd、battle_view.gd）：survive、hidden 和揭开、rise、reserve 和 field_max、guests、end_if_down、party.exclude 都从 combat.json 读。打完写 `$last_battle`、`$last_battle_won`、`$last_battle_end`。Godot --sim 第 2–6 章 31 场三种打法 201 行和 tools/sim_numbers.py 逐字一样（两边都关掉还没写的同伴专属招），第 1 章 15 行没变；--sim 11 条测试全过。
+- 对白跟着改两处：Variables 加 `$last_battle_end`；Ch3 佩利诺一仗亚瑟在第 3 回合倒下由剧情接管时，接「亚瑟举剑硬挡，膝盖砸进了泥里」。build_variables.py 补上对白里另设的 `$arthur_knew_affair`、`$d5_told`，之前是手加的，重新生成会被冲掉。
+
+**大地图六处代码**（world.gd、main.gd、新 shop.gd、screens.gd）：出口带 `cond`、地方跨章、宝物带 `condition`、`<<teleport 地方 x y>>`、支线水面发光、商店有店主和位置。
+
+**第 2 章白盒**：伦敦 32×20（换掉原来 20×12）、北门外大路 32×18（新）、贝德格兰 32×20。四群小仗、两处宝物、两座圣龛、17 个伦敦 NPC、桥头店主；1002 五步补了 target；白盒结尾挪到 Ch2_Feast。新字 5 个，重新截了像素字体。
+- --playtest 三条路线从第 1 章开头走到庆功宴：a 全打，b 一群不碰，c 祈祷后打北坡骑兵；回伦敦买东西核对扣钱。截图 production/qa/evidence/ch2-whitebox-20261110/。
+
+**发现的问题**：只打必须的路线 2 级开打贝德格兰，通用打法连输三次，测试里换成最优打法搜索才第 8 回合赢、剩 48%（设计 5 回合剩 54%）。和模拟差在模拟按「只打必须的」那条线的装备算，路线 b 没买装备。等用户试玩时看手感再定要不要调。
+
+**没做完**：第 2 章五样场景交互（插剑的石头、帐篷、窗台、看台、泥里的盾）；商店不能卖；卡美洛和随军商人的店；同伴专属招和静水、偏转。
+
+检查：story a–e PASS；playtest a/b/c PASS；--sim 测试 PASS；check_project_data 22 个地方 0 错误；check_content 0 错误；网页版重新导出到 docs/，无头 Chromium 打印 `[boot] ok tables=12 nodes=128 vars=55 quests=10 data_errors=0`。
