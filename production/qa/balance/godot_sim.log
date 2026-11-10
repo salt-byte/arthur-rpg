@@ -1,0 +1,215 @@
+
+[boot] ok tables=12 nodes=128 vars=56 quests=10 data_errors=0
+[sim] forest_wolves always_first → win 第 2 回合，倒下 0 人，剩血 你 14/14, 凯 13/16, 亚瑟 13/13
+[sim] forest_wolves smart → win 第 2 回合，倒下 0 人，剩血 你 14/14, 凯 13/16, 亚瑟 13/13
+[sim] forest_wolves no_magic → win 第 3 回合，倒下 0 人，剩血 你 14/14, 凯 13/16, 亚瑟 7/13
+[sim] road_bandits always_first → win 第 3 回合，倒下 0 人，剩血 你 10/14, 凯 12/16, 亚瑟 13/13
+[sim] road_bandits smart → win 第 3 回合，倒下 0 人，剩血 你 14/14, 凯 12/16, 亚瑟 13/13
+[sim] road_bandits no_magic → win 第 4 回合，倒下 0 人，剩血 你 5/14, 凯 12/16, 亚瑟 13/13
+[sim] oak_wolves always_first → win 第 2 回合，倒下 0 人，剩血 你 14/14, 凯 16/16, 亚瑟 10/13
+[sim] oak_wolves smart → win 第 2 回合，倒下 0 人，剩血 你 14/14, 凯 16/16, 亚瑟 10/13
+[sim] oak_wolves no_magic → win 第 3 回合，倒下 0 人，剩血 你 14/14, 凯 16/16, 亚瑟 7/13
+[sim] log_wolves always_first → win 第 2 回合，倒下 0 人，剩血 你 14/14, 凯 13/16, 亚瑟 13/13
+[sim] log_wolves smart → win 第 2 回合，倒下 0 人，剩血 你 14/14, 凯 13/16, 亚瑟 13/13
+[sim] log_wolves no_magic → win 第 3 回合，倒下 0 人，剩血 你 14/14, 凯 10/16, 亚瑟 10/13
+[sim] wolves always_first → lose 第 6 回合，倒下 3 人，剩血 你 0/14, 凯 0/16, 亚瑟 0/13
+[sim] wolves smart → win 第 5 回合，倒下 0 人，剩血 你 14/14, 凯 2/16, 亚瑟 2/13
+[sim] wolves no_magic → lose 第 7 回合，倒下 3 人，剩血 你 0/14, 凯 0/16, 亚瑟 0/13
+[sim] 第 2 章 ch2_north_road always_first（凯、亚瑟）→ win 第 3 回合，倒下 0 人，剩血 你 14/14, 凯 16/16, 亚瑟 2/16，经验 12
+[sim] 第 2 章 ch2_north_road smart（凯、亚瑟）→ win 第 4 回合，倒下 0 人，剩血 你 14/14, 凯 16/16, 亚瑟 3/16，经验 12
+[sim] 第 2 章 ch2_north_road no_magic（凯、亚瑟）→ win 第 5 回合，倒下 1 人，剩血 你 10/14, 凯 16/16, 亚瑟 0/16，经验 12
+[sim] 第 2 章 ch2_ford always_first（凯、亚瑟）→ win 第 4 回合，倒下 0 人，剩血 你 14/14, 凯 16/16, 亚瑟 2/16，经验 12
+[sim] 第 2 章 ch2_ford smart（凯、亚瑟）→ win 第 4 回合，倒下 0 人，剩血 你 14/14, 凯 12/16, 亚瑟 11/16，经验 12
+[sim] 第 2 章 ch2_ford no_magic（凯、亚瑟）→ win 第 7 回合，倒下 0 人，剩血 你 14/14, 凯 4/16, 亚瑟 11/16，经验 12
+[sim] 第 2 章 ch2_hill always_first（凯、亚瑟）→ win 第 3 回合，倒下 0 人，剩血 你 14/14, 凯 16/16, 亚瑟 7/16，经验 12
+[sim] 第 2 章 ch2_hill smart（凯、亚瑟）→ win 第 3 回合，倒下 0 人，剩血 你 14/14, 凯 16/16, 亚瑟 7/16，经验 12
+[sim] 第 2 章 ch2_hill no_magic（凯、亚瑟）→ win 第 4 回合，倒下 0 人，剩血 你 14/14, 凯 16/16, 亚瑟 2/16，经验 12
+[sim] 第 2 章 ch2_camp always_first（凯、亚瑟）→ win 第 4 回合，倒下 0 人，剩血 你 6/14, 凯 11/16, 亚瑟 11/16，经验 12
+[sim] 第 2 章 ch2_camp smart（凯、亚瑟）→ win 第 4 回合，倒下 0 人，剩血 你 14/14, 凯 12/16, 亚瑟 16/16，经验 12
+[sim] 第 2 章 ch2_camp no_magic（凯、亚瑟）→ win 第 7 回合，倒下 0 人，剩血 你 14/14, 凯 4/16, 亚瑟 16/16，经验 12
+[sim] 第 2 章 bedegraine always_first（凯、亚瑟）→ lose 第 7 回合，倒下 3 人，剩血 你 0/14, 凯 0/16, 亚瑟 0/16
+[sim] 第 2 章 bedegraine smart（凯、亚瑟）→ lose 第 7 回合，倒下 3 人，剩血 你 0/14, 凯 0/16, 亚瑟 0/16
+[sim] 第 2 章 bedegraine no_magic（凯、亚瑟）→ lose 第 5 回合，倒下 3 人，剩血 你 0/14, 凯 0/16, 亚瑟 0/16
+[sim] 第 3 章 pellinore always_first（亚瑟）→ win/end_if_down 第 3 回合，倒下 1 人，剩血 你 14/14, 亚瑟 0/16，经验 27
+[sim] 第 3 章 pellinore smart（亚瑟）→ win/end_if_down 第 3 回合，倒下 1 人，剩血 你 14/14, 亚瑟 0/16，经验 27
+[sim] 第 3 章 pellinore no_magic（亚瑟）→ win/end_if_down 第 3 回合，倒下 1 人，剩血 你 14/14, 亚瑟 0/16，经验 27
+[sim] 第 3 章 ch3_road_knight always_first（凯、亚瑟）→ win 第 3 回合，倒下 0 人，剩血 你 3/14, 凯 18/18, 亚瑟 16/16，经验 18
+[sim] 第 3 章 ch3_road_knight smart（凯、亚瑟）→ win 第 3 回合，倒下 0 人，剩血 你 7/14, 凯 18/18, 亚瑟 16/16，经验 18
+[sim] 第 3 章 ch3_road_knight no_magic（凯、亚瑟）→ win 第 6 回合，倒下 1 人，剩血 你 0/14, 凯 18/18, 亚瑟 9/16，经验 18
+[sim] 第 3 章 ch3_wild_pair always_first（凯、亚瑟）→ win 第 3 回合，倒下 1 人，剩血 你 0/14, 凯 18/18, 亚瑟 16/16，经验 18
+[sim] 第 3 章 ch3_wild_pair smart（凯、亚瑟）→ win 第 3 回合，倒下 1 人，剩血 你 0/14, 凯 18/18, 亚瑟 16/16，经验 18
+[sim] 第 3 章 ch3_wild_pair no_magic（凯、亚瑟）→ win 第 4 回合，倒下 1 人，剩血 你 0/14, 凯 18/18, 亚瑟 11/16，经验 18
+[sim] 第 3 章 ch3_squires always_first（凯、高文）→ win 第 3 回合，倒下 0 人，剩血 你 6/14, 凯 18/18, 高文 18/18，经验 18
+[sim] 第 3 章 ch3_squires smart（凯、高文）→ win 第 3 回合，倒下 0 人，剩血 你 6/14, 凯 18/18, 高文 18/18，经验 18
+[sim] 第 3 章 ch3_squires no_magic（凯、高文）→ win 第 4 回合，倒下 0 人，剩血 你 2/14, 凯 18/18, 高文 18/18，经验 18
+[sim] 第 3 章 ch3_knight_pair always_first（凯、高文）→ win 第 4 回合，倒下 1 人，剩血 你 0/14, 凯 10/18, 高文 18/18，经验 18
+[sim] 第 3 章 ch3_knight_pair smart（凯、高文）→ win 第 6 回合，倒下 1 人，剩血 你 0/14, 凯 11/18, 高文 18/18，经验 18
+[sim] 第 3 章 ch3_knight_pair no_magic（凯、高文）→ win 第 10 回合，倒下 2 人，剩血 你 0/14, 凯 0/18, 高文 11/18，经验 18
+[sim] 第 3 章 wild_men always_first（高文）→ lose 第 2 回合，倒下 2 人，剩血 你 0/14, 高文 0/18
+[sim] 第 3 章 wild_men smart（高文）→ lose 第 3 回合，倒下 2 人，剩血 你 0/14, 高文 0/18
+[sim] 第 3 章 wild_men no_magic（高文）→ lose 第 2 回合，倒下 2 人，剩血 你 0/14, 高文 0/18
+[sim] 第 4 章 ch4_brigands always_first（凯、高文）→ win 第 4 回合，倒下 1 人，剩血 你 0/14, 凯 18/18, 高文 20/20，经验 24
+[sim] 第 4 章 ch4_brigands smart（凯、高文）→ win 第 4 回合，倒下 1 人，剩血 你 0/14, 凯 18/18, 高文 20/20，经验 24
+[sim] 第 4 章 ch4_brigands no_magic（凯、高文）→ win 第 5 回合，倒下 1 人，剩血 你 0/14, 凯 18/18, 高文 20/20，经验 24
+[sim] 第 4 章 ch4_wolves always_first（凯、高文）→ win 第 3 回合，倒下 1 人，剩血 你 0/14, 凯 14/18, 高文 20/20，经验 24
+[sim] 第 4 章 ch4_wolves smart（凯、高文）→ win 第 3 回合，倒下 1 人，剩血 你 0/14, 凯 14/18, 高文 20/20，经验 24
+[sim] 第 4 章 ch4_wolves no_magic（凯、高文）→ win 第 4 回合，倒下 1 人，剩血 你 0/14, 凯 9/18, 高文 20/20，经验 24
+[sim] 第 4 章 morgan_chase always_first（亚瑟、凯）→ lose 第 7 回合，倒下 3 人，剩血 你 0/14, 亚瑟 0/18, 凯 0/18
+[sim] 第 4 章 morgan_chase smart（亚瑟、凯）→ win 第 7 回合，倒下 1 人，剩血 你 2/14, 亚瑟 0/18, 凯 18/18，经验 60
+[sim] 第 4 章 morgan_chase no_magic（亚瑟、凯）→ lose 第 5 回合，倒下 3 人，剩血 你 0/14, 亚瑟 0/18, 凯 0/18
+[sim] 第 4 章 ch4_riders always_first（凯、兰斯洛特）→ win 第 2 回合，倒下 0 人，剩血 你 8/14, 凯 18/18, 兰斯洛特 20/20，经验 24
+[sim] 第 4 章 ch4_riders smart（凯、兰斯洛特）→ win 第 2 回合，倒下 0 人，剩血 你 8/14, 凯 18/18, 兰斯洛特 20/20，经验 24
+[sim] 第 4 章 ch4_riders no_magic（凯、兰斯洛特）→ win 第 6 回合，倒下 1 人，剩血 你 0/14, 凯 12/18, 兰斯洛特 20/20，经验 24
+[sim] 第 4 章 ch4_mixed always_first（高文、兰斯洛特）→ win 第 4 回合，倒下 1 人，剩血 你 0/14, 高文 11/20, 兰斯洛特 20/20，经验 24
+[sim] 第 4 章 ch4_mixed smart（高文、兰斯洛特）→ win 第 3 回合，倒下 0 人，剩血 你 3/14, 高文 20/20, 兰斯洛特 20/20，经验 24
+[sim] 第 4 章 ch4_mixed no_magic（高文、兰斯洛特）→ win 第 5 回合，倒下 1 人，剩血 你 0/14, 高文 20/20, 兰斯洛特 20/20，经验 24
+[sim] 第 4 章 red_knight always_first（高文、加雷斯）→ lose 第 5 回合，倒下 3 人，剩血 你 0/14, 高文 0/20, 加雷斯 0/16
+[sim] 第 4 章 red_knight smart（高文、加雷斯）→ lose 第 5 回合，倒下 3 人，剩血 你 0/14, 高文 0/20, 加雷斯 0/16
+[sim] 第 4 章 red_knight no_magic（高文、加雷斯）→ lose 第 5 回合，倒下 3 人，剩血 你 0/14, 高文 0/20, 加雷斯 0/16
+[sim] 第 5 章 ch5_deserters always_first（凯、贝狄威尔）→ win 第 4 回合，倒下 1 人，剩血 你 0/14, 凯 20/20, 贝狄威尔 12/18，经验 30
+[sim] 第 5 章 ch5_deserters smart（凯、贝狄威尔）→ win 第 4 回合，倒下 1 人，剩血 你 0/14, 凯 20/20, 贝狄威尔 12/18，经验 30
+[sim] 第 5 章 ch5_deserters no_magic（凯、贝狄威尔）→ win 第 6 回合，倒下 2 人，剩血 你 0/14, 凯 14/20, 贝狄威尔 0/18，经验 30
+[sim] 第 5 章 ch5_raiders always_first（凯、贝狄威尔）→ win 第 4 回合，倒下 1 人，剩血 你 0/14, 凯 20/20, 贝狄威尔 12/18，经验 30
+[sim] 第 5 章 ch5_raiders smart（凯、贝狄威尔）→ win 第 4 回合，倒下 1 人，剩血 你 0/14, 凯 20/20, 贝狄威尔 12/18，经验 30
+[sim] 第 5 章 ch5_raiders no_magic（凯、贝狄威尔）→ win 第 5 回合，倒下 1 人，剩血 你 0/14, 凯 20/20, 贝狄威尔 5/18，经验 30
+[sim] 第 5 章 camelot_defense always_first（凯、贝狄威尔）→ lose 第 2 回合，倒下 3 人，剩血 你 0/14, 凯 0/20, 贝狄威尔 0/18
+[sim] 第 5 章 camelot_defense smart（凯、贝狄威尔）→ lose 第 2 回合，倒下 3 人，剩血 你 0/14, 凯 0/20, 贝狄威尔 0/18
+[sim] 第 5 章 camelot_defense no_magic（凯、贝狄威尔）→ lose 第 2 回合，倒下 3 人，剩血 你 0/14, 凯 0/20, 贝狄威尔 0/18
+[sim] 第 5 章 ch5_pair always_first（凯、贝狄威尔）→ win 第 4 回合，倒下 1 人，剩血 你 0/14, 凯 20/20, 贝狄威尔 3/18，经验 30
+[sim] 第 5 章 ch5_pair smart（凯、贝狄威尔）→ win 第 5 回合，倒下 1 人，剩血 你 0/14, 凯 20/20, 贝狄威尔 1/18，经验 30
+[sim] 第 5 章 ch5_pair no_magic（凯、贝狄威尔）→ win 第 4 回合，倒下 1 人，剩血 你 0/14, 凯 20/20, 贝狄威尔 3/18，经验 30
+[sim] 第 5 章 ch5_mixed always_first（凯、贝狄威尔）→ win 第 4 回合，倒下 1 人，剩血 你 0/14, 凯 20/20, 贝狄威尔 12/18，经验 30
+[sim] 第 5 章 ch5_mixed smart（凯、贝狄威尔）→ win 第 4 回合，倒下 0 人，剩血 你 4/14, 凯 20/20, 贝狄威尔 12/18，经验 30
+[sim] 第 5 章 ch5_mixed no_magic（凯、贝狄威尔）→ win 第 7 回合，倒下 1 人，剩血 你 0/14, 凯 20/20, 贝狄威尔 2/18，经验 30
+[sim] 第 5 章 tournament always_first（贝狄威尔、凯）→ win 第 7 回合，倒下 1 人，剩血 你 4/14, 贝狄威尔 0/18, 凯 20/20，经验 45
+[sim] 第 5 章 tournament smart（贝狄威尔、凯）→ win 第 10 回合，倒下 2 人，剩血 你 0/14, 贝狄威尔 0/18, 凯 10/20，经验 45
+[sim] 第 5 章 tournament no_magic（贝狄威尔、凯）→ lose 第 9 回合，倒下 3 人，剩血 你 0/14, 贝狄威尔 0/18, 凯 0/20
+[sim] 第 6 章 ch6_looters always_first（亚瑟、贝狄威尔）→ win 第 6 回合，倒下 1 人，剩血 你 0/14, 亚瑟 5/20, 贝狄威尔 20/20，经验 36
+[sim] 第 6 章 ch6_looters smart（亚瑟、贝狄威尔）→ win 第 6 回合，倒下 1 人，剩血 你 0/14, 亚瑟 5/20, 贝狄威尔 20/20，经验 36
+[sim] 第 6 章 ch6_looters no_magic（亚瑟、贝狄威尔）→ win 第 7 回合，倒下 2 人，剩血 你 0/14, 亚瑟 0/20, 贝狄威尔 20/20，经验 36
+[sim] 第 6 章 joyous_gard always_first（亚瑟、贝狄威尔）→ win 第 9 回合，倒下 1 人，剩血 你 0/14, 亚瑟 8/20, 贝狄威尔 20/20，经验 54
+[sim] 第 6 章 joyous_gard smart（亚瑟、贝狄威尔）→ win 第 9 回合，倒下 1 人，剩血 你 0/14, 亚瑟 8/20, 贝狄威尔 20/20，经验 54
+[sim] 第 6 章 joyous_gard no_magic（亚瑟、贝狄威尔）→ lose 第 10 回合，倒下 3 人，剩血 你 0/14, 亚瑟 0/20, 贝狄威尔 0/20
+[sim] 第 6 章 ch6_shore always_first（亚瑟、贝狄威尔）→ win 第 3 回合，倒下 0 人，剩血 你 7/14, 亚瑟 20/20, 贝狄威尔 20/20，经验 36
+[sim] 第 6 章 ch6_shore smart（亚瑟、贝狄威尔）→ win 第 3 回合，倒下 0 人，剩血 你 7/14, 亚瑟 20/20, 贝狄威尔 20/20，经验 36
+[sim] 第 6 章 ch6_shore no_magic（亚瑟、贝狄威尔）→ win 第 6 回合，倒下 1 人，剩血 你 0/14, 亚瑟 5/20, 贝狄威尔 20/20，经验 36
+[sim] 第 6 章 dover always_first（高文、亚瑟）→ lose 第 2 回合，倒下 3 人，剩血 你 0/14, 高文 0/20, 亚瑟 0/20
+[sim] 第 6 章 dover smart（高文、亚瑟）→ lose 第 2 回合，倒下 3 人，剩血 你 0/14, 高文 0/20, 亚瑟 0/20
+[sim] 第 6 章 dover no_magic（高文、亚瑟）→ lose 第 2 回合，倒下 3 人，剩血 你 0/14, 高文 0/20, 亚瑟 0/20
+[sim] 第 6 章 ch6_riders always_first（亚瑟、贝狄威尔）→ win 第 5 回合，倒下 1 人，剩血 你 0/14, 亚瑟 13/20, 贝狄威尔 20/20，经验 36
+[sim] 第 6 章 ch6_riders smart（亚瑟、贝狄威尔）→ win 第 5 回合，倒下 1 人，剩血 你 0/14, 亚瑟 15/20, 贝狄威尔 20/20，经验 36
+[sim] 第 6 章 ch6_riders no_magic（亚瑟、贝狄威尔）→ win 第 7 回合，倒下 1 人，剩血 你 0/14, 亚瑟 1/20, 贝狄威尔 20/20，经验 36
+[sim] 第 6 章 ch6_camp always_first（亚瑟、贝狄威尔）→ win 第 3 回合，倒下 0 人，剩血 你 5/14, 亚瑟 20/20, 贝狄威尔 20/20，经验 36
+[sim] 第 6 章 ch6_camp smart（亚瑟、贝狄威尔）→ win 第 3 回合，倒下 0 人，剩血 你 5/14, 亚瑟 20/20, 贝狄威尔 20/20，经验 36
+[sim] 第 6 章 ch6_camp no_magic（亚瑟、贝狄威尔）→ win 第 5 回合，倒下 1 人，剩血 你 0/14, 亚瑟 15/20, 贝狄威尔 20/20，经验 36
+[sim] 第 6 章 camlann_rear always_first（贝狄威尔、凯）→ lose 第 4 回合，倒下 3 人，剩血 你 0/14, 贝狄威尔 0/20, 凯 0/20
+[sim] 第 6 章 camlann_rear smart（贝狄威尔、凯）→ lose 第 4 回合，倒下 3 人，剩血 你 0/14, 贝狄威尔 0/20, 凯 0/20
+[sim] 第 6 章 camlann_rear no_magic（贝狄威尔、凯）→ lose 第 4 回合，倒下 3 人，剩血 你 0/14, 贝狄威尔 0/20, 凯 0/20
+[sim] 第 6 章 camlann always_first（亚瑟、贝狄威尔）→ lose 第 4 回合，倒下 3 人，剩血 你 0/14, 亚瑟 0/20, 贝狄威尔 0/20
+[sim] 第 6 章 camlann smart（亚瑟、贝狄威尔）→ lose 第 6 回合，倒下 3 人，剩血 你 0/14, 亚瑟 0/20, 贝狄威尔 0/20
+[sim] 第 6 章 camlann no_magic（亚瑟、贝狄威尔）→ lose 第 4 回合，倒下 3 人，剩血 你 0/14, 亚瑟 0/20, 贝狄威尔 0/20
+[sim] 第 2 章 2 级 ch2_north_road always_first（凯、亚瑟）→ win 第 2 回合，倒下 0 人，剩血 你 16/16, 凯 16/16, 亚瑟 11/16，经验 12
+[sim] 第 2 章 2 级 ch2_north_road smart（凯、亚瑟）→ win 第 2 回合，倒下 0 人，剩血 你 16/16, 凯 16/16, 亚瑟 11/16，经验 12
+[sim] 第 2 章 2 级 ch2_north_road no_magic（凯、亚瑟）→ win 第 5 回合，倒下 1 人，剩血 你 12/16, 凯 16/16, 亚瑟 0/16，经验 12
+[sim] 第 2 章 2 级 ch2_ford always_first（凯、亚瑟）→ win 第 2 回合，倒下 0 人，剩血 你 16/16, 凯 16/16, 亚瑟 11/16，经验 12
+[sim] 第 2 章 2 级 ch2_ford smart（凯、亚瑟）→ win 第 3 回合，倒下 0 人，剩血 你 16/16, 凯 12/16, 亚瑟 16/16，经验 12
+[sim] 第 2 章 2 级 ch2_ford no_magic（凯、亚瑟）→ win 第 5 回合，倒下 0 人，剩血 你 16/16, 凯 8/16, 亚瑟 11/16，经验 12
+[sim] 第 2 章 2 级 ch2_hill always_first（凯、亚瑟）→ win 第 2 回合，倒下 0 人，剩血 你 16/16, 凯 16/16, 亚瑟 11/16，经验 12
+[sim] 第 2 章 2 级 ch2_hill smart（凯、亚瑟）→ win 第 2 回合，倒下 0 人，剩血 你 16/16, 凯 16/16, 亚瑟 11/16，经验 12
+[sim] 第 2 章 2 级 ch2_hill no_magic（凯、亚瑟）→ win 第 4 回合，倒下 0 人，剩血 你 16/16, 凯 16/16, 亚瑟 2/16，经验 12
+[sim] 第 2 章 2 级 ch2_camp always_first（凯、亚瑟）→ win 第 2 回合，倒下 0 人，剩血 你 16/16, 凯 16/16, 亚瑟 16/16，经验 12
+[sim] 第 2 章 2 级 ch2_camp smart（凯、亚瑟）→ win 第 3 回合，倒下 0 人，剩血 你 16/16, 凯 12/16, 亚瑟 16/16，经验 12
+[sim] 第 2 章 2 级 ch2_camp no_magic（凯、亚瑟）→ win 第 5 回合，倒下 0 人，剩血 你 16/16, 凯 8/16, 亚瑟 16/16，经验 12
+[sim] 第 2 章 2 级 bedegraine always_first（凯、亚瑟）→ win 第 5 回合，倒下 1 人，剩血 你 16/16, 凯 8/16, 亚瑟 0/16，经验 24
+[sim] 第 2 章 2 级 bedegraine smart（凯、亚瑟）→ lose 第 10 回合，倒下 3 人，剩血 你 0/16, 凯 0/16, 亚瑟 0/16
+[sim] 第 2 章 2 级 bedegraine no_magic（凯、亚瑟）→ lose 第 5 回合，倒下 3 人，剩血 你 0/16, 凯 0/16, 亚瑟 0/16
+[sim] 第 3 章 3 级 pellinore always_first（亚瑟）→ win/end_if_down 第 3 回合，倒下 1 人，剩血 你 19/19, 亚瑟 0/16，经验 27
+[sim] 第 3 章 3 级 pellinore smart（亚瑟）→ win/end_if_down 第 3 回合，倒下 1 人，剩血 你 19/19, 亚瑟 0/16，经验 27
+[sim] 第 3 章 3 级 pellinore no_magic（亚瑟）→ win/end_if_down 第 3 回合，倒下 1 人，剩血 你 19/19, 亚瑟 0/16，经验 27
+[sim] 第 3 章 4 级 ch3_road_knight always_first（凯、亚瑟）→ win 第 2 回合，倒下 0 人，剩血 你 19/19, 凯 14/18, 亚瑟 19/19，经验 18
+[sim] 第 3 章 4 级 ch3_road_knight smart（凯、亚瑟）→ win 第 2 回合，倒下 0 人，剩血 你 19/19, 凯 11/18, 亚瑟 19/19，经验 18
+[sim] 第 3 章 4 级 ch3_road_knight no_magic（凯、亚瑟）→ win 第 8 回合，倒下 1 人，剩血 你 5/19, 凯 0/18, 亚瑟 19/19，经验 18
+[sim] 第 3 章 4 级 ch3_wild_pair always_first（凯、亚瑟）→ win 第 2 回合，倒下 0 人，剩血 你 19/19, 凯 13/18, 亚瑟 19/19，经验 18
+[sim] 第 3 章 4 级 ch3_wild_pair smart（凯、亚瑟）→ win 第 2 回合，倒下 0 人，剩血 你 19/19, 凯 13/18, 亚瑟 19/19，经验 18
+[sim] 第 3 章 4 级 ch3_wild_pair no_magic（凯、亚瑟）→ win 第 5 回合，倒下 1 人，剩血 你 13/19, 凯 0/18, 亚瑟 19/19，经验 18
+[sim] 第 3 章 4 级 ch3_squires always_first（凯、高文）→ win 第 2 回合，倒下 0 人，剩血 你 19/19, 凯 14/18, 高文 18/18，经验 18
+[sim] 第 3 章 4 级 ch3_squires smart（凯、高文）→ win 第 2 回合，倒下 0 人，剩血 你 19/19, 凯 14/18, 高文 18/18，经验 18
+[sim] 第 3 章 4 级 ch3_squires no_magic（凯、高文）→ win 第 4 回合，倒下 0 人，剩血 你 19/19, 凯 6/18, 高文 18/18，经验 18
+[sim] 第 3 章 4 级 ch3_knight_pair always_first（凯、高文）→ win 第 3 回合，倒下 1 人，剩血 你 19/19, 凯 0/18, 高文 18/18，经验 18
+[sim] 第 3 章 4 级 ch3_knight_pair smart（凯、高文）→ win 第 3 回合，倒下 0 人，剩血 你 19/19, 凯 11/18, 高文 18/18，经验 18
+[sim] 第 3 章 4 级 ch3_knight_pair no_magic（凯、高文）→ lose 第 15 回合，倒下 3 人，剩血 你 0/19, 凯 0/18, 高文 0/18
+[sim] 第 3 章 4 级 wild_men always_first（高文）→ lose 第 3 回合，倒下 2 人，剩血 你 0/19, 高文 0/18
+[sim] 第 3 章 4 级 wild_men smart（高文）→ lose 第 3 回合，倒下 2 人，剩血 你 0/19, 高文 0/18
+[sim] 第 3 章 4 级 wild_men no_magic（高文）→ lose 第 3 回合，倒下 2 人，剩血 你 0/19, 高文 0/18
+[sim] 第 4 章 5 级 ch4_brigands always_first（凯、高文）→ win 第 2 回合，倒下 0 人，剩血 你 24/24, 凯 12/18, 高文 20/20，经验 24
+[sim] 第 4 章 5 级 ch4_brigands smart（凯、高文）→ win 第 2 回合，倒下 0 人，剩血 你 24/24, 凯 12/18, 高文 20/20，经验 24
+[sim] 第 4 章 5 级 ch4_brigands no_magic（凯、高文）→ win 第 6 回合，倒下 1 人，剩血 你 24/24, 凯 0/18, 高文 14/20，经验 24
+[sim] 第 4 章 5 级 ch4_wolves always_first（凯、高文）→ win 第 2 回合，倒下 0 人，剩血 你 24/24, 凯 13/18, 高文 20/20，经验 24
+[sim] 第 4 章 5 级 ch4_wolves smart（凯、高文）→ win 第 2 回合，倒下 0 人，剩血 你 24/24, 凯 13/18, 高文 20/20，经验 24
+[sim] 第 4 章 5 级 ch4_wolves no_magic（凯、高文）→ win 第 4 回合，倒下 0 人，剩血 你 16/24, 凯 3/18, 高文 20/20，经验 24
+[sim] 第 4 章 5 级 morgan_chase always_first（亚瑟、凯）→ win 第 5 回合，倒下 1 人，剩血 你 24/24, 亚瑟 0/21, 凯 18/18，经验 60
+[sim] 第 4 章 5 级 morgan_chase smart（亚瑟、凯）→ win 第 4 回合，倒下 0 人，剩血 你 24/24, 亚瑟 3/21, 凯 18/18，经验 60
+[sim] 第 4 章 5 级 morgan_chase no_magic（亚瑟、凯）→ lose 第 11 回合，倒下 3 人，剩血 你 0/24, 亚瑟 0/21, 凯 0/18
+[sim] 第 4 章 5 级 ch4_riders always_first（凯、兰斯洛特）→ win 第 2 回合，倒下 0 人，剩血 你 24/24, 凯 12/18, 兰斯洛特 20/20，经验 24
+[sim] 第 4 章 5 级 ch4_riders smart（凯、兰斯洛特）→ win 第 2 回合，倒下 0 人，剩血 你 24/24, 凯 12/18, 兰斯洛特 20/20，经验 24
+[sim] 第 4 章 5 级 ch4_riders no_magic（凯、兰斯洛特）→ win 第 6 回合，倒下 1 人，剩血 你 24/24, 凯 0/18, 兰斯洛特 14/20，经验 24
+[sim] 第 4 章 5 级 ch4_mixed always_first（高文、兰斯洛特）→ win 第 2 回合，倒下 0 人，剩血 你 24/24, 高文 15/20, 兰斯洛特 20/20，经验 24
+[sim] 第 4 章 5 级 ch4_mixed smart（高文、兰斯洛特）→ win 第 2 回合，倒下 0 人，剩血 你 24/24, 高文 14/20, 兰斯洛特 20/20，经验 24
+[sim] 第 4 章 5 级 ch4_mixed no_magic（高文、兰斯洛特）→ win 第 4 回合，倒下 0 人，剩血 你 24/24, 高文 3/20, 兰斯洛特 20/20，经验 24
+[sim] 第 4 章 5 级 red_knight always_first（高文、加雷斯）→ win 第 10 回合，倒下 2 人，剩血 你 12/24, 高文 0/20, 加雷斯 0/16，经验 60
+[sim] 第 4 章 5 级 red_knight smart（高文、加雷斯）→ lose 第 7 回合，倒下 3 人，剩血 你 0/24, 高文 0/20, 加雷斯 0/16
+[sim] 第 4 章 5 级 red_knight no_magic（高文、加雷斯）→ lose 第 5 回合，倒下 3 人，剩血 你 0/24, 高文 0/20, 加雷斯 0/16
+[sim] 第 5 章 6 级 ch5_deserters always_first（凯、贝狄威尔）→ win 第 2 回合，倒下 0 人，剩血 你 24/24, 凯 20/20, 贝狄威尔 12/18，经验 30
+[sim] 第 5 章 6 级 ch5_deserters smart（凯、贝狄威尔）→ win 第 2 回合，倒下 0 人，剩血 你 24/24, 凯 20/20, 贝狄威尔 12/18，经验 30
+[sim] 第 5 章 6 级 ch5_deserters no_magic（凯、贝狄威尔）→ win 第 4 回合，倒下 1 人，剩血 你 17/24, 凯 20/20, 贝狄威尔 0/18，经验 30
+[sim] 第 5 章 6 级 ch5_raiders always_first（凯、贝狄威尔）→ win 第 2 回合，倒下 0 人，剩血 你 24/24, 凯 20/20, 贝狄威尔 12/18，经验 30
+[sim] 第 5 章 6 级 ch5_raiders smart（凯、贝狄威尔）→ win 第 2 回合，倒下 0 人，剩血 你 24/24, 凯 20/20, 贝狄威尔 12/18，经验 30
+[sim] 第 5 章 6 级 ch5_raiders no_magic（凯、贝狄威尔）→ win 第 4 回合，倒下 1 人，剩血 你 17/24, 凯 20/20, 贝狄威尔 0/18，经验 30
+[sim] 第 5 章 6 级 camelot_defense always_first（凯、贝狄威尔）→ win 第 5 回合，倒下 2 人，剩血 你 16/24, 凯 0/20, 贝狄威尔 0/18，经验 60
+[sim] 第 5 章 6 级 camelot_defense smart（凯、贝狄威尔）→ lose 第 3 回合，倒下 3 人，剩血 你 0/24, 凯 0/20, 贝狄威尔 0/18
+[sim] 第 5 章 6 级 camelot_defense no_magic（凯、贝狄威尔）→ lose 第 3 回合，倒下 3 人，剩血 你 0/24, 凯 0/20, 贝狄威尔 0/18
+[sim] 第 5 章 6 级 ch5_pair always_first（凯、贝狄威尔）→ win 第 2 回合，倒下 0 人，剩血 你 24/24, 凯 20/20, 贝狄威尔 11/18，经验 30
+[sim] 第 5 章 6 级 ch5_pair smart（凯、贝狄威尔）→ win 第 2 回合，倒下 0 人，剩血 你 24/24, 凯 20/20, 贝狄威尔 11/18，经验 30
+[sim] 第 5 章 6 级 ch5_pair no_magic（凯、贝狄威尔）→ win 第 4 回合，倒下 1 人，剩血 你 24/24, 凯 9/20, 贝狄威尔 0/18，经验 30
+[sim] 第 5 章 6 级 ch5_mixed always_first（凯、贝狄威尔）→ win 第 2 回合，倒下 0 人，剩血 你 24/24, 凯 20/20, 贝狄威尔 12/18，经验 30
+[sim] 第 5 章 6 级 ch5_mixed smart（凯、贝狄威尔）→ win 第 2 回合，倒下 0 人，剩血 你 24/24, 凯 20/20, 贝狄威尔 12/18，经验 30
+[sim] 第 5 章 6 级 ch5_mixed no_magic（凯、贝狄威尔）→ win 第 5 回合，倒下 1 人，剩血 你 24/24, 凯 20/20, 贝狄威尔 0/18，经验 30
+[sim] 第 5 章 6 级 tournament always_first（贝狄威尔、凯）→ win 第 3 回合，倒下 0 人，剩血 你 24/24, 贝狄威尔 6/18, 凯 20/20，经验 45
+[sim] 第 5 章 6 级 tournament smart（贝狄威尔、凯）→ win 第 3 回合，倒下 0 人，剩血 你 24/24, 贝狄威尔 6/18, 凯 20/20，经验 45
+[sim] 第 5 章 6 级 tournament no_magic（贝狄威尔、凯）→ lose 第 10 回合，倒下 3 人，剩血 你 0/24, 贝狄威尔 0/18, 凯 0/20
+[sim] 第 6 章 7 级 ch6_looters always_first（亚瑟、贝狄威尔）→ win 第 3 回合，倒下 0 人，剩血 你 29/29, 亚瑟 23/23, 贝狄威尔 6/20，经验 36
+[sim] 第 6 章 7 级 ch6_looters smart（亚瑟、贝狄威尔）→ win 第 3 回合，倒下 0 人，剩血 你 29/29, 亚瑟 23/23, 贝狄威尔 6/20，经验 36
+[sim] 第 6 章 7 级 ch6_looters no_magic（亚瑟、贝狄威尔）→ win 第 7 回合，倒下 1 人，剩血 你 13/29, 亚瑟 23/23, 贝狄威尔 0/20，经验 36
+[sim] 第 6 章 7 级 joyous_gard always_first（亚瑟、贝狄威尔）→ win 第 5 回合，倒下 0 人，剩血 你 29/29, 亚瑟 23/23, 贝狄威尔 2/20，经验 54
+[sim] 第 6 章 7 级 joyous_gard smart（亚瑟、贝狄威尔）→ win 第 5 回合，倒下 0 人，剩血 你 29/29, 亚瑟 23/23, 贝狄威尔 7/20，经验 54
+[sim] 第 6 章 7 级 joyous_gard no_magic（亚瑟、贝狄威尔）→ lose 第 12 回合，倒下 3 人，剩血 你 0/29, 亚瑟 0/23, 贝狄威尔 0/20
+[sim] 第 6 章 7 级 ch6_shore always_first（亚瑟、贝狄威尔）→ win 第 2 回合，倒下 0 人，剩血 你 29/29, 亚瑟 23/23, 贝狄威尔 13/20，经验 36
+[sim] 第 6 章 7 级 ch6_shore smart（亚瑟、贝狄威尔）→ win 第 2 回合，倒下 0 人，剩血 你 29/29, 亚瑟 23/23, 贝狄威尔 13/20，经验 36
+[sim] 第 6 章 7 级 ch6_shore no_magic（亚瑟、贝狄威尔）→ win 第 5 回合，倒下 1 人，剩血 你 21/29, 亚瑟 23/23, 贝狄威尔 0/20，经验 36
+[sim] 第 6 章 7 级 dover always_first（高文、亚瑟）→ win/survive 第 4 回合，倒下 2 人，剩血 你 4/29, 高文 0/20, 亚瑟 0/23，经验 36
+[sim] 第 6 章 7 级 dover smart（高文、亚瑟）→ win/survive 第 4 回合，倒下 2 人，剩血 你 4/29, 高文 0/20, 亚瑟 0/23，经验 36
+[sim] 第 6 章 7 级 dover no_magic（高文、亚瑟）→ lose 第 3 回合，倒下 3 人，剩血 你 0/29, 高文 0/20, 亚瑟 0/23
+[sim] 第 6 章 7 级 ch6_riders always_first（亚瑟、贝狄威尔）→ win 第 3 回合，倒下 0 人，剩血 你 29/29, 亚瑟 23/23, 贝狄威尔 13/20，经验 36
+[sim] 第 6 章 7 级 ch6_riders smart（亚瑟、贝狄威尔）→ win 第 4 回合，倒下 0 人，剩血 你 29/29, 亚瑟 23/23, 贝狄威尔 4/20，经验 36
+[sim] 第 6 章 7 级 ch6_riders no_magic（亚瑟、贝狄威尔）→ win 第 8 回合，倒下 1 人，剩血 你 29/29, 亚瑟 9/23, 贝狄威尔 0/20，经验 36
+[sim] 第 6 章 7 级 ch6_camp always_first（亚瑟、贝狄威尔）→ win 第 2 回合，倒下 0 人，剩血 你 29/29, 亚瑟 23/23, 贝狄威尔 20/20，经验 36
+[sim] 第 6 章 7 级 ch6_camp smart（亚瑟、贝狄威尔）→ win 第 2 回合，倒下 0 人，剩血 你 29/29, 亚瑟 23/23, 贝狄威尔 20/20，经验 36
+[sim] 第 6 章 7 级 ch6_camp no_magic（亚瑟、贝狄威尔）→ win 第 6 回合，倒下 1 人，剩血 你 29/29, 亚瑟 14/23, 贝狄威尔 0/20，经验 36
+[sim] 第 6 章 7 级 camlann_rear always_first（贝狄威尔、凯）→ lose 第 6 回合，倒下 3 人，剩血 你 0/29, 贝狄威尔 0/20, 凯 0/20
+[sim] 第 6 章 7 级 camlann_rear smart（贝狄威尔、凯）→ win 第 11 回合，倒下 2 人，剩血 你 15/29, 贝狄威尔 0/20, 凯 0/20，经验 72
+[sim] 第 6 章 7 级 camlann_rear no_magic（贝狄威尔、凯）→ lose 第 5 回合，倒下 3 人，剩血 你 0/29, 贝狄威尔 0/20, 凯 0/20
+[sim] 第 6 章 7 级 camlann always_first（亚瑟、贝狄威尔）→ lose 第 6 回合，倒下 3 人，剩血 你 0/29, 亚瑟 0/23, 贝狄威尔 0/20
+[sim] 第 6 章 7 级 camlann smart（亚瑟、贝狄威尔）→ lose 第 11 回合，倒下 3 人，剩血 你 0/29, 亚瑟 0/23, 贝狄威尔 0/20
+[sim] 第 6 章 7 级 camlann no_magic（亚瑟、贝狄威尔）→ lose 第 5 回合，倒下 3 人，剩血 你 0/29, 亚瑟 0/23, 贝狄威尔 0/20
+[test] PASS survive：佩利诺 3 回合，前两回合没完（["", ""]），第 3 回合敌人出完手判赢（win/survive）
+[test] PASS survive：一个都没打倒，经验按上场的佩利诺给 27
+[test] PASS hidden：揭开前「摩根的护卫队长 ？」，揭开后「摩根的护卫队长 蓄力 → 下回合重劈 → 亚瑟 11」
+[test] PASS hidden：揭开花 1 法力、不占学徒的招，揭开后才能打断
+[test] PASS rise：红骑士第 1–5 回合的力量 [2, 4, 6, 6, 6]（应为 [2, 4, 6, 6, 6]）
+[test] PASS reserve：场上最多 2 个（见过 2），后备 1 个补上来过，后备打完才赢
+[test] PASS reserve：补上来的那个照常给经验（打倒 3 个，经验 45）
+[test] PASS guests：队里只有高文 → ["gawain", "gareth"]；队里有凯和高文 → ["gawain", "gareth"]（客人先于补位）
+[test] PASS end_if_down：第 3 回合亚瑟倒下，这一仗停（win/end_if_down），学徒没挨打（14/14）
+[test] PASS end_if_down：交给 Yarn 的变量 {"last_battle":"pellinore","last_battle_end":"end_if_down","last_battle_won":true}
+[test] PASS exclude：比武 → ["bedivere", "kay"]，卡姆兰后队 → ["kay", "bedivere"]，硬塞兰斯洛特进比武也不上场
+[sim] 测试：PASS，0 条 FAIL

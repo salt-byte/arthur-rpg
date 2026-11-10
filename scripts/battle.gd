@@ -7,6 +7,10 @@ extends RefCounted
 ## 一回合：亮出意图 → 你给每人排一个行动（queue）→ end_turn()：你们按学徒、同伴一、同伴二出手（你们的虚弱易伤减 1）
 ##   → 敌人按标好的顺序出手（敌人的虚弱易伤减 1）→ 下一回合：我方格挡清零、学徒回 1 法力、亮新意图。
 ## 敌人按招式表轮着出，不看运气：同一场重来，同样的操作，意图逐字一样。
+## 第 2–6 章的七个字段（combat.md「第 2–6 章的七个字段」，模拟 tools/sim_numbers.py 按同样的写法算）：
+##   遭遇 win.type survive（撑过 N 回合就赢）、reserve + field_max（倒一个、下回合开头补一个）、
+##   party.guests / party.exclude（谁额外上、谁不准上，见 party_for）、end_if_down（这个人倒下由剧情接管，算撑过）；
+##   敌人 rise（前几回合每回合开头自己力量 +N）；招式表一条 hidden（头上显示「？」，学徒花法力揭开，不占招，揭开前不能打断）。
 
 const Rules := preload("res://scripts/mechanics/intent-battle/status_rules.gd")
 const SPELL_ORDER := ["spark", "ward", "focus", "interrupt", "blind", "twin_spark", "fire_rain", "haze", "still_water", "deflect", "reveal"]
@@ -29,6 +33,12 @@ var steps: Array = []          # 这回合一步一步发生了什么，界面�
 var killed: Array = []         # 打倒的敌人 id（召唤出来的不算），结算经验和掉落用
 var chapter := 1
 var vars := {}
+var reserve: Array = []        # 后备的敌人 id（比武）：场上不满 field_max 时，下回合开头补一个
+var field_max := 0
+var guests: Array = []         # 不在队里、这一仗跟着上的人（遭遇 party.guests）
+var revealed := {}             # 这回合揭开了的「？」：敌人 uid -> true
+var end_kind := ""             # 怎么结束的：all_down 敌人全倒 / survive 撑过 / end_if_down 剧情接管 / lose / flee
+var down_by := ""              # end_if_down 触发时倒下的人
 var _start: Dictionary = {}
 var _cover := false
 var _stand_used := false
@@ -49,12 +59,20 @@ func setup(id: String, ctx_: Dictionary, chapter_: int, vars_: Dictionary) -> vo
 	out = []
 	steps = []
 	killed = []
+	revealed = {}
+	end_kind = ""
+	down_by = ""
+	var pd: Dictionary = enc.get("party", {})
+	guests = pd.get("guests", []).duplicate()
 	for a in ctx.allies:
+		if str(a.uid) in pd.get("exclude", []): continue      # 这一仗不准上的人（party.exclude）
 		var u := _unit(str(a.uid), "ally", str(a.name), int(a.max), int(a.power))
 		u.hp = clampi(int(a.hp), 1, int(a.max))
 		units.append(u)
 	for e in enc.get("enemies", []):
 		_add_enemy(e, false)
+	reserve = enc.get("reserve", []).duplicate()
+	field_max = int(enc.get("field_max", 0))
 	mana_max = int(ctx.mana_max)
 	mana = mana_max if int(P.mana_start) >= int(P.mana_max) else mini(mana_max, int(P.mana_start))
 	potions = ctx.get("potions", {}).duplicate()
@@ -69,7 +87,7 @@ func setup(id: String, ctx_: Dictionary, chapter_: int, vars_: Dictionary) -> vo
 			if e.hp > top.hp: top = e
 		top.vulnerable += int(st.top_hp_vulnerable)
 		out.append(UIKit.f("ev_start_keen", {"who": top.name, "n": int(st.top_hp_vulnerable)}))
-	_start = {"units": units.duplicate(true), "mana": mana, "potions": potions.duplicate(), "out": out.duplicate()}
+	_start = {"units": units.duplicate(true), "mana": mana, "potions": potions.duplicate(), "out": out.duplicate(), "reserve": reserve.duplicate()}
 	begin_turn()
 
 ## 输了「再来一次」：回到开打那一刻，血量和敌人都原样
@@ -84,6 +102,10 @@ func restart() -> void:
 	out = _start.out.duplicate()
 	steps = []
 	killed = []
+	reserve = _start.reserve.duplicate()
+	revealed = {}
+	end_kind = ""
+	down_by = ""
 	_stand_used = false
 	begin_turn()
 
@@ -136,6 +158,65 @@ func intent_of(uid: String):
 		if it.uid == uid: return it
 	return null
 
+## 怎么算赢：{"type": "all_down"} 或 {"type": "survive", "turns": N}
+func win_rule() -> Dictionary:
+	var w = enc.get("win", {})
+	return w if w is Dictionary and not w.is_empty() else {"type": "all_down"}
+
+## 撑过几回合就赢；不是这种仗返回 0
+func survive_turns() -> int:
+	var w := win_rule()
+	return int(w.get("turns", 0)) if str(w.get("type", "")) == "survive" else 0
+
+## 这一仗算「撑过」：到了回合数，或者 end_if_down 的人倒下由剧情接管。撑过的仗按上场的敌人给经验，不给掉落
+func survived() -> bool:
+	return result == "win" and end_kind in ["survive", "end_if_down"]
+
+## 撑过的仗给经验按哪些敌人算：遭遇里写的上场敌人（模拟同样按 enc.enemies）
+func xp_enemies() -> Array:
+	return enc.get("enemies", []).duplicate() if survived() else killed.duplicate()
+
+## 上场的人：剧情规定的（fixed，眼下在队里的）→ 客人（guests，不在队里也上）→ 从队里按顺序补满 max；
+## exclude 里的人哪一步都选不上
+static func party_for(e: Dictionary, roster: Array, default_max: int) -> Array:
+	var pd: Dictionary = e.get("party", {})
+	var ex: Array = pd.get("exclude", [])
+	var out: Array = pd.get("fixed", []).filter(func(c): return c in roster and not c in ex)
+	for g in pd.get("guests", []):
+		if not g in out and not g in ex: out.append(g)
+	var mx := int(pd.get("max", default_max))
+	for c in roster:
+		if out.size() >= mx: break
+		if not c in out and not c in ex: out.append(c)
+	return out.slice(0, mx)
+
+## 打完交给 Yarn 的结果（main.gd 写进剧情变量，对白里用 <<if $last_battle_end == "end_if_down">> 分支）：
+## $last_battle 遭遇 id；$last_battle_won 赢了没（撑过、剧情接管都算赢）；
+## $last_battle_end all_down 敌人全倒 / survive 撑过 N 回合 / end_if_down 那个人倒下由剧情接管 / lose / flee
+static func yarn_result(b: Battle) -> Dictionary:
+	return {"last_battle": b.enc_id, "last_battle_won": b.result == "win", "last_battle_end": b.end_kind}
+
+## 「？」：招式表里写了 hidden、这回合还没揭开
+func is_hidden(it: Dictionary) -> bool:
+	return bool(it.get("hidden", false)) and not revealed.has(it.uid)
+
+## 能揭开的敌人：意图还是「？」、人还站着
+func hidden_targets() -> Array:
+	var a := []
+	for it in intents:
+		var e = unit(it.uid)
+		if e != null and e.alive and not it.cancelled and is_hidden(it): a.append(it.uid)
+	return a
+
+## 揭开一个「？」：花法力（spells.reveal.mana），不占学徒这回合的招，马上看得见
+func reveal(uid: String) -> bool:
+	if result != "" or not has_spell("reveal") or not uid in hidden_targets(): return false
+	if spell_cost("reveal") > mana_left(): return false
+	mana -= spell_cost("reveal")
+	revealed[uid] = true
+	out.append(UIKit.f("ev_reveal", {"t": intent_text(intent_of(uid))}))
+	return true
+
 func is_story() -> bool:
 	return str(enc.get("kind", "")) == "story"
 
@@ -159,6 +240,7 @@ func actions_for(uid: String) -> Array:
 	var a := []
 	if uid == "apprentice":
 		a = spells()
+		if has_spell("reveal") and not hidden_targets().is_empty(): a.append("reveal")
 	else:
 		a = ["attack", "guard"]
 		if uid == "kay" and _kay_cover_ok(): a.append("kay_cover")
@@ -175,6 +257,7 @@ func target_kind(act: String) -> String:
 	match act:
 		"spark", "attack", "interrupt", "blind", "twin_spark": return "enemy"
 		"ward", "potion_hp": return "ally"
+		"reveal": return "hidden"
 	return ""
 
 ## 法力里已经被排进队列的法术占掉的
@@ -199,6 +282,8 @@ func why_not(uid: String, act: String) -> String:
 		var back := spell_cost(own.act) if own != null and has_spell(own.act) else 0
 		if spell_cost(act) > mana_left() + back:
 			return UIKit.f("ui_no_mana", {"need": spell_cost(act), "left": mana_left() + back})
+	if act == "reveal" and hidden_targets().is_empty():
+		return UIKit.t("ui_no_hidden")
 	if act == "interrupt" and interruptible().is_empty():
 		return UIKit.f("ui_no_interrupt")
 	if act in ["potion_hp", "potion_mana"]:
@@ -214,7 +299,7 @@ func interruptible() -> Array:
 	var a := []
 	for it in intents:
 		var e = unit(it.uid)
-		if e != null and e.alive and not it.cancelled and it.act in spell("interrupt").get("cancels", ["charge", "summon", "buff"]):
+		if e != null and e.alive and not it.cancelled and not is_hidden(it) and it.act in spell("interrupt").get("cancels", ["charge", "summon", "buff"]):
 			a.append(it.uid)
 	return a
 
@@ -226,10 +311,12 @@ func valid_targets(act: String) -> Array:
 		"ally":
 			if act == "potion_hp": return allies().filter(func(a): return a.hp < a.max).map(func(a): return a.uid)
 			return allies().map(func(a): return a.uid)
+		"hidden": return hidden_targets()
 	return []
 
 ## 排一个行动（同一个人再排就换掉原来那个，出手顺序不变：照学徒、同伴一、同伴二）
 func plan(uid: String, act: String, target := "") -> bool:
+	if has_spell(act) and bool(spell(act).get("free_action", false)): return false   # 揭开这类不占招，用 reveal()
 	if why_not(uid, act) != "": return false
 	if target_kind(act) != "" and not target in valid_targets(act): return false
 	unplan(uid)
@@ -259,13 +346,26 @@ func begin_turn() -> void:
 		if ap != null:
 			ap.block += int(ctx.start.apprentice_block)
 			out.append(UIKit.f("ev_start_vigil", {"n": int(ctx.start.apprentice_block)}))
+	# 越打越强（红骑士）：前 rise.turns 回合，每回合开头自己力量 +rise.strength，不占招
+	for e in enemies():
+		var rise: Dictionary = Data.enemy(e.id).get("rise", {})
+		if not rise.is_empty() and turn <= int(rise.get("turns", 0)):
+			e.strength += int(rise.get("strength", 0))
+			out.append(UIKit.f("ev_rise", {"who": e.name, "n": int(rise.get("strength", 0)), "s": int(e.strength)}))
+	# 倒一个补一个（比武）：场上不满 field_max，从后备补一个上来
+	if field_max > 0 and not reserve.is_empty() and enemies().size() < field_max:
+		var nu := _add_enemy(str(reserve.pop_front()), false)
+		out.append(UIKit.f("ev_reserve", {"who": nu.name, "n": reserve.size()}))
+	revealed = {}
 	var order := 1
 	for e in enemies():
 		var it := _make_intent(e)
 		it.order = order
 		order += 1
 		intents.append(it)
-	out.append("[第 %d 回合] 法力 %d/%d" % [turn, mana, mana_max])
+	var st := survive_turns()
+	if st > 0: out.append("[第 %d 回合] 法力 %d/%d，%s" % [turn, mana, mana_max, UIKit.f("ui_survive", {"n": st, "k": turn})])
+	else: out.append("[第 %d 回合] 法力 %d/%d" % [turn, mana, mana_max])
 	for it in intents:
 		out.append("[意图] %d. %s" % [it.order, intent_text(it)])
 
@@ -283,7 +383,7 @@ func _make_intent(e: Dictionary) -> Dictionary:
 		"power": int(src.get("power", 0)), "hits": maxi(1, int(src.get("hits", 1))), "target": "", "then": src.get("then", null),
 		"then_target": "", "what": str(src.get("what", "")), "count": int(src.get("count", 0)), "strength": int(src.get("strength", 0)),
 		"stacks": int(src.get("stacks", 0)), "block": int(src.get("block", 0)), "cancelled": false, "release": release,
-		"lethal": bool(src.get("lethal", false))}
+		"lethal": bool(src.get("lethal", false)), "hidden": bool(src.get("hidden", false)) and not release}
 	match it.act:
 		"attack", "weak":
 			it.target = _resolve(str(src.get("target", "lowest_hp")))
@@ -332,6 +432,7 @@ func intent_damage(it: Dictionary, target_uid := "") -> int:
 func intent_text(it: Dictionary) -> String:
 	var e = unit(it.uid)
 	var who: String = e.name
+	if is_hidden(it): return UIKit.f("intent_hidden", {"who": who})
 	var move := UIKit.t(it.move)
 	match it.act:
 		"attack":
@@ -375,6 +476,14 @@ func end_turn() -> void:
 		_step("enemy", it.uid, it.get("target", ""), mark, it.order)
 	if result != "": return
 	for u in enemies(false): Rules.tick(u, false)      # 敌人的在敌人出完手时减 1
+	var st := survive_turns()
+	if st > 0 and turn >= st:                           # 撑过 N 回合：敌人出完手、回合数到了就赢，剧情接管
+		var m0 := out.size()
+		result = "win"
+		end_kind = "survive"
+		out.append("[结果] " + UIKit.f("ui_survived", {"n": st}))
+		_step("end", "", "", m0, 0)
+		return
 	var mark := out.size()
 	begin_turn()
 	_step("end", "", "", mark, 0)
@@ -390,6 +499,7 @@ func _step(side: String, who: String, target: String, mark: int, order: int) -> 
 func flee() -> bool:
 	if not can_flee(): return false
 	result = "flee"
+	end_kind = "flee"
 	out.append("[结果] " + UIKit.t("ui_fled"))
 	return true
 
@@ -411,6 +521,14 @@ func preview() -> Dictionary:
 	c.intents = intents.duplicate(true)
 	c.queue = queue.duplicate(true)
 	c.killed = killed.duplicate()
+	c.reserve = reserve.duplicate()
+	c.field_max = field_max
+	c.guests = guests.duplicate()
+	c.revealed = revealed.duplicate()
+	c._cover = _cover
+	c._stand_used = _stand_used
+	for it in c.intents:          # 没揭开的「？」试算时当它不出手：打完以后的血不能把它泄露出来
+		if c.is_hidden(it): it.cancelled = true
 	c.end_turn()
 	var r := {}
 	for u in units:
@@ -546,8 +664,9 @@ func _check_enemy_down(t: Dictionary) -> void:
 	else:
 		if it != null: it.cancelled = true
 		out.append(UIKit.f("ev_down", {"who": t.name}))
-	if enemies().is_empty():
+	if enemies().is_empty() and reserve.is_empty():     # 后备也打完才算赢（比武）
 		result = "win"
+		end_kind = "all_down"
 		out.append("[结果] " + UIKit.t("ui_win"))
 
 func _enemy_act(it: Dictionary) -> void:
@@ -619,12 +738,20 @@ func _enemy_hit(e: Dictionary, target_uid: String, it: Dictionary, move: String,
 	if t.hp == 0 and t.alive:
 		t.alive = false
 		out.append(UIKit.f("ev_down", {"who": t.name}))
-		_check_lose()
+		if str(enc.get("end_if_down", "")) == t.uid:
+			# 这个人倒下，这一仗由剧情接管、算撑过（佩利诺看不见学徒，不改打别人）
+			result = "win"
+			end_kind = "end_if_down"
+			down_by = t.uid
+			out.append("[结果] " + UIKit.f("ui_takeover", {"who": t.name}))
+		else:
+			_check_lose()
 
 ## 三个人都倒下才输（原型的规矩）；只有学徒一个人上场的仗，学徒倒下就输
 func _check_lose() -> void:
 	if allies().is_empty():
 		result = "lose"
+		end_kind = "lose"
 		out.append("[结果] " + UIKit.t("ui_lose"))
 
 func take_log() -> Array:

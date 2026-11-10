@@ -9,7 +9,7 @@
    只打必须的（只打任务战和剧情战，普通装备）。另在每场任务战上跑三种退化打法做检验。
 
 用法：
-  python3 tools/sim_numbers.py --validate      # 第 1 章按 main.gd --sim 的三种固定打法打，和 Godot 的输出对照
+  python3 tools/sim_numbers.py --validate      # 第 1–6 章按 main.gd --sim 的三种固定打法打，和 Godot 的输出对照
   python3 tools/sim_numbers.py                 # 跑全部，结果写进 production/qa/balance/
 """
 import copy
@@ -1191,6 +1191,100 @@ def validate():
     return lines
 
 
+def godot_ctx(enc_id, ch):
+    """照 Godot --sim 第 2–6 章的开法：1 级、满血、没装备、同伴按章的数；法术是开局三招 + 打断（第 2 章起）+ 揭开（第 4 章起）。
+    Godot 里同伴专属招（剑鞘、正午之力、后发、连斩、包扎）还没写，这里关掉，两边才是同一套规则。"""
+    prof = Profile("must")
+    ctx = make_ctx(prof, enc_id, ch)
+    gear = GEAR["must"][ch]
+    ctx["allies"][0]["max"] -= gear.get("hp", 0)
+    ctx["allies"][0]["hp"] = ctx["allies"][0]["max"]
+    ctx["mana_max"] -= gear.get("mana_max", 0)
+    base = CB["spells"]
+    ctx["spells"]["spark"]["damage"] = base["spark"]["damage"]
+    ctx["spells"]["ward"]["block"] = base["ward"]["block"]
+    ctx["spells"]["focus"]["restore_mana"] = base["focus"].get("restore_mana", 2)
+    ctx["start"]["apprentice_block"] = 0
+    ctx["start"]["top_hp_vulnerable"] = 0
+    return strip_moves(ctx)
+
+
+def strip_moves(ctx):
+    for a in ctx["allies"]:
+        a["move"] = ""
+        a["uses"] = 0
+    ctx["scabbard"] = False
+    return ctx
+
+
+def must_ctxs():
+    """「只打必须的」那条线每场仗开打时的我方（等级、技能树、普通装备，和 degenerate_checks 同一套），同伴专属招关掉。
+    写进 production/qa/balance/sim_ctx.json，Godot --sim 原样读进去打，对照战斗规则本身。"""
+    out = {}
+    prof = Profile("must")
+    for ch in range(1, 7):
+        alts = [k for k, v in META.items() if v.get("alt") and v["ch"] == ch]
+        for enc_id in PROPOSAL["route"][ch][:-1] + alts + PROPOSAL["route"][ch][-1:]:
+            enc = enc_def(enc_id)
+            if enc_id == "merlin_shadow":
+                continue
+            if ch >= 2:
+                prof.hp = {}
+                ctx = strip_moves(make_ctx(prof, enc_id, ch, "balanced", gear_route="must"))
+                out[enc_id] = {k: v for k, v in ctx.items() if not k.startswith("_")}
+                out[enc_id]["level"] = prof.level
+                out[enc_id]["chapter"] = ch
+            if enc.get("required"):
+                prof.gain_xp(xp_of(list(enc["enemies"]), ch), ch, ["apprentice"] + enc["party"])
+        prof.gain_xp(PROPOSAL["quest_xp"][ch - 1], ch, ["apprentice"])
+    return out
+
+
+def write_must_ctxs():
+    ctxs = must_ctxs()
+    os.makedirs(OUT, exist_ok=True)
+    with open(os.path.join(OUT, "sim_ctx.json"), "w", encoding="utf-8") as f:
+        json.dump({"_说明": "tools/sim_numbers.py 生成，别手改。Godot --sim 第 2–6 章「只打必须的等级」那一节原样读这里的我方数据。",
+                   "ctx": ctxs}, f, ensure_ascii=False, indent=1)
+    return ctxs
+
+
+def validate_later(profile="lv1"):
+    """第 2–6 章：三种固定打法。lv1 = 1 级没装备（godot_ctx）；must = 只打必须的等级和装备（must_ctxs）。
+    撑过的仗按上场的敌人给经验"""
+    lines = []
+    names = {"apprentice": "你"}
+    for k, v in CB["companions"].items():
+        if isinstance(v, dict):
+            names[k] = v.get("name", k)
+    musts = must_ctxs()
+    for enc in musts:          # 顺序和 sim_ctx.json 一样（Godot 按这个文件的顺序打）
+        ed = enc_def(enc)
+        ch = ed["ch"]
+        for strat in ["always_first", "smart", "no_magic"]:
+            ctx = godot_ctx(enc, ch) if profile == "lv1" else json.loads(json.dumps(musts[enc]))
+            b = Battle(enc, ctx, ch)
+            g = 0
+            while not b.result and g < 20:
+                g += 1
+                godot_plan(b, strat)
+                b.end_turn()
+            down = len([u for u in b.allies(False) if not u["alive"]])
+            hp = ", ".join("%s %d/%d" % (names[u["uid"]], u["hp"], u["max"]) for u in b.allies(False))
+            res = b.result
+            if b.result == "win":
+                if b.takeover:
+                    res += "/end_if_down"
+                elif ed["win"].get("type") == "survive" and b.enemies():
+                    res += "/survive"
+                killed = list(ed["enemies"]) if res != "win" else list(b.killed)
+                hp += "，经验 %d" % xp_of(killed, ch)
+            party = "、".join(names[u["uid"]] for u in b.allies(False) if u["uid"] != "apprentice")
+            lv = "" if profile == "lv1" else " %d 级" % ctx["level"]
+            lines.append("[sim] 第 %d 章%s %s %s（%s）→ %s 第 %d 回合，倒下 %d 人，剩血 %s" % (ch, lv, enc, strat, party, res, b.turn, down, hp))
+    return lines
+
+
 def fmt_pct(x):
     return "%d%%" % round(100 * x)
 
@@ -1245,7 +1339,8 @@ def check_row(r):
 
 def main():
     if "--validate" in sys.argv:
-        print("\n".join(validate()))
+        write_must_ctxs()
+        print("\n".join(validate() + validate_later() + validate_later("must")))
         return
     os.makedirs(OUT, exist_ok=True)
     all_rows, all_ch = [], []
@@ -1257,17 +1352,21 @@ def main():
     mapnm = map_no_magic()
     simple = simple_player()
     val = validate()
+    write_must_ctxs()
+    val_later = validate_later() + validate_later("must")
 
     # ---- 写结果 ----
     with open(os.path.join(OUT, "sim_results.json"), "w", encoding="utf-8") as f:
         json.dump({"fights": all_rows, "chapters": all_ch, "degenerate": degen, "map_no_magic": mapnm, "simple_player": simple,
-                   "ch1_validate": val}, f, ensure_ascii=False, indent=1)
+                   "ch1_validate": val, "ch2_6_validate": val_later}, f, ensure_ascii=False, indent=1)
     style_name = {"full": "全力", "save": "省资源", "must": "只打必须的"}
     md = []
     md.append("# 数值模拟结果（tools/sim_numbers.py 生成，别手改）\n")
     md.append("数值全从 content/data 读（第 2–6 章 2026-11-09 落进 combat.json，见 design/NUMBERS.md）。最优打法每回合把三个人能排的组合全试一遍，挑评分最高的。\n")
     md.append("## 第 1 章对照 Godot `--sim`（同样的三种固定打法）\n")
     md.append("```\n" + "\n".join(val) + "\n```\n")
+    md.append("## 第 2–6 章对照 Godot `--sim`（先按 1 级、没装备，再按「只打必须的」等级和装备；同伴按章；同伴专属招两边都关掉）\n")
+    md.append("```\n" + "\n".join(val_later) + "\n```\n")
     md.append("## 每章末等级和经验\n")
     md.append("| 章 | " + " | ".join("%s：经验 / 等级" % style_name[s] for s in ("full", "save", "must")) + " |")
     md.append("|---|---|---|---|")

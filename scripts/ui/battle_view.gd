@@ -4,6 +4,8 @@ extends Control
 ## 一回合三步，顶上一直写着、走到哪步亮哪步：① 看敌人头上的牌子 ② 给每个人选行动 ③ 点「结束回合」。
 ## 敌人头顶的意图牌写出手顺序、招、点数和打谁；被盯上的人头顶标着要挨几点（红）。
 ## 选完行动马上显示打完以后的血（「8 → 3」）；点「结束回合」后一来一回地播：你们按 ①②③ 出手，再轮到敌人。
+## 第 2–6 章：首领的「？」牌子（学徒点「揭开」看清，不占招）；撑过几回合的仗顶上写第几回合；
+## 某人倒下由剧情接管的仗顶上写明；比武那种倒一个补一个，敌人那边写后面还有几个。
 
 signal finished(result: String)   # "win" 打赢 / "back" 输了回圣龛 / "flee" 逃跑
 
@@ -26,6 +28,7 @@ var _preview := {}                 # uid -> 打完以后的血
 # 播放这回合时用：画面上显示的血、播到哪一步、飘字、横幅
 var _shown := {}                   # uid -> [hp, alive]；空 = 用真的
 var _old_intents: Array = []
+var _old_revealed := {}            # 播放时用上一回合揭开过的「？」
 var _done_orders := {}             # 已经出过手的敌人意图 order
 var _actor := ""
 var _floats: Array = []            # {uid, text, col, t}
@@ -245,6 +248,7 @@ func _act_hint(uid: String, a: String) -> String:
 		"attack": h = UIKit.f("hint_attack", {"n": int(b.unit(uid).power)})
 		"guard": h = UIKit.f("hint_guard", {"n": int(b.ctx.get("guard_block", 3))})
 		"kay_cover": h = UIKit.f("hint_kay_cover", {"n": int(b.P.kay_cover_block)})
+		"reveal": h = UIKit.f("hint_reveal", {"n": b.spell_cost("reveal")})
 		"potion_hp": h = UIKit.f("hint_potion_hp", {"n": int(b.ctx.get("potion_heal", 6))})
 		"potion_mana": h = UIKit.f("hint_potion_mana", {"n": int(b.ctx.get("potion_mana", 3))})
 	if why != "" and why != "dead": h += "\n" + why
@@ -261,6 +265,9 @@ func _refresh_hint() -> void:
 # ---------------- 操作 ----------------
 func _on_act(uid: String, a: String) -> void:
 	if mode != "plan": return
+	if a == "reveal" and b.valid_targets(a).size() == 1:
+		_reveal(b.valid_targets(a)[0])
+		return
 	var kind := b.target_kind(a)
 	if kind == "":
 		b.plan(uid, a)
@@ -280,6 +287,10 @@ func _on_act(uid: String, a: String) -> void:
 
 func _on_target(uid: String) -> void:
 	if targeting.is_empty(): return
+	if targeting.act == "reveal":
+		targeting = {}
+		_reveal(uid)
+		return
 	b.plan(targeting.who, targeting.act, uid)
 	targeting = {}
 	_rebuild()
@@ -296,6 +307,13 @@ func _maybe_auto_end() -> void:
 	if mode == "plan" and _all_planned():
 		_on_end_turn()
 
+## 揭开不占招：马上扣法力、牌子翻过来，学徒这回合照样能再选一招
+func _reveal(uid: String) -> void:
+	if not b.reveal(uid): return
+	_print(b.take_log())
+	_rebuild()
+	if not auto: _flash_banner(UIKit.t("ui_revealed"))
+
 func cancel_target() -> void:
 	if targeting.is_empty(): return
 	targeting = {}
@@ -310,6 +328,7 @@ func _on_end_turn() -> void:
 	if mode != "plan": return
 	targeting = {}
 	_old_intents = b.intents.duplicate(true)
+	_old_revealed = b.revealed.duplicate()
 	_turn_shown = b.turn
 	var before := {}
 	for u in b.units: before[u.uid] = [u.hp, u.alive]
@@ -320,6 +339,8 @@ func _on_end_turn() -> void:
 	_preview = {}
 	if auto:
 		_old_intents = []
+		_old_revealed = {}
+		_turn_shown = 0
 		_after_turn()
 		return
 	await _play(before)
@@ -363,6 +384,7 @@ func _play(before: Dictionary) -> void:
 		_actor = ""
 	_shown = {}
 	_old_intents = []
+	_old_revealed = {}
 	_done_orders = {}
 	_ticker = ""
 	_turn_shown = 0
@@ -396,7 +418,7 @@ func _show_end() -> void:
 		end_btns.append(_button(UIKit.t("ui_retry"), Vector2(430, 420), Vector2(200, 52), _retry))
 		end_btns.append(_button(UIKit.t("ui_back_shrine"), Vector2(650, 420), Vector2(200, 52), _finish.bind("back")))
 	if auto:
-		print("  [战斗结束] %s；按钮：%s" % [UIKit.t("ui_win") if b.result == "win" else UIKit.t("ui_lose"), "、".join(PackedStringArray(end_btns.map(func(x): return x.text)))])
+		print("  [战斗结束] %s%s；按钮：%s" % [UIKit.t("ui_win") if b.result == "win" else UIKit.t("ui_lose"), "（%s）" % b.end_kind if b.end_kind not in ["", "all_down", "lose"] else "", "、".join(PackedStringArray(end_btns.map(func(x): return x.text)))])
 		for l in reward_lines: print("  [结算] ", l)
 	else:
 		end_btns[0].grab_focus.call_deferred()
@@ -523,6 +545,22 @@ func _draw_top() -> void:
 			ci.draw_string(font, Vector2(x, 35), "→", HORIZONTAL_ALIGNMENT_LEFT, -1, UIKit.SMALL * 2, UIKit.CREAM_DIM)
 			x += 32
 	ci.draw_string(font, Vector2(STAGE.x - 260, 36), title, HORIZONTAL_ALIGNMENT_RIGHT, 240, UIKit.BODY, UIKit.CREAM)
+	# 第二行：这一仗怎么算完（撑过几回合、谁倒下就停）；敌人那边还有几个后备
+	var rules := []
+	var st := b.survive_turns()
+	if st > 0: rules.append(UIKit.f("ui_survive", {"n": st, "k": mini(st, _turn_shown if _turn_shown > 0 else b.turn)}))
+	var eid := str(b.enc.get("end_if_down", ""))
+	if eid != "" and b.unit(eid) != null: rules.append(UIKit.f("ui_end_if_down", {"who": b.unit(eid).name}))
+	if not rules.is_empty():
+		var t := "  ".join(PackedStringArray(rules))
+		var w := font.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, UIKit.SMALL * 2).x
+		ci.draw_rect(Rect2(12, 58, w + 24, 34), Color(UIKit.INK, 0.85))
+		ci.draw_string(font, Vector2(24, 83), t, HORIZONTAL_ALIGNMENT_LEFT, -1, UIKit.SMALL * 2, UIKit.GOLD)
+	if not b.reserve.is_empty():
+		var t2 := UIKit.f("ui_reserve", {"n": b.reserve.size()})
+		var w2 := font.get_string_size(t2, HORIZONTAL_ALIGNMENT_LEFT, -1, UIKit.SMALL * 2).x
+		ci.draw_rect(Rect2(950 - w2 / 2 - 12, 438, w2 + 24, 34), Color(UIKit.INK, 0.85))
+		ci.draw_string(font, Vector2(950 - w2 / 2, 464), t2, HORIZONTAL_ALIGNMENT_LEFT, -1, UIKit.SMALL * 2, UIKit.CREAM)
 
 func _draw_unit(u: Dictionary, p: Vector2, ally: bool) -> void:
 	var ci := stage
@@ -601,7 +639,7 @@ func _draw_incoming(u: Dictionary, p: Vector2, intents: Array) -> void:
 	for it in intents:
 		var e = b.unit(it.uid)
 		if e == null or it.cancelled or _done_orders.has(it.order): continue
-		if not _hp(e)[1]: continue
+		if not _hp(e)[1] or _hidden(it): continue
 		var hit := false
 		var later := false
 		var n := ""
@@ -638,7 +676,12 @@ func _intent_plate(it: Dictionary, p: Vector2) -> void:
 	var line1 := UIKit.t(it.move)
 	var line2 := ""
 	var num := ""
-	match it.act:
+	var act: String = "hidden" if _hidden(it) else it.act
+	match act:
+		"hidden":
+			line1 = ""
+			num = "？"
+			line2 = UIKit.f("plate_hidden", {"n": b.spell_cost("reveal")}) if b.has_spell("reveal") else UIKit.t("plate_hidden_no")
 		"attack":
 			num = str(b.intent_damage(it)) + ("×%d" % it.hits if it.hits > 1 else "") if it.target != "all" else str(b.intent_damage(it, b.allies()[0].uid if not b.allies().is_empty() else ""))
 			line2 = "→ " + (b._name(it.target) if it.target != "all" else UIKit.t("plate_all"))
@@ -668,6 +711,12 @@ func _intent_plate(it: Dictionary, p: Vector2) -> void:
 	if it.cancelled or not alive:
 		ci.draw_line(r.position + Vector2(8, r.size.y / 2), r.end - Vector2(8, r.size.y / 2), UIKit.CREAM_DIM, 3.0)
 
+## 「？」还没揭开（播放这回合时按出手前的揭开情况）
+func _hidden(it: Dictionary) -> bool:
+	if not bool(it.get("hidden", false)): return false
+	var rv: Dictionary = _old_revealed if not _old_intents.is_empty() else b.revealed
+	return not rv.has(it.uid)
+
 func _badge(c: Vector2, n: int, col: Color) -> void:
 	stage.draw_circle(c, 13, UIKit.INK)
 	stage.draw_circle(c, 11, col)
@@ -689,6 +738,8 @@ func _draw_end() -> void:
 	var r := Rect2(STAGE.x / 2 - 360, 150, 720, 350)
 	UIKit.draw_frame(stage, r, Color(UIKit.INK, 0.96))
 	var t := UIKit.t("ui_win") if b.result == "win" else UIKit.t("ui_lose")
+	if b.end_kind == "survive": t = UIKit.f("ui_survived", {"n": b.survive_turns()})
+	elif b.end_kind == "end_if_down": t = UIKit.f("ui_takeover", {"who": b.unit(b.down_by).name})
 	stage.draw_string(UIKit.font(), Vector2(r.position.x, r.position.y + 64), t, HORIZONTAL_ALIGNMENT_CENTER, r.size.x, UIKit.BIG + 12, UIKit.GOLD if b.result == "win" else UIKit.DANGER)
 	var y := r.position.y + 118
 	var lines: Array = reward_lines if b.result == "win" else [UIKit.t("ui_lose_hint")]

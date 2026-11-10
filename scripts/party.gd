@@ -231,8 +231,12 @@ func xp_for(killed: Array) -> int:
 	return s
 
 ## 打赢以后：血带出战斗（倒下的站起来剩 1 点），给经验和掉落。返回给结算框和测试看的结果
+## 撑过的仗（survive、end_if_down）按上场的敌人给经验、不给掉落（combat.md「第 2–6 章的七个字段」）；
+## 客人（party.guests，不在队里）的血不带出这一仗
 func after_win(b: Battle) -> Dictionary:
+	var inp := companions_in_party()
 	for u in b.allies(false):
+		if u.uid in b.guests and not u.uid in inp: continue
 		set_hp(u.uid, u.hp if u.alive else int(CB.get("downed_revive_hp", 1)))
 	GS.S.potions = b.potions.duplicate()
 	var res := {"xp": 0, "levels": 0, "level": prog.level, "drops": {}, "revived": b.allies(false).filter(func(u): return not u.alive).map(func(u): return u.name)}
@@ -240,13 +244,14 @@ func after_win(b: Battle) -> Dictionary:
 	if heal > 0:
 		for u in party_uids(): set_hp(u, hp(u) + heal)
 		res["mend"] = heal
-	var xp := xp_for(b.killed)
+	var xp := xp_for(b.xp_enemies())
 	var r := gain_xp(xp)
 	res.xp = xp
 	res.levels = r.levels
 	res.level = prog.level
 	res.at_cap = prog.level >= prog.max_level()
-	if not b.killed.is_empty():
+	res.survived = b.survived()
+	if not b.killed.is_empty() and not b.survived():
 		res.drops = roll_drops(b.killed)
 	return res
 

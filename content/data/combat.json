@@ -1062,7 +1062,7 @@
   },
   "_敌人招式说明": "pattern 按回合轮着用（第 1 回合用第 1 条，用完从头再来）。act：attack（hits 是几下）、charge（蓄力，then 是下回合放出的招）、summon（what 是敌人 id）、buff（strength 加力量，who: same_kind 同一类都加）、weak（给目标上虚弱）、block（自己加格挡）。target：某个同伴 id、apprentice（学徒）、lowest_hp（血最少的人）、all（群攻）。boss：首领，经验 × 3、必掉装备。move 是招式名的文本键（game_text.csv）。chapter 决定经验和掉落（progression.json、items.json）。",
   "encounters": {
-    "_说明": "一场仗：上场的敌人（按出手顺序）、我方规则、怎么算赢。kind：quest 任务战（地图上站着不动，3–5 回合）；map 地图上能绕开的小仗（会走动、会追，2–3 回合）；story 剧情战（不能逃）。party.fixed 是剧情规定一定上场的同伴，party.max 是最多带几个（默认 party_max_companions）。win：all_down 敌人全倒；survive 撑过 turns 回合，到了由剧情接管。 第 2–6 章 2026-11-09 照 design/NUMBERS.md 第 5 节填。新字段（代码第 15 步第二批写，见 combat.md「需要的新字段」）：win.type survive；party.guests 不在队也上场；party.exclude 这一仗不能上的人；reserve + field_max 倒一个补一个；end_if_down 这个人倒下由剧情接管。",
+    "_说明": "一场仗：上场的敌人（按出手顺序）、我方规则、怎么算赢。kind：quest 任务战（地图上站着不动，3–5 回合）；map 地图上能绕开的小仗（会走动、会追，2–3 回合）；story 剧情战（不能逃）。party.fixed 是剧情规定一定上场的同伴，party.max 是最多带几个（默认 party_max_companions）。win：all_down 敌人全倒；survive 撑过 turns 回合，到了由剧情接管。 第 2–6 章 2026-11-09 照 design/NUMBERS.md 第 5 节填。新字段（2026-11-10 已实现，见 combat.md「第 2–6 章的七个字段」）：win.type survive；party.guests 不在队也上场；party.exclude 这一仗不能上的人；reserve + field_max 倒一个补一个；end_if_down 这个人倒下由剧情接管。",
     "forest_wolves": {
       "name": "enc_forest_wolves",
       "kind": "map",

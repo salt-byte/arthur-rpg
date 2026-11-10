@@ -1,5 +1,5 @@
 {
-  "_说明": "参数登记，来自 design/systems/overworld.md 第 6 节；代码只读这里的数，改数先改设计页。参数名照 mechanics-library overworld-grid。 areas 列出每章的地方（名字是文本键）；大小、出口第 9 步做地图时补。shrines、chests 先写第 1 章，其余第 10 步补。",
+  "_说明": "参数登记，来自 design/systems/overworld.md 第 6 节；代码只读这里的数，改数先改设计页。参数名照 mechanics-library overworld-grid。 areas 列出每章的地方（名字是文本键）；大小、出口第 9 步做地图时补。shrines、chests 写到第 2 章（第 15 步第二批）。第 15 步加的写法：areas 的 chapter 可以是数组（复用的地方）；shrines 的 first_of_chapter 写章号数组；chests 可以带 condition（Yarn 表达式）；water_spots 的 glows_at 支线写「任务 id:步骤」。",
   "tile_px": 32,
   "move_speed_tiles": 4,
   "contact": "adjacent",
@@ -42,6 +42,11 @@
       "name": "area_london"
     },
     {
+      "id": "london_north",
+      "chapter": 2,
+      "name": "area_london_north"
+    },
+    {
       "id": "bedegraine",
       "chapter": 2,
       "name": "area_bedegraine"
@@ -58,12 +63,19 @@
     },
     {
       "id": "lake",
-      "chapter": 3,
+      "chapter": [
+        3,
+        4
+      ],
       "name": "area_lake"
     },
     {
       "id": "camelot",
-      "chapter": 3,
+      "chapter": [
+        3,
+        4,
+        5
+      ],
       "name": "area_camelot"
     },
     {
@@ -88,7 +100,11 @@
     },
     {
       "id": "camelot_outside",
-      "chapter": 5,
+      "chapter": [
+        3,
+        4,
+        5
+      ],
       "name": "area_camelot_outside"
     },
     {
@@ -136,7 +152,9 @@
         9
       ],
       "name": "shrine_manor",
-      "first_of_chapter": true
+      "first_of_chapter": [
+        1
+      ]
     },
     {
       "id": "forest_shrine",
@@ -156,6 +174,39 @@
         2
       ],
       "name": "shrine_stone_circle"
+    },
+    {
+      "id": "london_bridge",
+      "area": "london",
+      "cell": [
+        14,
+        18
+      ],
+      "name": "shrine_london",
+      "first_of_chapter": [
+        2
+      ],
+      "_说明": "伦敦桥头的小礼拜堂，本章第一座，铺子在隔壁"
+    },
+    {
+      "id": "london_north_cross",
+      "area": "london_north",
+      "cell": [
+        18,
+        16
+      ],
+      "name": "shrine_london_north",
+      "_说明": "出北门右手边的路边石十字"
+    },
+    {
+      "id": "bedegraine_camp",
+      "area": "bedegraine",
+      "cell": [
+        24,
+        13
+      ],
+      "name": "shrine_bedegraine",
+      "_说明": "营地后头的木十字，离旗前 10 格；打完回伦敦从这里传"
     }
   ],
   "chests": [
@@ -169,6 +220,28 @@
       "drop": "chest",
       "_说明": "空心老橡树里的包袱",
       "name": "chest_forest_oak"
+    },
+    {
+      "id": "london_north_cart",
+      "area": "london_north",
+      "cell": [
+        28,
+        14
+      ],
+      "drop": "chest",
+      "name": "chest_london_north_cart",
+      "_说明": "渡口东边浅滩上翻倒的货车，挨着 ch2_ford"
+    },
+    {
+      "id": "bedegraine_scout_pack",
+      "area": "bedegraine",
+      "cell": [
+        1,
+        3
+      ],
+      "drop": "chest",
+      "name": "chest_bedegraine_scout",
+      "_说明": "斥候丢下的包袱，挨着 ch2_camp"
     }
   ],
   "water_spots": [

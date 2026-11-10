@@ -603,3 +603,37 @@ move_shield_up,举盾
 move_shout,吆喝
 move_sweep,横扫
 move_thrust,刺
+intent_hidden,{who} ？
+plate_hidden,揭开 {n} 法力
+plate_hidden_no,看不清
+ev_reveal,揭开：{t}
+ui_revealed,看清了
+ui_no_hidden,这回合没有“？”
+hint_reveal,花 {n} 点法力看清一个“？”。不占这回合的招，揭开前打断不了它
+ev_rise,{who}越打越有劲：力量 +{n}，现在 +{s}
+ev_reserve,{who}补了上来，后面还有 {n} 个
+ui_reserve,后面还有 {n} 个
+ui_survive,撑过 {n} 回合：第 {k} 回合
+ui_survived,撑过了 {n} 回合
+ui_end_if_down,{who}倒下，这一仗就停
+ui_takeover,{who}倒下了，这一仗停在这里
+res_survived,撑过的仗：按上场的敌人给经验，没有掉落
+area_london_north,北门外大路
+shrine_london_north,路边的石十字
+shrine_desc_london_north_cross,出北门右手边一个石十字，比人矮半头。底座上刻着到下一个驿站的里数，让赶车人的鞭杆敲出了一圈白印。
+chest_london_north_cart,翻倒的货车
+chest_open_london_north_cart,车轮朝天，还在慢慢转。车板底下压着一只皮口袋，袋口的蜡封上有半个指印。
+chest_empty_london_north_cart,车板底下只剩一摊冻住的泥。
+chest_bedegraine_scout,斥候丢下的包袱
+chest_open_bedegraine_scout_pack,包袱挂在矮树杈上，打着死结。干粮让露水泡软了，底下裹着一样硬东西。
+chest_empty_bedegraine_scout_pack,树杈上只剩一截断了的皮绳。
+npc_shopkeeper,店主
+shop_money,兜里 {silver} 银 · 血药 {hp} · 法力药 {mp}
+shop_price,{n} 银
+shop_buy,买
+shop_left,还剩 {n} 件
+shop_no_money,钱不够
+shop_bag_full,背包满了
+shop_cap_full,带不下了
+shop_bought,买下：{t}，花了 {n} 银
+shop_sold_out,货架上的都买走了

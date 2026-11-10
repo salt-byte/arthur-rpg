@@ -1,5 +1,5 @@
 {
-  "_说明": "白盒地图（第 8 步搭，第 10 步重做：森林扩成 32×18，放四群会走动的敌人、林边石龛、空心老橡树里的包袱）：色块格子，验证走位和任务链；第 11 步照 overworld.md 换成正式地图。rows 每个字一格，图例见 tiles。exits 是走上去就换地方的格子；triggers 是走上去、条件为真就开始对话的格子；npcs.json 和 spawns.json 的 cell 指这里的坐标。颜色只给白盒用，正式颜色照 ART_DIRECTION。 battle_bg 是在这里开打时战斗画面的底色。",
+  "_说明": "白盒地图（第 8 步搭，第 10 步重做：森林扩成 32×18，放四群会走动的敌人、林边石龛、空心老橡树里的包袱）：色块格子，验证走位和任务链；第 11 步照 overworld.md 换成正式地图。rows 每个字一格，图例见 tiles。exits 是走上去就换地方的格子；triggers 是走上去、条件为真就开始对话的格子；npcs.json 和 spawns.json 的 cell 指这里的坐标。颜色只给白盒用，正式颜色照 ART_DIRECTION。 battle_bg 是在这里开打时战斗画面的底色。exits 可以带 cond（Yarn 表达式），不成立时门关着（第 15 步加）。第 15 步第二批照 design/levels/ch2.md 搭了第 2 章三片：伦敦 32×20、北门外大路 32×18、贝德格兰森林 32×20。",
   "cell_px": 64,
   "tiles": {
     "#": {
@@ -86,6 +86,51 @@
       "color": "#C9C2B4",
       "block": true,
       "_": "死羊"
+    },
+    "N": {
+      "color": "#C9B58A",
+      "block": true,
+      "_": "帐篷"
+    },
+    "W": {
+      "color": "#4F7090",
+      "block": true,
+      "_": "河水"
+    },
+    "b": {
+      "color": "#9A7650",
+      "block": false,
+      "_": "桥面"
+    },
+    "g": {
+      "color": "#8E8A84",
+      "block": true,
+      "_": "墓碑"
+    },
+    "f": {
+      "color": "#7A5C3E",
+      "block": true,
+      "_": "栅栏"
+    },
+    "o": {
+      "color": "#93A47A",
+      "block": false,
+      "_": "草地"
+    },
+    "h": {
+      "color": "#7E8F5E",
+      "block": false,
+      "_": "山坡"
+    },
+    "v": {
+      "color": "#8FB0C4",
+      "block": false,
+      "_": "浅滩（能蹚过去）"
+    },
+    "F": {
+      "color": "#C23B32",
+      "block": true,
+      "_": "亚瑟的旗"
     }
   },
   "actors": {
@@ -113,6 +158,34 @@
     "villager1": {
       "name": "",
       "color": "#8C7B66"
+    },
+    "archbishop": {
+      "name": "大主教",
+      "color": "#E6DCC8"
+    },
+    "guard_knight": {
+      "name": "守剑骑士",
+      "color": "#7C8494"
+    },
+    "noble": {
+      "name": "贵族",
+      "color": "#6E3F72"
+    },
+    "landlady": {
+      "name": "房东",
+      "color": "#A0705A"
+    },
+    "soldier": {
+      "name": "士兵",
+      "color": "#6E6248"
+    },
+    "rebel": {
+      "name": "",
+      "color": "#6A2E2E"
+    },
+    "shopkeeper": {
+      "name": "店主",
+      "color": "#4F7A6A"
     }
   },
   "areas": {
@@ -256,181 +329,334 @@
     },
     "london": {
       "name": "area_london",
+      "_说明": "第 2 章伦敦（第 15 步第二批照 design/levels/ch2.md 第 1 节搭）：南北街 x=16、东西街 y=12；西北大教堂（门 7,5 / 8,5）和墓地（插剑的石头 6,8，帐篷 9-10,7，墓地门 6-8,11）；东北大主教的厅（门 25,8）；西南城西比武场（入口 x=11）；东南皮匠楼（门 26,13）；南边伦敦桥头（小礼拜堂 14,18，铺子 18,18）；北门 16,0 在 1204 以前关着。城里不放敌人。",
       "rows": [
-        "####################",
-        "#,,,,,,,,AA,,,,,,,,#",
-        "#,||||,,,,,,,,||||,#",
-        "#,||||,,,,,,,,||||,#",
-        "#,,,,,,,,,,,,,,,,,,#",
-        "#########++#########",
-        "....................",
-        "...S..........:.....",
-        "..............:.....",
-        "..............:.....",
-        "..............:.....",
-        "...................."
+        "################+###############",
+        "##,,,,,AA,,,,#..:..#===========#",
+        "##,|||,,,,|||#..:..#===========#",
+        "##,|||,,,,,,,#..:..#===========#",
+        "##,,,,,,,,,,,#..:..#==|||||||==#",
+        "#######++#####..:..#===========#",
+        "##..........g#..:..#===========#",
+        "##.g.....NN..#..:..#===========#",
+        "##....S......#..:..######+######",
+        "##.g.......g.#..:........:.....#",
+        "##g........g.#..:........:.....#",
+        "######:::#####..:........:.....#",
+        "#::::::::::::::::::::::::::::::#",
+        "#fffffffffff....:......###+#####",
+        "#.|||||||||f....:......#=====H##",
+        "#..........:....:......#======##",
+        "#..........:....:......#======##",
+        "#..........:....:......#======##",
+        "#..........f...:::.....#########",
+        "WWWWWWWWWWWWWWWbbbWWWWWWWWWWWWWW"
       ],
       "start": [
-        14,
-        10
+        26,
+        15
       ],
-      "exits": [],
+      "exits": [
+        {
+          "cell": [
+            16,
+            0
+          ],
+          "to": "london_north",
+          "at": [
+            16,
+            16
+          ],
+          "cond": "quest_part(1002) >= 1204"
+        }
+      ],
       "triggers": [
         {
           "cell": [
-            2,
-            7
-          ],
-          "node": "Ch2_Churchyard",
-          "cond": "quest_part(1002) == 1201 and not visited(\"Ch2_Churchyard\")"
-        },
-        {
-          "cell": [
-            4,
-            7
-          ],
-          "node": "Ch2_Churchyard",
-          "cond": "quest_part(1002) == 1201 and not visited(\"Ch2_Churchyard\")"
-        },
-        {
-          "cell": [
-            3,
-            8
-          ],
-          "node": "Ch2_Churchyard",
-          "cond": "quest_part(1002) == 1201 and not visited(\"Ch2_Churchyard\")"
-        },
-        {
-          "cell": [
-            3,
-            6
-          ],
-          "node": "Ch2_Churchyard",
-          "cond": "quest_part(1002) == 1201 and not visited(\"Ch2_Churchyard\")"
-        },
-        {
-          "cell": [
-            18,
-            7
-          ],
-          "node": "Ch2_Tournament",
-          "cond": "quest_part(1002) == 1202 and not visited(\"Ch2_Tournament\")"
-        },
-        {
-          "cell": [
-            18,
-            8
-          ],
-          "node": "Ch2_Tournament",
-          "cond": "quest_part(1002) == 1202 and not visited(\"Ch2_Tournament\")"
-        },
-        {
-          "cell": [
-            18,
-            9
-          ],
-          "node": "Ch2_Tournament",
-          "cond": "quest_part(1002) == 1202 and not visited(\"Ch2_Tournament\")"
-        },
-        {
-          "cell": [
-            18,
-            10
-          ],
-          "node": "Ch2_Tournament",
-          "cond": "quest_part(1002) == 1202 and not visited(\"Ch2_Tournament\")"
-        },
-        {
-          "cell": [
-            14,
+            6,
             11
+          ],
+          "node": "Ch2_Churchyard",
+          "cond": "quest_part(1002) == 1201 and not visited(\"Ch2_Churchyard\")"
+        },
+        {
+          "cell": [
+            7,
+            11
+          ],
+          "node": "Ch2_Churchyard",
+          "cond": "quest_part(1002) == 1201 and not visited(\"Ch2_Churchyard\")"
+        },
+        {
+          "cell": [
+            8,
+            11
+          ],
+          "node": "Ch2_Churchyard",
+          "cond": "quest_part(1002) == 1201 and not visited(\"Ch2_Churchyard\")"
+        },
+        {
+          "cell": [
+            11,
+            15
+          ],
+          "node": "Ch2_Tournament",
+          "cond": "quest_part(1002) == 1202 and not visited(\"Ch2_Tournament\")"
+        },
+        {
+          "cell": [
+            11,
+            16
+          ],
+          "node": "Ch2_Tournament",
+          "cond": "quest_part(1002) == 1202 and not visited(\"Ch2_Tournament\")"
+        },
+        {
+          "cell": [
+            11,
+            17
+          ],
+          "node": "Ch2_Tournament",
+          "cond": "quest_part(1002) == 1202 and not visited(\"Ch2_Tournament\")"
+        },
+        {
+          "cell": [
+            26,
+            12
           ],
           "node": "Ch2_LockedDoor",
           "cond": "visited(\"Ch2_Tournament\") and not visited(\"Ch2_LockedDoor\")"
         },
         {
           "cell": [
-            2,
-            7
+            6,
+            11
           ],
           "node": "Ch2_SwordPulled",
           "cond": "visited(\"Ch2_LockedDoor\") and not visited(\"Ch2_SwordPulled\")"
         },
         {
           "cell": [
-            4,
-            7
+            7,
+            11
           ],
           "node": "Ch2_SwordPulled",
           "cond": "visited(\"Ch2_LockedDoor\") and not visited(\"Ch2_SwordPulled\")"
         },
         {
           "cell": [
-            3,
-            8
+            8,
+            11
           ],
           "node": "Ch2_SwordPulled",
           "cond": "visited(\"Ch2_LockedDoor\") and not visited(\"Ch2_SwordPulled\")"
         },
         {
           "cell": [
-            3,
-            6
-          ],
-          "node": "Ch2_SwordPulled",
-          "cond": "visited(\"Ch2_LockedDoor\") and not visited(\"Ch2_SwordPulled\")"
-        },
-        {
-          "cell": [
-            18,
-            7
+            11,
+            15
           ],
           "node": "Ch2_SwordToKay",
           "cond": "quest_part(1002) == 1202 and visited(\"Ch2_SwordPulled\") and not visited(\"Ch2_SwordToKay\")"
         },
         {
           "cell": [
-            18,
-            8
+            11,
+            16
           ],
           "node": "Ch2_SwordToKay",
           "cond": "quest_part(1002) == 1202 and visited(\"Ch2_SwordPulled\") and not visited(\"Ch2_SwordToKay\")"
         },
         {
           "cell": [
-            18,
+            11,
+            17
+          ],
+          "node": "Ch2_SwordToKay",
+          "cond": "quest_part(1002) == 1202 and visited(\"Ch2_SwordPulled\") and not visited(\"Ch2_SwordToKay\")"
+        },
+        {
+          "cell": [
+            7,
+            5
+          ],
+          "node": "Ch2_Church",
+          "cond": "quest_part(1002) == 1203 and not visited(\"Ch2_Church\")"
+        },
+        {
+          "cell": [
+            8,
+            5
+          ],
+          "node": "Ch2_Church",
+          "cond": "quest_part(1002) == 1203 and not visited(\"Ch2_Church\")"
+        },
+        {
+          "cell": [
+            24,
             9
           ],
-          "node": "Ch2_SwordToKay",
-          "cond": "quest_part(1002) == 1202 and visited(\"Ch2_SwordPulled\") and not visited(\"Ch2_SwordToKay\")"
+          "node": "Ch2_Feast",
+          "cond": "quest_part(1002) == 1205 and not visited(\"Ch2_Feast\")"
         },
         {
           "cell": [
-            18,
-            10
+            25,
+            9
           ],
-          "node": "Ch2_SwordToKay",
-          "cond": "quest_part(1002) == 1202 and visited(\"Ch2_SwordPulled\") and not visited(\"Ch2_SwordToKay\")"
+          "node": "Ch2_Feast",
+          "cond": "quest_part(1002) == 1205 and not visited(\"Ch2_Feast\")"
+        },
+        {
+          "cell": [
+            26,
+            9
+          ],
+          "node": "Ch2_Feast",
+          "cond": "quest_part(1002) == 1205 and not visited(\"Ch2_Feast\")"
+        }
+      ],
+      "battle_bg": "#6A6258"
+    },
+    "london_north": {
+      "name": "area_london_north",
+      "_说明": "第 2 章北门外大路（新登记）：大路从南门 16,17 往北，过渡口（15-17, 11-12 的浅滩），在 16,8 拐弯往东，再往北出 24,0 进贝德格兰。三群能绕开的小仗：西边路旁的步兵、渡口东边浅滩的盾兵（守着翻倒的货车 28,14）、北坡的骑兵（离拐角 4 格）。出门右手边一个石十字 18,16。",
+      "rows": [
+        "TTTTTTTTTTTTTTTTTTTTTTTT:TTTTTTT",
+        "TTTTTTTTTTTTTTTTooTTTTTT:TTTTTTT",
+        "TTTTTTTTTTTTTTTTooTTTTTT:TTTTTTT",
+        "TTTTTTTTohhhhhhoooTTTTTT:TTTTTTT",
+        "TTTTTTTTThhhhhhTooTTTTTT:TTTTTTT",
+        "TTTTTTTTohhhhhhoooTTTTTT:TTTTTTT",
+        "TTTTTTTTohhhhhhoooTTTTTT:TTTTTTT",
+        "TTTTTTTTTooooooooooooooo:TTTTTTT",
+        "TTTTTTTToooooooo:::::::::TTTTTTT",
+        "TTTTTTTTooooTooo:oTTTTTToTTTTTTT",
+        "TTTTTTTToToooToo:oTTTTTToTTTTTTT",
+        "TWWWWWWWWWWWWWWvvvWWWWWWWWWWWWWT",
+        "TWWWWWWWWWWWWWWvvvWWWWWWWWWWWWWT",
+        "TTTTTToooooooooo:ooovvvvvvvvvooT",
+        "TTTTTToooooooooo:ooToooooooooooT",
+        "TTTTTToooooooooo:ooooooooooooTTT",
+        "TTTTTTooooooooTo:oooooTTTTTTTTTT",
+        "TTTTTTTTTTTTTTTT:TTTTTTTTTTTTTTT"
+      ],
+      "exits": [
+        {
+          "cell": [
+            16,
+            17
+          ],
+          "to": "london",
+          "at": [
+            16,
+            1
+          ]
+        },
+        {
+          "cell": [
+            24,
+            0
+          ],
+          "to": "bedegraine",
+          "at": [
+            8,
+            18
+          ]
+        }
+      ],
+      "triggers": [],
+      "battle_bg": "#5F6E50"
+    },
+    "bedegraine": {
+      "name": "area_bedegraine",
+      "_说明": "第 2 章贝德格兰森林：南边 8,19 进来，营地在中间（帐篷、士兵），营地入口 7-9,17 第一次走上去演 Ch2_BedegraineCamp；营地中间的路往东再往北，旗 22,4 前三格 21-23,5 开打（Ch2_Bedegraine，先说话再 fight_npcs，不进 spawns）；营地后头的木十字 24,13；西北林间空地一队游骑，斥候的包袱 1,3。",
+      "rows": [
+        "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+        "TTTTTTTTTTTTTTTTTooooooooooooooT",
+        "ToooooooBooTTTTTTooooooooooooooT",
+        "TooBoooooooTTTTTTooooooooooooooT",
+        "TooooooooooTTTTTToooooFooooooooT",
+        "ToooBooooBoTTTTTToooo:::oooooooT",
+        "TooooooooooTTTTTTTTTT:::TTTTTTTT",
+        "TTTTTooTTTTTTTTTTTTTT:::TTTTTTTT",
+        "TTTTTooTTTTTTTTTTTTTT:::TTTTTTTT",
+        "TTTTTooTTTTTTTTTTTTTT:::TTTTTTTT",
+        "TTTTTooTTTTTTTTTTTTTT:::TTTTTTTT",
+        "TTTTTooTTTTTTTTTTTTTT:::TTTTTTTT",
+        "Tooooooo:::::::::::::::ooooTTTTT",
+        "TTTTTToo:ooooooooooooooooooTTTTT",
+        "TTTTTToo:oNNooNNooNNoooooooTTTTT",
+        "TTTTTToo:ooooooooooooNNooooTTTTT",
+        "TTTTTToo:oooNNoooNoooooooooTTTTT",
+        "TTTTTTTo:oTTTTTTTTTTTTTTTTTTTTTT",
+        "TTTTTTTo:oTTTTTTTTTTTTTTTTTTTTTT",
+        "TTTTTTTT:TTTTTTTTTTTTTTTTTTTTTTT"
+      ],
+      "exits": [
+        {
+          "cell": [
+            8,
+            19
+          ],
+          "to": "london_north",
+          "at": [
+            24,
+            1
+          ]
+        }
+      ],
+      "triggers": [
+        {
+          "cell": [
+            7,
+            17
+          ],
+          "node": "Ch2_BedegraineCamp",
+          "cond": "quest_part(1002) == 1204 and not visited(\"Ch2_BedegraineCamp\")"
+        },
+        {
+          "cell": [
+            8,
+            17
+          ],
+          "node": "Ch2_BedegraineCamp",
+          "cond": "quest_part(1002) == 1204 and not visited(\"Ch2_BedegraineCamp\")"
         },
         {
           "cell": [
             9,
-            5
+            17
           ],
-          "node": "Ch2_Church",
-          "cond": "quest_part(1002) == 1203 and not visited(\"Ch2_Church\")"
+          "node": "Ch2_BedegraineCamp",
+          "cond": "quest_part(1002) == 1204 and not visited(\"Ch2_BedegraineCamp\")"
         },
         {
           "cell": [
-            10,
+            21,
             5
           ],
-          "node": "Ch2_Church",
-          "cond": "quest_part(1002) == 1203 and not visited(\"Ch2_Church\")"
+          "node": "Ch2_Bedegraine",
+          "cond": "quest_part(1002) == 1204 and visited(\"Ch2_BedegraineCamp\")"
+        },
+        {
+          "cell": [
+            22,
+            5
+          ],
+          "node": "Ch2_Bedegraine",
+          "cond": "quest_part(1002) == 1204 and visited(\"Ch2_BedegraineCamp\")"
+        },
+        {
+          "cell": [
+            23,
+            5
+          ],
+          "node": "Ch2_Bedegraine",
+          "cond": "quest_part(1002) == 1204 and visited(\"Ch2_BedegraineCamp\")"
         }
       ],
-      "battle_bg": "#6A6258",
-      "_说明": "白盒的伦敦：第 2 章 1201–1203 的触发点先摆在这张小图上（墓地 = 左边那块石头四周，比武场 = 右边一排，住处门口 = 出生点南边一格），第 13 步按 ch2_notes.md 做正式地图"
+      "battle_bg": "#3F5C45"
     }
   },
   "chapter_start": {
@@ -445,8 +671,8 @@
     "2": {
       "area": "london",
       "cell": [
-        14,
-        10
+        26,
+        15
       ],
       "node": "Ch2_Start"
     }

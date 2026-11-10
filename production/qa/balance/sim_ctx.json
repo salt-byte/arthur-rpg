@@ -1,0 +1,2733 @@
+{
+ "_说明": "tools/sim_numbers.py 生成，别手改。Godot --sim 第 2–6 章「只打必须的等级」那一节原样读这里的我方数据。",
+ "ctx": {
+  "ch2_north_road": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 16,
+     "hp": 16,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "kay",
+     "name": "kay",
+     "max": 16,
+     "hp": 16,
+     "power": 4,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "arthur",
+     "name": "arthur",
+     "max": 16,
+     "hp": 16,
+     "power": 3,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 3,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 4,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 2
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    }
+   },
+   "mana_max": 7,
+   "mana_regen": 1,
+   "guard_block": 3,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 6,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 0,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 0,
+    "stand": 0
+   },
+   "level": 2,
+   "chapter": 2
+  },
+  "ch2_ford": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 16,
+     "hp": 16,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "kay",
+     "name": "kay",
+     "max": 16,
+     "hp": 16,
+     "power": 4,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "arthur",
+     "name": "arthur",
+     "max": 16,
+     "hp": 16,
+     "power": 3,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 3,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 4,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 2
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    }
+   },
+   "mana_max": 7,
+   "mana_regen": 1,
+   "guard_block": 3,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 6,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 0,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 0,
+    "stand": 0
+   },
+   "level": 2,
+   "chapter": 2
+  },
+  "ch2_hill": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 16,
+     "hp": 16,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "kay",
+     "name": "kay",
+     "max": 16,
+     "hp": 16,
+     "power": 4,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "arthur",
+     "name": "arthur",
+     "max": 16,
+     "hp": 16,
+     "power": 3,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 3,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 4,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 2
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    }
+   },
+   "mana_max": 7,
+   "mana_regen": 1,
+   "guard_block": 3,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 6,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 0,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 0,
+    "stand": 0
+   },
+   "level": 2,
+   "chapter": 2
+  },
+  "ch2_camp": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 16,
+     "hp": 16,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "kay",
+     "name": "kay",
+     "max": 16,
+     "hp": 16,
+     "power": 4,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "arthur",
+     "name": "arthur",
+     "max": 16,
+     "hp": 16,
+     "power": 3,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 3,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 4,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 2
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    }
+   },
+   "mana_max": 7,
+   "mana_regen": 1,
+   "guard_block": 3,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 6,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 0,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 0,
+    "stand": 0
+   },
+   "level": 2,
+   "chapter": 2
+  },
+  "bedegraine": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 16,
+     "hp": 16,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "kay",
+     "name": "kay",
+     "max": 16,
+     "hp": 16,
+     "power": 4,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "arthur",
+     "name": "arthur",
+     "max": 16,
+     "hp": 16,
+     "power": 3,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 3,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 4,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 2
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    }
+   },
+   "mana_max": 7,
+   "mana_regen": 1,
+   "guard_block": 3,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 6,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 0,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 0,
+    "stand": 0
+   },
+   "level": 2,
+   "chapter": 2
+  },
+  "pellinore": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 19,
+     "hp": 19,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "arthur",
+     "name": "arthur",
+     "max": 16,
+     "hp": 16,
+     "power": 4,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 4,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 4,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 2
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 7,
+   "mana_regen": 1,
+   "guard_block": 3,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 6,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 0,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 0,
+    "stand": 0
+   },
+   "level": 3,
+   "chapter": 3
+  },
+  "ch3_road_knight": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 19,
+     "hp": 19,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "kay",
+     "name": "kay",
+     "max": 18,
+     "hp": 18,
+     "power": 4,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "arthur",
+     "name": "arthur",
+     "max": 19,
+     "hp": 19,
+     "power": 4,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 5,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 4,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 2
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 8,
+   "mana_regen": 1,
+   "guard_block": 3,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 6,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 0,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 0,
+    "stand": 0
+   },
+   "level": 4,
+   "chapter": 3
+  },
+  "ch3_wild_pair": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 19,
+     "hp": 19,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "kay",
+     "name": "kay",
+     "max": 18,
+     "hp": 18,
+     "power": 4,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "arthur",
+     "name": "arthur",
+     "max": 19,
+     "hp": 19,
+     "power": 4,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 5,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 4,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 2
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 8,
+   "mana_regen": 1,
+   "guard_block": 3,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 6,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 0,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 0,
+    "stand": 0
+   },
+   "level": 4,
+   "chapter": 3
+  },
+  "ch3_squires": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 19,
+     "hp": 19,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "kay",
+     "name": "kay",
+     "max": 18,
+     "hp": 18,
+     "power": 4,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "gawain",
+     "name": "gawain",
+     "max": 18,
+     "hp": 18,
+     "power": 3,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 5,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 4,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 2
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 8,
+   "mana_regen": 1,
+   "guard_block": 3,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 6,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 0,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 0,
+    "stand": 0
+   },
+   "level": 4,
+   "chapter": 3
+  },
+  "ch3_knight_pair": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 19,
+     "hp": 19,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "kay",
+     "name": "kay",
+     "max": 18,
+     "hp": 18,
+     "power": 4,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "gawain",
+     "name": "gawain",
+     "max": 18,
+     "hp": 18,
+     "power": 3,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 5,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 4,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 2
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 8,
+   "mana_regen": 1,
+   "guard_block": 3,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 6,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 0,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 0,
+    "stand": 0
+   },
+   "level": 4,
+   "chapter": 3
+  },
+  "wild_men": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 19,
+     "hp": 19,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "gawain",
+     "name": "gawain",
+     "max": 18,
+     "hp": 18,
+     "power": 3,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 5,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 4,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 2
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 8,
+   "mana_regen": 1,
+   "guard_block": 3,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 6,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 0,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 0,
+    "stand": 0
+   },
+   "level": 4,
+   "chapter": 3
+  },
+  "ch4_brigands": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 24,
+     "hp": 24,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "kay",
+     "name": "kay",
+     "max": 18,
+     "hp": 18,
+     "power": 5,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "gawain",
+     "name": "gawain",
+     "max": 20,
+     "hp": 20,
+     "power": 3,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 6,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 4,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 3
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "reveal": {
+     "name": "揭开",
+     "mana": 1,
+     "free_action": true
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 10,
+   "mana_regen": 1,
+   "guard_block": 5,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 12,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 1,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 0,
+    "stand": 0
+   },
+   "level": 5,
+   "chapter": 4
+  },
+  "ch4_wolves": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 24,
+     "hp": 24,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "kay",
+     "name": "kay",
+     "max": 18,
+     "hp": 18,
+     "power": 5,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "gawain",
+     "name": "gawain",
+     "max": 20,
+     "hp": 20,
+     "power": 3,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 6,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 4,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 3
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "reveal": {
+     "name": "揭开",
+     "mana": 1,
+     "free_action": true
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 10,
+   "mana_regen": 1,
+   "guard_block": 5,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 12,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 1,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 0,
+    "stand": 0
+   },
+   "level": 5,
+   "chapter": 4
+  },
+  "morgan_chase": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 24,
+     "hp": 24,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "arthur",
+     "name": "arthur",
+     "max": 21,
+     "hp": 21,
+     "power": 4,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "kay",
+     "name": "kay",
+     "max": 18,
+     "hp": 18,
+     "power": 5,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 6,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 4,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 3
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "reveal": {
+     "name": "揭开",
+     "mana": 1,
+     "free_action": true
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 10,
+   "mana_regen": 1,
+   "guard_block": 5,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 12,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 1,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 0,
+    "stand": 0
+   },
+   "level": 5,
+   "chapter": 4
+  },
+  "ch4_riders": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 24,
+     "hp": 24,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "kay",
+     "name": "kay",
+     "max": 18,
+     "hp": 18,
+     "power": 5,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "lancelot",
+     "name": "lancelot",
+     "max": 20,
+     "hp": 20,
+     "power": 4,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 6,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 4,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 3
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "reveal": {
+     "name": "揭开",
+     "mana": 1,
+     "free_action": true
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 10,
+   "mana_regen": 1,
+   "guard_block": 5,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 12,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 1,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 0,
+    "stand": 0
+   },
+   "level": 5,
+   "chapter": 4
+  },
+  "ch4_mixed": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 24,
+     "hp": 24,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "gawain",
+     "name": "gawain",
+     "max": 20,
+     "hp": 20,
+     "power": 3,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "lancelot",
+     "name": "lancelot",
+     "max": 20,
+     "hp": 20,
+     "power": 4,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 6,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 4,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 3
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "reveal": {
+     "name": "揭开",
+     "mana": 1,
+     "free_action": true
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 10,
+   "mana_regen": 1,
+   "guard_block": 5,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 12,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 1,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 0,
+    "stand": 0
+   },
+   "level": 5,
+   "chapter": 4
+  },
+  "red_knight": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 24,
+     "hp": 24,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "gawain",
+     "name": "gawain",
+     "max": 20,
+     "hp": 20,
+     "power": 3,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "gareth",
+     "name": "gareth",
+     "max": 16,
+     "hp": 16,
+     "power": 3,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 6,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 4,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 3
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "reveal": {
+     "name": "揭开",
+     "mana": 1,
+     "free_action": true
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 10,
+   "mana_regen": 1,
+   "guard_block": 5,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 12,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 1,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 0,
+    "stand": 0
+   },
+   "level": 5,
+   "chapter": 4
+  },
+  "ch5_deserters": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 24,
+     "hp": 24,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "kay",
+     "name": "kay",
+     "max": 20,
+     "hp": 20,
+     "power": 5,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "bedivere",
+     "name": "bedivere",
+     "max": 18,
+     "hp": 18,
+     "power": 3,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 7,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 5,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 3
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "reveal": {
+     "name": "揭开",
+     "mana": 1,
+     "free_action": true
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 11,
+   "mana_regen": 1,
+   "guard_block": 5,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 12,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 1,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 0,
+    "stand": 0
+   },
+   "level": 6,
+   "chapter": 5
+  },
+  "ch5_raiders": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 24,
+     "hp": 24,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "kay",
+     "name": "kay",
+     "max": 20,
+     "hp": 20,
+     "power": 5,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "bedivere",
+     "name": "bedivere",
+     "max": 18,
+     "hp": 18,
+     "power": 3,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 7,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 5,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 3
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "reveal": {
+     "name": "揭开",
+     "mana": 1,
+     "free_action": true
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 11,
+   "mana_regen": 1,
+   "guard_block": 5,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 12,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 1,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 0,
+    "stand": 0
+   },
+   "level": 6,
+   "chapter": 5
+  },
+  "camelot_defense": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 24,
+     "hp": 24,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "kay",
+     "name": "kay",
+     "max": 20,
+     "hp": 20,
+     "power": 5,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "bedivere",
+     "name": "bedivere",
+     "max": 18,
+     "hp": 18,
+     "power": 3,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 7,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 5,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 3
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "reveal": {
+     "name": "揭开",
+     "mana": 1,
+     "free_action": true
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 11,
+   "mana_regen": 1,
+   "guard_block": 5,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 12,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 1,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 0,
+    "stand": 0
+   },
+   "level": 6,
+   "chapter": 5
+  },
+  "ch5_pair": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 24,
+     "hp": 24,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "kay",
+     "name": "kay",
+     "max": 20,
+     "hp": 20,
+     "power": 5,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "bedivere",
+     "name": "bedivere",
+     "max": 18,
+     "hp": 18,
+     "power": 3,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 7,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 5,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 3
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "reveal": {
+     "name": "揭开",
+     "mana": 1,
+     "free_action": true
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 11,
+   "mana_regen": 1,
+   "guard_block": 5,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 12,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 1,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 0,
+    "stand": 0
+   },
+   "level": 6,
+   "chapter": 5
+  },
+  "ch5_mixed": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 24,
+     "hp": 24,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "kay",
+     "name": "kay",
+     "max": 20,
+     "hp": 20,
+     "power": 5,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "bedivere",
+     "name": "bedivere",
+     "max": 18,
+     "hp": 18,
+     "power": 3,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 7,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 5,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 3
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "reveal": {
+     "name": "揭开",
+     "mana": 1,
+     "free_action": true
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 11,
+   "mana_regen": 1,
+   "guard_block": 5,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 12,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 1,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 0,
+    "stand": 0
+   },
+   "level": 6,
+   "chapter": 5
+  },
+  "tournament": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 24,
+     "hp": 24,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "bedivere",
+     "name": "bedivere",
+     "max": 18,
+     "hp": 18,
+     "power": 3,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "kay",
+     "name": "kay",
+     "max": 20,
+     "hp": 20,
+     "power": 5,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 7,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 5,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 3
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "reveal": {
+     "name": "揭开",
+     "mana": 1,
+     "free_action": true
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 11,
+   "mana_regen": 1,
+   "guard_block": 5,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 12,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 1,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 0,
+    "stand": 0
+   },
+   "level": 6,
+   "chapter": 5
+  },
+  "ch6_looters": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 29,
+     "hp": 29,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "arthur",
+     "name": "arthur",
+     "max": 23,
+     "hp": 23,
+     "power": 5,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "bedivere",
+     "name": "bedivere",
+     "max": 20,
+     "hp": 20,
+     "power": 4,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 7,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 5,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 3
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "reveal": {
+     "name": "揭开",
+     "mana": 1,
+     "free_action": true
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 11,
+   "mana_regen": 1,
+   "guard_block": 5,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 12,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 1,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 2,
+    "stand": 0
+   },
+   "level": 7,
+   "chapter": 6
+  },
+  "joyous_gard": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 29,
+     "hp": 29,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "arthur",
+     "name": "arthur",
+     "max": 23,
+     "hp": 23,
+     "power": 5,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "bedivere",
+     "name": "bedivere",
+     "max": 20,
+     "hp": 20,
+     "power": 4,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 7,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 5,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 3
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "reveal": {
+     "name": "揭开",
+     "mana": 1,
+     "free_action": true
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 11,
+   "mana_regen": 1,
+   "guard_block": 5,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 12,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 1,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 2,
+    "stand": 0
+   },
+   "level": 7,
+   "chapter": 6
+  },
+  "ch6_shore": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 29,
+     "hp": 29,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "arthur",
+     "name": "arthur",
+     "max": 23,
+     "hp": 23,
+     "power": 5,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "bedivere",
+     "name": "bedivere",
+     "max": 20,
+     "hp": 20,
+     "power": 4,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 7,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 5,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 3
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "reveal": {
+     "name": "揭开",
+     "mana": 1,
+     "free_action": true
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 11,
+   "mana_regen": 1,
+   "guard_block": 5,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 12,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 1,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 2,
+    "stand": 0
+   },
+   "level": 7,
+   "chapter": 6
+  },
+  "dover": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 29,
+     "hp": 29,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "gawain",
+     "name": "gawain",
+     "max": 20,
+     "hp": 20,
+     "power": 4,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "arthur",
+     "name": "arthur",
+     "max": 23,
+     "hp": 23,
+     "power": 5,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 7,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 5,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 3
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "reveal": {
+     "name": "揭开",
+     "mana": 1,
+     "free_action": true
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 11,
+   "mana_regen": 1,
+   "guard_block": 5,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 12,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 1,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 2,
+    "stand": 0
+   },
+   "level": 7,
+   "chapter": 6
+  },
+  "ch6_riders": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 29,
+     "hp": 29,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "arthur",
+     "name": "arthur",
+     "max": 23,
+     "hp": 23,
+     "power": 5,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "bedivere",
+     "name": "bedivere",
+     "max": 20,
+     "hp": 20,
+     "power": 4,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 7,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 5,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 3
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "reveal": {
+     "name": "揭开",
+     "mana": 1,
+     "free_action": true
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 11,
+   "mana_regen": 1,
+   "guard_block": 5,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 12,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 1,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 2,
+    "stand": 0
+   },
+   "level": 7,
+   "chapter": 6
+  },
+  "ch6_camp": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 29,
+     "hp": 29,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "arthur",
+     "name": "arthur",
+     "max": 23,
+     "hp": 23,
+     "power": 5,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "bedivere",
+     "name": "bedivere",
+     "max": 20,
+     "hp": 20,
+     "power": 4,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 7,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 5,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 3
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "reveal": {
+     "name": "揭开",
+     "mana": 1,
+     "free_action": true
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 11,
+   "mana_regen": 1,
+   "guard_block": 5,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 12,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 1,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 2,
+    "stand": 0
+   },
+   "level": 7,
+   "chapter": 6
+  },
+  "camlann_rear": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 29,
+     "hp": 29,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "bedivere",
+     "name": "bedivere",
+     "max": 20,
+     "hp": 20,
+     "power": 4,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "kay",
+     "name": "kay",
+     "max": 20,
+     "hp": 20,
+     "power": 5,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 7,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 5,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 3
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "reveal": {
+     "name": "揭开",
+     "mana": 1,
+     "free_action": true
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 11,
+   "mana_regen": 1,
+   "guard_block": 5,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 12,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 1,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 2,
+    "stand": 0
+   },
+   "level": 7,
+   "chapter": 6
+  },
+  "camlann": {
+   "allies": [
+    {
+     "uid": "apprentice",
+     "name": "你",
+     "max": 29,
+     "hp": 29,
+     "power": 0,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "arthur",
+     "name": "arthur",
+     "max": 23,
+     "hp": 23,
+     "power": 5,
+     "move": "",
+     "uses": 0
+    },
+    {
+     "uid": "bedivere",
+     "name": "bedivere",
+     "max": 20,
+     "hp": 20,
+     "power": 4,
+     "move": "",
+     "uses": 0
+    }
+   ],
+   "spells": {
+    "spark": {
+     "name": "星火",
+     "mana": 1,
+     "damage": 7,
+     "vulnerable": 1,
+     "target": "enemy"
+    },
+    "ward": {
+     "name": "护身",
+     "mana": 2,
+     "block": 5,
+     "target": "ally_or_self",
+     "targets": 1
+    },
+    "focus": {
+     "name": "凝神",
+     "mana": 0,
+     "restore_mana": 3
+    },
+    "interrupt": {
+     "name": "打断",
+     "mana": 3,
+     "cancels": [
+      "charge",
+      "summon",
+      "buff"
+     ],
+     "target": "enemy"
+    },
+    "reveal": {
+     "name": "揭开",
+     "mana": 1,
+     "free_action": true
+    },
+    "blind": {
+     "mana": 1,
+     "weak": 2
+    }
+   },
+   "mana_max": 11,
+   "mana_regen": 1,
+   "guard_block": 5,
+   "potions": {
+    "potion_hp": 0,
+    "potion_mana": 0
+   },
+   "potion_heal": 12,
+   "potion_mana": 3,
+   "scabbard": false,
+   "kay_cover": false,
+   "start": {
+    "all_enemies_vulnerable": 1,
+    "top_hp_vulnerable": 0,
+    "apprentice_block": 0,
+    "interrupt_vulnerable": 2,
+    "stand": 0
+   },
+   "level": 7,
+   "chapter": 6
+  }
+ }
+}

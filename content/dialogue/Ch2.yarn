@@ -188,6 +188,8 @@ tags: area
 亚瑟没笑。他站起来，王冠歪了一点，他也没扶。 #line:ch2_118
 亚瑟: 凯，天亮前把城里能骑马的人数报给我。 #line:ch2_119
 梅林: 他们会在北边贝德格兰的林子里会齐。 #line:ch2_120
+// 宴散了，你站在大主教的厅门口（design/levels/ch2.md 2-1 结算）；北门从这一步起开
+<<teleport london 25 10>>
 <<progress_quest 1002 1204>>
 ===
 title: Ch2_BedegraineCamp
@@ -364,4 +366,12 @@ tags: npc
 <<else>>
     大主教: 主与你同在。 #line:ch2_206
 <<endif>>
+===
+title: Shop_london
+tags: npc
+---
+// 伦敦桥头的铺子（design/levels/ch2.md 2-4，items.json shop.shops.london）。面对店主按确认。2-1 路过时货架上的价钱看得见，钱不够；2-4 打完仗回来买得起。
+柜台上横着几根木杖，一排陶瓶拿软木塞着，瓶肚子上拿炭写着价钱。 #line:ch2_209
+店主: 先看。看中了再掏钱，赊账去对面找神父。 #line:ch2_210
+<<open_shop london>>
 ===

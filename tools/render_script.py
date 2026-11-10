@@ -52,7 +52,8 @@ TAGS = {"chapter": "章节开场", "npc": "找他说话", "area": "走到这里�
         "prop": "物件", "rumor": "线索", "side": "支线", "ending": "结局"}
 CMD = {"autosave": "存档", "book_after": "预言簿·后来", "chapter": "换章", "companion": "同伴", "complete_quest": "任务完成",
        "fight_npcs": "开打", "jump": "跳到", "objective": "小目标", "progress_quest": "任务推进", "show_ending": "结局",
-       "start_quest": "接任务", "unlock": "能力", "vision": "看水面", "close_side": "支线关门"}
+       "start_quest": "接任务", "unlock": "能力", "vision": "看水面", "close_side": "支线关门",
+       "teleport": "挪到", "open_shop": "打开商店"}
 SKIP_CMD = {"set", "declare"}
 
 
@@ -227,6 +228,8 @@ def render_cmd(name, args):
         a = TEXT.get(f"unlock_{args[0]}_name", args[0])
     elif name == "chapter" and args:
         a = f"第 {args[0]} 章"
+    elif name == "teleport" and len(args) >= 3:
+        a = f"{TEXT.get('area_' + args[0], args[0])} ({args[1]}, {args[2]})"
     elif name == "jump" and args:
         return f'<span class="cmd c-jump"><b>{label}</b> <a href="#n-{esc(args[0])}">{esc(args[0])}</a></span>'
     return f'<span class="cmd c-{esc(name)}"><b>{esc(label)}</b> {esc(a)}</span>{extra}'

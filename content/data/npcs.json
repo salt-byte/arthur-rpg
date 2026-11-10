@@ -1,5 +1,5 @@
 {
-  "_说明": "NPC 表（game-data-schema 格式）。condition 是 Yarn 表达式，为真时出现；node 是对话入口，空字符串是路人，只冒闲话；area 是地方 id；cell 是 content/data/maps.json 里这个地方的格子坐标（第 8 步白盒填的）。现在只有第 1 章的样例，其余章第 10 步写任务时补。",
+  "_说明": "NPC 表（game-data-schema 格式）。condition 是 Yarn 表达式，为真时出现；node 是对话入口，空字符串是路人，只冒闲话；area 是地方 id；cell 是 content/data/maps.json 里这个地方的格子坐标（第 8 步白盒填的）。写到第 2 章（第 15 步第二批，站位照 content/dialogue/notes/ch2_notes.md 第 4 节和 design/levels/ch2.md）。店主的 node 写 Shop_<店 id>，里面 <<open_shop 店 id>>。",
   "speakers": {
     "_说明": "对白里出现、不站在地图上的说话人 → 头像外观"
   },
@@ -151,6 +151,392 @@
       ],
       "node": "",
       "condition": "quest_part(1002) == 1203",
+      "act": {
+        "type": "look"
+      },
+      "barks": []
+    },
+    {
+      "id": "landlady",
+      "name": "npc_landlady",
+      "look": "landlady",
+      "area": "london",
+      "cell": [
+        25,
+        16
+      ],
+      "node": "",
+      "condition": "quest_part(1002) == 1201",
+      "act": {
+        "type": "look"
+      },
+      "barks": [
+        "bark_landlady_1"
+      ]
+    },
+    {
+      "id": "archbishop_steps",
+      "name": "npc_archbishop",
+      "look": "archbishop",
+      "area": "london",
+      "cell": [
+        10,
+        6
+      ],
+      "node": "Ch2_Archbishop",
+      "condition": "quest_part(1002) == 1201",
+      "act": {
+        "type": "look"
+      }
+    },
+    {
+      "id": "guard_knight_1",
+      "name": "npc_guard_knight",
+      "look": "guard_knight",
+      "area": "london",
+      "cell": [
+        5,
+        7
+      ],
+      "node": "",
+      "condition": "quest_part(1002) == 1201",
+      "act": {
+        "type": "look"
+      },
+      "barks": [
+        "bark_guard_knight_1"
+      ]
+    },
+    {
+      "id": "guard_knight_2",
+      "name": "npc_guard_knight",
+      "look": "guard_knight",
+      "area": "london",
+      "cell": [
+        7,
+        9
+      ],
+      "node": "",
+      "condition": "quest_part(1002) == 1201",
+      "act": {
+        "type": "look"
+      },
+      "barks": [
+        "bark_guard_knight_2"
+      ]
+    },
+    {
+      "id": "noble_1",
+      "name": "npc_noble",
+      "look": "noble",
+      "area": "london",
+      "cell": [
+        4,
+        9
+      ],
+      "node": "",
+      "condition": "quest_part(1002) == 1201",
+      "act": {
+        "type": "look"
+      },
+      "barks": [
+        "bark_noble_1"
+      ]
+    },
+    {
+      "id": "noble_2",
+      "name": "npc_noble",
+      "look": "noble",
+      "area": "london",
+      "cell": [
+        8,
+        8
+      ],
+      "node": "",
+      "condition": "quest_part(1002) == 1201",
+      "act": {
+        "type": "look"
+      },
+      "barks": [
+        "bark_noble_2"
+      ]
+    },
+    {
+      "id": "ector_stands",
+      "name": "npc_ector",
+      "look": "ector",
+      "area": "london",
+      "cell": [
+        4,
+        15
+      ],
+      "node": "Ch2_Ector",
+      "condition": "quest_part(1002) == 1201",
+      "act": {
+        "type": "look"
+      }
+    },
+    {
+      "id": "londoner_1",
+      "name": "npc_londoner",
+      "look": "villager1",
+      "area": "london",
+      "cell": [
+        20,
+        13
+      ],
+      "node": "",
+      "condition": "quest_part(1002) >= 1201 and quest_part(1002) <= 1203",
+      "act": {
+        "type": "wander",
+        "r": 2
+      },
+      "barks": [
+        "bark_londoner_1"
+      ]
+    },
+    {
+      "id": "kay_gate",
+      "name": "npc_kay",
+      "look": "kay",
+      "area": "london",
+      "cell": [
+        14,
+        1
+      ],
+      "node": "Ch2_Kay",
+      "condition": "quest_part(1002) == 1204",
+      "act": {
+        "type": "work",
+        "dir": "down",
+        "every": 1.8
+      }
+    },
+    {
+      "id": "ector_gate",
+      "name": "npc_ector",
+      "look": "ector",
+      "area": "london",
+      "cell": [
+        18,
+        1
+      ],
+      "node": "Ch2_Ector",
+      "condition": "quest_part(1002) == 1204",
+      "act": {
+        "type": "look"
+      }
+    },
+    {
+      "id": "arthur_steps",
+      "name": "npc_arthur",
+      "look": "arthur",
+      "area": "london",
+      "cell": [
+        9,
+        6
+      ],
+      "node": "Ch2_Arthur",
+      "condition": "quest_part(1002) == 1204",
+      "act": {
+        "type": "look"
+      }
+    },
+    {
+      "id": "merlin_stone",
+      "name": "npc_merlin",
+      "look": "merlin",
+      "area": "london",
+      "cell": [
+        7,
+        8
+      ],
+      "node": "Ch2_Merlin",
+      "condition": "quest_part(1002) == 1204",
+      "act": {
+        "type": "look"
+      }
+    },
+    {
+      "id": "archbishop_church",
+      "name": "npc_archbishop",
+      "look": "archbishop",
+      "area": "london",
+      "cell": [
+        7,
+        2
+      ],
+      "node": "Ch2_Archbishop",
+      "condition": "quest_part(1002) == 1204",
+      "act": {
+        "type": "look"
+      }
+    },
+    {
+      "id": "londoner_2",
+      "name": "npc_londoner",
+      "look": "villager1",
+      "area": "london",
+      "cell": [
+        20,
+        10
+      ],
+      "node": "",
+      "condition": "quest_part(1002) == 1204",
+      "act": {
+        "type": "wander",
+        "r": 2
+      },
+      "barks": [
+        "bark_londoner_2",
+        "bark_londoner_3"
+      ]
+    },
+    {
+      "id": "merlin_hall",
+      "name": "npc_merlin",
+      "look": "merlin",
+      "area": "london",
+      "cell": [
+        27,
+        9
+      ],
+      "node": "Ch2_Merlin",
+      "condition": "quest_part(1002) == 1205",
+      "act": {
+        "type": "look"
+      }
+    },
+    {
+      "id": "londoner_4",
+      "name": "npc_londoner",
+      "look": "villager1",
+      "area": "london",
+      "cell": [
+        20,
+        17
+      ],
+      "node": "",
+      "condition": "quest_part(1002) == 1205",
+      "act": {
+        "type": "wander",
+        "r": 2
+      },
+      "barks": [
+        "bark_londoner_4"
+      ]
+    },
+    {
+      "id": "shop_london",
+      "name": "npc_shopkeeper",
+      "look": "shopkeeper",
+      "area": "london",
+      "cell": [
+        18,
+        18
+      ],
+      "node": "Shop_london",
+      "condition": "$chapter == 2",
+      "act": {
+        "type": "look"
+      },
+      "_说明": "伦敦桥头的铺子：面对店主按确认跑 Shop_london，<<open_shop london>> 打开 items.json shop.shops.london"
+    },
+    {
+      "id": "kay_camp",
+      "name": "npc_kay",
+      "look": "kay",
+      "area": "bedegraine",
+      "cell": [
+        12,
+        13
+      ],
+      "node": "Ch2_Kay",
+      "condition": "quest_part(1002) == 1204 and visited(\"Ch2_BedegraineCamp\")",
+      "act": {
+        "type": "look"
+      }
+    },
+    {
+      "id": "arthur_camp",
+      "name": "npc_arthur",
+      "look": "arthur",
+      "area": "bedegraine",
+      "cell": [
+        13,
+        13
+      ],
+      "node": "Ch2_Arthur",
+      "condition": "quest_part(1002) == 1204 and visited(\"Ch2_BedegraineCamp\")",
+      "act": {
+        "type": "look"
+      }
+    },
+    {
+      "id": "soldier_1",
+      "name": "npc_soldier",
+      "look": "soldier",
+      "area": "bedegraine",
+      "cell": [
+        10,
+        15
+      ],
+      "node": "",
+      "condition": "quest_part(1002) == 1204",
+      "act": {
+        "type": "work",
+        "dir": "down",
+        "every": 2.2
+      },
+      "barks": [
+        "bark_soldier_1"
+      ]
+    },
+    {
+      "id": "soldier_2",
+      "name": "npc_soldier",
+      "look": "soldier",
+      "area": "bedegraine",
+      "cell": [
+        16,
+        13
+      ],
+      "node": "",
+      "condition": "quest_part(1002) == 1204",
+      "act": {
+        "type": "look"
+      },
+      "barks": [
+        "bark_soldier_2"
+      ]
+    },
+    {
+      "id": "rebel_1",
+      "name": "enemy_rebel_foot",
+      "look": "rebel",
+      "area": "bedegraine",
+      "cell": [
+        20,
+        2
+      ],
+      "node": "",
+      "condition": "quest_part(1002) == 1204",
+      "act": {
+        "type": "look"
+      },
+      "barks": []
+    },
+    {
+      "id": "rebel_2",
+      "name": "enemy_rebel_foot",
+      "look": "rebel",
+      "area": "bedegraine",
+      "cell": [
+        24,
+        2
+      ],
+      "node": "",
+      "condition": "quest_part(1002) == 1204",
       "act": {
         "type": "look"
       },

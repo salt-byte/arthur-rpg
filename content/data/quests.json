@@ -46,28 +46,48 @@
       {
         "id": 1201,
         "text": "quest_1002_p1201",
-        "area": "london"
+        "area": "london",
+        "target": [
+          7,
+          11
+        ]
       },
       {
         "id": 1202,
         "text": "quest_1002_p1202",
-        "area": "london"
+        "area": "london",
+        "target": [
+          11,
+          16
+        ]
       },
       {
         "id": 1203,
         "text": "quest_1002_p1203",
-        "area": "london"
+        "area": "london",
+        "target": [
+          7,
+          5
+        ]
       },
       {
         "id": 1204,
         "text": "quest_1002_p1204",
         "area": "bedegraine",
-        "battle": "bedegraine"
+        "battle": "bedegraine",
+        "target": [
+          22,
+          5
+        ]
       },
       {
         "id": 1205,
         "text": "quest_1002_p1205",
-        "area": "london"
+        "area": "london",
+        "target": [
+          25,
+          9
+        ]
       }
     ]
   },

@@ -7,6 +7,7 @@ tags: declarations
 <<declare $chapter = 1>>
 <<declare $last_battle = "">>
 <<declare $last_battle_won = false>>
+<<declare $last_battle_end = "">>
 <<declare $back = "">>
 // 每个决定选了哪个选项（存选项 id，没选是空字符串）
 <<declare $D1 = "">>
@@ -38,8 +39,6 @@ tags: declarations
 <<declare $elaine_lives = false>>
 // S2a
 <<declare $gareth_refused_order = false>>
-<<declare $arthur_knew_affair = false>>
-<<declare $d5_told = "">>
 // S1a
 <<declare $gawain_confessed = false>>
 // S1a
@@ -76,6 +75,9 @@ tags: declarations
 <<declare $player_late = false>>
 // S4a
 <<declare $rumor_up = false>>
+// 对白里另设的变量：按条件推出来的标记、同一个选项按对象分开记
+<<declare $arthur_knew_affair = false>>  // Ch4：D4b 且没有 D3b，亚瑟从此知情
+<<declare $d5_told = "">>  // Ch5：D5b 告诉了谁，kay / bedivere
 // 同伴状态："none" 还没来 / "party" 在队 / "left" 离开 / "dead" 离世
 <<declare $c_kay = "none">>
 <<declare $c_arthur = "none">>

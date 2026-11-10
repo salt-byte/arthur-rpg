@@ -1,7 +1,7 @@
 class_name Screens
 extends Control
 ## 盖在地图上的整屏：标题、看水面、章节过渡、新能力、预言簿、白盒结束；第 10 步加了升级挑奖励、技能树、背包、圣龛。
-## 一次只开一个，关上时回调。
+## 第 15 步第二批加了商店。一次只开一个，关上时回调。
 ## 看水面照 prophecy.md：画面切成一张静止的图，下面两三句具体的描写；全游戏最亮的就是这一圈（ART_DIRECTION 原则 2）。
 
 var main
@@ -337,6 +337,42 @@ func _build_shrine() -> void:
 	var go := _add_button(UIKit.t("shrine_leave"), Vector2(r.position.x + 386, y), 330, func(): _choose("leave"))
 	if not auto: (first if first else go).grab_focus.call_deferred()
 
+# ---------------- 商店：药不限量，装备货架每章换一批（items.md「商店」，第 15 步第二批） ----------------
+func _build_shop() -> void:
+	var v := _view()
+	var r := Rect2(maxf(16.0, v.x / 2 - 560), maxf(16.0, v.y / 2 - 320), minf(1120.0, v.x - 32), minf(640.0, v.y - 32))
+	data["rect"] = r
+	var id: String = data.get("shop", "")
+	_add_label(str(ShopLogic.shop_def(id).get("name", id)), r.position + Vector2(32, 22), r.size.x - 64, UIKit.BIG, UIKit.GOLD)
+	_add_label(UIKit.f("shop_money", {"silver": int(GS.S.silver), "hp": int(GS.S.potions.get("potion_hp", 0)), "mp": int(GS.S.potions.get("potion_mana", 0))}),
+		r.position + Vector2(32, 76), r.size.x - 64, UIKit.BODY, UIKit.CREAM)
+	var y := r.position.y + 128
+	var items := ShopLogic.stock(id)
+	if not items.any(func(e): return e.kind == "gear"):
+		_add_label(UIKit.t("shop_sold_out"), Vector2(r.position.x + 32, r.end.y - 128), 600, UIKit.SMALL * 2, UIKit.CREAM_DIM)
+	for e in items:
+		if y > r.end.y - 150: break
+		var col := UIKit.hexcol(e.color) if e.has("color") else UIKit.CREAM
+		_add_label(e.name, Vector2(r.position.x + 32, y), 560, UIKit.BODY, col)
+		if e.has("lines"):
+			_add_label("  " + "，".join(PackedStringArray(e.lines)), Vector2(r.position.x + 32, y + 34), 560, UIKit.SMALL * 2, UIKit.CREAM)
+		_add_label(UIKit.f("shop_price", {"n": int(e.price)}), Vector2(r.end.x - 400, y + 6), 140, UIKit.BODY, UIKit.GOLD)
+		var why := ShopLogic.why_not(e)
+		var bt := _add_button(UIKit.t("shop_buy") if why == "" else UIKit.t(why), Vector2(r.end.x - 232, y), 200, func(): _shop_buy(e))
+		bt.disabled = why != ""
+		y += 76 if e.has("lines") else 60
+	var done := _add_button(UIKit.t("shrine_leave"), Vector2(r.end.x - 252, r.end.y - 68), 220, func(): _choose("leave"))
+	if not auto: done.grab_focus.call_deferred()
+
+func _shop_buy(e: Dictionary) -> void:
+	var res := ShopLogic.buy(data.get("shop", ""), e)
+	if res.ok:
+		data["bought"] = int(data.get("bought", 0)) + 1
+		print("  [商店] " + UIKit.f("shop_bought", {"t": res.name, "n": res.price}))
+	else:
+		print("  [商店] 买不了 %s：%s" % [e.name, UIKit.t(res.reason)])
+	_rebuild()
+
 func _build_end() -> void:
 	var v := _view()
 	var r := Rect2(v.x / 2 - 420, maxf(16.0, v.y / 2 - 320), 840, minf(640.0, v.y - 32))
@@ -365,8 +401,8 @@ func handle(e: InputEvent) -> void:
 			if e.is_action_pressed("confirm"): close()
 		"book":
 			if e.is_action_pressed("confirm") or e.is_action_pressed("cancel"): close()
-		"bag", "tree", "shrine":
-			if e.is_action_pressed("cancel"): _choose("done" if kind != "shrine" else "leave")
+		"bag", "tree", "shrine", "shop":
+			if e.is_action_pressed("cancel"): _choose("leave" if kind in ["shrine", "shop"] else "done")
 
 func _gui_input(e: InputEvent) -> void:
 	if e is InputEventMouseButton and e.pressed and kind in ["vision", "card", "unlock", "book"]:
@@ -396,7 +432,7 @@ func _draw() -> void:
 		"book":
 			draw_rect(Rect2(Vector2.ZERO, v), Color(0, 0, 0, 0.55))
 			UIKit.draw_frame(self, data.rect, Color(UIKit.NAVY, 0.97), UIKit.DROP)
-		"end", "levelup", "tree", "bag", "shrine":
+		"end", "levelup", "tree", "bag", "shrine", "shop":
 			draw_rect(Rect2(Vector2.ZERO, v), Color(0, 0, 0, 0.7))
 			UIKit.draw_frame(self, data.rect)
 

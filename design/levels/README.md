@@ -234,6 +234,8 @@ rect 的大小照森林：最大 10×7，最小 4×6；一群在 rect 里转、�
 
 ### 7.1 代码和数据格式不支持（先解决这几条，关卡才落得下去）
 
+2026-11-10 第 15 步第二批六条都补了：写法见 content/README.md，改了什么写在 overworld.md、dialogue.md、prophecy.md、items.md、quests.md 的改动记录里。
+
 1. **出口没有条件。** `world.gd` 的 `exit_at` 只认格子，不读 `cond`。可是第 2 章北门要 1204 才开（ch2 交接说明第 3 节）、湖北边的出口要支线开了才通、quests.md 写「有人告诉你以后，那个地方才出现在地图上」，都靠出口条件。建议 maps.json 的 exits 加 `cond`（和 triggers 同一种写法）。各章页的出口都按这个写了。
 2. **一片地方只认一个章。** `main.gd` 的 `_area_chapter` 按 overworld.json 的 `chapter` 取一个数：卡美洛、湖登记成第 3 章，卡美洛城外登记成第 5 章。第 4、5 章在卡美洛礼拜堂祈祷后，传送菜单列不出别的圣龛；`first_of_chapter` 只能是真假，第 4、5 章都想用卡美洛礼拜堂当第一座。建议 areas 的 `chapter` 改成数组（`"chapters": [3, 4, 5]`），`first_of_chapter` 改成章号数组。ch4 交接说明第 8 节第 9 条提过同一件事。
 3. **宝物没有条件。** 复用的地方每章要换宝物，overworld.json 的 chests 没有 `condition`。建议加上（各章页的宝物都带了 `condition`）。

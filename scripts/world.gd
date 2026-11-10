@@ -122,9 +122,14 @@ func water_at(c: Vector2i):
 		if w.area == area and w.has("cell") and Vector2i(int(w.cell[0]), int(w.cell[1])) == c: return w
 	return null
 
+## glows_at 两种写法：主线写步骤号 "1102"；支线写「任务 id:步骤」"2301:2"（第 15 步加，四条支线各有一次看水面）
 func water_glows(w: Dictionary) -> bool:
+	var g := str(w.get("glows_at", ""))
+	if ":" in g:
+		var qp := g.split(":")
+		return Quests.is_active(qp[0]) and str(main.runner.quest_part(int(qp[0]))) == qp[1]
 	for q in Quests.active():
-		if Quests.is_main(q) and str(main.runner.quest_part(int(q))) == str(w.get("glows_at", "")):
+		if Quests.is_main(q) and str(main.runner.quest_part(int(q))) == g:
 			return true
 	return false
 
@@ -133,16 +138,26 @@ func trigger_at(c: Vector2i):
 		if Vector2i(int(t.cell[0]), int(t.cell[1])) == c and main.cond(t.get("cond", "")): return t
 	return null
 
+## 出口可以带 cond（Yarn 表达式，和 triggers 同一种写法）：条件不成立时门关着，走不上去
+func exit_open(e: Dictionary) -> bool:
+	return main.cond(e.get("cond", ""))
+
 func exit_at(c: Vector2i):
 	for e in A.get("exits", []):
-		if Vector2i(int(e.cell[0]), int(e.cell[1])) == c: return e
+		if Vector2i(int(e.cell[0]), int(e.cell[1])) == c and exit_open(e): return e
 	return null
+
+func _closed_exit_at(c: Vector2i) -> bool:
+	for e in A.get("exits", []):
+		if Vector2i(int(e.cell[0]), int(e.cell[1])) == c and not exit_open(e): return true
+	return false
 
 func blocked(c: Vector2i) -> bool:
 	if tile_def(tile(c)).get("block", false): return true
 	if npc_at(c) != null: return true
 	if water_at(c) != null: return true
 	if shrine_at(c) != null or chest_at(c) != null: return true
+	if _closed_exit_at(c): return true
 	return false
 
 # ---------------- 圣龛、宝物 ----------------
@@ -154,9 +169,13 @@ func shrine_at(c: Vector2i):
 		if Vector2i(int(s.cell[0]), int(s.cell[1])) == c: return s
 	return null
 
+## 这片地方眼下摆着的宝物：宝物可以带 condition（复用的地方每章换宝物，第 15 步加）
+func chests_here() -> Array:
+	return Data.t("overworld").get("chests", []).filter(func(s): return s.area == area and s.cell != null and main.cond(s.get("condition", "")))
+
 func chest_at(c: Vector2i):
-	for s in Data.t("overworld").get("chests", []):
-		if s.area == area and s.cell != null and Vector2i(int(s.cell[0]), int(s.cell[1])) == c: return s
+	for s in chests_here():
+		if Vector2i(int(s.cell[0]), int(s.cell[1])) == c: return s
 	return null
 
 func chest_opened(ch: Dictionary) -> bool:
@@ -447,7 +466,9 @@ func interact() -> void:
 		return
 	var ch = chest_at(c)
 	if ch != null:
-		if chest_opened(ch): want_bark.emit(UIKit.t("chest_empty"), _px(c))
+		if chest_opened(ch):
+			var k := "chest_empty_" + str(ch.id)
+			want_bark.emit(UIKit.t(k) if UIKit.t(k) != k else UIKit.t("chest_empty"), _px(c))
 		else: want_chest.emit(ch)
 		return
 
@@ -464,12 +485,22 @@ func markers() -> Array:
 	var p := Quests.part_def(q)
 	var target_area: String = p.get("area", "")
 	if target_area != "" and target_area != area:
+		# 要去的地方有这一章能传过去的圣龛、脚下这片也有圣龛：标圣龛（教「圣龛之间传送」），不标出口
+		var sh = _shrine_towards(target_area)
+		if sh != null:
+			out.append(Vector2i(int(sh.cell[0]), int(sh.cell[1])))
+			return out
 		var ex = _exit_towards(target_area)
 		if ex != null: out.append(Vector2i(int(ex.cell[0]), int(ex.cell[1])))
 		return out
 	for s in spawns_here(): out.append(Vector2i(int(s.cell[0]), int(s.cell[1])))
-	for t in A.get("triggers", []):
-		if main.cond(t.get("cond", "")): out.append(Vector2i(int(t.cell[0]), int(t.cell[1])))
+	# 步骤带 target、这一步里还没换小目标：只标 target 那一格；换了小目标（人换了地方）就标眼下成立的触发格
+	var sub := str(GS.S.quests.get(q, {}).get("sub", ""))
+	if p.has("target") and sub == "":
+		out.append(Vector2i(int(p.target[0]), int(p.target[1])))
+	else:
+		for t in A.get("triggers", []):
+			if main.cond(t.get("cond", "")): out.append(Vector2i(int(t.cell[0]), int(t.cell[1])))
 	for w in Data.t("overworld").get("water_spots", []):
 		if w.area == area and water_glows(w): out.append(Vector2i(int(w.cell[0]), int(w.cell[1])))
 	return out
@@ -483,12 +514,20 @@ func _exit_towards(target: String):
 		var nxt := []
 		for a in frontier:
 			for e in M.areas[a].get("exits", []):
-				if seen.has(e.to): continue
+				if seen.has(e.to) or not exit_open(e): continue
 				seen[e.to] = true
 				first[e.to] = first.get(a, e)
 				if e.to == target: return first[e.to]
 				nxt.append(e.to)
 		frontier = nxt
+	return null
+
+## 这片地方的圣龛，祈祷后能传到 target 那片地方的哪一座（没有就返回 null）
+func _shrine_towards(target: String):
+	var here := shrines_here()
+	if here.is_empty(): return null
+	for o in main.travel_targets(here[0]):
+		if o.area == target: return here[0]
 	return null
 
 ## 从站的地方走得到的格子（测试用：地图有没有把人、出口、敌人围死）
@@ -513,10 +552,14 @@ func _draw() -> void:
 			var col := UIKit.hexcol(tile_def(ch).get("color", "#ff00ff"))
 			draw_rect(Rect2(x * cs, y * cs, cs, cs), col)
 			draw_rect(Rect2(x * cs, y * cs, cs, cs), Color(0, 0, 0, 0.06), false, 1.0)
-	# 出口：门口画一道金色的横杠
+	# 出口：门口画一道金色的横杠；关着的门（cond 不成立）画两道铁灰的竖闩
 	for e in A.get("exits", []):
-		var r := Rect2(int(e.cell[0]) * cs + 8, int(e.cell[1]) * cs + cs / 2.0 - 4, cs - 16, 8)
-		draw_rect(r, Color(UIKit.GOLD, 0.7))
+		var ec := Vector2(int(e.cell[0]) * cs, int(e.cell[1]) * cs)
+		if exit_open(e):
+			draw_rect(Rect2(ec.x + 8, ec.y + cs / 2.0 - 4, cs - 16, 8), Color(UIKit.GOLD, 0.7))
+		else:
+			draw_rect(Rect2(ec.x + 4, ec.y + 4, cs - 8, cs - 8), Color("#4A3A2C"))
+			for i in 3: draw_rect(Rect2(ec.x + 12 + i * 16, ec.y + 6, 6, cs - 12), Color("#2A2B30"))
 	# 水面
 	for w in Data.t("overworld").get("water_spots", []):
 		if w.area != area or not w.has("cell"): continue
@@ -550,8 +593,7 @@ func _draw() -> void:
 		draw_rect(Rect2(c.x - 14, c.y - 18, 28, 7), UIKit.GOLD if prayed else Color("#B8BCC6"))
 		_name_tag(UIKit.t(sh.name), c + Vector2(0, -cs * 0.62), UIKit.GOLD if prayed else UIKit.CREAM)
 	# 宝物：没开的包袱发一点光；开过的是空的
-	for ch in Data.t("overworld").get("chests", []):
-		if ch.area != area or ch.cell == null: continue
+	for ch in chests_here():
 		var c := _px(Vector2i(int(ch.cell[0]), int(ch.cell[1])))
 		var open := chest_opened(ch)
 		if not open: draw_circle(c, cs * 0.30, Color(1.0, 0.9, 0.5, 0.25 + 0.15 * sin(_t * 3.0)))

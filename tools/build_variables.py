@@ -9,7 +9,7 @@
   $D1…$D6、$S1…$S4、$V   每个决定选了哪个选项，存选项 id（"D1a"），没选是 ""
   $<标记名>               bible.json 里选项的 flags，布尔，默认 false
   $c_<同伴 id>            同伴状态："none" 还没来 / "party" 在队 / "left" 离开 / "dead" 离世
-  系统变量                $player_name $chapter $last_battle $last_battle_won $back
+  系统变量                $player_name $chapter $last_battle $last_battle_won $last_battle_end $back
 """
 import json
 import sys
@@ -36,6 +36,7 @@ out = ["title: Variables", "tags: declarations", "---",
        "<<declare $chapter = 1>>",
        '<<declare $last_battle = "">>',
        "<<declare $last_battle_won = false>>",
+       '<<declare $last_battle_end = "">>',
        '<<declare $back = "">>',
        "// 每个决定选了哪个选项（存选项 id，没选是空字符串）"]
 for d in decisions:
@@ -46,6 +47,9 @@ out.append("// 选项带来的标记（后面是哪些选项会设它）")
 for f in sorted(flags):
     out.append(f"// {'、'.join(dict.fromkeys(flags[f]))}")
     out.append(f"<<declare ${f} = false>>")
+out.append("// 对白里另设的变量：按条件推出来的标记、同一个选项按对象分开记")
+out.append("<<declare $arthur_knew_affair = false>>  // Ch4：D4b 且没有 D3b，亚瑟从此知情")
+out.append('<<declare $d5_told = "">>  // Ch5：D5b 告诉了谁，kay / bedivere')
 out.append('// 同伴状态："none" 还没来 / "party" 在队 / "left" 离开 / "dead" 离世')
 for c in roster:
     out.append(f'<<declare $c_{c["id"]} = "none">>')

@@ -1,5 +1,5 @@
 {
-  "_说明": "敌人放在哪（game-data-schema 格式）。2026-11-06 起照《Vampire's Fall 2》：zones 是能绕开的敌人，每群在地图上是一个看得见的人影，在自己那块地方（rect：[x, y, 宽, 高]，格子坐标）里转，4 格内会追，出不了 rect；cell 是出生的格子；enemy 填遭遇 id（combat.json 的 encounters）。spawns 是任务敌人，站着不动（stay: true），撞上才开打。condition 为真时出现；on_defeat 是打赢后运行的对话节点。打死的都不回来（defeated 记 zone 的 id）。第 10 步白盒填好第 1 章：森林四群能绕开的，加头狼群；其余章生产阶段补。",
+  "_说明": "敌人放在哪（game-data-schema 格式）。2026-11-06 起照《Vampire's Fall 2》：zones 是能绕开的敌人，每群在地图上是一个看得见的人影，在自己那块地方（rect：[x, y, 宽, 高]，格子坐标）里转，4 格内会追，出不了 rect；cell 是出生的格子；enemy 填遭遇 id（combat.json 的 encounters）。spawns 是任务敌人，站着不动（stay: true），撞上才开打。condition 为真时出现；on_defeat 是打赢后运行的对话节点。打死的都不回来（defeated 记 zone 的 id）。第 10 步白盒填好第 1 章：森林四群能绕开的，加头狼群；第 15 步第二批补第 2 章四群（北门外大路三群、贝德格兰一群）；第 2 章起任务敌人走「先对话再 fight_npcs」，不进 spawns（design/levels/README.md 7.2 第 10 条）。",
   "zones": {
     "forest_east": {
       "area": "forest",
@@ -64,6 +64,70 @@
       "enemy": "log_wolves",
       "label": "enc_log_wolves",
       "_说明": "东北角倒木后面的两只灰狼，从倒木左边的缺口进去"
+    },
+    "ch2_north_gate": {
+      "area": "london_north",
+      "rect": [
+        6,
+        14,
+        8,
+        3
+      ],
+      "cell": [
+        9,
+        15
+      ],
+      "enemy": "ch2_north_road",
+      "label": "enc_ch2_north_road",
+      "_说明": "北门外西边路旁，出门第一群，两个步兵。离大路 x=16 隔两格"
+    },
+    "ch2_ford": {
+      "area": "london_north",
+      "rect": [
+        20,
+        13,
+        8,
+        3
+      ],
+      "cell": [
+        23,
+        14
+      ],
+      "enemy": "ch2_ford",
+      "label": "enc_ch2_ford",
+      "_说明": "渡口东边浅滩，盾兵带步兵，守着翻倒的货车 (28,14)"
+    },
+    "ch2_hill": {
+      "area": "london_north",
+      "rect": [
+        9,
+        3,
+        6,
+        4
+      ],
+      "cell": [
+        11,
+        4
+      ],
+      "enemy": "ch2_hill",
+      "label": "enc_ch2_hill",
+      "_说明": "大路拐弯处的北坡。rect 离拐角 (16,8) 4 格：走到拐角骑兵冲到坡沿停住，教群攻，能绕开"
+    },
+    "ch2_camp": {
+      "area": "bedegraine",
+      "rect": [
+        2,
+        2,
+        9,
+        5
+      ],
+      "cell": [
+        6,
+        4
+      ],
+      "enemy": "ch2_camp",
+      "label": "enc_ch2_camp",
+      "_说明": "营地西北林子里的游骑，盾兵挡在骑兵前头；斥候的包袱在 (1,3)"
     }
   },
   "spawns": [
